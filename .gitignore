@@ -1,0 +1,16 @@
+# Build artifacts
+build/
+*.o
+
+# Logs and profiling data
+*.log
+perf.data
+perf.data.old
+
+# Backups and temporary files
+*.bak
+*~
+
+# IDE and tool files
+.system_generated/
+skills/

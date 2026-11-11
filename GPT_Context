@@ -1,0 +1,37 @@
+## Stage 1 — Environment verification complete
+
+All checks passed
+
+Your development environment now has the required foundational components.
+
+| Component        | Verified version/status |
+| ---------------- | ----------------------- |
+| Linux kernel     | 7.0.0-42-generic        |
+| Architecture     | x86_64                  |
+| Kernel BTF       | Available               |
+| Clang            | 16.0.6                  |
+| LLVM BPF backend | Available               |
+| bpftool          | Installed               |
+| libbpf           | 1.3.0                   |
+| libbpf headers   | Available               |
+| libelf-dev       | Installed               |
+| GCC              | 13.3.0                  |
+| Make             | 4.3                     |
+
+No further system dependencies are needed for our initial development setup.
+
+## Next: Project structure
+
+Before creating files, let's settle the language and tooling decisions, as agreed.
+
+Our next discussion will examine:
+
+1. C versus Rust for eBPF programs.
+2. C versus Rust for the user-space event consumer.
+3. libbpf versus alternative eBPF frameworks.
+4. Whether to use SQLite, an in-memory graph, or another storage mechanism.
+5. The resource and maintenance implications for your machine.
+
+We will not write implementation code until these decisions are justified.
+
+Stage 1 is complete.
