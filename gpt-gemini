@@ -1,0 +1,1820 @@
+# EPHIMTRACE
+## Comprehensive Engineering, Architecture and Implementation Handover
+
+**Document purpose:** Transfer of project knowledge, architecture, implementation history, engineering decisions, validation status, and future development direction to a new AI engineering assistant.
+
+**Project:** EphimTrace  
+**Primary technology:** Linux eBPF, C, libbpf  
+**Development environment:** Linux Mint, Zed IDE  
+**Repository:** `/home/magellan/Garage/prototypes/FM`  
+**Current implementation milestone:** M2.1 — Backing-object registry and open-file lookup  
+**Project status:** M1 accepted and closed; M2 architecture approved; M2.1 implemented and undergoing final corrective review.
+
+---
+
+# 1. Project Overview
+
+EphimTrace is a Linux eBPF-based forensic provenance and event-reconstruction system.
+
+Its central purpose is to help investigators understand the sequence of events surrounding suspicious in-memory file activity, particularly the creation, use, modification, and execution of anonymous files created through `memfd_create`, alongside file unlinking and related process activity.
+
+The project is not intended to be merely a syscall logger.
+
+It aims to become an evidence-backed provenance reconstruction system that can answer questions such as:
+
+- Which process created a particular memfd?
+- What happened to that object after creation?
+- Which file descriptors and processes referred to the same underlying object?
+- Was the object duplicated, inherited, reopened, or modified?
+- Was it subsequently used as an execution source?
+- What file unlinking activity occurred around the same investigative sequence?
+- Which events can be directly connected, and which relationships are uncertain?
+
+The ultimate objective is to reconstruct meaningful investigative timelines and relationships from kernel-observed events.
+
+## 1.1 The original investigative sequence
+
+The original conceptual sequence was:
+
+`Process creation → Execution → Memfd creation and/or file unlink activity → Network activity`
+
+This is an investigative model, not a guarantee that every event will occur in this order.
+
+EphimTrace must capture the actual event sequence rather than force observations into a predetermined narrative.
+
+## 1.2 Long-term vision
+
+The eventual system should represent forensic activity as a readable directed acyclic graph (DAG).
+
+Potential entities include:
+
+- Processes and process generations
+- Executable images
+- Memfd backing objects
+- Open file descriptions
+- File descriptor references
+- Filesystem objects
+- Network endpoints and connections
+- Kernel-observed events
+
+Potential relationships include:
+
+- Process created another process
+- Process created a memfd
+- Descriptor refers to an open file description
+- Open file description refers to a backing object
+- Descriptor was duplicated or inherited
+- Backing object was modified
+- Backing object was used in an execution attempt
+- A process executed successfully
+- A filesystem object was unlinked
+- A process initiated network activity
+
+The graph must distinguish observed facts from derived relationships and investigative hypotheses.
+
+**Temporal proximity alone must never be treated as proof of causality.**
+
+---
+
+# 2. Core Engineering Principles
+
+These principles govern the entire project.
+
+## 2.1 Evidence before inference
+
+Every forensic claim must have an evidentiary basis.
+
+Maintain three conceptual categories:
+
+1. **Directly observed:** An event or value captured by an eBPF program.
+2. **Derived:** A relationship established by correlating multiple observed events and identities.
+3. **Inferred:** A possible explanation supported by observations but not conclusively established.
+
+Never present an inference as a directly observed kernel fact.
+
+## 2.2 Object identity matters
+
+File descriptors are not file identities.
+
+A descriptor is an integer associated with a process's descriptor table. Its value can be reused.
+
+A `struct file` represents an open file description, not necessarily a unique backing object.
+
+A backing inode can be referenced through multiple `struct file` instances.
+
+Consequently, EphimTrace needs a layered identity model.
+
+## 2.3 Preserve uncertainty
+
+The system must preserve:
+
+- Failed operations
+- Uncorrelated events
+- Missing events
+- Map insertion failures
+- Ring-buffer reservation failures
+- Event loss
+- Incomplete lifecycle observations
+- Uncertain causal relationships
+
+A forensic tool must not silently manufacture certainty.
+
+## 2.4 Avoid unnecessary kernel overhead
+
+Do not instrument every possible syscall simply because a hook exists.
+
+Every hook must serve a defined forensic question.
+
+Prefer meaningful lifecycle convergence points over indiscriminate event collection.
+
+## 2.5 Never expose raw kernel pointers
+
+Kernel pointers may be used internally as temporary map keys where appropriate.
+
+They must not be exposed as stable userspace identities.
+
+Userspace should receive opaque object tokens and structured metadata.
+
+## 2.6 Runtime verification is mandatory
+
+A successful compilation does not establish that a BPF program attaches.
+
+BTF availability does not establish attachability.
+
+A successful attachment does not establish semantic correctness.
+
+A test program printing the expected syscalls does not prove that the collector observed the corresponding BPF events.
+
+Validation must be layered:
+
+1. Source inspection
+2. BTF and kernel compatibility inspection
+3. Compilation
+4. Actual BPF attachment
+5. Controlled runtime workload
+6. Collector event observation
+7. Counter reconciliation
+8. Regression testing
+9. Failure-path testing where practical
+
+---
+
+# 3. Development Environment
+
+The project is being developed on:
+
+| Component | Environment |
+|---|---|
+| OS | Linux Mint 22.3 Zena |
+| Desktop | Cinnamon |
+| Kernel | `7.0.0-42-generic` |
+| Kernel package | `7.0.0-42.42~24.04.1` |
+| BTF | `/sys/kernel/btf/vmlinux` |
+| Language | C |
+| eBPF library | libbpf 1.3.0 |
+| Compiler | clang-16 |
+| LLVM tools | llc-16, llvm-objdump-16 |
+| Other tools | bpftool |
+| IDE | Zed |
+| Hardware | AMD Ryzen 5 5600H, 8 GB RAM, NVIDIA RTX 3050 Laptop GPU and AMD integrated GPU |
+
+Repository:
+
+`/home/magellan/Garage/prototypes/FM`
+
+The project uses C and libbpf.
+
+The implementation agent should inspect the actual repository before assuming any particular directory structure or source layout.
+
+---
+
+# 4. Collaboration and Development Workflow
+
+This is important. The project has been developed through a deliberate engineering workflow, and the next assistant must preserve it.
+
+## 4.1 Division of responsibility
+
+The human developer is the project owner and makes final architectural decisions.
+
+The AI engineering assistant is responsible for:
+
+- Understanding the architecture
+- Explaining kernel and eBPF concepts
+- Evaluating technical feasibility
+- Identifying design flaws
+- Defining implementation milestones
+- Reviewing code and diffs
+- Designing validation experiments
+- Interpreting runtime evidence
+- Maintaining architectural consistency
+
+Antigravity was previously used as the implementation agent.
+
+The new assistant may use Gemini's available coding tools or agents for implementation, but it must retain independent architectural review.
+
+**An implementation agent is not the architectural authority.**
+
+## 4.2 Required implementation workflow
+
+For every implementation task:
+
+1. Understand the existing architecture and current source.
+2. Inspect relevant files before suggesting changes.
+3. Define the precise objective and acceptance criteria.
+4. Identify affected components and possible regressions.
+5. Implement only the approved scope.
+6. Compile and run relevant tests.
+7. Perform runtime validation on the actual host where required.
+8. Inspect the resulting source and diffs.
+9. Compare implementation behaviour against acceptance criteria.
+10. Update the engineering decision record.
+
+Do not allow an implementation agent to redesign unrelated subsystems while working on a narrow milestone.
+
+## 4.3 Evidence classification
+
+Every significant technical claim should be labelled mentally or explicitly as one of:
+
+- **Reported:** An implementation agent claims it.
+- **Source-inspected:** The relevant source code was examined.
+- **Compile-verified:** The code compiles.
+- **Attach-verified:** The BPF program actually attached.
+- **Runtime-verified:** The expected behaviour was observed during execution.
+- **Regression-verified:** The behaviour survived relevant repeatable tests.
+- **Unknown:** Evidence is insufficient.
+
+Do not collapse these categories.
+
+## 4.4 Investigation discipline
+
+Avoid endless feasibility investigations.
+
+For a technical uncertainty:
+
+1. Conduct one focused investigation.
+2. Review the findings.
+3. Conduct at most one targeted follow-up if a critical question remains.
+4. Make a decision.
+5. Implement and measure.
+
+Do not repeatedly investigate settled architecture without new evidence.
+
+## 4.5 Repository discipline
+
+- Do not modify `GPT_Context/` unless explicitly necessary.
+- Keep changes scoped.
+- Preserve existing working functionality.
+- Do not casually rename interfaces or change event structures.
+- Review userspace and kernel-side structure alignment together.
+- Keep test code separate from production behaviour.
+- Record exact build commands, test commands, and observed results.
+
+---
+
+# 5. Original Architecture: M1 — Memfd Creation Identity
+
+## 5.1 Objective
+
+M1 answers:
+
+**Which process created a memfd, and can EphimTrace reliably identify the newly created backing object?**
+
+The objective was to establish reliable memfd creation identity before attempting lifecycle tracking.
+
+## 5.2 Hook sequence
+
+M1 uses three primary observation points:
+
+`sys_enter_memfd_create → fentry/fd_install → sys_exit_memfd_create`
+
+### A. `sys_enter_memfd_create`
+
+Captures the beginning of a memfd creation operation.
+
+The program records pending context keyed by TID.
+
+This context contains the information needed to correlate the syscall with a later descriptor installation and syscall completion.
+
+### B. `fentry/fd_install`
+
+Captures the file descriptor installation operation.
+
+The hook captures:
+
+- FD
+- `struct file *`
+- Available inode metadata
+- Relevant pending process context
+
+The `struct file *` is used as a temporary in-kernel correlation cookie.
+
+It is not exposed as a userspace identity.
+
+### C. `sys_exit_memfd_create`
+
+Completes the correlation.
+
+The returned FD is checked against the FD observed during installation.
+
+The operation is classified into one of three outcomes:
+
+| Outcome | Meaning |
+|---|---|
+| `SUCCESS_CORRELATED` | Successful syscall with matching descriptor installation |
+| `SUCCESS_UNCORRELATED` | Successful syscall, but correlation could not be established |
+| `FAILED` | The syscall failed |
+
+Only successful correlated events receive an object identity.
+
+Userspace assigns an opaque, monotonically increasing `InstanceID` in the original M1 implementation.
+
+## 5.3 Pending-context safety
+
+The pending context uses:
+
+- TID
+- TGID
+- Process generation using `start_boottime`
+
+This prevents stale pending state from being incorrectly associated with a different process generation or reused TID.
+
+Cleanup occurs on:
+
+- Successful completion
+- Failed completion
+- Ring-buffer reservation failure
+- Identity mismatch
+- Process exit
+
+If ring-buffer reservation fails, `CNT_MEMFD_RB_ERR` is incremented and the pending context is removed.
+
+If pending-map insertion fails, `CNT_MEMFD_MAP_UPD_ERR` is incremented. An individual completion event is not necessarily emitted for that insertion failure.
+
+For an uncorrelated successful result, the returned FD is preserved, but metadata is cleared and no instance ID is assigned.
+
+## 5.4 M1 validation
+
+M1 was tested against:
+
+- Controlled memfd creation
+- Failed creation
+- Sequential creation
+- Concurrent creation
+- FD reuse
+- Sealing
+- CPU 0 and CPU 1 execution
+
+The live sensor output verified these controlled creation scenarios.
+
+Some failure paths, such as ring-buffer saturation and uncorrelated completion, were inspected in source but were not deliberately induced at runtime.
+
+Global `fd_install` overhead was not measured.
+
+Mount namespace information was not available in displayed memfd events.
+
+## 5.5 M1 final status
+
+**M1 is accepted and closed.**
+
+Do not redesign or modify M1 without evidence of an actual defect.
+
+---
+
+# 6. M2 — Memfd Lifecycle Tracking
+
+## 6.1 Objective
+
+M2 asks:
+
+**What happened to the same memfd object after creation?**
+
+M1 establishes object creation identity.
+
+M2 extends this into object lifecycle and provenance tracking.
+
+Questions include:
+
+- Which descriptors refer to the object?
+- Was the descriptor duplicated?
+- Was it inherited by another process?
+- Was the object reopened through `/proc/self/fd/`?
+- Was the object modified?
+- Did it remain alive after an individual descriptor closed?
+- Was it used as an execution source?
+- When was the backing object finally destroyed?
+
+## 6.2 The crucial identity distinction
+
+This was one of the most important architectural discoveries in the project.
+
+Do not treat the following entities as interchangeable.
+
+| Entity | Meaning |
+|---|---|
+| Memfd backing object | Underlying anonymous file/inode |
+| Open file description | `struct file` instance |
+| Descriptor reference | Descriptor table and FD slot |
+
+Consider:
+
+```text
+Process A
+  FD 3
+    |
+    v
+  struct file F1
+    |
+    v
+  Inode I1
+```
+
+After `dup()`:
+
+```text
+Process A
+  FD 3 ----+
+           |
+           v
+        struct file F1
+           |
+  FD 7 ----+
+           |
+           v
+         Inode I1
+```
+
+The descriptors refer to the same open file description.
+
+After reopening through `/proc/self/fd/3`:
+
+```text
+Process A
+  FD 3
+    |
+    v
+  struct file F1
+    |
+    +--------+
+             |
+             v
+           Inode I1
+             ^
+             |
+  struct file F2
+    |
+    v
+  FD 8
+```
+
+Here F1 and F2 are distinct `struct file` instances, but they refer to the same backing inode.
+
+This means:
+
+- A registry keyed only by FD is insufficient.
+- A registry keyed only by `struct file *` is insufficient.
+- A registry keyed only by inode number is unsafe because inode numbers can be reused and are not globally unique.
+
+## 6.3 Approved two-level registry direction
+
+The chosen conceptual architecture is:
+
+```text
+Open-file registry:
+    struct file * → open-file mapping → object token
+
+Memfd-object registry:
+    backing-object identity → object token + lifecycle state
+```
+
+The backing-object registry is inode-anchored.
+
+The open-file registry provides fast lookup from an observed `struct file *` to the corresponding object token.
+
+The object token is an opaque, kernel-generated monotonically increasing identity.
+
+Kernel pointers remain internal map keys.
+
+The inode number and device information can be retained as metadata, but must not be the sole object identity.
+
+---
+
+# 7. M2 Feasibility Investigation and Hook Decisions
+
+Several candidate hooks were investigated before implementation.
+
+## 7.1 `fd_install`
+
+Purpose:
+
+- Detect descriptor installation.
+- Capture file references.
+- Register initial memfd file references.
+- Recognise new open-file instances referring to tracked backing objects.
+
+A key kernel-ordering detail was established:
+
+The `fentry/fd_install` hook executes before the body of `fd_install`, and before `__fd_install` and the descriptor-table publication through `rcu_assign_pointer(fdt->fd[fd], file)`.
+
+Therefore, the provisional registry insertion occurs before the descriptor is published.
+
+The feared race in which another thread uses the newly published descriptor before the `fd_install` fentry registration does not arise from this ordering.
+
+The provisional state remains necessary until the memfd creation syscall completes.
+
+## 7.2 `shmem_evict_inode`
+
+Purpose:
+
+Detect final backing-object retirement for tracked shmem/memfd objects.
+
+This is not equivalent to an individual FD close or a `struct file` release.
+
+The object registry entry should be removed when the backing inode is evicted.
+
+Only objects already present in the EphimTrace registry should be processed.
+
+## 7.3 `__fput`
+
+Purpose:
+
+Clean up the open-file registry when the final reference to a particular `struct file` is released.
+
+This is distinct from backing-object retirement.
+
+One backing object can have multiple `struct file` instances.
+
+Each unique `struct file` mapping must be removed at its own final release.
+
+**Do not retire the backing object merely because one `struct file` is released.**
+
+## 7.4 `security_bprm_check`
+
+Chosen as an execution-attempt observation point.
+
+It provides an opportunity to identify a tracked file being considered as an execution source.
+
+It does not by itself prove successful execution.
+
+## 7.5 `sched_process_exec`
+
+Chosen for successful execution observation.
+
+The distinction matters:
+
+- `security_bprm_check`: execution-related attempt/check.
+- `sched_process_exec`: successful execution event.
+
+The system should correlate these carefully rather than treating them as identical events.
+
+## 7.6 Write tracking
+
+An initial candidate was `vfs_iocb_iter_write`.
+
+A deeper investigation corrected the coverage assumption.
+
+Ordinary write paths:
+
+```text
+write()
+  → vfs_write()
+  → new_sync_write()
+  → call_write_iter()
+```
+
+Vectored write paths:
+
+```text
+writev()/pwritev()
+  → vfs_writev()
+  → do_iter_write()
+```
+
+Both ultimately converge on shmem's:
+
+`shmem_file_write_iter(struct kiocb *, struct iov_iter *)`
+
+This was identified as the better candidate for explicit memfd/shmem write tracking.
+
+Relevant available information includes:
+
+- `iocb->ki_filp`
+- `iocb->ki_pos`
+- `iter->count`
+- Actual return value through an appropriate exit observation
+
+Because this is shmem-specific, events should only be emitted when the inode resolves to an object in the tracked memfd registry.
+
+`io_uring` requires independent validation.
+
+Memory-mapped writes are a separate challenge: ordinary VFS write hooks cannot capture individual memory stores made through a writable mapping.
+
+M2 does not currently promise byte-level mmap modification tracking.
+
+## 7.7 Other candidate lifecycle hooks
+
+The following were investigated:
+
+- `do_dup2`
+- `file_close_fd`
+- `__fput`
+- `bprm_execve`
+
+These require semantic validation when their respective milestones are implemented.
+
+Do not assume that an available symbol, BTF prototype, or kallsyms entry proves that a hook is suitable or attachable.
+
+## 7.8 Runtime attachment validation
+
+The environment initially prevented attachment tests from an Antigravity-restricted subshell because of:
+
+- `PR_SET_NO_NEW_PRIVS=1`
+- `unprivileged_bpf_disabled=2`
+
+The developer subsequently ran a standalone validation harness directly on the host:
+
+```text
+sudo /tmp/validate_m2_hooks
+```
+
+Observed output:
+
+```text
+=== EphimTrace M2 Hook Attachment Validation ===
+[shmem_evict_inode     ] ATTACH SUCCESS (link_fd=5)
+[security_bprm_check   ] ATTACH SUCCESS (link_fd=5)
+[vfs_iocb_iter_write   ] ATTACH SUCCESS (link_fd=5)
+```
+
+This establishes successful attachment of those three candidate hooks on the host.
+
+It does not establish complete semantic coverage.
+
+Also note that `vfs_iocb_iter_write` was subsequently superseded as the preferred ordinary shmem write observation point by `shmem_file_write_iter`.
+
+---
+
+# 8. M2 Milestone Plan
+
+M2 was deliberately split into smaller milestones.
+
+| Milestone | Objective | Status |
+|---|---|---|
+| M2.1 | Backing-object registry and open-file lookup | Implemented; final corrective review pending |
+| M2.2 | Descriptor lifecycle tracking | Not started |
+| M2.3 | Explicit object modification tracking | Not started |
+| M2.4 | Execution provenance | Not started |
+| M2.5 | Integration and validation | Not started |
+
+Do not jump to M2.2 before M2.1 passes its acceptance criteria.
+
+---
+
+# 9. M2.1 — Backing-Object Registry and Open-File Lookup
+
+## 9.1 Objective
+
+M2.1 establishes persistent kernel-side identity for tracked memfd backing objects and enables newly opened `struct file` instances to resolve to the same object token.
+
+It must correctly distinguish:
+
+1. Initial memfd creation.
+2. Duplicate descriptor installation referring to an already tracked `struct file`.
+3. Genuine reopen through `/proc/self/fd/N`, which creates a new `struct file` referencing the same inode.
+4. Final release of a `struct file`.
+5. Final retirement of the backing inode.
+
+## 9.2 Implemented kernel maps
+
+Antigravity reported adding the following maps in `src/bpf/monitor.bpf.c`.
+
+### A. `memfd_inode_registry`
+
+Type:
+
+Hash map.
+
+Key:
+
+`u64 inode_ptr`
+
+Value:
+
+`struct memfd_object_entry`
+
+Reported value size:
+
+304 bytes.
+
+Maximum entries:
+
+4096.
+
+The object entry includes:
+
+- Object token
+- Inode number
+- Device ID
+- Creator TGID
+- Creator TID
+- Process start time
+- Creation flags
+- Provisional/committed state
+- Creation timestamp
+- Memfd name
+
+The inode pointer is an internal kernel-side key, not a userspace identity.
+
+### B. `memfd_file_registry`
+
+Type:
+
+Hash map.
+
+Key:
+
+`u64 file_ptr`
+
+Value:
+
+`u64 object_token`
+
+Maximum entries:
+
+8192.
+
+Purpose:
+
+Resolve an observed `struct file *` to its backing-object token.
+
+### C. `memfd_token_generator`
+
+Type:
+
+Single-entry array map.
+
+Value:
+
+`u64`.
+
+The token is generated atomically through `__sync_fetch_and_add`.
+
+The generated token is an opaque identity used to correlate the object across kernel observations and userspace events.
+
+## 9.3 Object lifecycle state
+
+The registry uses two primary states:
+
+- Provisional
+- Committed
+
+During the initial descriptor installation associated with `memfd_create`, the backing object and file mapping can be registered provisionally.
+
+At successful syscall completion, the object is committed.
+
+If creation fails or correlation fails, the provisional state is removed.
+
+This prevents an incomplete creation operation from becoming an established tracked object.
+
+## 9.4 Implemented hooks
+
+The implementation reports the following additions and modifications:
+
+| Hook | Responsibility |
+|---|---|
+| `fentry/fd_install` | Initial registration and lookup of tracked objects |
+| `tracepoint/sys_exit_memfd_create` | Commit or rollback |
+| `fentry/__fput` | Open-file mapping cleanup |
+| `fentry/shmem_evict_inode` | Backing-object retirement |
+
+`capture_fd_install` handles both initial creation and later descriptor installation paths.
+
+`capture_memfd_create_exit` commits successful correlated creation and cleans up failed or uncorrelated provisional entries.
+
+`capture_fput` removes only the open-file mapping.
+
+`capture_shmem_evict_inode` removes the backing-object entry and emits an object-destroyed event.
+
+## 9.5 Event addition
+
+The implementation added:
+
+`EVENT_MEMFD_DESTROYED = 13`
+
+A dedicated `object_token` field was also added to the event structure.
+
+Userspace event handling was updated.
+
+The implementation aligned userspace `InstanceID` with the kernel-generated `object_token`.
+
+This is an architectural change from M1's userspace-assigned instance ID.
+
+The event structure must remain consistent between BPF and userspace, including field types, alignment, padding, and layout.
+
+## 9.6 Registry counters
+
+The implementation introduced counters at indices 80–87:
+
+| Index | Counter |
+|---|---|
+| 80 | `CNT_REG_INODE_INSERT_OK` |
+| 81 | `CNT_REG_INODE_INSERT_ERR` |
+| 82 | `CNT_REG_FILE_INSERT_OK` |
+| 83 | `CNT_REG_FILE_INSERT_ERR` |
+| 84 | `CNT_REG_COMMITTED` |
+| 85 | `CNT_REG_PROVISIONAL_DROPPED` |
+| 86 | `CNT_REG_RETIRED` |
+| 87 | `CNT_REG_REOPEN_MATCH` |
+
+Additional cleanup and rollback counters were subsequently introduced/reported:
+
+- `file_del_ok`
+- `file_del_err`
+- `ino_rollback`
+- `ino_del_err`
+- `token_err`
+- `map_full_drop`
+
+These counters are essential for accounting and should not be treated as cosmetic logging.
+
+---
+
+# 10. M2.1 — Important Defect Found During Review
+
+The first implementation review identified a potential stale file registry entry.
+
+## 10.1 Stale pointer problem
+
+Suppose:
+
+```text
+Memfd A
+  |
+  v
+struct file F1
+  |
+  v
+memfd_file_registry[F1] = token_A
+```
+
+When F1 reaches its final release, its memory may eventually be reused.
+
+If the map entry remains:
+
+```text
+memfd_file_registry[F1] = token_A
+```
+
+A future unrelated file might occupy the same kernel memory address.
+
+A lookup could then incorrectly associate an unrelated file with Memfd A.
+
+This would be a serious forensic false-attribution problem.
+
+## 10.2 Required distinction
+
+The cleanup must remove the `struct file *` entry without retiring the backing object.
+
+`__fput` was introduced as the cleanup observation point.
+
+`shmem_evict_inode` remains the backing-object retirement point.
+
+The two lifecycle levels must remain separate.
+
+## 10.3 Corrective implementation reported
+
+Antigravity reported adding:
+
+`fentry/__fput`
+
+with `capture_fput`.
+
+The function removes the file pointer mapping.
+
+The inode registry remains until `shmem_evict_inode`.
+
+Insertion rollback and error counters were also added.
+
+This correction is architecturally necessary and should be retained.
+
+---
+
+# 11. M2.1 — Actual Runtime Evidence
+
+The developer subsequently ran the collector on the host while executing the registry test workload.
+
+The following output was supplied:
+
+```text
+[UNLINK] sys_enter: 2 map_ok: 2 map_err: 0 rb_ok: 2 rb_submit: 2
+[UNLINKAT] all 0
+[RMDIR] sys_enter: 3 map_ok: 3 map_err: 0 rb_ok: 3 rb_submit: 3
+[VFS_UNLINK] entry: 2 pending_found: 2 pending_missing: 0 exit: 2
+[VFS_RMDIR] entry: 3 pending_found: 3 pending_missing: 0 exit: 3
+[SYS_EXIT] unlink_exit: 2 cleanup: 0; unlinkat_exit: 0; rmdir_exit: 3
+
+[MEMFD] sys_enter: 42 map_ok: 42 map_err: 0
+[FD_INSTALL] total: 3582 match: 42 err: 0
+[MEMFD_EXIT] exit: 42 correlated: 42 uncorrelated: 0 failed: 0 rb_err: 0
+
+[REGISTRY] inode_ok: 42 inode_err: 0 file_ok: 83 file_err: 0
+ committed: 42 prov_drop: 0 retired: 42 reopen_match: 41
+ file_del_ok: 43 file_del_err: 0
+ ino_rollback: 0 ino_del_err: 0
+ token_err: 0 map_full_drop: 0
+```
+
+## 11.1 What this establishes
+
+The collector's counters establish that BPF programs executed under the workload.
+
+The observed counters include:
+
+- 42 memfd entry observations
+- 42 successful map insertions into the pending context
+- 42 correlated completions
+- 42 backing-object insertions
+- 42 commits
+- 42 backing-object retirements
+- 83 counted file insertion operations
+- 43 file mapping deletions
+- 41 reported reopen matches
+- No reported insertion, deletion, rollback, token, or ring-buffer errors in these counters
+
+This is materially stronger than merely compiling the implementation.
+
+## 11.2 What this does not establish
+
+The output does not, by itself, demonstrate every individual object-token relationship.
+
+It also does not independently prove the precise source of every file insertion operation.
+
+The test workload showed:
+
+- Four distinct memfd creations with distinct inodes.
+- FD-number reuse with a new inode.
+- `/proc/self/fd/3` reopening with the same inode.
+- The reopened FD remained writable after the original descriptor was closed.
+- A final close was performed for retirement testing.
+
+These observations support the intended object model.
+
+However, a full per-object event trace showing identical tokens across original and reopened references was not supplied.
+
+An independent tracefs observer recorded zero events. This does not prove BPF failure; it simply means there was no independent tracefs corroboration in that run.
+
+---
+
+# 12. M2.1 — Registry Accounting Audit and Latest Unresolved Correction
+
+A final accounting audit was conducted after the insertion and deletion counters initially appeared inconsistent.
+
+## 12.1 Root cause identified
+
+`fd_install` is not called only for new memfd creation or genuine reopening.
+
+It also handles descriptor installation involving an already-open `struct file *`, including paths such as:
+
+- `dup`
+- `dup2`
+- `dup3`
+- `fcntl(F_DUPFD)`
+- `fcntl(F_DUPFD_CLOEXEC)`
+- SCM_RIGHTS receive
+
+These operations may install another descriptor reference to the same existing open file description.
+
+They do not necessarily create a new `struct file`.
+
+The previous `capture_fd_install` non-creation branch did the following:
+
+1. Looked up the inode registry.
+2. Found the tracked object.
+3. Called `bpf_map_update_elem(..., BPF_ANY)` on the file registry.
+4. Counted the successful update as a new file insertion and reopen match.
+
+When the key already existed, `BPF_ANY` overwrote the existing value.
+
+The map cardinality did not increase.
+
+However, the counter increased.
+
+`__fput` only executes once for the unique `struct file` when its final reference is released.
+
+Therefore, counting every successful map update as a new unique file mapping created misleading accounting.
+
+## 12.2 Reconciliation of the observed numbers
+
+The reported counters were:
+
+- `file_ok = 83`
+- `file_del_ok = 43`
+- `reopen_match = 41`
+
+A plausible explanation is:
+
+- 42 initial unique `struct file` mappings.
+- 1 genuine `/proc/self/fd/N` reopened `struct file`.
+- 40 additional installations of existing file pointers due to descriptor duplication or other installation paths.
+
+This would produce:
+
+```text
+42 + 1 + 40 = 83 insertion/update operations
+```
+
+But only:
+
+```text
+42 + 1 = 43 unique struct file mappings
+```
+
+And therefore:
+
+```text
+43 unique mappings → 43 final file cleanups
+```
+
+The exact 40-operation breakdown was proposed as a reconciliation, not independently proven. The collector is system-wide, so other `fd_install` activity may contribute.
+
+The important conclusion is that the old counter counted successful updates, not necessarily new registry entries.
+
+## 12.3 Initial corrective patch
+
+Antigravity reported changing the non-creation branch to check for an existing file key:
+
+```c
+__u64 file_key = (__u64)file;
+__u64 *existing_tok = bpf_map_lookup_elem(
+    &memfd_file_registry, &file_key
+);
+
+if (existing_tok) {
+    /* File already tracked in registry */
+    return 0;
+}
+
+inc_counter(CNT_REG_REOPEN_MATCH);
+
+int res_fil = bpf_map_update_elem(
+    &memfd_file_registry,
+    &file_key,
+    &obj->object_token,
+    BPF_ANY
+);
+```
+
+This prevents a simple duplicate installation from being counted as a new file mapping.
+
+However, this patch needs a stronger concurrency and identity treatment.
+
+## 12.4 Latest required correction
+
+The next implementation review must address these points.
+
+### A. Verify existing token consistency
+
+When an existing key is found, compare:
+
+`*existing_tok` against `obj->object_token`.
+
+If they differ, increment a dedicated mismatch counter and preserve enough diagnostic information to investigate.
+
+Do not silently accept a conflicting mapping.
+
+### B. Prefer atomic insertion semantics
+
+A lookup followed by an update has a potential race.
+
+Consider using:
+
+`BPF_NOEXIST`
+
+for inserting a new unique file mapping.
+
+Conceptually:
+
+1. Attempt insertion using `BPF_NOEXIST`.
+2. If insertion succeeds, count one new unique mapping.
+3. If it returns `-EEXIST`, look up the existing entry.
+4. Compare the existing token against the expected object token.
+5. If equal, treat the event as a duplicate descriptor installation, not a new mapping.
+6. If different, record a mismatch/error.
+
+This avoids overwriting a previously established mapping and handles concurrent attempts more safely.
+
+The implementation must account for verifier and helper constraints.
+
+### C. Regression tests
+
+Add tests covering:
+
+- `dup`
+- `dup2`
+- `dup3`
+- `fcntl(F_DUPFD)`
+- `fcntl(F_DUPFD_CLOEXEC)`
+- `/proc/self/fd/N` reopen
+
+Expected behaviour:
+
+| Operation | Expected registry behaviour |
+|---|---|
+| `dup` | Same file pointer; no new unique file mapping |
+| `dup2` | Same file pointer; no new unique file mapping |
+| `dup3` | Same file pointer; no new unique file mapping |
+| `fcntl(F_DUPFD)` | Same file pointer; no new unique file mapping |
+| `fcntl(F_DUPFD_CLOEXEC)` | Same file pointer; no new unique file mapping |
+| `/proc/self/fd/N` reopen | New `struct file` mapping; same backing-object token |
+
+### D. Final release
+
+Verify that each unique `struct file` mapping is removed exactly once at final release.
+
+A duplicated descriptor must not cause premature deletion.
+
+Closing one descriptor must not remove the registry entry while other references remain.
+
+### E. Genuine reopen
+
+Verify that reopening a tracked memfd through `/proc/self/fd/N`:
+
+- Creates a distinct `struct file`.
+- Resolves to the existing inode registry entry.
+- Receives the same object token.
+- Creates a distinct file registry mapping.
+- Does not create a second backing-object identity.
+
+### F. Inode insertion rollback
+
+Review creation and reopen branches carefully.
+
+If a genuine reopen discovers an already committed inode entry, failure to insert its new file mapping must not delete the pre-existing inode registry entry.
+
+Only roll back a provisional inode entry that was newly created by the current memfd creation operation.
+
+Every rollback should verify that the token being deleted matches the expected object token.
+
+---
+
+# 13. M2.1 Acceptance Criteria
+
+M2.1 must not be declared complete until the following are satisfied.
+
+## Object identity
+
+- [ ] A correlated memfd creation receives one opaque object token.
+- [ ] A successful creation transitions from provisional to committed.
+- [ ] Failed or uncorrelated creation does not leave an invalid committed entry.
+- [ ] Distinct memfd backing objects receive distinct tokens.
+- [ ] Inode number alone is never used as the sole identity.
+
+## Open-file registry
+
+- [ ] Initial `struct file` is registered.
+- [ ] Duplicate descriptor operations do not create duplicate unique file mappings.
+- [ ] Existing token mismatches are detected.
+- [ ] Genuine `/proc/self/fd/N` reopen creates a new file mapping.
+- [ ] The reopened mapping resolves to the same backing-object token.
+- [ ] Final `__fput` removes the unique file mapping.
+- [ ] File-map deletion errors are counted.
+- [ ] A file pointer reused by the kernel cannot inherit a stale association.
+
+## Backing-object lifecycle
+
+- [ ] Closing one descriptor does not retire the backing object while references remain.
+- [ ] Reopened descriptors can continue using the same object after the original descriptor closes.
+- [ ] Final backing-object eviction removes the inode registry entry.
+- [ ] Exactly one retirement event is emitted for the tracked object.
+- [ ] A file-description release does not prematurely retire the backing object.
+
+## Runtime verification
+
+- [ ] Collector runs during the controlled workload.
+- [ ] Per-object tokens can be observed across relevant events.
+- [ ] Counter accounting is reconciled.
+- [ ] Duplication and reopen regression tests pass.
+- [ ] All existing test suites pass.
+- [ ] No M1 regression is introduced.
+
+Only after these criteria pass should M2.1 be accepted and M2.2 begin.
+
+---
+
+# 14. Existing M2.1 Test and Build Information
+
+Files reported as modified:
+
+| File | Changes |
+|---|---|
+| `src/bpf/monitor.bpf.c` | Registry maps, token generation, registration, commit/rollback, cleanup, retirement hooks and counters |
+| `src/user/loader.c` | Required hooks, event handling, object token integration and counter output |
+| `Makefile` | `-pthread` in the test compilation rule |
+| `tests/test_m2_registry.c` | Registry-related workload tests |
+
+Reported test coverage includes:
+
+- Multiple memfd creation
+- FD reuse
+- `/proc/self/fd/N` reopen
+- Writing through reopened descriptors
+- Final close and retirement scenarios
+
+The implementation agent reported successful builds and seven test suites passing.
+
+However, these claims must be checked against the current repository and actual test output.
+
+Do not assume that the seven suites cover the latest duplicate-descriptor accounting correction.
+
+The earlier collector invocation also used an invalid `--debug` option. The loader accepts:
+
+- `-v`
+- `--verbose`
+
+Use the actual CLI options from the current source.
+
+---
+
+# 15. M2.2 — Descriptor Lifecycle Tracking
+
+This milestone has not yet been implemented.
+
+Its purpose is to establish which descriptor references refer to a tracked memfd object and how those references change over time.
+
+Potential operations:
+
+- `dup`
+- `dup2`
+- `dup3`
+- `fcntl` descriptor duplication
+- Fork inheritance
+- Descriptor closure
+- Descriptor installation through SCM_RIGHTS
+
+The existing `fd_install` and `__fput` observations provide important foundations, but they do not automatically provide a complete descriptor-level history.
+
+Important distinctions:
+
+- A duplicated descriptor does not create a new open file description.
+- A fork may inherit descriptor references without creating new `struct file` instances.
+- Closing an FD removes a descriptor reference.
+- Final `__fput` occurs when the open file description's final reference is released.
+- Backing-object retirement happens later, when the backing inode is evicted.
+
+Do not confuse these events.
+
+## 15.1 Questions to resolve
+
+- What is the appropriate observation point for descriptor closure?
+- Can the implementation reliably identify the FD slot being removed?
+- How should process-generation identity be represented?
+- How should fork inheritance be represented?
+- Can SCM_RIGHTS be captured meaningfully?
+- What is the minimum useful descriptor history for forensic reconstruction?
+- What state must be retained in BPF maps versus userspace?
+
+Avoid a full FD-table scan unless there is a demonstrated need.
+
+A lazy resolution strategy was previously considered, but it must not be described as complete enumeration of inherited descriptors.
+
+---
+
+# 16. M2.3 — Explicit Object Modification Tracking
+
+This milestone has not yet been implemented.
+
+Its purpose is to determine whether a tracked memfd object was modified after creation.
+
+The selected observation direction is:
+
+`shmem_file_write_iter`
+
+It is preferable to the previously investigated `vfs_iocb_iter_write` for ordinary shmem-backed writes because ordinary write and vectored-write paths converge on the shmem file's write iterator.
+
+The implementation should capture only operations whose backing inode resolves to a tracked memfd object.
+
+Potential metadata:
+
+- Object token
+- Process identity
+- Timestamp
+- Write offset
+- Requested byte count
+- Actual bytes written
+- Return status
+
+The implementation must distinguish requested bytes from successfully written bytes.
+
+Potential limitations:
+
+- Memory-mapped writes are not covered at the individual memory-store level by ordinary VFS write hooks.
+- `io_uring` requires independent validation.
+- Other modification paths must be investigated before claiming comprehensive write coverage.
+
+M2.3 should initially be described as **explicit write-operation tracking**, not complete memory modification tracking.
+
+---
+
+# 17. M2.4 — Execution Provenance
+
+This milestone has not yet been implemented.
+
+Its purpose is to establish whether a tracked memfd was used as an execution source.
+
+The selected observation direction is:
+
+- `security_bprm_check` for execution-related checks/attempts.
+- `sched_process_exec` for successful execution.
+
+The system must distinguish:
+
+1. A tracked object being considered for execution.
+2. An execution attempt progressing through security checks.
+3. A successful process execution.
+
+An execution check does not prove successful execution.
+
+A successful execution event must be correlated with the correct process and relevant tracked backing object.
+
+This milestone must also consider:
+
+- Process identity and process generation.
+- Whether the execution source resolves to a tracked memfd.
+- How to preserve the relationship between an execution attempt and the final successful event.
+- How to represent failed execution attempts.
+- Whether additional kernel hooks are needed for reliable source identity.
+
+Do not assume that every memfd execution technique follows the same path.
+
+---
+
+# 18. M2.5 — Integration and Validation
+
+This milestone will integrate the previous M2 components.
+
+Expected result:
+
+A coherent lifecycle record for each tracked memfd backing object, including:
+
+- Creation
+- Object token assignment
+- Open-file associations
+- Descriptor lifecycle information
+- Explicit modifications
+- Execution attempts
+- Successful execution relationships
+- Final object retirement
+
+The implementation should provide enough information for userspace to reconstruct a meaningful provenance timeline.
+
+Validation must include:
+
+- Multiple processes
+- Multiple descriptors
+- Duplicate descriptors
+- Fork inheritance
+- `/proc/self/fd/N` reopen
+- Closing descriptors in different orders
+- FD number reuse
+- Concurrent activity
+- Object modification
+- Execution attempts
+- Failed operations
+- Final retirement
+- Map capacity and ring-buffer pressure
+- Event-loss and cleanup behaviour
+
+---
+
+# 19. Existing Unlink and Rmdir Instrumentation
+
+Although M2 is currently focused on memfd lifecycle tracking, the repository already includes unlink and rmdir instrumentation.
+
+The live collector output supplied by the developer included:
+
+```text
+[UNLINK] sys_enter: 2 map_ok: 2 map_err: 0 rb_ok: 2 rb_submit: 2
+[UNLINKAT] all 0
+[RMDIR] sys_enter: 3 map_ok: 3 map_err: 0 rb_ok: 3 rb_submit: 3
+[VFS_UNLINK] entry: 2 pending_found: 2 pending_missing: 0 exit: 2
+[VFS_RMDIR] entry: 3 pending_found: 3 pending_missing: 0 exit: 3
+[SYS_EXIT] unlink_exit: 2 cleanup: 0; unlinkat_exit: 0; rmdir_exit: 3
+```
+
+This indicates that the collector observed activity through the relevant syscall and VFS observation paths in that workload.
+
+The project must preserve the distinction between:
+
+- A pathname being unlinked.
+- A directory being removed.
+- A dentry/name relationship being removed.
+- An inode remaining alive due to open references.
+- Final object destruction.
+
+An unlink operation does not necessarily mean that the underlying file object has been destroyed.
+
+This is conceptually similar to the distinction between descriptor closure and backing-object retirement in the memfd subsystem.
+
+Do not let changes to memfd tracking break unlink/rmdir functionality.
+
+---
+
+# 20. Important Technical Challenges
+
+These are recurring challenges that the next assistant must understand.
+
+## 20.1 Kernel hook availability versus semantic correctness
+
+A function can:
+
+- Exist in kernel source.
+- Have BTF information.
+- Appear in kallsyms.
+- Compile as an fentry target.
+
+Yet its use may still be semantically incorrect.
+
+Every hook needs source-level understanding of where it executes, which objects it receives, and what lifecycle stage it represents.
+
+## 20.2 Kernel pointer lifetime
+
+Using `struct file *` or `struct inode *` as internal keys requires correct lifetime management.
+
+A stale pointer association can cause severe false attribution after kernel memory reuse.
+
+Cleanup timing is therefore part of the identity design, not just memory management.
+
+## 20.3 Descriptor versus file-description lifecycle
+
+A single `struct file` can be referenced by multiple descriptors.
+
+The final `__fput` is not equivalent to an individual `close()`.
+
+This distinction is central to M2.1 and M2.2.
+
+## 20.4 Backing object versus open file description
+
+A backing inode can have multiple open file descriptions.
+
+A file registry must not be mistaken for an object registry.
+
+The two-level architecture exists specifically to address this.
+
+## 20.5 Event accounting
+
+A successful BPF map update does not necessarily mean a new key was inserted.
+
+For example, `BPF_ANY` can overwrite an existing key.
+
+Counters must reflect the actual semantic operation being counted.
+
+Use clear names and define what each counter means.
+
+## 20.6 Concurrency
+
+Potential races exist in:
+
+- Map lookup followed by insertion.
+- Duplicate descriptor installation.
+- Registry cleanup.
+- Object commit.
+- Concurrent creation and reopening.
+
+Prefer atomic insertion semantics where appropriate.
+
+Check token consistency instead of blindly overwriting state.
+
+## 20.7 BPF environment restrictions
+
+The restricted Antigravity execution environment did not always permit privileged BPF attachment.
+
+Host-side validation by the developer was necessary.
+
+When an implementation agent cannot run a privileged test, it should clearly say so and provide a reproducible command for host execution.
+
+It must never fabricate a successful runtime test.
+
+## 20.8 Event loss
+
+Ring-buffer reservation failures and map insertion failures must remain observable.
+
+The collector should not silently drop events and then present the resulting graph as complete.
+
+## 20.9 Memory-mapped modification
+
+Ordinary VFS write hooks do not capture every modification to a writable memory mapping.
+
+This limitation must be explicitly documented.
+
+---
+
+# 21. Current Project Status
+
+| Area | Status | Evidence / qualification |
+|---|---|---|
+| M1 memfd creation identity | Accepted and closed | Controlled runtime tests |
+| M1 failure and correlation logic | Implemented | Source review and selected runtime tests |
+| M2 architecture | Approved | Feasibility investigation and host attachment tests |
+| Inode-anchored registry | Implemented | Source reported; collector counters observed |
+| Open-file registry | Implemented | Source reported; collector counters observed |
+| Provisional-to-committed transition | Implemented | Collector counters observed |
+| `__fput` cleanup | Implemented | Source reported; deletion counters observed |
+| `shmem_evict_inode` retirement | Implemented | Host hook attachment and retirement counters |
+| Object token in event structure | Implemented | Source reported |
+| Genuine reopen correlation | Partially validated | Reopen workload and reopen counters |
+| Duplicate descriptor accounting | Corrective review pending | Root cause identified; stronger insertion logic and regression tests required |
+| Per-object token continuity | Incomplete evidence | No full per-object trace supplied |
+| M2.2 descriptor lifecycle | Not started | — |
+| M2.3 explicit write tracking | Not started | Hook direction selected |
+| M2.4 execution provenance | Not started | Hook direction selected |
+| M2.5 integration | Not started | — |
+| Final DAG and investigator interface | Future work | Not yet established as implemented |
+
+---
+
+# 22. Immediate Next Task for the New Assistant
+
+**Do not begin a new architecture design. Do not start M2.2.**
+
+Continue from the actual repository state.
+
+The immediate task is to finish the M2.1 duplicate-descriptor accounting correction.
+
+## Required sequence
+
+### Step 1 — Inspect the current repository
+
+Read:
+
+- `src/bpf/monitor.bpf.c`
+- `src/user/loader.c`
+- `tests/test_m2_registry.c`
+- `Makefile`
+- Relevant headers and event definitions
+
+Inspect the current implementation of:
+
+- `capture_fd_install`
+- `capture_memfd_create_exit`
+- `capture_fput`
+- `capture_shmem_evict_inode`
+
+Do not rely solely on this handover or an implementation-agent report. The repository may have changed since the report was produced.
+
+### Step 2 — Review map insertion semantics
+
+Determine whether the latest source uses:
+
+- `BPF_ANY`
+- `BPF_NOEXIST`
+- Lookup-before-insert
+- Token consistency checks
+
+Review creation and genuine-reopen branches separately.
+
+Ensure rollback cannot delete a pre-existing committed inode entry.
+
+### Step 3 — Implement the correction
+
+Ensure:
+
+- Duplicate installations of an existing `struct file *` do not count as new unique mappings.
+- Existing tokens are compared against expected tokens.
+- Token mismatch is counted and visible.
+- Concurrent insertions do not overwrite valid mappings.
+- Genuine reopen creates a new file mapping using the existing object token.
+
+### Step 4 — Add regression tests
+
+Test:
+
+- `dup`
+- `dup2`
+- `dup3`
+- `fcntl(F_DUPFD)`
+- `fcntl(F_DUPFD_CLOEXEC)`
+- `/proc/self/fd/N` reopen
+- Different descriptor close orders
+- Final file release
+- Final backing-object retirement
+
+### Step 5 — Build and test
+
+Run the complete existing test suite.
+
+Report exact commands and output.
+
+### Step 6 — Host-side collector validation
+
+Run the collector alongside the controlled workload.
+
+Capture:
+
+- Object tokens
+- Registry counters
+- File insertion/deletion counters
+- Reopen matches
+- Retirement events
+- Any error counters
+
+Verify the expected token continuity for each object.
+
+### Step 7 — Independent review
+
+Inspect the final diff.
+
+Check for:
+
+- Event structure mismatches
+- Map cleanup errors
+- Token inconsistencies
+- Unintended M1 changes
+- Counter semantics
+- Unrelated refactoring
+
+### Step 8 — Decide M2.1 acceptance
+
+Accept M2.1 only when its acceptance criteria are satisfied.
+
+Then plan M2.2.
+
+---
+
+# 23. Long-Term Research and Product Direction
+
+The long-term goal is larger than the current implementation.
+
+EphimTrace should eventually provide an investigator with a trustworthy reconstruction of activity rather than a large collection of unrelated kernel events.
+
+Potential future layers:
+
+## Layer 1 — Kernel event collection
+
+eBPF programs capture relevant kernel events and metadata.
+
+## Layer 2 — Identity and lifecycle correlation
+
+Userspace and kernel registries correlate:
+
+- Process generations
+- Backing objects
+- Open file descriptions
+- Descriptor references
+- Filesystem objects
+- Execution identities
+- Network entities
+
+## Layer 3 — Provenance reconstruction
+
+Events are converted into relationships.
+
+Every relationship must preserve its evidence and confidence.
+
+## Layer 4 — Temporal reconstruction
+
+Investigators can examine:
+
+- Event order
+- Concurrent operations
+- Parent/child process relationships
+- Object lifecycle
+- Missing observations
+- Uncertain causal links
+
+## Layer 5 — Investigator interface
+
+The final interface should make it possible to inspect a suspicious sequence visually.
+
+The graph should support expansion from a process to its related objects and events.
+
+An investigator should be able to inspect the underlying evidence behind each relationship.
+
+Do not begin implementing this interface before the underlying identity and event model is sufficiently reliable.
+
+---
+
+# 24. Instructions to the New AI Engineering Assistant
+
+You are now the primary technical collaborator for EphimTrace.
+
+Treat this document as the architectural and historical handover, not as proof that every described implementation detail is still present in the current source.
+
+Your responsibilities:
+
+1. Preserve the project's existing architectural decisions unless new evidence justifies changing them.
+2. Understand Linux kernel object lifecycles before recommending hooks.
+3. Explain difficult kernel and eBPF concepts in a way that develops the developer's understanding.
+4. Do not rush into implementation.
+5. Do not agree with the developer or an implementation agent merely to be agreeable.
+6. Challenge incorrect assumptions respectfully and with technical reasoning.
+7. Review source code, not just implementation summaries.
+8. Distinguish compilation, attachment, runtime observation, and semantic validation.
+9. Preserve forensic correctness over implementation convenience.
+10. Maintain a concise engineering decision record as the project progresses.
+11. Keep implementation milestones small and independently verifiable.
+12. Do not modify `GPT_Context/` without explicit necessity.
+13. Never invent runtime outputs or claim tests passed without evidence.
+14. Do not begin M2.2 until M2.1 is formally accepted.
+
+When working with an implementation agent, provide it with narrow, explicit tasks and acceptance criteria.
+
+When reviewing its work, independently inspect the actual diff.
+
+When a design choice is uncertain, formulate a controlled experiment rather than relying on intuition.
+
+The developer is interested in understanding the system, not simply receiving code. Explain why a particular hook or data structure is required and what trade-offs it introduces.
+
+---
+
+# 25. Initial Prompt for Continuing Development
+
+Use the following as the first message in the new engineering conversation:
+
+---
+
+I am continuing development of EphimTrace, a Linux eBPF-based forensic provenance system.
+
+I have supplied you with the complete engineering handover. Read it carefully and treat it as the primary project context.
+
+You are my technical architecture partner, kernel/eBPF mentor, implementation reviewer, and engineering guide.
+
+We are developing in C with libbpf on Linux Mint, using Zed IDE.
+
+Our repository is:
+
+`/home/magellan/Garage/prototypes/FM`
+
+The project is already beyond initial prototyping.
+
+M1, memfd creation identity, is accepted and closed.
+
+M2 architecture is approved.
+
+M2.1, backing-object registry and open-file lookup, is implemented but still undergoing its final corrective review.
+
+**Your first responsibility is to continue from the existing repository state, not to redesign the project.**
+
+Begin by inspecting the actual source and identifying the current state of:
+
+- `memfd_inode_registry`
+- `memfd_file_registry`
+- `memfd_token_generator`
+- `capture_fd_install`
+- `capture_memfd_create_exit`
+- `capture_fput`
+- `capture_shmem_evict_inode`
+- Event structures and userspace event handling
+- `tests/test_m2_registry.c`
+
+Our immediate unresolved issue is the duplicate-descriptor accounting correction.
+
+The implementation must distinguish between:
+
+1. A new memfd creation.
+2. A duplicate descriptor referring to an already registered `struct file`.
+3. A genuine `/proc/self/fd/N` reopen that creates a new `struct file` for the same backing inode.
+4. Final release of an individual `struct file`.
+5. Final eviction of the backing inode.
+
+Review insertion semantics, especially the use of `BPF_ANY` versus `BPF_NOEXIST`, and ensure that existing mappings cannot be silently overwritten.
+
+Add regression coverage for `dup`, `dup2`, `dup3`, `fcntl(F_DUPFD)`, `fcntl(F_DUPFD_CLOEXEC)`, and `/proc/self/fd/N` reopening.
+
+Do not proceed to M2.2 until M2.1 is fully validated.
+
+Follow these rules:
+
+- Inspect before modifying.
+- Make scoped changes.
+- Explain architectural reasoning.
+- Never invent test results.
+- Never equate compilation with runtime verification.
+- Preserve existing working functionality.
+- Challenge incorrect assumptions.
+- Keep a clear record of completed, pending, and unresolved work.
+
+Start with a concise assessment of the current repository against the M2.1 acceptance criteria. Then propose the smallest next implementation step.
+
+---
+
+# 26. Final Engineering Note
+
+EphimTrace's most important achievement so far is not the number of hooks implemented.
+
+It is the development of a sound identity model.
+
+The project has already encountered and corrected several tempting but incorrect assumptions:
+
+- A file descriptor is not a file identity.
+- A `struct file` is not necessarily a unique backing object.
+- An inode number is not a globally stable identity.
+- Closing one descriptor is not equivalent to releasing the final open-file reference.
+- Releasing a `struct file` is not equivalent to destroying the backing inode.
+- A successful map update is not necessarily a new map insertion.
+- A hook that attaches is not automatically a semantically correct hook.
+- A sequence of events is not automatically a causal chain.
+
+These lessons should remain central to every future design decision.
+
+**The priority is to build a forensic system that can defend every relationship it presents. Correctness, evidence preservation, and transparent uncertainty must take precedence over feature count and development speed.**
+
+End of handover.

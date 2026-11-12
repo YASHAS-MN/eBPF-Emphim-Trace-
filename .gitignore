@@ -14,3 +14,9 @@ perf.data.old
 # IDE and tool files
 .system_generated/
 skills/
+
+# Tool outputs and bundles
+repomix-output.md
+ephimtrace_*.dot
+ephimtrace_*.json
+ephimtrace_timeline.md

@@ -18,6 +18,7 @@
 #include <sys/ioctl.h>
 #include <linux/perf_event.h>
 #include <ctype.h>
+#include "provenance.h"
 
 enum log_level {
     LOG_LEVEL_ERROR = 0,
@@ -54,21 +55,6 @@ static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va
     return vfprintf(stderr, format, args);
 }
 
-enum event_type {
-    EVENT_EXECVE = 1,
-    EVENT_MEMFD_CREATE = 2,
-    EVENT_UNLINK = 3,
-    EVENT_UNLINKAT = 4,
-    EVENT_CONNECT = 5,
-    EVENT_FORK = 6,
-    EVENT_PROCESS_EXEC = 7,
-    EVENT_PROCESS_EXIT = 8,
-    EVENT_VFS_UNLINK_COMPLETED = 9,
-    EVENT_VFS_RMDIR_COMPLETED = 10,
-    EVENT_RMDIR = 11,
-    EVENT_DEBUG = 99
-};
-
 #define DEBUG_STAGE_SYSCALL_ENTRY 1
 #define DEBUG_STAGE_VFS_ENTRY     2
 #define DEBUG_STAGE_VFS_EXIT      3
@@ -83,6 +69,12 @@ enum event_type {
 #define PATH_VALID       1
 #define PATH_TRUNCATED   2
 #define PATH_UNAVAILABLE 3
+
+#define MEMFD_STATUS_FAILED               1
+#define MEMFD_STATUS_SUCCESS_CORRELATED   2
+#define MEMFD_STATUS_SUCCESS_UNCORRELATED 3
+
+static uint64_t next_memfd_instance_id = 1;
 
 enum counter_idx {
     CNT_UNLINK_ENTER = 0,
@@ -120,38 +112,45 @@ enum counter_idx {
     CNT_RMDIR_EXIT = 54,
     CNT_RMDIR_EXIT_CLEANUP = 55,
 
-    CNT_MAX_COUNTERS = 64
-};
+    /* Memfd creation counters */
+    CNT_MEMFD_ENTER = 60,
+    CNT_MEMFD_MAP_UPD_OK = 61,
+    CNT_MEMFD_MAP_UPD_ERR = 62,
 
-struct event {
-    uint32_t type;
-    uint32_t pid;
-    uint32_t tid;
-    uint32_t ppid;
-    uint32_t flags;
-    int32_t dirfd;
-    uint32_t reserved;
-    uint64_t timestamp_ns;
-    int32_t fd;
-    uint16_t family;
-    uint16_t port;
-    uint8_t address[16];
-    char name[256];
-    uint32_t child_pid;
-    uint32_t old_pid;
-    uint32_t child_tgid;
-    uint64_t start_time_ns;
-    uint64_t child_start_time_ns;
-    uint64_t inode_no;
-    uint64_t dev_id;
-    uint32_t mnt_ns_id;
-    int32_t ret_val;
-    uint32_t op_type;
-    uint32_t syscall_flags;
-    uint64_t entry_ts_ns;
-    uint32_t path_status;
-    char path[256];
-    uint32_t pad;
+    CNT_FD_INSTALL_TOTAL = 65,
+    CNT_FD_INSTALL_MATCH = 66,
+    CNT_FD_INSTALL_ERR = 67,
+
+    CNT_MEMFD_EXIT = 70,
+    CNT_MEMFD_CORRELATED = 71,
+    CNT_MEMFD_UNCORRELATED = 72,
+    CNT_MEMFD_FAILED = 73,
+    CNT_MEMFD_RB_ERR = 74,
+
+    /* M2.1 Registry counters */
+    CNT_REG_INODE_INSERT_OK = 80,
+    CNT_REG_INODE_INSERT_ERR = 81,
+    CNT_REG_FILE_INSERT_OK = 82,
+    CNT_REG_FILE_INSERT_ERR = 83,
+    CNT_REG_COMMITTED = 84,
+    CNT_REG_PROVISIONAL_DROPPED = 85,
+    CNT_REG_RETIRED = 86,
+    CNT_REG_REOPEN_MATCH = 87,
+    CNT_REG_FILE_DELETE_OK = 88,
+    CNT_REG_FILE_DELETE_ERR = 89,
+    CNT_REG_INODE_ROLLBACK = 90,
+    CNT_REG_TOKEN_ERR = 91,
+    CNT_REG_MAP_FULL_DROP = 92,
+    CNT_REG_INODE_DELETE_ERR = 93,
+    CNT_REG_TOKEN_MISMATCH = 94,
+    CNT_FD_CLOSED_MATCH = 95,
+    CNT_MEMFD_WRITE_OPS = 96,
+    CNT_MEMFD_WRITE_BYTES = 97,
+    CNT_MEMFD_EXEC_ATTEMPT = 98,
+    CNT_MEMFD_EXEC_SUCCESS = 99,
+    CNT_MEMFD_EXEC_FAIL = 100,
+
+    CNT_MAX_COUNTERS = 128
 };
 
 #define MAX_PROCESSES 4096
@@ -430,6 +429,7 @@ static void update_process_state(const struct event *e)
 
 static volatile sig_atomic_t running = 1;
 static volatile sig_atomic_t sigusr1_received = 0;
+static volatile sig_atomic_t sigusr2_received = 0;
 
 static void handle_sigint(int sig)
 {
@@ -441,6 +441,12 @@ static void handle_sigusr1(int sig)
 {
     (void)sig;
     sigusr1_received = 1;
+}
+
+static void handle_sigusr2(int sig)
+{
+    (void)sig;
+    sigusr2_received = 1;
 }
 
 
@@ -589,6 +595,36 @@ static void print_counters_table(int cnt_fd)
            (unsigned long long)c[CNT_UNLINKAT_EXIT], (unsigned long long)c[CNT_UNLINKAT_EXIT_CLEANUP]);
     printf("               rmdir_exit: %-6llu (cleanup: %-6llu)\n",
            (unsigned long long)c[CNT_RMDIR_EXIT], (unsigned long long)c[CNT_RMDIR_EXIT_CLEANUP]);
+    printf("  --------------------------------------------------------------\n");
+    printf("  [MEMFD]      sys_enter: %-6llu | map_ok: %-6llu | map_err: %-6llu\n",
+           (unsigned long long)c[CNT_MEMFD_ENTER], (unsigned long long)c[CNT_MEMFD_MAP_UPD_OK],
+           (unsigned long long)c[CNT_MEMFD_MAP_UPD_ERR]);
+    printf("  [FD_INSTALL] total: %-6llu | match: %-6llu | err: %-6llu | closed_match: %-6llu\n",
+           (unsigned long long)c[CNT_FD_INSTALL_TOTAL], (unsigned long long)c[CNT_FD_INSTALL_MATCH],
+           (unsigned long long)c[CNT_FD_INSTALL_ERR], (unsigned long long)c[CNT_FD_CLOSED_MATCH]);
+    printf("  [MEMFD_WRITE] ops: %-6llu | bytes: %-6llu\n",
+           (unsigned long long)c[CNT_MEMFD_WRITE_OPS], (unsigned long long)c[CNT_MEMFD_WRITE_BYTES]);
+    printf("  [MEMFD_EXEC]  attempt: %-6llu | success: %-6llu | fail: %-6llu\n",
+           (unsigned long long)c[CNT_MEMFD_EXEC_ATTEMPT],
+           (unsigned long long)c[CNT_MEMFD_EXEC_SUCCESS],
+           (unsigned long long)c[CNT_MEMFD_EXEC_FAIL]);
+    printf("  [MEMFD_EXIT] exit: %-6llu | correlated: %-6llu | uncorrelated: %-6llu | failed: %-6llu | rb_err: %-6llu\n",
+           (unsigned long long)c[CNT_MEMFD_EXIT], (unsigned long long)c[CNT_MEMFD_CORRELATED],
+           (unsigned long long)c[CNT_MEMFD_UNCORRELATED], (unsigned long long)c[CNT_MEMFD_FAILED],
+           (unsigned long long)c[CNT_MEMFD_RB_ERR]);
+    printf("  --------------------------------------------------------------\n");
+    printf("  [REGISTRY]   inode_ok: %-6llu | inode_err: %-6llu | file_ok: %-6llu | file_err: %-6llu\n",
+           (unsigned long long)c[CNT_REG_INODE_INSERT_OK], (unsigned long long)c[CNT_REG_INODE_INSERT_ERR],
+           (unsigned long long)c[CNT_REG_FILE_INSERT_OK], (unsigned long long)c[CNT_REG_FILE_INSERT_ERR]);
+    printf("               committed: %-6llu | prov_drop: %-6llu | retired: %-6llu | reopen_match: %-6llu\n",
+           (unsigned long long)c[CNT_REG_COMMITTED], (unsigned long long)c[CNT_REG_PROVISIONAL_DROPPED],
+           (unsigned long long)c[CNT_REG_RETIRED], (unsigned long long)c[CNT_REG_REOPEN_MATCH]);
+    printf("               file_del_ok: %-6llu | file_del_err: %-6llu | ino_rollback: %-6llu | ino_del_err: %-6llu\n",
+           (unsigned long long)c[CNT_REG_FILE_DELETE_OK], (unsigned long long)c[CNT_REG_FILE_DELETE_ERR],
+           (unsigned long long)c[CNT_REG_INODE_ROLLBACK], (unsigned long long)c[CNT_REG_INODE_DELETE_ERR]);
+    printf("               token_err: %-6llu | token_mismatch: %-6llu | map_full_drop: %-6llu\n",
+           (unsigned long long)c[CNT_REG_TOKEN_ERR], (unsigned long long)c[CNT_REG_TOKEN_MISMATCH],
+           (unsigned long long)c[CNT_REG_MAP_FULL_DROP]);
     printf("===============================================================\n\n");
     fflush(stdout);
     dump_diag_instance();
@@ -601,6 +637,7 @@ static int handle_event(void *ctx, void *data, size_t size)
     const struct event *e = data;
 
     update_process_state(e);
+    prov_engine_process_event(e);
 
     if (size != sizeof(*e))
         return 0;
@@ -615,6 +652,116 @@ static int handle_event(void *ctx, void *data, size_t size)
         printf("[MEMFD_CREATE] PID: %u PPID: %u Name: %s Flags: 0x%x\n",
                e->pid, e->ppid, e->name, e->flags);
         break;
+
+    case EVENT_MEMFD_COMPLETED: {
+        const char *status_str = "UNKNOWN";
+        uint64_t instance_id = 0;
+        char inode_buf[32] = "<unavailable>";
+        char dev_buf[64] = "<unavailable>";
+        char mnt_buf[32] = "<unavailable>";
+        char id_buf[32] = "<none>";
+
+        if (e->op_type == MEMFD_STATUS_FAILED) {
+            status_str = "FAILED";
+        } else if (e->op_type == MEMFD_STATUS_SUCCESS_CORRELATED) {
+            status_str = "SUCCESS_CORRELATED";
+            instance_id = e->object_token ? e->object_token : next_memfd_instance_id++;
+            snprintf(id_buf, sizeof(id_buf), "%llu", (unsigned long long)instance_id);
+
+            if ((e->flags & VFS_IDENTITY_INODE_VALID) && e->inode_no != 0)
+                snprintf(inode_buf, sizeof(inode_buf), "%llu", (unsigned long long)e->inode_no);
+            if (e->flags & VFS_IDENTITY_DEV_VALID)
+                snprintf(dev_buf, sizeof(dev_buf), "%u:%u (%llu)", major(e->dev_id), minor(e->dev_id), (unsigned long long)e->dev_id);
+            if (e->mnt_ns_id != 0)
+                snprintf(mnt_buf, sizeof(mnt_buf), "%u", e->mnt_ns_id);
+        } else if (e->op_type == MEMFD_STATUS_SUCCESS_UNCORRELATED) {
+            status_str = "SUCCESS_UNCORRELATED";
+        }
+
+        const char *dentry_name_ptr = (e->flags & VFS_IDENTITY_NAME_VALID && e->path[0]) ? e->path : (e->path[0] ? e->path : "<unavailable>");
+
+        printf("[MEMFD_COMPLETED] Status: %s InstanceID: %s PID: %u TID: %u PPID: %u StartTime: %llu ns Name: %s Flags: 0x%x RetVal: %d FD: %d Target: %s Inode: %s Device: %s MountNS: %s EntryTime: %llu ns CompletionTime: %llu ns\n",
+               status_str,
+               id_buf,
+               e->pid,
+               e->tid,
+               e->ppid,
+               (unsigned long long)e->start_time_ns,
+               e->name[0] ? e->name : "<unavailable>",
+               e->syscall_flags,
+               e->ret_val,
+               e->fd,
+               dentry_name_ptr,
+               inode_buf,
+               dev_buf,
+               mnt_buf,
+               (unsigned long long)e->entry_ts_ns,
+               (unsigned long long)e->timestamp_ns);
+        break;
+    }
+
+    case EVENT_MEMFD_DESTROYED: {
+        printf("[MEMFD_DESTROYED] Token: %llu Inode: %llu Device: %u:%u (%llu) Name: %s\n",
+               (unsigned long long)e->object_token,
+               (unsigned long long)e->inode_no,
+               major(e->dev_id), minor(e->dev_id), (unsigned long long)e->dev_id,
+               e->name[0] ? e->name : "<unavailable>");
+        break;
+    }
+
+    case EVENT_MEMFD_FILE_RELEASED: {
+        printf("[MEMFD_FILE_RELEASED] Token: %llu Inode: %llu\n",
+               (unsigned long long)e->object_token,
+               (unsigned long long)e->inode_no);
+        break;
+    }
+
+    case EVENT_FD_INSTALLED: {
+        if (current_log_level >= LOG_LEVEL_DEBUG) {
+            const char *type_str = "UNKNOWN";
+            if (e->op_type == 1) type_str = "CREATION";
+            else if (e->op_type == 2) type_str = "REOPEN";
+            else if (e->op_type == 3) type_str = "DUP";
+            printf("[FD_INSTALLED] PID: %u FD: %d Token: %llu Type: %s\n",
+                   e->pid, e->fd, (unsigned long long)e->object_token, type_str);
+        }
+        break;
+    }
+
+    case EVENT_FD_CLOSED: {
+        if (current_log_level >= LOG_LEVEL_DEBUG) {
+            printf("[FD_CLOSED]    PID: %u FD: %d Token: %llu\n",
+                   e->pid, e->fd, (unsigned long long)e->object_token);
+        }
+        break;
+    }
+
+    case EVENT_MEMFD_WRITE: {
+        if (current_log_level >= LOG_LEVEL_DEBUG) {
+            printf("[MEMFD_WRITE] PID: %u Token: %llu Offset: %lld Bytes: %zu\n",
+                   e->pid, (unsigned long long)e->object_token,
+                   (long long)e->entry_ts_ns, (size_t)e->ret_val);
+        }
+        break;
+    }
+
+    case EVENT_MEMFD_EXEC_ATTEMPT: {
+        if (current_log_level >= LOG_LEVEL_DEBUG) {
+            printf("[MEMFD_EXEC_ATTEMPT] PID: %u TID: %u Token: %llu File: %s\n",
+                   e->pid, e->tid, (unsigned long long)e->object_token,
+                   e->name[0] ? e->name : "<unknown>");
+        }
+        break;
+    }
+
+    case EVENT_MEMFD_EXEC_SUCCESS: {
+        if (current_log_level >= LOG_LEVEL_DEBUG) {
+            printf("[MEMFD_EXEC_SUCCESS] PID: %u TID: %u Token: %llu Binary: %s\n",
+                   e->pid, e->tid, (unsigned long long)e->object_token,
+                   e->name[0] ? e->name : "<unknown>");
+        }
+        break;
+    }
 
     case EVENT_UNLINK:
         printf("[UNLINK] PID: %u PPID: %u Path: %s\n",
@@ -1043,8 +1190,71 @@ static const struct hook_spec required_hooks[] = {
         .group     = HOOK_GROUP_SYSCALL_EXIT,
         .type      = HOOK_TYPE_TRACEPOINT,
     },
+    {
+        .prog_name = "capture_memfd_create_exit",
+        .category  = "syscalls",
+        .target    = "sys_exit_memfd_create",
+        .group     = HOOK_GROUP_SYSCALL_EXIT,
+        .type      = HOOK_TYPE_TRACEPOINT,
+    },
 
     /* VFS */
+    {
+        .prog_name = "capture_fd_install",
+        .category  = "vfs",
+        .target    = "fd_install",
+        .group     = HOOK_GROUP_VFS,
+        .type      = HOOK_TYPE_TRAMPOLINE,
+    },
+    {
+        .prog_name = "capture_shmem_evict_inode",
+        .category  = "vfs",
+        .target    = "shmem_evict_inode",
+        .group     = HOOK_GROUP_VFS,
+        .type      = HOOK_TYPE_TRAMPOLINE,
+    },
+    {
+        .prog_name = "capture_fput",
+        .category  = "vfs",
+        .target    = "__fput",
+        .group     = HOOK_GROUP_VFS,
+        .type      = HOOK_TYPE_TRAMPOLINE,
+    },
+    {
+        .prog_name = "capture_shmem_write_iter",
+        .category  = "vfs",
+        .target    = "shmem_file_write_iter",
+        .group     = HOOK_GROUP_VFS,
+        .type      = HOOK_TYPE_TRAMPOLINE,
+    },
+    {
+        .prog_name = "capture_close_fd",
+        .category  = "vfs",
+        .target    = "close_fd",
+        .group     = HOOK_GROUP_VFS,
+        .type      = HOOK_TYPE_TRAMPOLINE,
+    },
+    {
+        .prog_name = "capture_bprm_check",
+        .category  = "security",
+        .target    = "security_bprm_check",
+        .group     = HOOK_GROUP_VFS,
+        .type      = HOOK_TYPE_TRAMPOLINE,
+    },
+    {
+        .prog_name = "capture_execve_exit",
+        .category  = "syscalls",
+        .target    = "sys_exit_execve",
+        .group     = HOOK_GROUP_SYSCALL_EXIT,
+        .type      = HOOK_TYPE_TRACEPOINT,
+    },
+    {
+        .prog_name = "capture_execveat_exit",
+        .category  = "syscalls",
+        .target    = "sys_exit_execveat",
+        .group     = HOOK_GROUP_SYSCALL_EXIT,
+        .type      = HOOK_TYPE_TRACEPOINT,
+    },
     {
         .prog_name = "capture_vfs_unlink_entry",
         .category  = "vfs",
@@ -1180,20 +1390,70 @@ static void print_startup_summary(const struct hook_status *statuses, size_t tot
     fflush(stdout);
 }
 
+static uint32_t filter_pid = 0;
+static uint64_t filter_token = 0;
+static const char *timeline_filepath = "ephimtrace_timeline.md";
+
+static void export_provenance_data(uint32_t target_pid, uint64_t target_token, const char *timeline_path)
+{
+    prov_engine_export_dot("ephimtrace_dag.dot");
+    prov_engine_export_json("ephimtrace_dag.json");
+    size_t nc = 0, ec = 0;
+    prov_engine_get_counts(&nc, &ec);
+    printf("[PROVENANCE] Graph exported: %zu nodes, %zu edges\n", nc, ec);
+
+    if (target_pid != 0 || target_token != 0) {
+        prov_engine_export_filtered_dot("ephimtrace_filtered.dot", target_pid, target_token);
+        prov_engine_export_filtered_json("ephimtrace_filtered.json", target_pid, target_token);
+        printf("[PROVENANCE] Filtered graph exported (PID=%u, Token=%llu): ephimtrace_filtered.dot, ephimtrace_filtered.json\n",
+               target_pid, (unsigned long long)target_token);
+    }
+
+    if (timeline_path && timeline_path[0]) {
+        prov_engine_export_timeline(timeline_path, target_pid, target_token);
+        printf("[PROVENANCE] Timeline exported: %s\n", timeline_path);
+    }
+    fflush(stdout);
+}
+
 int main(int argc, char **argv)
 {
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
             current_log_level = LOG_LEVEL_DEBUG;
+        } else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--filter-pid") == 0) {
+            if (i + 1 < argc) {
+                filter_pid = (uint32_t)strtoul(argv[++i], NULL, 10);
+            } else {
+                fprintf(stderr, "Error: %s requires a PID argument\n", argv[i]);
+                return 1;
+            }
+        } else if (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--filter-token") == 0) {
+            if (i + 1 < argc) {
+                filter_token = (uint64_t)strtoull(argv[++i], NULL, 10);
+            } else {
+                fprintf(stderr, "Error: %s requires a token argument\n", argv[i]);
+                return 1;
+            }
+        } else if (strcmp(argv[i], "--timeline") == 0) {
+            if (i + 1 < argc) {
+                timeline_filepath = argv[++i];
+            } else {
+                fprintf(stderr, "Error: --timeline requires a filepath argument\n");
+                return 1;
+            }
         } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             printf("Usage: %s [OPTIONS]\n", argv[0]);
             printf("Options:\n");
-            printf("  -v, --verbose    Enable verbose/debug logging\n");
-            printf("  -h, --help       Show this help message\n");
+            printf("  -v, --verbose               Enable verbose/debug logging\n");
+            printf("  -p, --filter-pid <pid>      Set target PID for filtered export\n");
+            printf("  -t, --filter-token <token>  Set target object token for filtered export\n");
+            printf("  --timeline <filepath>       Path to write forensic timeline (default: ephimtrace_timeline.md)\n");
+            printf("  -h, --help                  Show this help message\n");
             return 0;
         } else {
             fprintf(stderr, "Unknown option: %s\n", argv[i]);
-            fprintf(stderr, "Usage: %s [-v|--verbose] [-h|--help]\n", argv[0]);
+            fprintf(stderr, "Usage: %s [-v|--verbose] [-p|--filter-pid <pid>] [-t|--filter-token <token>] [--timeline <file>] [-h|--help]\n", argv[0]);
             return 1;
         }
     }
@@ -1235,6 +1495,12 @@ int main(int argc, char **argv)
 
     signal(SIGINT, handle_sigint);
     signal(SIGUSR1, handle_sigusr1);
+    signal(SIGUSR2, handle_sigusr2);
+
+    if (prov_engine_init() != 0) {
+        log_error("Failed to initialize provenance engine");
+        goto cleanup;
+    }
 
     if (cpus_parsed != 0 || online_cpu_count <= 0) {
         log_error("Failed to parse online CPUs from sysfs");
@@ -1246,7 +1512,7 @@ int main(int argc, char **argv)
             }
         }
         print_startup_summary(statuses, NUM_REQUIRED_HOOKS, 0, 0, total_percpu_expected);
-        return 1;
+        goto cleanup;
     }
 
     obj = bpf_object__open_file("build/monitor.bpf.o", NULL);
@@ -1527,6 +1793,11 @@ int main(int argc, char **argv)
             print_counters_table(cnt_fd);
         }
 
+        if (sigusr2_received) {
+            sigusr2_received = 0;
+            export_provenance_data(filter_pid, filter_token, timeline_filepath);
+        }
+
         time_t now = time(NULL);
         if (current_log_level >= LOG_LEVEL_DEBUG && (now - last_counter_print >= 2)) {
             last_counter_print = now;
@@ -1547,9 +1818,12 @@ int main(int argc, char **argv)
         print_counters_table(cnt_fd);
     }
 
+    export_provenance_data(filter_pid, filter_token, timeline_filepath);
+
     ret = 0;
 
 cleanup:
+    prov_engine_destroy();
     cleanup_diag_instance();
 
     /* 1. Disable and close all per-CPU perf-event FDs first to stop event generation */

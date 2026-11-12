@@ -35,3 +35,401 @@ Our next discussion will examine:
 We will not write implementation code until these decisions are justified.
 
 Stage 1 is complete.
+
+---------------------AFTER SOME DAYS-------------------------
+
+I will take responsibility for maintaining the technical direction of EphimTrace. I understand that this is your actual research and engineering work, that you have invested days in it, and that you entrusted me with architectural guidance and technical review. You should not have to spend your time repeatedly correcting me about the project's purpose.
+
+I also need to be honest: I cannot promise that a model's context window will never lose information. But I can change how I manage this project so that context limitations do not keep becoming your problem.
+
+My decision is to make the project's objective and architectural decisions explicit, persistent reference points, and use them to evaluate every implementation task. I will not propose a new milestone until I can explain exactly how it advances the forensic objective.
+
+I will also maintain the separation you established:
+- This thread: technical evaluation, architecture, implementation planning, code review and validation.
+- The research thread: literature review, brainstorming, research questions, novelty, comparisons and paper development.
+I will not turn this implementation thread into an independent research direction, nor silently change the agreed scope.
+
+Now, here is the requirement map we should use as our engineering reference.
+EphimTrace — Forensic Requirement-to-Telemetry Map
+Engineering baseline · 11 November 2026 · Version 1.0
+1. Mission and system boundary
+Project objective
+
+Develop a reliable Linux eBPF-based forensic provenance tool that collects, correlates and presents evidence related to memfd_create and file unlink operations in a readable, evidence-backed directed acyclic graph (DAG).
+
+The graph should help an investigator understand the relationships between:
+- Processes and their lifecycle.
+- Process execution.
+- Anonymous file creation through memfd_create.
+- Filesystem unlink operations.
+- Relevant file and descriptor interactions.
+- Network activity associated with the observed processes.
+Our original suspicious sequence of interest remains:
+Original investigative sequence
+Process creation
+
+Process execution
+
+memfd creation and file unlink activity
+
+Network activity
+
+This is the investigative sequence we want to make understandable. The graph must establish individual relationships from evidence rather than assume that every event forms a causal chain.
+
+What the system must ultimately provide
+1. Capture relevant kernel events.
+2. Preserve identities across process and object lifecycles.
+3. Correlate events into defensible provenance relationships.
+4. Preserve the original evidence supporting each relationship.
+5. Present the resulting DAG in a form an investigator can navigate and understand.
+6. Expose uncertainty, missing events and collection limitations rather than fabricate continuity.
+What is outside the immediate objective
+- General-purpose system monitoring.
+- Tracking every possible Linux descriptor type without forensic justification.
+- Collecting file contents indiscriminately.
+- Declaring an operation malicious solely because it involves memfd or unlink.
+- Replacing a complete digital forensic investigation platform.
+2. Forensic questions the tool must answer
+These questions define our actual requirements. Kernel hooks are selected to answer them.
+ID	Investigator's question	Evidence required
+FQ-01	Which process was involved?	PID, TID, process generation, command name
+FQ-02	Where did the process originate?	Parent-child relationships, fork events
+FQ-03	What did the process execute?	Successful execution events, executable identity and available execution metadata
+FQ-04	Did it create a memfd?	Creation name, flags, return value, resulting object identity
+FQ-05	What happened to the memfd afterward?	Descriptor relationships, writes, duplication, inheritance, execution and closure
+FQ-06	Which filesystem objects did it unlink?	Original pathname, dirfd, flags, target identity, VFS result
+FQ-07	Did an unlinked object remain accessible?	Relevant open references and their lifecycle
+FQ-08	Was there network activity associated with the process?	Connection attempts, destination, result, process identity
+FQ-09	How are these events related?	Temporal ordering, process lineage, object identity and supported causal edges
+FQ-10	How reliable is the reconstructed sequence?	Event loss, missing context, identity uncertainty, timestamps and source-event references
+
+These questions are the acceptance criteria for the product. If a telemetry feature does not help answer one of them, it needs a strong justification before we implement it.
+3. Required DAG model
+We should define the graph independently of the sensor implementation.
+3.1 Required node types
+Node	Meaning	Identity requirement
+Process	A process execution instance	PID + process generation
+Memfd object	An anonymous file created through memfd	Kernel object correlation + user-space lifetime ID
+Filesystem object	An ordinary filesystem object	Inode + device, with mount context where available
+Descriptor table	A collection of FD slots shared by tasks	Descriptor-table lifetime identity
+Open file description	An opened kernel file object	Kernel object correlation + user-space lifetime ID
+Network endpoint	Remote or local endpoint involved in network activity	Address family, address and port, with protocol/context
+
+Descriptor table and open-file nodes are conditional infrastructure: we introduce them when needed to establish object relationships reliably.
+3.2 Required edge types
+Edge	Meaning	Evidence needed
+FORKED	Parent created child process	Fork event
+EXECUTED	Process successfully transitioned to an executable image	Successful exec event
+CREATED	Process created a memfd	Successful memfd creation and object correlation
+REFERENCES	Descriptor slot references an open file description	FD installation/duplication evidence
+WRITTEN_TO	Process wrote through a descriptor to an object	Successful write operation and descriptor correlation
+EXECUTED_FROM	Process execution originated from a particular file object	Execution-object correlation, not just temporal proximity
+UNLINKED	Process performed an unlink operation on a filesystem object	Correlated VFS completion
+CONNECTED_TO	Process attempted or established a network connection	Connect event and return result
+
+We must distinguish three things in the graph:
+- Observed event: Something the sensor directly recorded.
+- Derived relationship: A relationship reconstructed from multiple observations.
+- Inference: A possible interpretation that is not directly established.
+These must never be presented as equivalent.
+
+For example, a process that creates a memfd and subsequently executes another binary does not automatically establish that the binary came from that memfd.
+3.3 DAG correctness
+The graph should be acyclic, but we must not achieve acyclicity by discarding valid evidence.
+
+Events should have timestamps and sequence metadata. Relationships should represent causal or provenance dependencies. When the evidence only establishes temporal association, the graph must say so.
+
+We also need to preserve the original event records. The DAG is an analytical representation, not a replacement for the underlying evidence.
+
+4. Telemetry requirement matrix
+This is the central engineering table. It maps our actual implementation to the forensic requirements.
+
+Implemented
+ means implemented and supported by the recorded tests or runtime evidence.
+
+Partial
+ means some instrumentation exists, but the forensic relationship is incomplete.
+
+Missing
+ means not yet implemented.
+A. Process provenance
+Telemetry	Forensic purpose	Current status
+sched_process_fork	Establish parent-child process relationships	Implemented
+sched_process_exec	Record successful execution transitions	Implemented
+sched_process_exit	Establish process lifecycle termination	Implemented
+PID/TID and PPID	Identify process and thread activity	Implemented
+Process generation using start time	Distinguish reused PIDs	Implemented
+Process state before sensor startup	Reconstruct pre-existing ancestry	Missing
+
+Assessment: This is one of our strongest areas. The remaining limitation is that we cannot reconstruct process history that occurred before the sensor started.
+B. Execution provenance
+Telemetry	Forensic purpose	Current status
+sys_enter_execve	Record execution attempts	Implemented
+sched_process_exec	Confirm successful execution	Implemented
+Executable identity	Associate successful execution with its executable object	Partial
+execveat	Capture FD-based execution attempts	Missing
+Execution through AT_EMPTY_PATH	Investigate descriptor-based execution	Missing
+
+Assessment: We can identify successful execution, but cannot yet reliably connect every execution to the specific file object from which it originated.
+C. Memfd provenance
+Telemetry	Forensic purpose	Current status
+sys_enter_memfd_create	Capture requested memfd name and flags	Implemented
+Successful syscall return	Obtain the returned descriptor	Missing
+Resulting struct file correlation	Identify the actual memfd object	Missing
+FD duplication/inheritance	Preserve object references	Missing
+Writes to memfd	Establish subsequent modification	Missing
+Execution from memfd	Connect memfd to successful process execution	Missing
+Memfd closure and lifetime	Understand when references are released	Missing
+
+Assessment: We currently capture the creation request, not the complete lifecycle of the created object.
+
+This is a major gap in our target event family.
+D. Filesystem unlink provenance
+Telemetry	Forensic purpose	Current status
+sys_enter_unlink	Capture unlink attempt and original pathname	Implemented
+sys_enter_unlinkat	Capture pathname, dirfd and flags	Implemented
+sys_enter_rmdir	Capture directory removal attempt	Implemented
+vfs_unlink entry/exit	Capture target identity and completion result	Implemented
+vfs_rmdir entry/exit	Capture directory identity and completion result	Implemented
+Inode/device identity	Identify the filesystem object	Implemented
+Mount namespace	Provide filesystem namespace context	Implemented
+Return value	Distinguish successful and failed operations	Implemented
+Original pathname status	Distinguish valid, truncated and unavailable paths	Implemented
+Resolve non-AT_FDCWD dirfd	Identify the directory object used for relative paths	Missing
+Track open references after unlink	Understand whether the object remains accessible	Missing
+
+Assessment: Our unlink sensor is comparatively mature. We have syscall-to-VFS correlation and actual runtime validation. However, it does not yet reconstruct the lifetime of an unlinked object through outstanding descriptors.
+E. Network provenance
+Telemetry	Forensic purpose	Current status
+sys_enter_connect	Capture connection attempts	Implemented
+PID/TID and FD	Associate attempt with process and descriptor	Implemented
+IPv4/IPv6 destination	Identify remote endpoint	Implemented
+AF_UNIX endpoint details	Understand local IPC relationships	Partial
+sys_exit_connect	Establish syscall result	Missing
+Successful connection state	Distinguish attempt from successful connection	Missing
+Network event correlation with graph	Connect network activity to process provenance	Missing
+
+Assessment: We currently record connection attempts. We should not label all of them established connections.
+F. Forensic reconstruction and presentation
+Capability	Forensic purpose	Current status
+Persistent event records	Retain collected evidence	Partial
+Cross-event correlation	Reconstruct relationships	Partial
+Stable object identity	Prevent incorrect object merging	Partial
+DAG construction	Represent provenance	Missing
+DAG traversal and filtering	Help investigators navigate activity	Missing
+Event-to-edge evidence references	Make relationships auditable	Missing
+Uncertainty and loss indicators	Avoid overstating conclusions	Partial
+Evaluation against forensic scenarios	Measure actual usefulness and reliability	Missing
+
+Assessment: This is the unfinished product layer. Our sensor is not yet a forensic analysis tool until this layer exists.
+5. Why FD tracking matters to the forensic objective
+Now we can evaluate FD tracking without turning it into a separate project.
+
+An FD is a process-visible reference to an open file description. The open file description refers to the kernel file object.
+
+The distinction is essential for two of our original event families.
+
+For memfd:
+Process
+  |
+  | memfd_create()
+  v
+Returned FD
+  |
+  v
+struct file
+  |
+  ├── write()
+  ├── dup()
+  ├── inherited through fork()
+  └── execveat()
+
+
+Without the FD-to-object relationship, we cannot reliably establish which memfd was written to or executed.
+
+For unlink:
+Process A
+  |
+  | open()
+  v
+FD 5 ───────────────┐
+                    |
+Process B           v
+  |              File object
+  | unlink()        |
+  v                 |
+Directory entry removed
+                    |
+                    v
+             FD 5 still references
+             the open file description
+
+
+The pathname can disappear while the underlying file remains accessible.
+
+This leads to an important architectural conclusion:
+
+FD tracking is required selectively to establish object provenance and lifetime. It is not an independent objective of EphimTrace.
+
+We should also distinguish the relevant identities:
+- FD number: reusable integer, meaningful within a descriptor table.
+- Descriptor table: may be shared by multiple tasks.
+- struct file: represents an open file description.
+- Inode/device: identifies the underlying filesystem object, where applicable.
+Two separate open() calls on the same inode may produce different open file descriptions. Two duplicated descriptors may reference the same open file description.
+
+Therefore, inode identity cannot replace open-file identity.
+6. Additional telemetry: priority and justification
+Not every missing event has equal importance. Here is how I would prioritize it against the forensic questions.
+Telemetry	Priority	Reason
+Successful memfd_create and returned FD	Critical	Currently we cannot identify the created object
+FD-to-file-object correlation	Critical	Required for reliable memfd provenance
+execveat and execution-object correlation	Critical	Required to investigate FD-based execution
+FD duplication and inheritance	High	Required to preserve references across processes
+write / pwrite	High	Establishes whether a memfd received data
+FD close and object lifetime	High	Prevents false conclusions about object disappearance
+Open-file tracking for unlinked files	High	Helps establish whether an unlinked object remains accessible
+openat / openat2	High	Establishes access to ordinary filesystem objects
+sys_exit_connect	Medium	Distinguishes attempts from successful connection results
+mmap	Medium	Adds evidence about file-backed memory usage
+ftruncate	Medium	Adds context about memfd/file size manipulation
+rename	Medium	Adds filesystem namespace history
+File metadata and permissions	Enrichment	Adds context to the investigator's analysis
+
+These priorities are architectural assessments, not claims that every hook is already selected. We will investigate kernel implementation details before choosing attachment points.
+
+7. Proposed implementation roadmap
+The order below is based on dependencies. It is not a commitment to implement every listed event.
+1. Milestone 1 — Complete object identity for memfd creation
+   - Capture the successful return value of memfd_create.
+   - Identify the resulting kernel file object.
+   - Establish a stable user-space lifetime identity.
+   - Preserve process generation, name, flags and timestamps.
+   Acceptance: An investigator can identify which specific memfd object was created by which process.
+2. Milestone 2 — Targeted FD lifecycle and object correlation
+   - Track descriptor installation and release.
+   - Track duplication.
+   - Account for fork inheritance and shared descriptor tables.
+   - Handle FD reuse and object lifetime.
+   - Avoid tracking unrelated descriptor types unless required.
+   Acceptance: The sensor can reliably distinguish descriptor slots from the underlying open file descriptions.
+3. Milestone 3 — Object interaction and execution correlation
+   - Capture writes to relevant objects.
+   - Investigate execveat.
+   - Correlate successful execution with its source file object.
+   - Preserve execution identity across process transitions.
+   Acceptance: We can establish object-level relationships between memfd creation, subsequent use and execution when the kernel evidence supports them.
+4. Milestone 4 — Strengthen filesystem unlink provenance
+   - Correlate relevant open references with unlinked filesystem objects.
+   - Improve relative-path context where necessary.
+   - Preserve identity and lifetime after pathname removal.
+   - Consider rename and other namespace operations only where they improve reconstruction.
+   Acceptance: The investigator can distinguish directory-entry removal from the continued existence of an open file object.
+5. Milestone 5 — Complete process and network event correlation
+   - Confirm network syscall outcomes.
+   - Improve endpoint context.
+   - Correlate network events with process history.
+   - Preserve the difference between attempts and established activity.
+   Acceptance: Network activity appears as supported contextual evidence in the provenance graph.
+6. Milestone 6 — Provenance graph and forensic interface
+   - Define persistent event and graph schemas.
+   - Build nodes and edges.
+   - Preserve source-event references.
+   - Support time-based filtering, process traversal and object traversal.
+   - Display incomplete or uncertain relationships explicitly.
+   Acceptance: An investigator can navigate a reconstructed sequence without having to manually interpret raw kernel logs.
+7. Milestone 7 — Forensic validation and performance evaluation
+   - Execute controlled scenarios.
+   - Compare expected and observed provenance.
+   - Measure missing events and event loss.
+   - Evaluate CPU and memory overhead.
+   - Compare the investigative workflow against raw logs and relevant existing tools.
+   Acceptance: We can support claims about reliability, limitations and practical forensic usefulness with measured evidence.
+The order may change if kernel investigation reveals that a later capability is a prerequisite for an earlier one. But the forensic requirements will not change silently.
+
+8. How we will know whether EphimTrace is actually progressing
+We need measurable acceptance criteria, not just a growing list of implemented hooks.
+
+I propose five evaluation dimensions.
+Dimension	What we measure
+Event coverage	Percentage of expected target events captured
+Identity correctness	Whether events refer to the correct process and object
+Relationship correctness	Whether reconstructed edges are supported by evidence
+Sequence completeness	Whether expected event sequences can be reconstructed
+Resource efficiency	CPU, memory, ring-buffer loss and map pressure
+
+For example, we should construct controlled test scenarios:
+1. Process creation followed by execution.
+2. Memfd creation followed by writes.
+3. Memfd creation followed by descriptor duplication.
+4. Memfd execution through execveat.
+5. File opened, unlinked and accessed through an existing descriptor.
+6. Fork with inherited descriptors.
+7. Multiple processes performing unlink and network activity.
+8. Failed operations and interrupted or incomplete sequences.
+For each scenario, we should have:
+- Expected events.
+- Expected process and object identities.
+- Expected DAG nodes and edges.
+- Actual sensor output.
+- Missing or incorrect relationships.
+- Explanation of any discrepancy.
+This is what will demonstrate whether our tool is becoming a reliable forensic instrument.
+9. What we have accomplished versus what remains
+I want to make this distinction explicit because it is easy to confuse engineering activity with product progress.
+EphimTrace progress
+Sensor foundation
+Substantial progress
+
+Process lifecycle, execution, memfd creation attempts, unlink/VFS correlation and connection attempts.
+
+Object-level provenance
+Incomplete
+
+Filesystem identity is established for unlink. Memfd identity and descriptor-based relationships remain incomplete.
+
+Cross-event reconstruction
+Incomplete
+
+We have event-level information and some correlation, but not the complete provenance model.
+
+Forensic DAG
+Not started
+
+Graph schema, reconstruction engine and investigator interface remain to be built.
+
+Forensic validation
+Not started
+
+Controlled scenario evaluation and quantitative reliability assessment remain ahead.
+
+We have not wasted the work already done. The process lifecycle and unlink correlation work are foundational capabilities that the final graph will need.
+
+But we should not claim that EphimTrace is already performing forensic reconstruction. It is not there yet.
+10. The working agreement from here onward
+I am establishing the following rules for my role in this project.
+1. Objective first: Every technical proposal must map to one or more forensic questions in this document.
+2. No scope drift: I will not introduce generic telemetry or unrelated architecture merely because it is technically interesting.
+3. No premature implementation: We settle the kernel behaviour, data model and trade-offs before I give Antigravity an implementation prompt.
+4. Evidence-based review: Antigravity's reports are implementation evidence, not architectural authority. I will critically evaluate them.
+5. Accurate progress tracking: Implemented, runtime verified, source inspected, proposed and unverified will remain separate statuses.
+6. Preserve decisions: We will maintain an engineering decision record so that decisions do not have to be rediscovered.
+7. Protect your time: I will inspect available project context and previously shared evidence before asking you to repeat work.
+I cannot guarantee that context limitations will never occur. I can, however, make this requirement map the persistent source of truth and keep a compact project handoff updated as milestones are completed. If a new thread is needed, it should inherit the objective, decisions, current implementation state and next action—not start from a vague project description.
+11. The immediate next action
+I am deliberately not issuing an FD implementation prompt yet.
+
+Our next task should be a focused audit of the existing memfd implementation, answering:
+- Exactly what does our current memfd_create instrumentation capture?
+- Where and how can we observe its successful return value?
+- How can we identify the resulting struct file reliably?
+- What kernel mechanisms expose the relationship between the returned FD and file object?
+- What is the minimum additional telemetry needed to connect creation, later operations and execution?
+- Which of these relationships can we establish reliably on our Linux 7.0 environment?
+This will tell us whether targeted FD lifecycle tracking is actually our next milestone and precisely how much of it we need.
+
+No generic FD subsystem, no premature hooks, and no implementation until we have the evidence and design.
+
+The measure of our progress is not how much code we write or how many kernel functions we attach. It is how much more accurately an investigator can reconstruct the events surrounding memfd creation and unlink operations using EphimTrace.
+
+That is the standard I will use to guide and review this work.
