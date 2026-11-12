@@ -17,6 +17,7 @@ all: $(BUILD_DIR)/monitor.bpf.o $(BUILD_DIR)/loader $(TEST_BINS)
 test_m2_integration: $(BUILD_DIR)/test_m2_integration
 test_m6_dag: $(BUILD_DIR)/test_m6_dag
 test_m6_filtering: $(BUILD_DIR)/test_m6_filtering
+test_m7_scenarios: $(BUILD_DIR)/test_m7_scenarios
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -33,4 +34,4 @@ $(BUILD_DIR)/%: tests/%.c | $(BUILD_DIR)
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean test_m2_integration test_m6_dag test_m6_filtering
+.PHONY: all clean test_m2_integration test_m6_dag test_m6_filtering test_m7_scenarios
