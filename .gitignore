@@ -6,6 +6,7 @@ build/
 *.log
 perf.data
 perf.data.old
+logs/
 
 # Backups and temporary files
 *.bak
