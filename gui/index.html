@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>EPHIMTRACE // 3D Forensic Provenance DAG</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- 3D Viewport Canvas -->
+        <canvas id="viewport3d"></canvas>
+
+        <!-- Drag & Drop Overlay -->
+        <div id="drop-overlay" class="hidden">
+            <div class="drop-box">
+                <div class="drop-title">DROP FORENSIC ARTIFACT</div>
+                <div class="drop-sub">
+                    ephimtrace_dag.json · ephimtrace_filtered.json ·
+                    ephimtrace_timeline.md
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Command Bar -->
+        <header class="hud-topbar">
+            <div class="brand">
+                <div class="brand-title">
+                    <span class="pulse-dot"></span> EPHIMTRACE
+                </div>
+                <div class="brand-sub" id="status-sub">
+                    3D FORENSIC ENGINE // READY
+                </div>
+            </div>
+
+            <div class="top-controls">
+                <label class="hud-btn">
+                    LOAD DAG JSON
+                    <input
+                        type="file"
+                        id="file-json-input"
+                        accept=".json"
+                        hidden
+                    />
+                </label>
+                <label class="hud-btn">
+                    LOAD TIMELINE MD
+                    <input
+                        type="file"
+                        id="file-md-input"
+                        accept=".md,.txt"
+                        hidden
+                    />
+                </label>
+                <button
+                    class="hud-btn"
+                    id="btn-reload"
+                    title="Fetch ../ephimtrace_dag.json if served over HTTP"
+                >
+                    RELOAD SNAPSHOT
+                </button>
+                <button class="hud-btn active-mode" id="btn-layout">
+                    MODE: 3D FORCE ORBIT
+                </button>
+                <button class="hud-btn" id="btn-reset-cam">RESET CAMERA</button>
+            </div>
+
+            <div class="top-metrics">
+                <div class="metric">
+                    <span id="stat-nodes">0</span> <small>NODES</small>
+                </div>
+                <div class="metric">
+                    <span id="stat-edges">0</span> <small>EDGES</small>
+                </div>
+                <div class="metric">
+                    <span id="stat-span">0</span> <small>NS SPAN</small>
+                </div>
+            </div>
+        </header>
+
+        <!-- Left Filter & Blast Radius Panel -->
+        <aside class="hud-panel hud-left">
+            <div class="panel-header">FILTER / BLAST RADIUS</div>
+
+            <input
+                type="text"
+                id="search-input"
+                class="hud-input"
+                placeholder="PID, token, comm, path, IP..."
+            />
+
+            <div class="section-label">ENTITIES (3D GEOMETRY)</div>
+            <div class="check-grid">
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-node-type="NODE_PROCESS"
+                        checked
+                    /><span class="swatch cyan"></span> PROCESS (CUBE)</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-node-type="NODE_MEMFD"
+                        checked
+                    /><span class="swatch gold"></span> MEMFD (OCTA)</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-node-type="NODE_FS_OBJECT"
+                        checked
+                    /><span class="swatch green"></span> FS OBJECT (CYL)</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-node-type="NODE_NET_ENDPOINT"
+                        checked
+                    /><span class="swatch violet"></span> NET ENDPOINT
+                    (DIA)</label
+                >
+            </div>
+
+            <div class="section-label">EDGE SIGNALS (9 TYPES)</div>
+            <div class="check-grid">
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-edge-type="EDGE_FORK"
+                        checked
+                    />
+                    FORK</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-edge-type="EDGE_MEMFD_CREATE"
+                        checked
+                    />
+                    MEMFD CREATE</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-edge-type="EDGE_FD_INSTALLED"
+                        checked
+                    />
+                    FD INSTALLED</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-edge-type="EDGE_FD_CLOSED"
+                        checked
+                    />
+                    FD CLOSED</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-edge-type="EDGE_MEMFD_WRITE"
+                        checked
+                    />
+                    MEMFD WRITE</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-edge-type="EDGE_MEMFD_EXEC_ATTEMPT"
+                        checked
+                    />
+                    EXEC ATTEMPT</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-edge-type="EDGE_MEMFD_EXEC_SUCCESS"
+                        checked
+                    />
+                    EXEC SUCCESS</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-edge-type="EDGE_UNLINK"
+                        checked
+                    />
+                    UNLINK</label
+                >
+                <label class="check-item"
+                    ><input
+                        type="checkbox"
+                        data-edge-type="EDGE_CONNECT"
+                        checked
+                    />
+                    CONNECT</label
+                >
+            </div>
+
+            <button class="hud-btn full-btn" id="btn-isolate">
+                ISOLATE CONNECTED COMPONENT
+            </button>
+            <button class="hud-btn full-btn secondary" id="btn-clear-isolate">
+                CLEAR ISOLATION
+            </button>
+
+            <div class="help-box">
+                <div>
+                    <strong>Left Drag Empty Space:</strong> 3D Orbit Camera
+                </div>
+                <div><strong>Left Drag Node:</strong> Move Node in 3D</div>
+                <div><strong>Right Drag / Shift+Drag:</strong> Pan Camera</div>
+                <div><strong>Scroll Wheel:</strong> Zoom 3D Depth</div>
+                <div>
+                    <strong>Click Node / Event:</strong> Fly Camera & Inspect
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Evidence Inspector Panel -->
+        <aside class="hud-panel hud-right">
+            <div class="panel-header">
+                <span>EVIDENCE INSPECTOR</span>
+                <button
+                    id="btn-close-inspector"
+                    class="icon-btn"
+                    title="Clear Selection"
+                >
+                    ✕
+                </button>
+            </div>
+            <div id="inspector-content" class="inspector-body">
+                <div class="empty-hint">
+                    Click any 3D entity or chronological event below to inspect
+                    raw kernel provenance telemetry.
+                </div>
+            </div>
+        </aside>
+
+        <!-- Bottom Chronological Scrubber & Event Log -->
+        <footer class="hud-bottom">
+            <div class="scrubber-bar">
+                <div class="panel-header inline-header">
+                    CHRONOLOGICAL TRACE
+                </div>
+                <div class="scrubber-controls">
+                    <span id="scrubber-counter" class="scrubber-label"
+                        >EVENT 6 / 6</span
+                    >
+                    <button class="hud-btn small-btn" id="btn-play">
+                        ▶ PLAY
+                    </button>
+                    <button class="hud-btn small-btn" id="btn-step-back">
+                        ◀
+                    </button>
+                    <button class="hud-btn small-btn" id="btn-step-fwd">
+                        ▶
+                    </button>
+                </div>
+            </div>
+
+            <input
+                type="range"
+                id="timeline-slider"
+                min="0"
+                max="6"
+                value="6"
+                step="1"
+                class="timeline-range"
+            />
+
+            <div class="bottom-tabs">
+                <button class="tab-btn active" id="tab-events">
+                    EVENT LOG (CLICK TO FLY)
+                </button>
+                <button class="tab-btn" id="tab-markdown">
+                    TIMELINE REPORT (.MD)
+                </button>
+            </div>
+
+            <div id="event-log-list" class="log-container"></div>
+            <pre id="markdown-viewer" class="log-container hidden"></pre>
+        </footer>
+
+        <script src="app.js"></script>
+    </body>
+</html>
