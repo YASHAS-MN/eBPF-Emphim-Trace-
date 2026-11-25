@@ -29,7 +29,7 @@ Kernel hooks and BPF registries
     -> Synchronous userspace consumer
     -> Provenance engine
 
-Architectures B and C have been evaluated and preserved as experimental candidates, not adopted. A remains the existing reference architecture, not an approved final lock-in. Implementation and the current performance-testing phase are paused by the owner pending architectural selection/fusion discussion.
+Architectures B and C have been evaluated and preserved as experimental candidates, not adopted. A remains the existing reference architecture, not an approved final lock-in. Owner selected A as the experimental reference for one final scoped persistence experiment (#7); this is not production adoption. Historical A/B/C evaluation remains frozen.
 
 ## Completed Work
 
@@ -45,9 +45,9 @@ Accepted within the tested memfd lifecycle scope:
 
 ## Current Checkpoint
 
-Active task: #4 — comparative architecture decision review. Implementation and performance testing paused. C implementation and three-way native experiments complete; no candidate accepted for production.
+Active implementation task: #7 — persistent evidence capture versus online reconstruction. A is frozen as the reference (36d4c6b benchmark source). M and P share the same evidence writer and durability policy; compare immediate versus deferred graph processing. Separate worktree FM-persist, branch experiment/persistent-evidence. Provisional three workloads, three paired repetitions, native smoke review before full trials. #4 awaits final architectural disposition; no A/B/C tuning or product adoption.
 
-Three-way diagnostic benchmark: `tests1.0/kernel_telemetry/results/three_way_20261125-194503/` (75 trials, 5 workloads, 5 repetitions each, full quiet diagnostic mode). Mean create-pair completeness A/B/C: paced 99.96/100/100%, burst 7.43/82.34/81.45%, sustained 12.25/28.89/28.64%, contention 1.86/12.87/11.30%, registry 40.96/40.96/100.00% rounded. B and C each passed 2/6 original analyzer targets. C registry improvement confounded by expanded maps; both async candidates suffer sustained queue saturation. Local audit classifies C 283810 discrepancy labels as queue losses and one as truthful uncorrelated success; A paced had one file-registry update failure. No full lifecycle fidelity or production evidence equivalence established. Review limitations documented in #4 comment 7165662311. Preserve artifacts and checkpoints; no further tuning/runs until owner decision.
+Three-way diagnostic benchmark: `tests1.0/kernel_telemetry/results/three_way_20261125-194503/` (75 trials, 5 workloads, 5 repetitions each, full quiet diagnostic mode). Mean create-pair completeness A/B/C: paced 99.96/100/100%, burst 7.43/82.34/81.45%, sustained 12.25/28.89/28.64%, contention 1.86/12.87/11.30%, registry 40.96/40.96/100.00% rounded. B and C each passed 2/6 original analyzer targets. C registry improvement confounded by expanded maps; both async candidates suffer sustained queue saturation. Local audit classifies C 283810 discrepancy labels as queue losses and one as truthful uncorrelated success; A paced had one file-registry update failure. No full lifecycle fidelity or production evidence equivalence established. Review limitations documented in #4 comment 7165662311. Preserve artifacts and checkpoints; no further A/B/C tuning or reruns. Only #7 experiment approved.
 
 Issue #3 completed: 50 paired diagnostic trials (five repetitions per workload per architecture), local evidence `tests1.0/kernel_telemetry/results/interleaved_20261125-132015/`. B improved mean validated create-pair completeness on burst (7.90% to 84.54%) but failed sustained useful throughput, memory and drain targets. Original analyzer verdict 2/6; registry discrepancies reportedly truthful uncorrelated successes, not actual syscall inversions. Full lifecycle fidelity, production evidence equivalence and exact binary provenance not established. Preserve both candidates and historical evidence. No further B tuning.
 
@@ -65,7 +65,8 @@ GitHub Issues is the authoritative task register.
 
 - #2: Review logging optimization (closed/accepted as diagnostic optimization).
 - #3: Evaluate asynchronous userspace acquisition (closed: experiment completed, not adopted).
-- #4: Evaluate minimal kernel-side state (experimental phase complete; open for owner architecture decision; implementation paused).
+- #4: Evaluate minimal kernel-side state (experimental phase complete; open for final owner architecture decision).
+- #7: Persistent evidence versus online reconstruction (active, scoped experiment).
 - #5: Remaining descriptor and registry limitations.
 - #6: Repair legacy test build paths.
 
