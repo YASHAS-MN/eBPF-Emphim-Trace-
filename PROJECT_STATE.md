@@ -17,6 +17,8 @@ and reliable provenance reconstruction.
 - Architecture A benchmark checkpoint: 36d4c6b
 - Architecture B benchmark candidate: 8c2a0c1; later shutdown fix e497635 (exact full-run binary provenance unresolved)
 - Architecture B branch: experiment/async-userspace
+- Three-way benchmark checkpoints: A 82f0e3e, B e497635, C 4a5de9a
+- Architecture C branch: experiment/minimal-kernel
 - Original remediation checkpoint: 355ed8a
 - Working branch: checkpoint/telemetry-remediation
 
@@ -27,7 +29,7 @@ Kernel hooks and BPF registries
     -> Synchronous userspace consumer
     -> Provenance engine
 
-Architecture B has been evaluated and preserved as an experimental candidate, not adopted. Architecture C (minimal essential kernel-side state, reusing B's acquisition/queue/worker topology) is approved for scoped design and experimentation under #4, with specific hook/map changes subject to design review. Final architecture selection or fusion is deferred until comparative evaluation.
+Architectures B and C have been evaluated and preserved as experimental candidates, not adopted. A remains the existing reference architecture, not an approved final lock-in. Implementation and the current performance-testing phase are paused by the owner pending architectural selection/fusion discussion.
 
 ## Completed Work
 
@@ -43,7 +45,9 @@ Accepted within the tested memfd lifecycle scope:
 
 ## Current Checkpoint
 
-Active task: #4 — Architecture C design and minimal-kernel-state feasibility review. No C implementation has started.
+Active task: #4 — comparative architecture decision review. Implementation and performance testing paused. C implementation and three-way native experiments complete; no candidate accepted for production.
+
+Three-way diagnostic benchmark: `tests1.0/kernel_telemetry/results/three_way_20261125-194503/` (75 trials, 5 workloads, 5 repetitions each, full quiet diagnostic mode). Mean create-pair completeness A/B/C: paced 99.96/100/100%, burst 7.43/82.34/81.45%, sustained 12.25/28.89/28.64%, contention 1.86/12.87/11.30%, registry 40.96/40.96/100.00% rounded. B and C each passed 2/6 original analyzer targets. C registry improvement confounded by expanded maps; both async candidates suffer sustained queue saturation. Local audit classifies C 283810 discrepancy labels as queue losses and one as truthful uncorrelated success; A paced had one file-registry update failure. No full lifecycle fidelity or production evidence equivalence established. Review limitations documented in #4 comment 7165662311. Preserve artifacts and checkpoints; no further tuning/runs until owner decision.
 
 Issue #3 completed: 50 paired diagnostic trials (five repetitions per workload per architecture), local evidence `tests1.0/kernel_telemetry/results/interleaved_20261125-132015/`. B improved mean validated create-pair completeness on burst (7.90% to 84.54%) but failed sustained useful throughput, memory and drain targets. Original analyzer verdict 2/6; registry discrepancies reportedly truthful uncorrelated successes, not actual syscall inversions. Full lifecycle fidelity, production evidence equivalence and exact binary provenance not established. Preserve both candidates and historical evidence. No further B tuning.
 
@@ -61,7 +65,7 @@ GitHub Issues is the authoritative task register.
 
 - #2: Review logging optimization (closed/accepted as diagnostic optimization).
 - #3: Evaluate asynchronous userspace acquisition (closed: experiment completed, not adopted).
-- #4: Evaluate minimal kernel-side state (active: design and feasibility review).
+- #4: Evaluate minimal kernel-side state (experimental phase complete; open for owner architecture decision; implementation paused).
 - #5: Remaining descriptor and registry limitations.
 - #6: Repair legacy test build paths.
 
