@@ -26,7 +26,7 @@ $(BUILD_DIR)/monitor.bpf.o: $(SRC_BPF) src/bpf/vmlinux.h | $(BUILD_DIR)
 	$(CLANG) $(BPF_CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/loader: $(SRC_LOADER) src/user/provenance.h | $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(LIBBPF_CFLAGS) $(SRC_LOADER) -o $@ $(LIBBPF_LIBS)
+	$(CC) $(CFLAGS) -pthread $(LIBBPF_CFLAGS) $(SRC_LOADER) -o $@ $(LIBBPF_LIBS)
 
 $(BUILD_DIR)/%: tests/%.c | $(BUILD_DIR)
 	$(CC) -O2 -pthread $< -o $@

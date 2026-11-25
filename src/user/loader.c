@@ -19,6 +19,35 @@
 #include <linux/perf_event.h>
 #include <ctype.h>
 #include "provenance.h"
+#include "event_queue.h"
+
+#ifndef DIAG_QUEUE_STATS_DEF
+#define DIAG_QUEUE_STATS_DEF
+struct diag_queue_stats {
+    uint32_t capacity;
+    uint64_t admission_attempts;
+    uint64_t enqueued;
+    uint64_t dequeued;
+    uint64_t drops;
+    uint32_t high_water_mark;
+};
+#endif
+
+static struct event_queue *g_queue = NULL;
+
+#define DIAG_HAS_QUEUE_STATS 1
+int diag_get_queue_stats(struct diag_queue_stats *qs) {
+    if (!qs || !g_queue) return -1;
+    pthread_mutex_lock(&g_queue->lock);
+    qs->capacity = g_queue->capacity;
+    qs->admission_attempts = g_queue->admission_attempts;
+    qs->enqueued = g_queue->enqueued;
+    qs->dequeued = g_queue->dequeued;
+    qs->drops = g_queue->drops;
+    qs->high_water_mark = g_queue->high_water_mark;
+    pthread_mutex_unlock(&g_queue->lock);
+    return 0;
+}
 
 enum log_level {
     LOG_LEVEL_ERROR = 0,
@@ -1001,6 +1030,43 @@ static int handle_event(void *ctx, void *data, size_t size)
     return 0;
 }
 
+static inline void on_event_processed(int cap_idx) {
+    (void)cap_idx;
+}
+
+static __attribute__((unused)) int acquisition_callback(void *ctx, void *data, size_t size) {
+    (void)ctx;
+    if (size != sizeof(struct event))
+        return 0;
+    const struct event *e = (const struct event *)data;
+    event_queue_push(g_queue, e, -1);
+    return 0;
+}
+
+static void *acquisition_thread_fn(void *arg) {
+    struct ring_buffer *rb = (struct ring_buffer *)arg;
+    while (running) {
+        int poll_err = ring_buffer__poll(rb, 100);
+        if (poll_err < 0 && poll_err != -EINTR) {
+            log_error("Ring buffer polling failed: %d", poll_err);
+            break;
+        }
+    }
+    while (ring_buffer__consume(rb) > 0) {}
+    event_queue_shutdown(g_queue);
+    return NULL;
+}
+
+static void *worker_thread_fn(void *arg) {
+    (void)arg;
+    struct queue_entry entry;
+    while (event_queue_pop(g_queue, &entry) == 0) {
+        handle_event(NULL, &entry.e, sizeof(entry.e));
+        on_event_processed(entry.cap_idx);
+    }
+    return NULL;
+}
+
 static int parse_online_cpus(int **out_cpus, int *out_count)
 {
     FILE *f = fopen("/sys/devices/system/cpu/online", "r");
@@ -1398,7 +1464,7 @@ static uint32_t filter_pid = 0;
 static uint64_t filter_token = 0;
 static const char *timeline_filepath = "ephimtrace_timeline.md";
 
-static void export_provenance_data(uint32_t target_pid, uint64_t target_token, const char *timeline_path)
+static __attribute__((unused)) void export_provenance_data(uint32_t target_pid, uint64_t target_token, const char *timeline_path)
 {
     prov_engine_export_dot("ephimtrace_dag.dot");
     prov_engine_export_json("ephimtrace_dag.json");
@@ -1779,12 +1845,30 @@ int main(int argc, char **argv)
         goto cleanup;
     }
 
-    rb = ring_buffer__new(bpf_map__fd(map), handle_event, NULL, NULL);
+    g_queue = event_queue_create(EVENT_QUEUE_CAPACITY);
+    if (!g_queue) {
+        log_error("Failed to allocate event queue");
+        goto cleanup;
+    }
+
+    rb = ring_buffer__new(bpf_map__fd(map), acquisition_callback, NULL, NULL);
     long rb_err = libbpf_get_error(rb);
     if (!rb || rb_err) {
         int ec = rb_err ? (int)rb_err : (errno ? -errno : -EINVAL);
         rb = NULL;
         log_error("Ring buffer setup failed: %d (%s)", ec, strerror(ec < 0 ? -ec : ec));
+        goto cleanup;
+    }
+
+    pthread_t worker_tid, acq_tid;
+    if (pthread_create(&worker_tid, NULL, worker_thread_fn, NULL) != 0) {
+        log_error("Failed to start processing worker thread");
+        goto cleanup;
+    }
+    if (pthread_create(&acq_tid, NULL, acquisition_thread_fn, rb) != 0) {
+        log_error("Failed to start ring buffer acquisition thread");
+        event_queue_shutdown(g_queue);
+        pthread_join(worker_tid, NULL);
         goto cleanup;
     }
 
@@ -1797,7 +1881,7 @@ int main(int argc, char **argv)
     time_t last_counter_print = time(NULL);
 
     while (running) {
-        int poll_err = ring_buffer__poll(rb, 250);
+        sleep(1);
 
         if (sigusr1_received) {
             sigusr1_received = 0;
@@ -1814,15 +1898,10 @@ int main(int argc, char **argv)
             last_counter_print = now;
             print_counters_table(cnt_fd);
         }
-
-        if (poll_err == -EINTR)
-            continue;
-
-        if (poll_err < 0) {
-            log_error("Ring buffer polling failed: %d", poll_err);
-            break;
-        }
     }
+
+    pthread_join(acq_tid, NULL);
+    pthread_join(worker_tid, NULL);
 
     if (current_log_level >= LOG_LEVEL_DEBUG) {
         printf("\nFinal counter summary at exit:\n");
@@ -1836,6 +1915,11 @@ int main(int argc, char **argv)
 cleanup:
     prov_engine_destroy();
     cleanup_diag_instance();
+
+    if (g_queue) {
+        event_queue_destroy(g_queue);
+        g_queue = NULL;
+    }
 
     /* 1. Disable and close all per-CPU perf-event FDs first to stop event generation */
     for (size_t i = 0; i < NUM_REQUIRED_HOOKS; i++) {

@@ -14,10 +14,12 @@ struct diag_queue_stats {
 };
 #endif
 
+#ifndef DIAG_HAS_QUEUE_STATS
 __attribute__((weak)) int diag_get_queue_stats(struct diag_queue_stats *qs) {
     (void)qs;
     return -1;
 }
+#endif
 
 enum diag_p_status {
     P_STATUS_UNAVAILABLE = 0,

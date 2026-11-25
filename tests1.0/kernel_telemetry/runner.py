@@ -127,17 +127,19 @@ def build():
 
     marker = "static int parse_online_cpus("
     wrapper = """static int diag_receive(void *ctx, void *data, size_t size) {
+    (void)ctx;
     uint64_t _t_enter = diag_time_now_ns();
     if (size != sizeof(struct event)) { diag_invalid++; return 0; }
     const struct event *e = data;
     if (!e->type || (e->type > 19 && e->type != 99)) { diag_other++; return 0; }
     diag_received[0][e->type]++;
-    struct diag_captured_event *cap = NULL;
+    int cap_idx = -1;
     if (e->pid == diag_pid) {
         diag_received[1][e->type]++;
         if (e->type == 2 || e->type == 12) {
             if (diag_captured_count < DIAG_MAX_CAPTURED) {
-                cap = &diag_captured_events[diag_captured_count++];
+                cap_idx = (int)diag_captured_count++;
+                struct diag_captured_event *cap = &diag_captured_events[cap_idx];
                 cap->type = e->type;
                 cap->pid = e->pid;
                 cap->tid = e->tid;
@@ -160,22 +162,26 @@ def build():
     uint64_t _t_rec = diag_time_now_ns();
     diag_timing_record(&g_diag_profile.reception, _t_rec - _t_enter);
     if (diag_delay) { struct timespec ts = {diag_delay / 1000000, (long)(diag_delay % 1000000) * 1000}; nanosleep(&ts, NULL); }
-    int rc = 0;
-    if (diag_full) {
-        rc = handle_event(ctx, data, size);
-        if (cap) {
-            cap->p_status = diag_p_get_last_status();
+
+    if (event_queue_push(g_queue, e, cap_idx) < 0) {
+        if (cap_idx >= 0) {
+            diag_captured_events[cap_idx].p_status = P_STATUS_FAILED;
         }
     }
-    uint64_t _t_exit = diag_time_now_ns();
-    uint64_t _total_cb = _t_exit - _t_enter;
-    diag_timing_record(&g_diag_profile.total_callback, _total_cb);
-    diag_profile_record_latency_growth(_total_cb);
-    return rc;
+    return 0;
 }
 
 """
     u = replace(u, marker, wrapper + marker)
+    u = replace(
+        u,
+        "static inline void on_event_processed(int cap_idx) {\n    (void)cap_idx;\n}",
+        """static inline void on_event_processed(int cap_idx) {
+    if (cap_idx >= 0) {
+        diag_captured_events[cap_idx].p_status = diag_p_get_last_status();
+    }
+}""",
+    )
     u = replace(
         u,
         "    libbpf_set_print(libbpf_print_fn);",
@@ -223,7 +229,7 @@ def build():
     )
     u = replace(
         u,
-        "ring_buffer__new(bpf_map__fd(map), handle_event, NULL, NULL)",
+        "ring_buffer__new(bpf_map__fd(map), acquisition_callback, NULL, NULL)",
         "ring_buffer__new(bpf_map__fd(map), diag_receive, NULL, NULL)",
     )
     u = replace(
@@ -231,11 +237,7 @@ def build():
         "    time_t last_counter_print = time(NULL);",
         '    puts("DIAG_READY"); fflush(stdout);\n    time_t last_counter_print = time(NULL);',
     )
-    u = replace(
-        u,
-        '            log_error("Ring buffer polling failed: %d", poll_err);\n            break;',
-        '            log_error("Ring buffer polling failed: %d", poll_err);\n            goto cleanup;',
-    )
+
     start = u.index("    /* 1. Disable and close all per-CPU perf-event FDs")
     end = u.index("    /* 3. Free the ring buffer */", start)
     detach = u[start:end]
@@ -243,12 +245,10 @@ def build():
         u,
         "    export_provenance_data(filter_pid, filter_token, timeline_filepath);\n\n    ret = 0;",
         detach
-        + """    /* Producers detached; consume queued records before comparing counters. */
-    for (int quiet=0; quiet<3;) {
-        int got=ring_buffer__consume(rb);
-        if (got<0) { log_error("Diagnostic drain failed: %d",got); goto cleanup; }
-        if (got==0) { quiet++; usleep(10000); } else quiet=0;
-    }
+        + """    /* Producers detached; wait for acquisition and worker threads to drain and finish. */
+    running = 0;
+    pthread_join(acq_tid, NULL);
+    pthread_join(worker_tid, NULL);
     if (diag_report(obj)) { log_error("Diagnostic counter read failed"); goto cleanup; }
     ret = 0;""",
     )
@@ -508,7 +508,7 @@ def build():
     )
     run(
         cc
-        + ["-O2", "-Wall", "-Wextra", "-I", "src/user"]
+        + ["-O2", "-Wall", "-Wextra", "-pthread", "-I", "src/user", "-I", "."]
         + pkg("--cflags")
         + [
             str(BUILD / "loader.diag.c"),
@@ -556,6 +556,23 @@ def build():
                 str(HERE / "test_registry_concurrency.c"),
                 "-o",
                 str(BUILD / "test_registry_concurrency"),
+            ]
+        )
+    if (HERE / "test_async_queue.c").exists():
+        run(
+            cc
+            + [
+                "-O2",
+                "-Wall",
+                "-Wextra",
+                "-pthread",
+                "-I",
+                "src/user",
+                "-I",
+                ".",
+                str(HERE / "test_async_queue.c"),
+                "-o",
+                str(BUILD / "test_async_queue"),
             ]
         )
     if (HERE / "test_callback_equivalence.c").exists():
