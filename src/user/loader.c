@@ -1045,19 +1045,32 @@ static __attribute__((unused)) int acquisition_callback(void *ctx, void *data, s
 }
 
 static volatile int acq_drain_and_stop = 0;
+static int acq_thread_err = 0;
 
 static void *acquisition_thread_fn(void *arg) {
     struct ring_buffer *rb = (struct ring_buffer *)arg;
-    while (!acq_drain_and_stop && running) {
+    while (!__atomic_load_n(&acq_drain_and_stop, __ATOMIC_ACQUIRE)) {
         int poll_err = ring_buffer__poll(rb, 100);
         if (poll_err < 0 && poll_err != -EINTR) {
             log_error("Ring buffer polling failed: %d", poll_err);
+            acq_thread_err = poll_err;
+            running = 0;
             break;
         }
     }
-    while (ring_buffer__consume(rb) > 0) {}
+    while (1) {
+        int got = ring_buffer__consume(rb);
+        if (got < 0) {
+            log_error("Ring buffer final drain failed: %d", got);
+            if (!acq_thread_err)
+                acq_thread_err = got;
+            break;
+        }
+        if (got == 0)
+            break;
+    }
     event_queue_shutdown(g_queue);
-    return NULL;
+    return (void *)(intptr_t)acq_thread_err;
 }
 
 static void *worker_thread_fn(void *arg) {
@@ -1925,8 +1938,14 @@ int main(int argc, char **argv)
         }
     }
 
-    acq_drain_and_stop = 1;
-    pthread_join(acq_tid, NULL);
+    __atomic_store_n(&acq_drain_and_stop, 1, __ATOMIC_RELEASE);
+    void *acq_ret = NULL;
+    pthread_join(acq_tid, &acq_ret);
+    if ((intptr_t)acq_ret != 0 || acq_thread_err != 0) {
+        log_error("Acquisition thread failed with error %ld", (long)(intptr_t)acq_ret);
+        ret = 1;
+        goto cleanup;
+    }
     pthread_join(worker_tid, NULL);
 
     if (current_log_level >= LOG_LEVEL_DEBUG) {
