@@ -820,7 +820,7 @@ def reconcile_events(records, captured_events, p_available=False):
     }
 
 
-def analyse(d, w):
+def analyse(d, w, timing=None):
     rows = {(r["scope"], r["type"]): r for r in d["events"]}
     t = lambda k: rows.get(
         (1, k), dict(attempted=0, reserve_failed=0, submitted=0, received=0)
@@ -878,10 +878,10 @@ def analyse(d, w):
 
     rec = reconcile_events(records, caps, p_available=p_avail)
 
-    c = d["target_counters"]
+    c = d.get("target_counters", [0] * 128)
     checks = {
-        "memfd_enter_hook": (w["calls"], c[60]),
-        "memfd_exit_hook": (w["calls"], c[70]),
+        "memfd_enter_hook": (w["calls"], c[60] if len(c) > 60 else 0),
+        "memfd_exit_hook": (w["calls"], c[70] if len(c) > 70 else 0),
         "creation_attempt_records": (w["calls"], t(2)["attempted"]),
         "completion_attempt_records": (w["calls"], t(12)["attempted"]),
         "write_attempt_records": (w["writes"], t(17)["attempted"]),
@@ -949,12 +949,68 @@ def analyse(d, w):
         and len(unrelated_p_disc) == 0
     )
 
+    n_ops_attempted = w.get("create_attempts", 0)
+    n_gen_gap = max(0, n_ops_attempted - t(2)["attempted"])
+    n_ring_loss = target_drops
+    queue_info = d.get("queue", {})
+    n_queue_loss = queue_info.get("drops", 0)
+    n_corr_def = c[72] if len(c) > 72 else 0
+    n_proc_fail = p_info.get("failed", 0) if p_avail else 0
+
+    stage_losses = n_gen_gap + n_ring_loss + n_queue_loss + n_corr_def + n_proc_fail
+    n_reconstructed = max(0, n_ops_attempted - stage_losses)
+    accounting_residual = n_ops_attempted - (n_reconstructed + stage_losses)
+
+    c_e2e = (n_reconstructed / n_ops_attempted) if n_ops_attempted > 0 else 1.0
+    f_incomplete = 1.0 - c_e2e
+
+    thru = {}
+    if timing:
+        w_dur = timing.get("workload_duration_sec", 0.0)
+        tot_dur = timing.get("total_duration_sec", 0.0)
+        drain_s = timing.get("drain_latency_sec", 0.0)
+        thru["offered_throughput_ops_sec"] = (n_ops_attempted / w_dur) if w_dur > 0 else 0.0
+        thru["useful_throughput_ops_sec"] = (n_reconstructed / tot_dur) if tot_dur > 0 else 0.0
+        thru["drain_latency_ms"] = drain_s * 1000.0
+        thru["workload_duration_sec"] = w_dur
+        thru["total_duration_sec"] = tot_dur
+
+    loader_ru = d.get("rusage", {})
+    loader_cpu_us = loader_ru.get("user_cpu_us", 0) + loader_ru.get("sys_cpu_us", 0)
+    loader_max_rss_kb = loader_ru.get("max_rss_kb", 0)
+    workload_cpu_us = w.get("user_cpu_us", 0) + w.get("sys_cpu_us", 0)
+    resources = {
+        "workload_cpu_us": workload_cpu_us,
+        "loader_cpu_us": loader_cpu_us,
+        "loader_max_rss_kb": loader_max_rss_kb,
+        "loader_max_rss_mib": round(loader_max_rss_kb / 1024.0, 2),
+        "cpu_cost_attempted_us": (loader_cpu_us / n_ops_attempted) if n_ops_attempted > 0 else 0.0,
+        "cpu_cost_reconstructed_us": (loader_cpu_us / n_reconstructed) if n_reconstructed > 0 else 0.0,
+    }
+
+    pipeline_accounting = {
+        "ops_attempted": n_ops_attempted,
+        "reconstructed": n_reconstructed,
+        "gen_gap": n_gen_gap,
+        "ring_loss": n_ring_loss,
+        "queue_loss": n_queue_loss,
+        "corr_def": n_corr_def,
+        "proc_fail": n_proc_fail,
+        "completeness_c_e2e": c_e2e,
+        "incomplete_fraction_f": f_incomplete,
+        "residual": accounting_residual,
+    }
+
     return {
         "measurement_valid": measurement_valid,
         "telemetry_complete": telemetry_complete,
         "telemetry_fidelity_valid": telemetry_fidelity_valid,
         "measurement_issues": measurement_issues,
         "backend_findings": backend_findings,
+        "pipeline_accounting": pipeline_accounting,
+        "throughput": thru,
+        "resources": resources,
+        "queue": queue_info,
         "reconciliation": {
             "missing_create_count": len(rec["missing_create"]),
             "missing_complete_count": len(rec["missing_complete"]),
@@ -976,10 +1032,10 @@ def analyse(d, w):
             and r["op"] == "update"
             and r["other_error"] + r["enoent"]
         },
-        "completion_correlated": c[71],
-        "completion_uncorrelated": c[72],
-        "completion_failed_syscall": c[73],
-        "memfd_completion_rb_error": c[74],
+        "completion_correlated": c[71] if len(c) > 71 else 0,
+        "completion_uncorrelated": c[72] if len(c) > 72 else 0,
+        "completion_failed_syscall": c[73] if len(c) > 73 else 0,
+        "memfd_completion_rb_error": c[74] if len(c) > 74 else 0,
     }
 
 
@@ -1064,9 +1120,11 @@ def trial(
             if stall:
                 os.kill(p.pid, signal.SIGSTOP)
                 stopped(p.pid)
+            t_workload_start = time.monotonic()
             w.stdin.write("\n")
             w.stdin.flush()
             truth = json.loads(line_with_timeout(w.stdout, 180))
+            t_workload_done = time.monotonic()
             if ("records" not in truth or not truth["records"]) and truth_path.exists():
                 try:
                     truth["records"] = json.loads(truth_path.read_text()).get(
@@ -1080,6 +1138,28 @@ def trial(
             p.send_signal(signal.SIGINT)
             if p.wait(timeout=120) != 0:
                 raise RuntimeError("loader returned failure")
+            t_processing_complete = time.monotonic()
+
+        drain_latency_sec = max(0.0, t_processing_complete - t_workload_done)
+        start_ts_ns = truth.get("start_ts_ns", 0)
+        done_ts_ns = truth.get("done_ts_ns", 0)
+        if start_ts_ns and done_ts_ns and done_ts_ns >= start_ts_ns:
+            workload_duration_sec = (done_ts_ns - start_ts_ns) / 1e9
+        elif "seconds" in truth and truth["seconds"] > 0:
+            workload_duration_sec = truth["seconds"]
+        else:
+            workload_duration_sec = max(0.0001, t_workload_done - t_workload_start)
+        total_duration_sec = workload_duration_sec + drain_latency_sec
+
+        timing = {
+            "workload_start": t_workload_start,
+            "workload_done": t_workload_done,
+            "processing_complete": t_processing_complete,
+            "workload_duration_sec": workload_duration_sec,
+            "drain_latency_sec": drain_latency_sec,
+            "total_duration_sec": total_duration_sec,
+        }
+
         d = get_result(log)
         if d["pid"] != w.pid:
             raise RuntimeError("wrong target PID")
@@ -1090,7 +1170,7 @@ def trial(
                 d["captured_events"] = json.loads(cap_path.read_text())
             except Exception:
                 pass
-        analysis = analyse(d, truth)
+        analysis = analyse(d, truth, timing=timing)
         report = {
             "status": "VALID" if analysis["measurement_valid"] else "INVALID",
             "test": spec,
@@ -1154,9 +1234,13 @@ def trial(
                 )
         a = report["analysis"]
         rec = a["reconciliation"]
+        pipe = a.get("pipeline_accounting", {})
+        thru = a.get("throughput", {})
+        res = a.get("resources", {})
         q_tag = " (quiet)" if spec.get("quiet") else ""
+        c_pct = pipe.get("completeness_c_e2e", 1.0) * 100.0
         print(
-            f"{name}{q_tag}: {report['status']} | complete={a['telemetry_complete']} (drops={a['target_reservation_failures']}, missing_comp={rec['missing_complete_count']}) | fidelity={a['telemetry_fidelity_valid']} (corrupt={rec['corrupted_events_count']}, p_disc={rec['p_discrepancies_count']}) | gaps={len(a['backend_findings']['generation_gaps'])}",
+            f"{name}{q_tag}: {report['status']} | complete={a['telemetry_complete']} (C_e2e={c_pct:.1f}%, drops={a['target_reservation_failures']}, q_drops={pipe.get('queue_loss', 0)}) | fidelity={a['telemetry_fidelity_valid']} (corrupt={rec['corrupted_events_count']}, p_disc={rec['p_discrepancies_count']}) | gaps={len(a['backend_findings']['generation_gaps'])} | offered={thru.get('offered_throughput_ops_sec', 0.0):.0f} op/s, useful={thru.get('useful_throughput_ops_sec', 0.0):.0f} op/s, drain={thru.get('drain_latency_ms', 0.0):.1f}ms, RSS={res.get('loader_max_rss_mib', 0.0)}MiB",
             flush=True,
         )
         if "profiling" in report["measurement"]:
@@ -1181,7 +1265,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("action", choices=["build", "run"])
     ap.add_argument(
-        "--suite", choices=["quick", "pressure", "map", "cpu"], default="quick"
+        "--suite", choices=["quick", "pressure", "map", "cpu", "benchmark"], default="quick"
     )
     ap.add_argument(
         "--quiet",
@@ -1246,6 +1330,14 @@ def main():
         ]
     elif a.suite == "map":
         cases = [("hold_paced", a.hold, 1, 100, False, False, 0, True)]
+    elif a.suite == "benchmark":
+        cases = [
+            ("W_PACED", 500, 1, 1000, True, False, 0, False),
+            ("W_BURST", 2500, 4, 0, True, False, 0, False),
+            ("W_SUSTAIN", 15000, 4, 50, True, False, 0, False),
+            ("W_CONTENTION", 5000, 8, 0, True, False, 0, False),
+            ("W_REGISTRY", 10000, 1, 100, True, False, 0, True),
+        ]
     else:
         cases = [
             (f"cpu_{c}", 100, 1, 1000, False, False, 0, False, c)

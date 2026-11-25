@@ -155,7 +155,9 @@ static void *worker(void *arg) {
     return NULL;
 }
 
-static int export_records_json(FILE *f, double elapsed_sec, int include_records, const char *records_file_path) {
+static int export_records_json(FILE *f, double elapsed_sec, uint64_t start_ts_ns, uint64_t done_ts_ns,
+                               uint64_t user_cpu_us, uint64_t sys_cpu_us,
+                               int include_records, const char *records_file_path) {
     if (!f) return -1;
     uint64_t c_att = atomic_load(&create_attempts);
     uint64_t c_succ = atomic_load(&create_successes);
@@ -172,12 +174,17 @@ static int export_records_json(FILE *f, double elapsed_sec, int include_records,
                "\"create_attempts\":%lu,\"create_successes\":%lu,\"create_failures\":%lu,"
                "\"write_attempts\":%lu,\"write_successes\":%lu,\"write_failures\":%lu,"
                "\"close_attempts\":%lu,\"close_successes\":%lu,\"close_failures\":%lu,"
-               "\"seconds\":%.9f",
+               "\"seconds\":%.9f,"
+               "\"start_ts_ns\":%llu,\"done_ts_ns\":%llu,\"user_cpu_us\":%llu,\"sys_cpu_us\":%llu",
                c_att, c_succ, w_succ, cl_succ, total_fail,
                c_att, c_succ, c_fail,
                w_att, w_succ, w_fail,
                cl_att, cl_succ, cl_fail,
-               elapsed_sec);
+               elapsed_sec,
+               (unsigned long long)start_ts_ns,
+               (unsigned long long)done_ts_ns,
+               (unsigned long long)user_cpu_us,
+               (unsigned long long)sys_cpu_us);
 
     if (records_file_path && records_file_path[0]) {
         fprintf(f, ",\"records_file\":\"%s\"", records_file_path);
@@ -311,6 +318,15 @@ int main(int argc, char **argv) {
     }
     clock_gettime(CLOCK_MONOTONIC, &b);
     double elapsed = (b.tv_sec - a.tv_sec) + (b.tv_nsec - a.tv_nsec) / 1e9;
+    uint64_t start_ts_ns = (uint64_t)a.tv_sec * 1000000000ULL + (uint64_t)a.tv_nsec;
+    uint64_t done_ts_ns = (uint64_t)b.tv_sec * 1000000000ULL + (uint64_t)b.tv_nsec;
+
+    struct rusage ru;
+    uint64_t user_cpu_us = 0, sys_cpu_us = 0;
+    if (getrusage(RUSAGE_SELF, &ru) == 0) {
+        user_cpu_us = (uint64_t)ru.ru_utime.tv_sec * 1000000ULL + (uint64_t)ru.ru_utime.tv_usec;
+        sys_cpu_us = (uint64_t)ru.ru_stime.tv_sec * 1000000ULL + (uint64_t)ru.ru_stime.tv_usec;
+    }
 
     if (join_errors > 0) {
         free(threads);
@@ -385,7 +401,7 @@ int main(int argc, char **argv) {
             return 2;
         }
         /* Full export with complete records array to file */
-        if (export_records_json(fp, elapsed, 1, ground_truth_path) != 0) {
+        if (export_records_json(fp, elapsed, start_ts_ns, done_ts_ns, user_cpu_us, sys_cpu_us, 1, ground_truth_path) != 0) {
             fprintf(stderr, "FATAL: Failed writing records to %s\n", ground_truth_path);
             fclose(fp);
             free(threads);
@@ -406,7 +422,7 @@ int main(int argc, char **argv) {
      * or if total_ops is small (<= 2000) for convenient pipeline consumption.
      */
     int include_stdout_records = (!ground_truth_path || !ground_truth_path[0] || total_ops <= 2000);
-    if (export_records_json(stdout, elapsed, include_stdout_records, ground_truth_path) != 0) {
+    if (export_records_json(stdout, elapsed, start_ts_ns, done_ts_ns, user_cpu_us, sys_cpu_us, include_stdout_records, ground_truth_path) != 0) {
         fprintf(stderr, "FATAL: Failed exporting records to stdout\n");
         free(threads);
         free(records);

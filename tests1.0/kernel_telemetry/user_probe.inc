@@ -1,5 +1,23 @@
 /* Diagnostic userspace probe instrumentation */
 #include <time.h>
+#include <sys/resource.h>
+
+#ifndef DIAG_QUEUE_STATS_DEF
+#define DIAG_QUEUE_STATS_DEF
+struct diag_queue_stats {
+    uint32_t capacity;
+    uint64_t admission_attempts;
+    uint64_t enqueued;
+    uint64_t dequeued;
+    uint64_t drops;
+    uint32_t high_water_mark;
+};
+#endif
+
+__attribute__((weak)) int diag_get_queue_stats(struct diag_queue_stats *qs) {
+    (void)qs;
+    return -1;
+}
 
 enum diag_p_status {
     P_STATUS_UNAVAILABLE = 0,
@@ -280,6 +298,24 @@ static int diag_report(struct bpf_object *obj) {
            (unsigned long long)g_diag_profile.late_count,
            g_diag_profile.late_count ? (unsigned long long)(g_diag_profile.late_total_ns / g_diag_profile.late_count) : 0ULL
     );
+
+    struct rusage ru;
+    uint64_t u_cpu = 0, s_cpu = 0, max_rss = 0;
+    if (getrusage(RUSAGE_SELF, &ru) == 0) {
+        u_cpu = (uint64_t)ru.ru_utime.tv_sec * 1000000ULL + (uint64_t)ru.ru_utime.tv_usec;
+        s_cpu = (uint64_t)ru.ru_stime.tv_sec * 1000000ULL + (uint64_t)ru.ru_stime.tv_usec;
+        max_rss = (uint64_t)ru.ru_maxrss;
+    }
+    printf(",\"rusage\":{\"user_cpu_us\":%llu,\"sys_cpu_us\":%llu,\"max_rss_kb\":%llu}",
+           (unsigned long long)u_cpu, (unsigned long long)s_cpu, (unsigned long long)max_rss);
+
+    struct diag_queue_stats qs;
+    if (diag_get_queue_stats(&qs) == 0) {
+        printf(",\"queue\":{\"capacity\":%u,\"admission_attempts\":%llu,\"enqueued\":%llu,\"dequeued\":%llu,\"drops\":%llu,\"high_water_mark\":%u}",
+               qs.capacity, (unsigned long long)qs.admission_attempts,
+               (unsigned long long)qs.enqueued, (unsigned long long)qs.dequeued,
+               (unsigned long long)qs.drops, qs.high_water_mark);
+    }
 
     puts("}");
     return fflush(stdout)==0?0:-1;
