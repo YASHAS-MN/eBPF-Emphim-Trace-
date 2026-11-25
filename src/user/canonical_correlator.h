@@ -37,6 +37,8 @@ struct canonical_event {
   uint64_t start_time_ns;
   int32_t fd;
   uint64_t object_token;
+  uint32_t creator_tgid;
+  uint64_t creator_start_time_ns;
   uint64_t inode_no;
   uint64_t dev_id;
   uint32_t op_type; /* Canonical status: MEMFD_STATUS_* */
@@ -62,9 +64,13 @@ void canonical_correlator_destroy(void);
  */
 int canonical_correlator_process_event(struct event *e);
 
-/* Process an incoming raw event and output the canonical reconstruction
- * separately, leaving the raw input event unmutated. Returns 0 on success,
- * negative error code on failure.
+/* Process an incoming raw event non-mutatingly and output the canonical
+ * reconstruction separately, leaving the raw input event unmutated. Propagates
+ * lifetime identity consistently:
+ * - Reconstructs process start_time_ns from descriptor tracking if missing in
+ * raw event.
+ * - Propagates creator_tgid and creator_start_time_ns across all object
+ * operations. Returns 0 on success, negative error code on failure.
  */
 int canonical_correlator_process_event_canonical(const struct event *raw,
                                                  struct canonical_event *canon);

@@ -179,7 +179,9 @@ def build():
         """static inline void on_event_processed(int cap_idx, uint32_t pid) {
     diag_record_global_event_ts();
     if (cap_idx >= 0) {
-        diag_captured_events[cap_idx].p_status = diag_p_get_last_status();
+        if (diag_full) {
+            diag_captured_events[cap_idx].p_status = diag_p_get_last_status();
+        }
         if (diag_last_processed_token != 0) {
             diag_captured_events[cap_idx].token = diag_last_processed_token;
         }
@@ -273,10 +275,12 @@ def build():
     uint64_t _t_ps_end = diag_time_now_ns();
     diag_timing_record(&g_diag_profile.process_state, _t_ps_end - _t_ps_start);
 
-    uint64_t _t_prov_start = diag_time_now_ns();
-    prov_engine_process_event(e);
-    uint64_t _t_prov_end = diag_time_now_ns();
-    diag_timing_record(&g_diag_profile.provenance, _t_prov_end - _t_prov_start);
+    if (diag_full) {
+        uint64_t _t_prov_start = diag_time_now_ns();
+        prov_engine_process_event(e);
+        uint64_t _t_prov_end = diag_time_now_ns();
+        diag_timing_record(&g_diag_profile.provenance, _t_prov_end - _t_prov_start);
+    }
 
     if (size != sizeof(*e))
         return 0;
@@ -570,6 +574,23 @@ def build():
                 str(BUILD / "test_async_queue"),
             ]
         )
+    if (HERE / "test_canonical_correlator.c").exists():
+        run(
+            cc
+            + [
+                "-O2",
+                "-Wall",
+                "-Wextra",
+                "-I",
+                "src/user",
+                "-I",
+                ".",
+                str(HERE / "test_canonical_correlator.c"),
+                str(ROOT / "src/user/canonical_correlator.c"),
+                "-o",
+                str(BUILD / "test_canonical_correlator"),
+            ]
+        )
     if (HERE / "test_callback_equivalence.c").exists():
         run(
             cc
@@ -625,7 +646,9 @@ def wait_ready(p, log, timeout=30):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if p.poll() is not None:
-            raise RuntimeError(f"loader exited {p.returncode}; inspect {log}")
+            ret = p.returncode
+            sig_name = f" (signal {signal.Signals(-ret).name})" if ret < 0 else ""
+            raise RuntimeError(f"loader exited {ret}{sig_name}; inspect {log}")
         if b"\nDIAG_READY\n" in log.read_bytes():
             return
         time.sleep(0.03)
@@ -1223,8 +1246,10 @@ def trial(
                 os.kill(p.pid, signal.SIGCONT)
             time.sleep(0.25)
             p.send_signal(signal.SIGINT)
-            if p.wait(timeout=120) != 0:
-                raise RuntimeError("loader returned failure")
+            exit_code = p.wait(timeout=120)
+            if exit_code != 0:
+                sig_name = f" (signal {signal.Signals(-exit_code).name})" if exit_code < 0 else ""
+                raise RuntimeError(f"loader returned failure: exit code {exit_code}{sig_name}")
             t_processing_complete = time.monotonic()
 
         d = get_result(log)

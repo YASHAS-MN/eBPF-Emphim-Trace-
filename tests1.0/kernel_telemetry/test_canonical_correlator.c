@@ -374,14 +374,36 @@ static void test_raw_vs_canonical_separation(void) {
     assert(raw.object_token == 0);
     assert(raw.op_type == MEMFD_STATUS_SUCCESS_CORRELATED);
 
-    /* Verify canonical event has reconstructed token */
+    /* Verify canonical event has reconstructed token and creator identity */
     assert(canon.object_token != 0);
     assert(canon.op_type == MEMFD_STATUS_SUCCESS_CORRELATED);
     assert(canon.inode_no == 12345);
     assert(canon.pid == 8001);
+    assert(canon.creator_tgid == 8001);
+    assert(canon.creator_start_time_ns == 500000000ULL);
+
+    /* Test consistent lifetime identity propagation when raw close event lacks start_time_ns (0) */
+    struct event raw_close;
+    init_mock_event(&raw_close, EVENT_FD_CLOSED, 8001, 8001);
+    raw_close.start_time_ns = 0; /* Simulating missing task leader boottime in close hook */
+    raw_close.fd = 3;
+
+    struct canonical_event canon_close;
+    rc = canonical_correlator_process_event_canonical(&raw_close, &canon_close);
+    assert(rc == 0);
+
+    /* Raw close is unmutated */
+    assert(raw_close.start_time_ns == 0);
+    assert(raw_close.object_token == 0);
+
+    /* Canonical close has recovered lifetime identity and creator provenance */
+    assert(canon_close.start_time_ns == 500000000ULL);
+    assert(canon_close.object_token == canon.object_token);
+    assert(canon_close.creator_tgid == 8001);
+    assert(canon_close.creator_start_time_ns == 500000000ULL);
 
     canonical_correlator_destroy();
-    printf("  [PASS] Raw observations preserved non-destructively; canonical event produced separately\n");
+    printf("  [PASS] Raw observations preserved non-destructively; lifetime identity propagated consistently\n");
 }
 
 static void test_unrelated_hooks_passthrough(void) {

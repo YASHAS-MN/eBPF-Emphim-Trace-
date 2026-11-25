@@ -46,9 +46,8 @@ static inline uint32_t hash_ino_dev(uint64_t dev, uint64_t ino) {
     return (uint32_t)(h % OBJECT_HASH_SIZE);
 }
 
-static inline uint32_t hash_desc(uint32_t tgid, uint64_t start_time, int32_t fd) {
-    uint64_t h = ((uint64_t)tgid << 32) ^ start_time ^ (uint32_t)fd;
-    h ^= (h >> 16);
+static inline uint32_t hash_desc(uint32_t tgid, int32_t fd) {
+    uint64_t h = ((uint64_t)tgid << 16) ^ (uint32_t)fd;
     return (uint32_t)(h % DESC_HASH_SIZE);
 }
 
@@ -163,7 +162,7 @@ static struct correlator_obj *upsert_object(uint64_t dev, uint64_t ino, uint64_t
 static struct correlator_desc *find_desc(uint32_t tgid, uint64_t start_time, int32_t fd) {
     if (fd < 0)
         return NULL;
-    uint32_t idx = hash_desc(tgid, start_time, fd);
+    uint32_t idx = hash_desc(tgid, fd);
     struct correlator_desc *curr = g_desc_table[idx];
     while (curr) {
         if (curr->tgid == tgid && curr->fd == fd &&
@@ -199,7 +198,7 @@ static int set_desc(uint32_t tgid, uint64_t start_time, int32_t fd,
         return -1;
     }
 
-    uint32_t idx = hash_desc(tgid, start_time, fd);
+    uint32_t idx = hash_desc(tgid, fd);
     desc = (struct correlator_desc *)calloc(1, sizeof(*desc));
     if (!desc) {
         g_stats.allocation_failures++;
@@ -222,7 +221,7 @@ static int set_desc(uint32_t tgid, uint64_t start_time, int32_t fd,
 static void remove_desc(uint32_t tgid, uint64_t start_time, int32_t fd) {
     if (fd < 0)
         return;
-    uint32_t idx = hash_desc(tgid, start_time, fd);
+    uint32_t idx = hash_desc(tgid, fd);
     struct correlator_desc **curr = &g_desc_table[idx];
     while (*curr) {
         if ((*curr)->tgid == tgid && (*curr)->fd == fd &&
@@ -323,6 +322,8 @@ int canonical_correlator_process_event(struct event *e) {
             e->object_token = desc->object_token;
             e->inode_no = desc->inode_no;
             e->dev_id = desc->dev_id;
+            if (e->start_time_ns == 0 && desc->start_time_ns != 0)
+                e->start_time_ns = desc->start_time_ns;
             remove_desc(e->pid, e->start_time_ns, e->fd);
         } else {
             e->object_token = 0;
@@ -335,6 +336,8 @@ int canonical_correlator_process_event(struct event *e) {
         struct correlator_desc *desc = find_desc(e->pid, e->start_time_ns, e->fd);
         if (desc && desc->object_token != 0) {
             e->object_token = desc->object_token;
+            if (e->start_time_ns == 0 && desc->start_time_ns != 0)
+                e->start_time_ns = desc->start_time_ns;
         } else {
             struct correlator_obj *obj = find_object(e->dev_id, e->inode_no);
             if (obj) {
@@ -408,6 +411,18 @@ int canonical_correlator_process_event_canonical(const struct event *raw, struct
     canon->dev_id = temp.dev_id;
     canon->op_type = temp.op_type;
     canon->timestamp_ns = temp.timestamp_ns;
+    canon->creator_tgid = 0;
+    canon->creator_start_time_ns = 0;
+
+    /* Propagate creator lifetime identity consistently */
+    if (canon->inode_no != 0) {
+        struct correlator_obj *obj = find_object(canon->dev_id, canon->inode_no);
+        if (obj) {
+            canon->creator_tgid = obj->creator_tgid;
+            canon->creator_start_time_ns = obj->creator_start_time_ns;
+        }
+    }
+
     return 0;
 }
 

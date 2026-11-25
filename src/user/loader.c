@@ -1079,12 +1079,28 @@ static void *acquisition_thread_fn(void *arg) {
     return (void *)(intptr_t)acq_thread_err;
 }
 
+static int handle_canonical_event(const struct event *raw, const struct canonical_event *canon)
+{
+    /* Construct canonical event view for downstream handlers without mutating raw queue entry */
+    struct event e = *raw;
+    e.object_token = canon->object_token;
+    e.op_type = canon->op_type;
+    e.inode_no = canon->inode_no;
+    e.dev_id = canon->dev_id;
+    if (canon->start_time_ns != 0)
+        e.start_time_ns = canon->start_time_ns;
+
+    return handle_event(NULL, &e, sizeof(e));
+}
+
 static void *worker_thread_fn(void *arg) {
     (void)arg;
     struct queue_entry entry;
     while (event_queue_pop(g_queue, &entry) == 0) {
-        canonical_correlator_process_event(&entry.e);
-        handle_event(NULL, &entry.e, sizeof(entry.e));
+        struct canonical_event canon;
+        if (canonical_correlator_process_event_canonical(&entry.e, &canon) == 0) {
+            handle_canonical_event(&entry.e, &canon);
+        }
         on_event_processed(entry.cap_idx, entry.e.pid);
     }
     return NULL;
