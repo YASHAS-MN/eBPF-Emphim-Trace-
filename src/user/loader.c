@@ -1030,8 +1030,9 @@ static int handle_event(void *ctx, void *data, size_t size)
     return 0;
 }
 
-static inline void on_event_processed(int cap_idx) {
+static inline void on_event_processed(int cap_idx, uint32_t pid) {
     (void)cap_idx;
+    (void)pid;
 }
 
 static __attribute__((unused)) int acquisition_callback(void *ctx, void *data, size_t size) {
@@ -1043,9 +1044,11 @@ static __attribute__((unused)) int acquisition_callback(void *ctx, void *data, s
     return 0;
 }
 
+static volatile int acq_drain_and_stop = 0;
+
 static void *acquisition_thread_fn(void *arg) {
     struct ring_buffer *rb = (struct ring_buffer *)arg;
-    while (running) {
+    while (!acq_drain_and_stop && running) {
         int poll_err = ring_buffer__poll(rb, 100);
         if (poll_err < 0 && poll_err != -EINTR) {
             log_error("Ring buffer polling failed: %d", poll_err);
@@ -1062,7 +1065,7 @@ static void *worker_thread_fn(void *arg) {
     struct queue_entry entry;
     while (event_queue_pop(g_queue, &entry) == 0) {
         handle_event(NULL, &entry.e, sizeof(entry.e));
-        on_event_processed(entry.cap_idx);
+        on_event_processed(entry.cap_idx, entry.e.pid);
     }
     return NULL;
 }
@@ -1890,7 +1893,7 @@ int main(int argc, char **argv)
 
         if (sigusr2_received) {
             sigusr2_received = 0;
-            export_provenance_data(filter_pid, filter_token, timeline_filepath);
+            log_info("[WARN] Live provenance export via SIGUSR2 disabled in async architecture to prevent concurrent graph mutation; export will occur cleanly at shutdown.");
         }
 
         time_t now = time(NULL);
@@ -1900,6 +1903,29 @@ int main(int argc, char **argv)
         }
     }
 
+    /* Coordinated Shutdown Sequence:
+     * 1. Detach kernel producers first to stop event production.
+     * 2. Signal acquisition thread to finish draining ring buffer into queue.
+     * 3. Close queue admission and signal worker.
+     * 4. Drain queue and join worker thread.
+     * 5. Join each thread exactly once.
+     * 6. Export quiescent provenance graph.
+     */
+    for (size_t i = 0; i < NUM_REQUIRED_HOOKS; i++) {
+        if (statuses[i].cpu_records) {
+            close_cpu_attachments(statuses[i].cpu_records, statuses[i].cpus_total);
+            free(statuses[i].cpu_records);
+            statuses[i].cpu_records = NULL;
+        }
+    }
+    for (size_t i = 0; i < NUM_REQUIRED_HOOKS; i++) {
+        if (links[i]) {
+            bpf_link__destroy(links[i]);
+            links[i] = NULL;
+        }
+    }
+
+    acq_drain_and_stop = 1;
     pthread_join(acq_tid, NULL);
     pthread_join(worker_tid, NULL);
 
@@ -1921,7 +1947,6 @@ cleanup:
         g_queue = NULL;
     }
 
-    /* 1. Disable and close all per-CPU perf-event FDs first to stop event generation */
     for (size_t i = 0; i < NUM_REQUIRED_HOOKS; i++) {
         if (statuses[i].cpu_records) {
             close_cpu_attachments(statuses[i].cpu_records, statuses[i].cpus_total);

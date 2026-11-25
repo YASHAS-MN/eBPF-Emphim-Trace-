@@ -15,12 +15,10 @@ struct diag_queue_stats {
 #endif
 
 #ifndef DIAG_HAS_QUEUE_STATS
-#ifndef DIAG_HAS_QUEUE_STATS
 __attribute__((weak)) int diag_get_queue_stats(struct diag_queue_stats *qs) {
     (void)qs;
     return -1;
 }
-#endif
 #endif
 
 enum diag_p_status {
@@ -79,15 +77,37 @@ static inline uint64_t diag_time_now_ns(void) {
     return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
 }
 
-static uint64_t diag_first_event_proc_ts_ns = 0;
-static uint64_t diag_last_event_proc_ts_ns = 0;
+static uint64_t diag_target_first_event_ts_ns = 0;
+static uint64_t diag_target_last_event_ts_ns = 0;
+static uint64_t diag_global_first_event_ts_ns = 0;
+static uint64_t diag_global_last_event_ts_ns = 0;
+static struct rusage diag_baseline_ru;
+static int diag_baseline_ru_valid = 0;
+
+static inline void diag_record_target_event_ts(void) {
+    uint64_t now = diag_time_now_ns();
+    if (!diag_target_first_event_ts_ns) {
+        diag_target_first_event_ts_ns = now;
+    }
+    diag_target_last_event_ts_ns = now;
+}
+
+static inline void diag_record_global_event_ts(void) {
+    uint64_t now = diag_time_now_ns();
+    if (!diag_global_first_event_ts_ns) {
+        diag_global_first_event_ts_ns = now;
+    }
+    diag_global_last_event_ts_ns = now;
+}
 
 static inline void diag_record_event_proc_timestamp(void) {
-    uint64_t now = diag_time_now_ns();
-    if (!diag_first_event_proc_ts_ns) {
-        diag_first_event_proc_ts_ns = now;
+    diag_record_target_event_ts();
+}
+
+static inline void diag_record_baseline_rusage(void) {
+    if (getrusage(RUSAGE_SELF, &diag_baseline_ru) == 0) {
+        diag_baseline_ru_valid = 1;
     }
-    diag_last_event_proc_ts_ns = now;
 }
 
 static inline void diag_timing_record(struct diag_timing_stat *st, uint64_t delta_ns) {
@@ -315,14 +335,27 @@ static int diag_report(struct bpf_object *obj) {
     );
 
     struct rusage ru;
-    uint64_t u_cpu = 0, s_cpu = 0, max_rss = 0;
+    uint64_t tot_u_cpu = 0, tot_s_cpu = 0, max_rss = 0;
+    uint64_t act_u_cpu = 0, act_s_cpu = 0;
     if (getrusage(RUSAGE_SELF, &ru) == 0) {
-        u_cpu = (uint64_t)ru.ru_utime.tv_sec * 1000000ULL + (uint64_t)ru.ru_utime.tv_usec;
-        s_cpu = (uint64_t)ru.ru_stime.tv_sec * 1000000ULL + (uint64_t)ru.ru_stime.tv_usec;
+        tot_u_cpu = (uint64_t)ru.ru_utime.tv_sec * 1000000ULL + (uint64_t)ru.ru_utime.tv_usec;
+        tot_s_cpu = (uint64_t)ru.ru_stime.tv_sec * 1000000ULL + (uint64_t)ru.ru_stime.tv_usec;
         max_rss = (uint64_t)ru.ru_maxrss;
+        if (diag_baseline_ru_valid) {
+            uint64_t base_u = (uint64_t)diag_baseline_ru.ru_utime.tv_sec * 1000000ULL + (uint64_t)diag_baseline_ru.ru_utime.tv_usec;
+            uint64_t base_s = (uint64_t)diag_baseline_ru.ru_stime.tv_sec * 1000000ULL + (uint64_t)diag_baseline_ru.ru_stime.tv_usec;
+            act_u_cpu = (tot_u_cpu >= base_u) ? (tot_u_cpu - base_u) : 0;
+            act_s_cpu = (tot_s_cpu >= base_s) ? (tot_s_cpu - base_s) : 0;
+        } else {
+            act_u_cpu = tot_u_cpu;
+            act_s_cpu = tot_s_cpu;
+        }
     }
-    printf(",\"rusage\":{\"user_cpu_us\":%llu,\"sys_cpu_us\":%llu,\"max_rss_kb\":%llu}",
-           (unsigned long long)u_cpu, (unsigned long long)s_cpu, (unsigned long long)max_rss);
+    printf(",\"rusage\":{\"user_cpu_us\":%llu,\"sys_cpu_us\":%llu,\"active_user_cpu_us\":%llu,\"active_sys_cpu_us\":%llu,\"total_user_cpu_us\":%llu,\"total_sys_cpu_us\":%llu,\"max_rss_kb\":%llu}",
+           (unsigned long long)act_u_cpu, (unsigned long long)act_s_cpu,
+           (unsigned long long)act_u_cpu, (unsigned long long)act_s_cpu,
+           (unsigned long long)tot_u_cpu, (unsigned long long)tot_s_cpu,
+           (unsigned long long)max_rss);
 
     struct diag_queue_stats qs;
     if (diag_get_queue_stats(&qs) == 0) {
@@ -332,9 +365,13 @@ static int diag_report(struct bpf_object *obj) {
                (unsigned long long)qs.drops, qs.high_water_mark);
     }
 
-    printf(",\"timing\":{\"first_event_proc_ts_ns\":%llu,\"last_event_proc_ts_ns\":%llu}",
-           (unsigned long long)diag_first_event_proc_ts_ns,
-           (unsigned long long)diag_last_event_proc_ts_ns);
+    printf(",\"timing\":{\"first_event_proc_ts_ns\":%llu,\"last_event_proc_ts_ns\":%llu,\"target_first_event_proc_ts_ns\":%llu,\"target_last_event_proc_ts_ns\":%llu,\"global_first_event_ts_ns\":%llu,\"global_last_event_ts_ns\":%llu}",
+           (unsigned long long)diag_target_first_event_ts_ns,
+           (unsigned long long)diag_target_last_event_ts_ns,
+           (unsigned long long)diag_target_first_event_ts_ns,
+           (unsigned long long)diag_target_last_event_ts_ns,
+           (unsigned long long)diag_global_first_event_ts_ns,
+           (unsigned long long)diag_global_last_event_ts_ns);
 
     puts("}");
     return fflush(stdout)==0?0:-1;

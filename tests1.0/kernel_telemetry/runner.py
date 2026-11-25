@@ -175,12 +175,15 @@ def build():
     u = replace(u, marker, wrapper + marker)
     u = replace(
         u,
-        "static inline void on_event_processed(int cap_idx) {\n    (void)cap_idx;\n}",
-        """static inline void on_event_processed(int cap_idx) {
+        "static inline void on_event_processed(int cap_idx, uint32_t pid) {\n    (void)cap_idx;\n    (void)pid;\n}",
+        """static inline void on_event_processed(int cap_idx, uint32_t pid) {
+    diag_record_global_event_ts();
     if (cap_idx >= 0) {
         diag_captured_events[cap_idx].p_status = diag_p_get_last_status();
     }
-    diag_record_event_proc_timestamp();
+    if (pid == diag_pid) {
+        diag_record_target_event_ts();
+    }
 }""",
     )
     u = replace(
@@ -236,32 +239,19 @@ def build():
     u = replace(
         u,
         "    time_t last_counter_print = time(NULL);",
-        '    puts("DIAG_READY"); fflush(stdout);\n    time_t last_counter_print = time(NULL);',
+        '    puts("DIAG_READY"); diag_record_baseline_rusage(); fflush(stdout);\n    time_t last_counter_print = time(NULL);',
     )
 
-    start = u.index("    /* 1. Disable and close all per-CPU perf-event FDs")
-    end = u.index("    /* 3. Free the ring buffer */", start)
-    detach = u[start:end]
     u = replace(
         u,
         "    export_provenance_data(filter_pid, filter_token, timeline_filepath);\n\n    ret = 0;",
-        detach
-        + """    /* Producers detached; wait for acquisition and worker threads to drain and finish. */
-    running = 0;
-    pthread_join(acq_tid, NULL);
-    pthread_join(worker_tid, NULL);
-    if (diag_report(obj)) { log_error("Diagnostic counter read failed"); goto cleanup; }
+        """    if (diag_report(obj)) { log_error("Diagnostic counter read failed"); goto cleanup; }
     ret = 0;""",
     )
     u = replace(
         u,
         "    prov_engine_destroy();\n    cleanup_diag_instance();",
         "    if (diag_full) prov_engine_destroy();\n    cleanup_diag_instance();",
-    )
-    u = replace(
-        u,
-        "            export_provenance_data(filter_pid, filter_token, timeline_filepath);",
-        "            /* export disabled in diagnostic executable */",
     )
     u = replace(
         u,
@@ -1039,23 +1029,29 @@ def analyse(d, w, timing=None):
         w_dur = timing.get("workload_duration_sec", 0.0)
         tot_dur = timing.get("total_duration_sec", 0.0)
         drain_s = timing.get("drain_latency_sec", 0.0)
+        global_drain_s = timing.get("global_backlog_drain_sec", 0.0)
         thru["offered_throughput_ops_sec"] = (n_ops_attempted / w_dur) if w_dur > 0 else 0.0
         thru["useful_throughput_ops_sec"] = (n_reconstructed / tot_dur) if tot_dur > 0 else 0.0
         thru["drain_latency_ms"] = drain_s * 1000.0
+        thru["global_backlog_drain_ms"] = global_drain_s * 1000.0
         thru["workload_duration_sec"] = w_dur
         thru["total_duration_sec"] = tot_dur
 
     loader_ru = d.get("rusage", {})
-    loader_cpu_us = loader_ru.get("user_cpu_us", 0) + loader_ru.get("sys_cpu_us", 0)
+    loader_active_cpu_us = loader_ru.get("active_user_cpu_us", loader_ru.get("user_cpu_us", 0)) + loader_ru.get("active_sys_cpu_us", loader_ru.get("sys_cpu_us", 0))
+    loader_total_cpu_us = loader_ru.get("total_user_cpu_us", loader_active_cpu_us) + loader_ru.get("total_sys_cpu_us", 0)
     loader_max_rss_kb = loader_ru.get("max_rss_kb", 0)
     workload_cpu_us = w.get("user_cpu_us", 0) + w.get("sys_cpu_us", 0)
     resources = {
         "workload_cpu_us": workload_cpu_us,
-        "loader_cpu_us": loader_cpu_us,
+        "loader_active_cpu_us": loader_active_cpu_us,
+        "loader_total_cpu_us": loader_total_cpu_us,
+        "loader_cpu_us": loader_active_cpu_us,
         "loader_max_rss_kb": loader_max_rss_kb,
         "loader_max_rss_mib": round(loader_max_rss_kb / 1024.0, 2),
-        "cpu_cost_attempted_us": (loader_cpu_us / n_ops_attempted) if n_ops_attempted > 0 else 0.0,
-        "cpu_cost_reconstructed_us": (loader_cpu_us / n_reconstructed) if n_reconstructed > 0 else 0.0,
+        "cpu_cost_attempted_us": (loader_active_cpu_us / n_ops_attempted) if n_ops_attempted > 0 else 0.0,
+        "cpu_cost_reconstructed_us": (loader_active_cpu_us / n_reconstructed) if n_reconstructed > 0 else 0.0,
+        "total_trial_cpu_cost_attempted_us": (loader_total_cpu_us / n_ops_attempted) if n_ops_attempted > 0 else 0.0,
     }
 
     pipeline_accounting = {
@@ -1063,15 +1059,20 @@ def analyse(d, w, timing=None):
         "reconstructed": n_reconstructed,
         "incomplete": n_incomplete,
         "operation_residual": operation_residual,
+        "validated_create_completeness_c_e2e": c_e2e,
         "completeness_c_e2e": c_e2e,
+        "incomplete_create_fraction_f": f_incomplete,
         "incomplete_fraction_f": f_incomplete,
-        "ring_attempted": ring_attempted,
-        "ring_submitted": ring_submitted,
+        "evaluated_operation_scope": "memfd_create_intent_and_completion",
+        "target_ring_attempted": ring_attempted,
+        "target_ring_submitted": ring_submitted,
+        "target_ring_loss": ring_reserve_failed,
         "ring_loss": ring_reserve_failed,
-        "transport_loss": transport_loss,
-        "queue_admission_attempts": queue_admission_attempts,
-        "queue_enqueued": queue_enqueued,
-        "queue_dequeued": queue_dequeued,
+        "target_transport_loss": transport_loss,
+        "global_queue_admission_attempts": queue_admission_attempts,
+        "global_queue_enqueued": queue_enqueued,
+        "global_queue_dequeued": queue_dequeued,
+        "global_queue_loss": queue_drops,
         "queue_loss": queue_drops,
         "ring_residual": ring_residual,
         "queue_residual": queue_residual,
@@ -1225,8 +1226,9 @@ def trial(
         meas_timing = d.get("timing", {})
         start_ts_ns = truth.get("start_ts_ns", 0)
         done_ts_ns = truth.get("done_ts_ns", 0)
-        p_first_ts_ns = meas_timing.get("first_event_proc_ts_ns", 0)
-        p_last_ts_ns = meas_timing.get("last_event_proc_ts_ns", 0)
+        target_first_ts_ns = meas_timing.get("target_first_event_proc_ts_ns", meas_timing.get("first_event_proc_ts_ns", 0))
+        target_last_ts_ns = meas_timing.get("target_last_event_proc_ts_ns", meas_timing.get("last_event_proc_ts_ns", 0))
+        global_last_ts_ns = meas_timing.get("global_last_event_ts_ns", 0)
 
         if start_ts_ns and done_ts_ns and done_ts_ns >= start_ts_ns:
             workload_duration_sec = (done_ts_ns - start_ts_ns) / 1e9
@@ -1235,23 +1237,32 @@ def trial(
         else:
             workload_duration_sec = max(0.0001, t_workload_done - t_workload_start)
 
-        if p_last_ts_ns and done_ts_ns and p_last_ts_ns > done_ts_ns:
-            drain_latency_sec = (p_last_ts_ns - done_ts_ns) / 1e9
+        if target_last_ts_ns and done_ts_ns and target_last_ts_ns > done_ts_ns:
+            drain_latency_sec = (target_last_ts_ns - done_ts_ns) / 1e9
         else:
             drain_latency_sec = 0.0
 
-        if p_last_ts_ns and start_ts_ns and p_last_ts_ns > start_ts_ns:
-            total_duration_sec = max(workload_duration_sec, (p_last_ts_ns - start_ts_ns) / 1e9)
+        if global_last_ts_ns and done_ts_ns and global_last_ts_ns > done_ts_ns:
+            global_backlog_drain_sec = (global_last_ts_ns - done_ts_ns) / 1e9
+        else:
+            global_backlog_drain_sec = 0.0
+
+        if target_last_ts_ns and start_ts_ns and target_last_ts_ns > start_ts_ns:
+            total_duration_sec = max(workload_duration_sec, (target_last_ts_ns - start_ts_ns) / 1e9)
         else:
             total_duration_sec = workload_duration_sec + drain_latency_sec
 
         timing = {
             "workload_start_ns": start_ts_ns,
             "workload_done_ns": done_ts_ns,
-            "first_event_proc_ts_ns": p_first_ts_ns,
-            "last_event_proc_ts_ns": p_last_ts_ns,
+            "target_first_event_proc_ts_ns": target_first_ts_ns,
+            "target_last_event_proc_ts_ns": target_last_ts_ns,
+            "first_event_proc_ts_ns": target_first_ts_ns,
+            "last_event_proc_ts_ns": target_last_ts_ns,
+            "global_last_event_ts_ns": global_last_ts_ns,
             "workload_duration_sec": workload_duration_sec,
             "drain_latency_sec": drain_latency_sec,
+            "global_backlog_drain_sec": global_backlog_drain_sec,
             "total_duration_sec": total_duration_sec,
         }
         if d["pid"] != w.pid:
