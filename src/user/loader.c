@@ -27,6 +27,7 @@ enum log_level {
 };
 
 static enum log_level current_log_level = LOG_LEVEL_INFO;
+static int quiet_mode = 0;
 
 #define log_error(fmt, ...) \
     do { \
@@ -642,6 +643,9 @@ static int handle_event(void *ctx, void *data, size_t size)
     if (size != sizeof(*e))
         return 0;
 
+    if (quiet_mode)
+        return 0;
+
     switch (e->type) {
     case EVENT_EXECVE:
         printf("[EXECVE] PID: %u PPID: %u Path: %s\n",
@@ -1230,7 +1234,7 @@ static const struct hook_spec required_hooks[] = {
     {
         .prog_name = "capture_close_fd",
         .category  = "vfs",
-        .target    = "close_fd",
+        .target    = "file_close_fd",
         .group     = HOOK_GROUP_VFS,
         .type      = HOOK_TYPE_TRAMPOLINE,
     },
@@ -1418,9 +1422,15 @@ static void export_provenance_data(uint32_t target_pid, uint64_t target_token, c
 
 int main(int argc, char **argv)
 {
+    if (getenv("EPHIM_QUIET") && atoi(getenv("EPHIM_QUIET"))) {
+        quiet_mode = 1;
+    }
+
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
             current_log_level = LOG_LEVEL_DEBUG;
+        } else if (strcmp(argv[i], "-q") == 0 || strcmp(argv[i], "--quiet") == 0) {
+            quiet_mode = 1;
         } else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--filter-pid") == 0) {
             if (i + 1 < argc) {
                 filter_pid = (uint32_t)strtoul(argv[++i], NULL, 10);
@@ -1446,6 +1456,7 @@ int main(int argc, char **argv)
             printf("Usage: %s [OPTIONS]\n", argv[0]);
             printf("Options:\n");
             printf("  -v, --verbose               Enable verbose/debug logging\n");
+            printf("  -q, --quiet                 Bypass per-event presentation logging\n");
             printf("  -p, --filter-pid <pid>      Set target PID for filtered export\n");
             printf("  -t, --filter-token <token>  Set target object token for filtered export\n");
             printf("  --timeline <filepath>       Path to write forensic timeline (default: ephimtrace_timeline.md)\n");
@@ -1453,7 +1464,7 @@ int main(int argc, char **argv)
             return 0;
         } else {
             fprintf(stderr, "Unknown option: %s\n", argv[i]);
-            fprintf(stderr, "Usage: %s [-v|--verbose] [-p|--filter-pid <pid>] [-t|--filter-token <token>] [--timeline <file>] [-h|--help]\n", argv[0]);
+            fprintf(stderr, "Usage: %s [-v|--verbose] [-q|--quiet] [-p|--filter-pid <pid>] [-t|--filter-token <token>] [--timeline <file>] [-h|--help]\n", argv[0]);
             return 1;
         }
     }

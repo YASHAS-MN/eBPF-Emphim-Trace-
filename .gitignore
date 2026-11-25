@@ -7,6 +7,8 @@ build/
 perf.data
 perf.data.old
 logs/
+audit/evidence/
+archive/
 
 # Backups and temporary files
 *.bak
@@ -21,3 +23,8 @@ repomix-output.md
 ephimtrace_*.dot
 ephimtrace_*.json
 ephimtrace_timeline.md
+
+# Generated telemetry test artifacts
+tests1.0/kernel_telemetry/results/
+__pycache__/
+*.pyc
