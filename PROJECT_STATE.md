@@ -13,7 +13,8 @@ and reliable provenance reconstruction.
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Implementation checkpoint: 355ed8a
+- Reference Architecture A checkpoint: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
+- Original remediation checkpoint: 355ed8a
 - Working branch: checkpoint/telemetry-remediation
 
 ## Current Architecture
@@ -23,8 +24,7 @@ Kernel hooks and BPF registries
     -> Synchronous userspace consumer
     -> Provenance engine
 
-Alternative architectures are under consideration,
-not approved for implementation.
+Architecture B (asynchronous acquisition) is approved for scoped experimentation under #3, conditional on an agreed evidence contract and normalized benchmark protocol. Architecture C remains unapproved for implementation.
 
 ## Completed Work
 
@@ -40,6 +40,8 @@ Accepted within the tested memfd lifecycle scope:
 
 ## Current Checkpoint
 
+Active task: #3 — comparative benchmark and evidence-contract design. No architecture implementation has started.
+
 Correction 4A accepted: Optional quiet event logging.
 
 Accepted strictly as a diagnostic and benchmark optimization.
@@ -53,7 +55,7 @@ Default presentation logging remains unchanged.
 GitHub Issues is the authoritative task register.
 
 - #2: Review logging optimization (closed/accepted as diagnostic optimization).
-- #3: Evaluate asynchronous userspace acquisition.
+- #3: Evaluate asynchronous userspace acquisition (active: protocol/design review).
 - #4: Evaluate minimal kernel-side state.
 - #5: Remaining descriptor and registry limitations.
 - #6: Repair legacy test build paths.
