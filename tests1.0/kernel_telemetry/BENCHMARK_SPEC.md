@@ -59,20 +59,34 @@ Workloads are generated using [`workload.c`](workload.c):
 
 ## 4. Normalization & Count Reconciliation
 
-All metrics are normalized against independent workload ground-truth operations $N_{\text{ops\_attempted}}$. Raw event rates across different event populations are never multiplied.
+All metrics are normalized against independent workload ground-truth operations $N_{\text{ops\_attempted}}$. Raw event rates across different event populations are never added or multiplied against operation populations.
 
-### 4.1 Exhaustive Pipeline Balance Equation
-$$N_{\text{ops\_attempted}} = N_{\text{reconstructed}} + N_{\text{gen\_gap}} + N_{\text{ring\_loss}} + N_{\text{queue\_loss}} + N_{\text{corr\_def}} + N_{\text{proc\_fail}}$$
+### 4.1 Operation-Level Reconciliation & Completeness
+Every attempted syscall operation $r \in \text{Workload}$ is verified against captured telemetry:
+$$N_{\text{ops\_attempted}} = N_{\text{reconstructed}} + N_{\text{incomplete}}$$
 
-- **$N_{\text{ops\_attempted}}$:** Total syscall attempts verified by workload ground truth.
-- **$N_{\text{gen\_gap}}$:** Workload attempts unobserved by kernel probes.
-- **$N_{\text{ring\_loss}}$:** Kernel ring-buffer reservation drops (`bpf_ringbuf_reserve` returning NULL).
-- **$N_{\text{queue\_loss}}$:** Drops at userspace queue admission due to intermediate queue saturation.
-- **$N_{\text{corr\_def}}$:** Syscall successes lacking valid object identity (`op_type = 3`, `token = 0`).
-- **$N_{\text{proc\_fail}}$:** Userspace parsing, memory allocation, or Checkpoint P failures (`p_status = 5`).
-- **$N_{\text{reconstructed}}$:** Operations completely and truthfully reconstructed in userspace.
+Where:
+- **$N_{\text{ops\_attempted}}$:** Total unique operations recorded in independent ground truth.
+- **$N_{\text{reconstructed}}$:** Unique operations whose full lifecycle (creation, completion, return code, descriptor, token, and provenance attributes) was completely and truthfully observed without discrepancies.
+- **$N_{\text{incomplete}}$:** Operations suffering any form of omission, corruption, or discrepancy.
+- **$\text{Operation Residual}$:** $N_{\text{ops\_attempted}} - (N_{\text{reconstructed}} + N_{\text{incomplete}}) = 0$.
 
-### 4.2 Primary Performance Metrics
+### 4.2 Independent Stage-Wise Event Conservation
+Event populations are reconciled independently per stage on their matching event populations, rather than mixed with operation counts:
+1. **BPF Probe to Ring Buffer:**
+   $$E_{\text{attempted}} = E_{\text{submitted}} + E_{\text{ring\_reserve\_failed}}$$
+   $$\text{Residual}_{\text{ring}} = E_{\text{attempted}} - (E_{\text{submitted}} + E_{\text{ring\_reserve\_failed}})$$
+2. **Ring Buffer Transport:**
+   $$E_{\text{submitted}} = E_{\text{received}} + E_{\text{transport\_loss}}$$
+3. **Userspace Intermediate Queue (Architecture B):**
+   $$E_{\text{admission\_attempts}} = E_{\text{enqueued}} + E_{\text{queue\_drops}}$$
+   $$\text{Residual}_{\text{queue}} = E_{\text{admission\_attempts}} - (E_{\text{enqueued}} + E_{\text{queue\_drops}})$$
+   $$E_{\text{enqueued}} = E_{\text{dequeued}} + E_{\text{queue\_drain\_loss}}$$
+   $$\text{Residual}_{\text{drain}} = E_{\text{enqueued}} - E_{\text{dequeued}}$$
+4. **Userspace Processing & Checkpoint P:**
+   $$E_{\text{dequeued}} = E_{\text{p\_evaluated}} + E_{\text{proc\_unaccounted}}$$
+
+### 4.3 Primary Performance Metrics
 1. **End-to-End Completeness ($C_{\text{e2e}}$):**
    $$C_{\text{e2e}} = \frac{N_{\text{reconstructed}}}{N_{\text{ops\_attempted}}}$$
 2. **Incomplete-Operation Fraction ($F_{\text{incomplete}}$):**
