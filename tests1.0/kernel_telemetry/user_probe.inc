@@ -15,10 +15,12 @@ struct diag_queue_stats {
 #endif
 
 #ifndef DIAG_HAS_QUEUE_STATS
+#ifndef DIAG_HAS_QUEUE_STATS
 __attribute__((weak)) int diag_get_queue_stats(struct diag_queue_stats *qs) {
     (void)qs;
     return -1;
 }
+#endif
 #endif
 
 enum diag_p_status {
@@ -75,6 +77,17 @@ static inline uint64_t diag_time_now_ns(void) {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
+}
+
+static uint64_t diag_first_event_proc_ts_ns = 0;
+static uint64_t diag_last_event_proc_ts_ns = 0;
+
+static inline void diag_record_event_proc_timestamp(void) {
+    uint64_t now = diag_time_now_ns();
+    if (!diag_first_event_proc_ts_ns) {
+        diag_first_event_proc_ts_ns = now;
+    }
+    diag_last_event_proc_ts_ns = now;
 }
 
 static inline void diag_timing_record(struct diag_timing_stat *st, uint64_t delta_ns) {
@@ -318,6 +331,10 @@ static int diag_report(struct bpf_object *obj) {
                (unsigned long long)qs.enqueued, (unsigned long long)qs.dequeued,
                (unsigned long long)qs.drops, qs.high_water_mark);
     }
+
+    printf(",\"timing\":{\"first_event_proc_ts_ns\":%llu,\"last_event_proc_ts_ns\":%llu}",
+           (unsigned long long)diag_first_event_proc_ts_ns,
+           (unsigned long long)diag_last_event_proc_ts_ns);
 
     puts("}");
     return fflush(stdout)==0?0:-1;

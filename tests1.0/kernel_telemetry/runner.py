@@ -180,6 +180,7 @@ def build():
     if (cap_idx >= 0) {
         diag_captured_events[cap_idx].p_status = diag_p_get_last_status();
     }
+    diag_record_event_proc_timestamp();
 }""",
     )
     u = replace(
@@ -679,15 +680,21 @@ def reconcile_events(records, captured_events, p_available=False):
     corrupted_events = []
     p_discrepancies = []
 
+    reconstructed_records = []
+    incomplete_records = []
+
     for r in records:
         k = (r["pid"], r["tid"], r["name"])
+        op_has_flaw = False
 
         # Check EVENT_MEMFD_CREATE (type 2)
         c_events = events_by_type[2].get(k, [])
         if len(c_events) == 0:
             missing_create.append(r)
+            op_has_flaw = True
         elif len(c_events) > 1:
             duplicate_create.append({"record": r, "events": c_events})
+            op_has_flaw = True
         else:
             ce = c_events[0]
             is_corrupt = False
@@ -701,6 +708,7 @@ def reconcile_events(records, captured_events, p_available=False):
                     }
                 )
                 is_corrupt = True
+                op_has_flaw = True
             elif ce.get("ret", 0) != 0 or ce.get("fd", -1) != -1:
                 incorrect_outcome.append(
                     {
@@ -709,6 +717,7 @@ def reconcile_events(records, captured_events, p_available=False):
                         "reason": "Invalid creation entry return/fd fields",
                     }
                 )
+                op_has_flaw = True
 
             if p_available:
                 # Expected P for enter event is P_STATUS_FILTERED (2)
@@ -723,13 +732,16 @@ def reconcile_events(records, captured_events, p_available=False):
                             "related_to_token_corruption": is_corrupt,
                         }
                     )
+                    op_has_flaw = True
 
         # Check EVENT_MEMFD_COMPLETED (type 12)
         comp_events = events_by_type[12].get(k, [])
         if len(comp_events) == 0:
             missing_complete.append(r)
+            op_has_flaw = True
         elif len(comp_events) > 1:
             duplicate_complete.append({"record": r, "events": comp_events})
+            op_has_flaw = True
         else:
             ce = comp_events[0]
             if r["success"] == 1:
@@ -741,6 +753,7 @@ def reconcile_events(records, captured_events, p_available=False):
                             "reason": f"Expected op=2, got {ce.get('op')}",
                         }
                     )
+                    op_has_flaw = True
                 elif ce.get("ret") != r["ret"]:
                     incorrect_outcome.append(
                         {
@@ -749,6 +762,7 @@ def reconcile_events(records, captured_events, p_available=False):
                             "reason": f"Expected ret={r['ret']}, got {ce.get('ret')}",
                         }
                     )
+                    op_has_flaw = True
                 elif ce.get("fd") != r["ret"]:
                     incorrect_outcome.append(
                         {
@@ -757,6 +771,7 @@ def reconcile_events(records, captured_events, p_available=False):
                             "reason": f"Expected fd={r['ret']}, got {ce.get('fd')}",
                         }
                     )
+                    op_has_flaw = True
                 elif ce.get("token", 0) == 0:
                     incorrect_outcome.append(
                         {
@@ -765,6 +780,7 @@ def reconcile_events(records, captured_events, p_available=False):
                             "reason": "Zero object token on correlated success",
                         }
                     )
+                    op_has_flaw = True
 
                 if p_available:
                     # Expected P for correlated success is P_STATUS_SUCCESS (1)
@@ -778,6 +794,7 @@ def reconcile_events(records, captured_events, p_available=False):
                                 "related_to_token_corruption": False,
                             }
                         )
+                        op_has_flaw = True
             else:
                 if ce.get("op") != 1:
                     incorrect_outcome.append(
@@ -787,6 +804,7 @@ def reconcile_events(records, captured_events, p_available=False):
                             "reason": f"Expected op=1 (failed), got {ce.get('op')}",
                         }
                     )
+                    op_has_flaw = True
                 elif ce.get("ret") != -r["errno"]:
                     incorrect_outcome.append(
                         {
@@ -795,6 +813,7 @@ def reconcile_events(records, captured_events, p_available=False):
                             "reason": f"Expected ret={-r['errno']}, got {ce.get('ret')}",
                         }
                     )
+                    op_has_flaw = True
                 elif ce.get("fd") != -1:
                     incorrect_outcome.append(
                         {
@@ -803,6 +822,7 @@ def reconcile_events(records, captured_events, p_available=False):
                             "reason": f"Expected fd=-1, got {ce.get('fd')}",
                         }
                     )
+                    op_has_flaw = True
                 elif ce.get("token", 0) != 0:
                     incorrect_outcome.append(
                         {
@@ -811,6 +831,7 @@ def reconcile_events(records, captured_events, p_available=False):
                             "reason": "Non-zero token on failed syscall",
                         }
                     )
+                    op_has_flaw = True
 
                 if p_available:
                     # Expected P for failed syscall is P_STATUS_FILTERED (2)
@@ -824,8 +845,18 @@ def reconcile_events(records, captured_events, p_available=False):
                                 "related_to_token_corruption": False,
                             }
                         )
+                        op_has_flaw = True
+
+        if not op_has_flaw:
+            reconstructed_records.append(r)
+        else:
+            incomplete_records.append(r)
 
     return {
+        "reconstructed_count": len(reconstructed_records),
+        "incomplete_count": len(incomplete_records),
+        "reconstructed_records": reconstructed_records,
+        "incomplete_records": incomplete_records,
         "missing_create": missing_create,
         "missing_complete": missing_complete,
         "duplicate_create": duplicate_create,
@@ -966,20 +997,42 @@ def analyse(d, w, timing=None):
         and len(unrelated_p_disc) == 0
     )
 
-    n_ops_attempted = w.get("create_attempts", 0)
-    n_gen_gap = max(0, n_ops_attempted - t(2)["attempted"])
-    n_ring_loss = target_drops
-    queue_info = d.get("queue", {})
-    n_queue_loss = queue_info.get("drops", 0)
-    n_corr_def = c[72] if len(c) > 72 else 0
-    n_proc_fail = p_info.get("failed", 0) if p_avail else 0
-
-    stage_losses = n_gen_gap + n_ring_loss + n_queue_loss + n_corr_def + n_proc_fail
-    n_reconstructed = max(0, n_ops_attempted - stage_losses)
-    accounting_residual = n_ops_attempted - (n_reconstructed + stage_losses)
+    n_ops_attempted = w.get("create_attempts", len(w.get("records", [])))
+    n_reconstructed = rec.get("reconstructed_count", 0)
+    n_incomplete = rec.get("incomplete_count", 0)
+    operation_residual = n_ops_attempted - (n_reconstructed + n_incomplete)
 
     c_e2e = (n_reconstructed / n_ops_attempted) if n_ops_attempted > 0 else 1.0
-    f_incomplete = 1.0 - c_e2e
+    f_incomplete = (n_incomplete / n_ops_attempted) if n_ops_attempted > 0 else 0.0
+
+    # Independent stage-wise event conservation (Scope 1 = target workload)
+    t_create = t(2)
+    t_complete = t(12)
+    ring_attempted = t_create["attempted"] + t_complete["attempted"]
+    ring_reserve_failed = t_create["reserve_failed"] + t_complete["reserve_failed"]
+    ring_submitted = t_create["submitted"] + t_complete["submitted"]
+    ring_received = t_create["received"] + t_complete["received"]
+    ring_residual = ring_attempted - (ring_submitted + ring_reserve_failed)
+    transport_loss = ring_submitted - ring_received
+
+    queue_info = d.get("queue", {})
+    queue_drops = queue_info.get("drops", 0)
+    queue_admission_attempts = queue_info.get("admission_attempts", ring_received)
+    queue_enqueued = queue_info.get("enqueued", ring_received)
+    queue_dequeued = queue_info.get("dequeued", ring_received)
+    queue_residual = (queue_admission_attempts - (queue_enqueued + queue_drops)) if queue_admission_attempts > 0 else 0
+    queue_drain_residual = (queue_enqueued - queue_dequeued) if queue_enqueued > 0 else 0
+
+    gen_gap = len(backend_findings["generation_gaps"])
+    corr_def = c[72] if len(c) > 72 else 0
+    proc_fail = p_info.get("failed", 0) if p_avail else 0
+
+    accounting_residual = (
+        operation_residual
+        + abs(ring_residual)
+        + abs(queue_residual)
+        + abs(queue_drain_residual)
+    )
 
     thru = {}
     if timing:
@@ -1008,13 +1061,24 @@ def analyse(d, w, timing=None):
     pipeline_accounting = {
         "ops_attempted": n_ops_attempted,
         "reconstructed": n_reconstructed,
-        "gen_gap": n_gen_gap,
-        "ring_loss": n_ring_loss,
-        "queue_loss": n_queue_loss,
-        "corr_def": n_corr_def,
-        "proc_fail": n_proc_fail,
+        "incomplete": n_incomplete,
+        "operation_residual": operation_residual,
         "completeness_c_e2e": c_e2e,
         "incomplete_fraction_f": f_incomplete,
+        "ring_attempted": ring_attempted,
+        "ring_submitted": ring_submitted,
+        "ring_loss": ring_reserve_failed,
+        "transport_loss": transport_loss,
+        "queue_admission_attempts": queue_admission_attempts,
+        "queue_enqueued": queue_enqueued,
+        "queue_dequeued": queue_dequeued,
+        "queue_loss": queue_drops,
+        "ring_residual": ring_residual,
+        "queue_residual": queue_residual,
+        "queue_drain_residual": queue_drain_residual,
+        "gen_gap": gen_gap,
+        "corr_def": corr_def,
+        "proc_fail": proc_fail,
         "residual": accounting_residual,
     }
 
@@ -1157,27 +1221,39 @@ def trial(
                 raise RuntimeError("loader returned failure")
             t_processing_complete = time.monotonic()
 
-        drain_latency_sec = max(0.0, t_processing_complete - t_workload_done)
+        d = get_result(log)
+        meas_timing = d.get("timing", {})
         start_ts_ns = truth.get("start_ts_ns", 0)
         done_ts_ns = truth.get("done_ts_ns", 0)
+        p_first_ts_ns = meas_timing.get("first_event_proc_ts_ns", 0)
+        p_last_ts_ns = meas_timing.get("last_event_proc_ts_ns", 0)
+
         if start_ts_ns and done_ts_ns and done_ts_ns >= start_ts_ns:
             workload_duration_sec = (done_ts_ns - start_ts_ns) / 1e9
         elif "seconds" in truth and truth["seconds"] > 0:
             workload_duration_sec = truth["seconds"]
         else:
             workload_duration_sec = max(0.0001, t_workload_done - t_workload_start)
-        total_duration_sec = workload_duration_sec + drain_latency_sec
+
+        if p_last_ts_ns and done_ts_ns and p_last_ts_ns > done_ts_ns:
+            drain_latency_sec = (p_last_ts_ns - done_ts_ns) / 1e9
+        else:
+            drain_latency_sec = 0.0
+
+        if p_last_ts_ns and start_ts_ns and p_last_ts_ns > start_ts_ns:
+            total_duration_sec = max(workload_duration_sec, (p_last_ts_ns - start_ts_ns) / 1e9)
+        else:
+            total_duration_sec = workload_duration_sec + drain_latency_sec
 
         timing = {
-            "workload_start": t_workload_start,
-            "workload_done": t_workload_done,
-            "processing_complete": t_processing_complete,
+            "workload_start_ns": start_ts_ns,
+            "workload_done_ns": done_ts_ns,
+            "first_event_proc_ts_ns": p_first_ts_ns,
+            "last_event_proc_ts_ns": p_last_ts_ns,
             "workload_duration_sec": workload_duration_sec,
             "drain_latency_sec": drain_latency_sec,
             "total_duration_sec": total_duration_sec,
         }
-
-        d = get_result(log)
         if d["pid"] != w.pid:
             raise RuntimeError("wrong target PID")
         if (
