@@ -160,15 +160,29 @@ def build():
     uint64_t _t_rec = diag_time_now_ns();
     diag_timing_record(&g_diag_profile.reception, _t_rec - _t_enter);
     if (diag_delay) { struct timespec ts = {diag_delay / 1000000, (long)(diag_delay % 1000000) * 1000}; nanosleep(&ts, NULL); }
+
+    /* Persistent Evidence Capture */
+    if (g_diag_writer_active) {
+        evidence_writer_write(&g_diag_writer, e, _t_enter);
+    }
+
     int rc = 0;
     diag_record_global_event_ts();
-    if (diag_full) {
-        rc = handle_event(ctx, data, size);
-        if (cap) {
-            cap->p_status = diag_p_get_last_status();
-        }
+    if (g_diag_persist_mode == EVIDENCE_MODE_DEFERRED) {
+        /* Model P (Deferred): collection phase only preserves evidence */
         if (e->pid == diag_pid) {
             diag_record_target_event_ts();
+        }
+    } else {
+        /* Model M (Online) & baseline: process online */
+        if (diag_full) {
+            rc = handle_event(ctx, data, size);
+            if (cap) {
+                cap->p_status = diag_p_get_last_status();
+            }
+            if (e->pid == diag_pid) {
+                diag_record_target_event_ts();
+            }
         }
     }
     uint64_t _t_exit = diag_time_now_ns();
@@ -188,6 +202,26 @@ def build():
     if (!pid_env || !(diag_pid=(uint32_t)strtoul(pid_env,NULL,10))) return 2;
     diag_full=getenv("EPHIM_DIAG_FULL") && !strcmp(getenv("EPHIM_DIAG_FULL"),"1");
     if (getenv("EPHIM_DIAG_DELAY_US")) diag_delay=(unsigned)strtoul(getenv("EPHIM_DIAG_DELAY_US"),NULL,10);
+    const char *pmode_env = getenv("EPHIM_PERSIST_MODE");
+    if (pmode_env) {
+        if (!strcmp(pmode_env, "M") || !strcmp(pmode_env, "online") || !strcmp(pmode_env, "1"))
+            g_diag_persist_mode = EVIDENCE_MODE_ONLINE;
+        else if (!strcmp(pmode_env, "P") || !strcmp(pmode_env, "deferred") || !strcmp(pmode_env, "2"))
+            g_diag_persist_mode = EVIDENCE_MODE_DEFERRED;
+    }
+    const char *epath_env = getenv("EPHIM_EVIDENCE_PATH");
+    if (epath_env && epath_env[0]) {
+        snprintf(g_diag_evidence_path, sizeof(g_diag_evidence_path), "%s", epath_env);
+    } else {
+        snprintf(g_diag_evidence_path, sizeof(g_diag_evidence_path), "/tmp/ephim_evidence_%u.evid", diag_pid);
+    }
+    if (g_diag_persist_mode != EVIDENCE_MODE_NONE) {
+        if (evidence_writer_init(&g_diag_writer, g_diag_evidence_path, (enum evidence_mode)g_diag_persist_mode, diag_pid, EVIDENCE_DEFAULT_BUFFER_SIZE, EVIDENCE_DEFAULT_MAX_BYTES) == 0) {
+            g_diag_writer_active = 1;
+        } else {
+            fprintf(stderr, "[DIAG_PERSIST] Failed to init writer at %s: %s\\n", g_diag_evidence_path, strerror(errno));
+        }
+    }
     libbpf_set_print(libbpf_print_fn);""",
     )
     u = replace(
@@ -253,6 +287,51 @@ def build():
         if (got<0) { log_error("Diagnostic drain failed: %d",got); goto cleanup; }
         if (got==0) { quiet++; usleep(10000); } else quiet=0;
     }
+    /* Complete persistence drain & sync */
+    uint64_t _t_persist_sync_start = diag_time_now_ns();
+    if (g_diag_writer_active) {
+        evidence_writer_close(&g_diag_writer);
+        g_diag_writer_active = 0;
+    }
+    uint64_t _t_persist_sync_end = diag_time_now_ns();
+    if (diag_target_last_event_ts_ns > 0 && _t_persist_sync_end > diag_target_last_event_ts_ns) {
+        g_diag_writer.stats.persist_drain_latency_ns = _t_persist_sync_end - diag_target_last_event_ts_ns;
+    } else {
+        g_diag_writer.stats.persist_drain_latency_ns = _t_persist_sync_end - _t_persist_sync_start;
+    }
+
+    /* Model P (Deferred): Execute Replay Phase */
+    if (g_diag_persist_mode == EVIDENCE_MODE_DEFERRED && diag_full) {
+        uint64_t _t_replay_start = diag_time_now_ns();
+        struct evidence_reader reader;
+        if (evidence_reader_open(&reader, g_diag_evidence_path) == 0) {
+            struct event ev_replay;
+            struct evidence_record_frame f_replay;
+            uint32_t replay_cap_idx = 0;
+            while (evidence_reader_read_next(&reader, &ev_replay, &f_replay) == 1) {
+                handle_event(NULL, &ev_replay, sizeof(ev_replay));
+                uint32_t p_st = diag_p_get_last_status();
+                if (ev_replay.pid == diag_pid && (ev_replay.type == 2 || ev_replay.type == 12)) {
+                    if (replay_cap_idx < diag_captured_count) {
+                        diag_captured_events[replay_cap_idx++].p_status = p_st;
+                    }
+                }
+            }
+            g_diag_writer.stats.records_replayed = reader.stats.records_replayed;
+            g_diag_writer.stats.corrupt_records += reader.stats.corrupt_records;
+            g_diag_writer.stats.seq_gaps += reader.stats.seq_gaps;
+            g_diag_writer.stats.incomplete_records += reader.stats.incomplete_records;
+            evidence_reader_close(&reader);
+        }
+        uint64_t _t_replay_end = diag_time_now_ns();
+        g_diag_writer.stats.replay_duration_ns = _t_replay_end - _t_replay_start;
+        g_diag_writer.stats.total_time_to_graph_ns = g_diag_writer.stats.persist_drain_latency_ns + g_diag_writer.stats.replay_duration_ns;
+    } else if (g_diag_persist_mode == EVIDENCE_MODE_ONLINE) {
+        g_diag_writer.stats.records_replayed = g_diag_writer.stats.records_written;
+        g_diag_writer.stats.replay_duration_ns = 0;
+        g_diag_writer.stats.total_time_to_graph_ns = g_diag_writer.stats.persist_drain_latency_ns;
+    }
+
     if (diag_report(obj)) { log_error("Diagnostic counter read failed"); goto cleanup; }
     ret = 0;""",
     )
@@ -1020,6 +1099,37 @@ def analyse(d, w, timing=None):
         + abs(queue_drain_residual)
     )
 
+    evidence_info = d.get("evidence", {})
+    if evidence_info:
+        rec_received = evidence_info.get("records_received", 0)
+        rec_written = evidence_info.get("records_written", 0)
+        rec_synced = evidence_info.get("records_synced", 0)
+        rec_replayed = evidence_info.get("records_replayed", 0)
+        backend_findings["persistence"] = {
+            "mode": evidence_info.get("mode"),
+            "path": evidence_info.get("path"),
+            "records_received": rec_received,
+            "records_written": rec_written,
+            "records_synced": rec_synced,
+            "records_replayed": rec_replayed,
+            "persistence_loss": rec_received - rec_written,
+            "sync_loss": rec_written - rec_synced,
+            "replay_loss": rec_synced - rec_replayed,
+            "write_errors": evidence_info.get("write_errors", 0),
+            "corrupt_records": evidence_info.get("corrupt_records", 0),
+            "seq_gaps": evidence_info.get("seq_gaps", 0),
+            "incomplete_records": evidence_info.get("incomplete_records", 0),
+            "storage_bytes": evidence_info.get("storage_bytes", 0),
+            "persist_drain_latency_ms": evidence_info.get("persist_drain_latency_ns", 0) / 1e6,
+            "replay_duration_ms": evidence_info.get("replay_duration_ns", 0) / 1e6,
+            "total_time_to_graph_ms": evidence_info.get("total_time_to_graph_ns", 0) / 1e6,
+        }
+        if (evidence_info.get("corrupt_records", 0) > 0 or
+            evidence_info.get("seq_gaps", 0) > 0 or
+            evidence_info.get("incomplete_records", 0) > 0 or
+            evidence_info.get("write_errors", 0) > 0):
+            telemetry_fidelity_valid = False
+
     thru = {}
     if timing:
         w_dur = timing.get("workload_duration_sec", 0.0)
@@ -1032,6 +1142,13 @@ def analyse(d, w, timing=None):
         thru["global_backlog_drain_ms"] = global_drain_s * 1000.0
         thru["workload_duration_sec"] = w_dur
         thru["total_duration_sec"] = tot_dur
+
+    if evidence_info:
+        thru["persist_drain_latency_ms"] = evidence_info.get("persist_drain_latency_ns", 0) / 1e6
+        thru["replay_duration_ms"] = evidence_info.get("replay_duration_ns", 0) / 1e6
+        thru["total_time_to_graph_ms"] = evidence_info.get("total_time_to_graph_ns", 0) / 1e6
+        thru["storage_bytes"] = evidence_info.get("storage_bytes", 0)
+        thru["storage_per_op_bytes"] = (evidence_info.get("storage_bytes", 0) / n_ops_attempted) if n_ops_attempted > 0 else 0.0
 
     loader_ru = d.get("rusage", {})
     loader_active_cpu_us = loader_ru.get("active_user_cpu_us", loader_ru.get("user_cpu_us", 0)) + loader_ru.get("active_sys_cpu_us", loader_ru.get("sys_cpu_us", 0))
@@ -1078,6 +1195,15 @@ def analyse(d, w, timing=None):
         "proc_fail": proc_fail,
         "residual": accounting_residual,
     }
+    if evidence_info:
+        pipeline_accounting["persisted_received"] = evidence_info.get("records_received", 0)
+        pipeline_accounting["persisted_written"] = evidence_info.get("records_written", 0)
+        pipeline_accounting["persisted_synced"] = evidence_info.get("records_synced", 0)
+        pipeline_accounting["persisted_replayed"] = evidence_info.get("records_replayed", 0)
+        pipeline_accounting["persistence_loss"] = evidence_info.get("records_received", 0) - evidence_info.get("records_written", 0)
+        pipeline_accounting["sync_loss"] = evidence_info.get("records_written", 0) - evidence_info.get("records_synced", 0)
+        pipeline_accounting["replay_loss"] = evidence_info.get("records_synced", 0) - evidence_info.get("records_replayed", 0)
+        pipeline_accounting["persisted_completeness"] = (evidence_info.get("records_written", 0) / evidence_info.get("records_received", 0)) if evidence_info.get("records_received", 0) > 0 else 1.0
 
     return {
         "measurement_valid": measurement_valid,
@@ -1089,6 +1215,7 @@ def analyse(d, w, timing=None):
         "throughput": thru,
         "resources": resources,
         "queue": queue_info,
+        "evidence": evidence_info,
         "reconciliation": {
             "missing_create_count": len(rec["missing_create"]),
             "missing_complete_count": len(rec["missing_complete"]),
@@ -1130,6 +1257,7 @@ def trial(
     cpu=None,
     flags=None,
     quiet=False,
+    persist_mode=None,
 ):
     log = out / (name + ".log")
     result = out / (name + ".json")
@@ -1147,6 +1275,7 @@ def trial(
         cpu=cpu,
         flags=flags,
         quiet=quiet,
+        persist_mode=persist_mode,
     )
     p = w = None
     try:
@@ -1175,6 +1304,11 @@ def trial(
             raise RuntimeError(f"bad workload handshake: {stderr_out}")
         if cpu is not None:
             os.sched_setaffinity(w.pid, {cpu})
+        if persist_mode is None:
+            persist_mode = os.environ.get("EPHIM_PERSIST_MODE", None)
+            if persist_mode in ("none", "0", ""):
+                persist_mode = None
+
         env = dict(
             os.environ,
             EPHIM_DIAG_PID=str(w.pid),
@@ -1183,6 +1317,12 @@ def trial(
             EPHIM_CAPTURED_EVENTS_FILE=str(cap_path),
             EPHIM_QUIET="1" if quiet else "0",
         )
+        if persist_mode:
+            evid_path = out / (name + ".evid")
+            env["EPHIM_PERSIST_MODE"] = persist_mode
+            env["EPHIM_EVIDENCE_PATH"] = str(evid_path)
+            spec["persist_mode"] = persist_mode
+            spec["evidence_file"] = str(evid_path)
         loader_cmd = [str(BUILD / "loader.diag")]
         if quiet:
             loader_cmd.append("-q")
@@ -1368,6 +1508,12 @@ def main():
         "--suite", choices=["quick", "pressure", "map", "cpu", "benchmark"], default="quick"
     )
     ap.add_argument(
+        "--persist",
+        choices=["none", "M", "P"],
+        default="none",
+        help="Run persistent evidence experiment (M = Online, P = Deferred)",
+    )
+    ap.add_argument(
         "--quiet",
         action="store_true",
         help="Run loader in quiet mode (bypass presentation logging)",
@@ -1446,7 +1592,7 @@ def main():
     reports = []
     for i in range(a.repeat):
         for case in cases:
-            report = trial(out, case[0] + f"_{i+1}", *case[1:], quiet=a.quiet)
+            report = trial(out, case[0] + f"_{i+1}", *case[1:], quiet=a.quiet, persist_mode=(a.persist if a.persist != "none" else None))
             reports.append(report)
             if report["status"] == "INVALID":
                 break

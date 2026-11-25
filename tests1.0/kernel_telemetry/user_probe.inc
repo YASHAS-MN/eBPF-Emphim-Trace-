@@ -1,6 +1,12 @@
 /* Diagnostic userspace probe instrumentation */
 #include <time.h>
 #include <sys/resource.h>
+#include "evidence_io.h"
+
+static struct evidence_writer g_diag_writer;
+static int g_diag_persist_mode = EVIDENCE_MODE_NONE;
+static char g_diag_evidence_path[256] = {0};
+static int g_diag_writer_active = 0;
 
 #ifndef DIAG_QUEUE_STATS_DEF
 #define DIAG_QUEUE_STATS_DEF
@@ -372,6 +378,27 @@ static int diag_report(struct bpf_object *obj) {
            (unsigned long long)diag_target_last_event_ts_ns,
            (unsigned long long)diag_global_first_event_ts_ns,
            (unsigned long long)diag_global_last_event_ts_ns);
+
+    if (g_diag_persist_mode != EVIDENCE_MODE_NONE) {
+        const char *mode_str = (g_diag_persist_mode == EVIDENCE_MODE_ONLINE) ? "M" : "P";
+        printf(",\"evidence\":{\"mode\":\"%s\",\"path\":\"%s\",\"records_received\":%llu,\"records_written\":%llu,\"records_synced\":%llu,\"records_replayed\":%llu,\"write_errors\":%llu,\"corrupt_records\":%llu,\"seq_gaps\":%llu,\"incomplete_records\":%llu,\"storage_bytes\":%llu,\"flush_count\":%llu,\"sync_duration_ns\":%llu,\"persist_drain_latency_ns\":%llu,\"replay_duration_ns\":%llu,\"total_time_to_graph_ns\":%llu}",
+               mode_str,
+               g_diag_evidence_path,
+               (unsigned long long)g_diag_writer.stats.records_received,
+               (unsigned long long)g_diag_writer.stats.records_written,
+               (unsigned long long)g_diag_writer.stats.records_synced,
+               (unsigned long long)g_diag_writer.stats.records_replayed,
+               (unsigned long long)g_diag_writer.stats.write_errors,
+               (unsigned long long)g_diag_writer.stats.corrupt_records,
+               (unsigned long long)g_diag_writer.stats.seq_gaps,
+               (unsigned long long)g_diag_writer.stats.incomplete_records,
+               (unsigned long long)g_diag_writer.stats.storage_bytes,
+               (unsigned long long)g_diag_writer.stats.flush_count,
+               (unsigned long long)g_diag_writer.stats.sync_duration_ns,
+               (unsigned long long)g_diag_writer.stats.persist_drain_latency_ns,
+               (unsigned long long)g_diag_writer.stats.replay_duration_ns,
+               (unsigned long long)g_diag_writer.stats.total_time_to_graph_ns);
+    }
 
     puts("}");
     return fflush(stdout)==0?0:-1;
