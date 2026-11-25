@@ -101,9 +101,12 @@ static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va
 #define PATH_TRUNCATED   2
 #define PATH_UNAVAILABLE 3
 
+#ifndef MEMFD_STATUS_DEFINED
+#define MEMFD_STATUS_DEFINED
 #define MEMFD_STATUS_FAILED               1
 #define MEMFD_STATUS_SUCCESS_CORRELATED   2
 #define MEMFD_STATUS_SUCCESS_UNCORRELATED 3
+#endif
 
 static uint64_t next_memfd_instance_id = 1;
 
@@ -1062,6 +1065,8 @@ static void *acquisition_thread_fn(void *arg) {
     while (1) {
         int got = ring_buffer__consume(rb);
         if (got < 0) {
+            if (got == -EINTR)
+                continue;
             log_error("Ring buffer final drain failed: %d", got);
             if (!acq_thread_err)
                 acq_thread_err = got;
@@ -1944,12 +1949,13 @@ int main(int argc, char **argv)
     __atomic_store_n(&acq_drain_and_stop, 1, __ATOMIC_RELEASE);
     void *acq_ret = NULL;
     pthread_join(acq_tid, &acq_ret);
-    if ((intptr_t)acq_ret != 0 || acq_thread_err != 0) {
+    pthread_join(worker_tid, NULL);
+    if (((intptr_t)acq_ret != 0 && (intptr_t)acq_ret != -EINTR) ||
+        (acq_thread_err != 0 && acq_thread_err != -EINTR)) {
         log_error("Acquisition thread failed with error %ld", (long)(intptr_t)acq_ret);
         ret = 1;
         goto cleanup;
     }
-    pthread_join(worker_tid, NULL);
 
     if (current_log_level >= LOG_LEVEL_DEBUG) {
         printf("\nFinal counter summary at exit:\n");

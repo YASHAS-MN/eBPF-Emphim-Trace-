@@ -133,6 +133,13 @@ struct prov_graph {
   size_t edge_count;
 };
 
+#ifndef MEMFD_STATUS_DEFINED
+#define MEMFD_STATUS_DEFINED
+#define MEMFD_STATUS_FAILED 1
+#define MEMFD_STATUS_SUCCESS_CORRELATED 2
+#define MEMFD_STATUS_SUCCESS_UNCORRELATED 3
+#endif
+
 #ifndef EVENT_TYPE_DEFINED
 #define EVENT_TYPE_DEFINED
 enum event_type {

@@ -12,12 +12,14 @@ SRC_LOADER = src/user/loader.c src/user/provenance.c src/user/canonical_correlat
 TEST_SRCS = $(wildcard tests/*.c)
 TEST_BINS = $(patsubst tests/%.c,$(BUILD_DIR)/%,$(TEST_SRCS))
 
-all: $(BUILD_DIR)/monitor.bpf.o $(BUILD_DIR)/loader $(TEST_BINS)
+all: $(BUILD_DIR)/monitor.bpf.o $(BUILD_DIR)/loader $(TEST_BINS) $(BUILD_DIR)/test_canonical_correlator $(BUILD_DIR)/test_async_queue
 
 test_m2_integration: $(BUILD_DIR)/test_m2_integration
 test_m6_dag: $(BUILD_DIR)/test_m6_dag
 test_m6_filtering: $(BUILD_DIR)/test_m6_filtering
 test_m7_scenarios: $(BUILD_DIR)/test_m7_scenarios
+test_canonical_correlator: $(BUILD_DIR)/test_canonical_correlator
+test_async_queue: $(BUILD_DIR)/test_async_queue
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -28,10 +30,16 @@ $(BUILD_DIR)/monitor.bpf.o: $(SRC_BPF) src/bpf/vmlinux.h | $(BUILD_DIR)
 $(BUILD_DIR)/loader: $(SRC_LOADER) src/user/provenance.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -pthread $(LIBBPF_CFLAGS) $(SRC_LOADER) -o $@ $(LIBBPF_LIBS)
 
+$(BUILD_DIR)/test_canonical_correlator: tests1.0/kernel_telemetry/test_canonical_correlator.c src/user/canonical_correlator.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -I. -I src/user $^ -o $@
+
+$(BUILD_DIR)/test_async_queue: tests1.0/kernel_telemetry/test_async_queue.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -pthread -I. -I src/user $^ -o $@
+
 $(BUILD_DIR)/%: tests/%.c | $(BUILD_DIR)
 	$(CC) -O2 -pthread $< -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean test_m2_integration test_m6_dag test_m6_filtering test_m7_scenarios
+.PHONY: all clean test_m2_integration test_m6_dag test_m6_filtering test_m7_scenarios test_canonical_correlator test_async_queue

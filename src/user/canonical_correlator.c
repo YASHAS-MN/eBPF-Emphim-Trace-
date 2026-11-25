@@ -24,9 +24,10 @@ struct correlator_obj {
     struct correlator_obj *next;
 };
 
-/* Process file descriptor slot */
+/* Process file descriptor slot: keyed lifetime-safely by (tgid, start_time_ns, fd) */
 struct correlator_desc {
     uint32_t tgid;
+    uint64_t start_time_ns;
     int32_t fd;
     uint64_t object_token;
     uint64_t dev_id;
@@ -45,8 +46,9 @@ static inline uint32_t hash_ino_dev(uint64_t dev, uint64_t ino) {
     return (uint32_t)(h % OBJECT_HASH_SIZE);
 }
 
-static inline uint32_t hash_desc(uint32_t tgid, int32_t fd) {
-    uint64_t h = ((uint64_t)tgid << 16) ^ (uint32_t)fd;
+static inline uint32_t hash_desc(uint32_t tgid, uint64_t start_time, int32_t fd) {
+    uint64_t h = ((uint64_t)tgid << 32) ^ start_time ^ (uint32_t)fd;
+    h ^= (h >> 16);
     return (uint32_t)(h % DESC_HASH_SIZE);
 }
 
@@ -102,9 +104,13 @@ static struct correlator_obj *upsert_object(uint64_t dev, uint64_t ino, uint64_t
         return NULL;
     struct correlator_obj *obj = find_object(dev, ino);
     if (obj) {
-        /* Inode reuse detection: if previous was evicted or birth_ts differs by more than 1s */
+        /* Inode reuse detection:
+         * 1. Inode was explicitly evicted via shmem_evict_inode (is_evicted = true).
+         * 2. Birth timestamp inequality: birth_ts != 0 && obj->birth_ts_ns != 0 && birth_ts != obj->birth_ts_ns.
+         * Note: Removed arbitrary 1-second heuristic.
+         */
         if (obj->is_evicted ||
-            (birth_ts != 0 && obj->birth_ts_ns != 0 && birth_ts > obj->birth_ts_ns + 1000000000ULL)) {
+            (birth_ts != 0 && obj->birth_ts_ns != 0 && birth_ts != obj->birth_ts_ns)) {
             g_stats.inode_reuses_detected++;
             obj->object_token = g_next_object_token++;
             obj->birth_ts_ns = birth_ts;
@@ -125,10 +131,18 @@ static struct correlator_obj *upsert_object(uint64_t dev, uint64_t ino, uint64_t
         return obj;
     }
 
+    /* Bounded state check */
+    if (g_stats.active_objects_count >= CORRELATOR_MAX_OBJECTS) {
+        g_stats.allocation_failures++;
+        return NULL;
+    }
+
     uint32_t idx = hash_ino_dev(dev, ino);
     obj = (struct correlator_obj *)calloc(1, sizeof(*obj));
-    if (!obj)
+    if (!obj) {
+        g_stats.allocation_failures++;
         return NULL;
+    }
     obj->object_token = g_next_object_token++;
     obj->dev_id = dev;
     obj->inode_no = ino;
@@ -146,23 +160,25 @@ static struct correlator_obj *upsert_object(uint64_t dev, uint64_t ino, uint64_t
     return obj;
 }
 
-static struct correlator_desc *find_desc(uint32_t tgid, int32_t fd) {
+static struct correlator_desc *find_desc(uint32_t tgid, uint64_t start_time, int32_t fd) {
     if (fd < 0)
         return NULL;
-    uint32_t idx = hash_desc(tgid, fd);
+    uint32_t idx = hash_desc(tgid, start_time, fd);
     struct correlator_desc *curr = g_desc_table[idx];
     while (curr) {
-        if (curr->tgid == tgid && curr->fd == fd)
+        if (curr->tgid == tgid && curr->fd == fd &&
+            (start_time == 0 || curr->start_time_ns == 0 || curr->start_time_ns == start_time))
             return curr;
         curr = curr->next;
     }
     return NULL;
 }
 
-static void set_desc(uint32_t tgid, int32_t fd, uint64_t token, uint64_t dev, uint64_t ino, uint64_t install_ts) {
+static int set_desc(uint32_t tgid, uint64_t start_time, int32_t fd,
+                    uint64_t token, uint64_t dev, uint64_t ino, uint64_t install_ts) {
     if (fd < 0)
-        return;
-    struct correlator_desc *desc = find_desc(tgid, fd);
+        return -1;
+    struct correlator_desc *desc = find_desc(tgid, start_time, fd);
     if (desc) {
         if (desc->object_token != 0 && desc->object_token != token) {
             /* Descriptor reuse without close detected */
@@ -172,14 +188,25 @@ static void set_desc(uint32_t tgid, int32_t fd, uint64_t token, uint64_t dev, ui
         desc->dev_id = dev;
         desc->inode_no = ino;
         desc->installed_ts_ns = install_ts;
-        return;
+        if (start_time != 0 && desc->start_time_ns == 0)
+            desc->start_time_ns = start_time;
+        return 0;
     }
 
-    uint32_t idx = hash_desc(tgid, fd);
+    /* Bounded state check */
+    if (g_stats.active_descriptors_count >= CORRELATOR_MAX_DESCRIPTORS) {
+        g_stats.allocation_failures++;
+        return -1;
+    }
+
+    uint32_t idx = hash_desc(tgid, start_time, fd);
     desc = (struct correlator_desc *)calloc(1, sizeof(*desc));
-    if (!desc)
-        return;
+    if (!desc) {
+        g_stats.allocation_failures++;
+        return -1;
+    }
     desc->tgid = tgid;
+    desc->start_time_ns = start_time;
     desc->fd = fd;
     desc->object_token = token;
     desc->dev_id = dev;
@@ -189,15 +216,17 @@ static void set_desc(uint32_t tgid, int32_t fd, uint64_t token, uint64_t dev, ui
     desc->next = g_desc_table[idx];
     g_desc_table[idx] = desc;
     g_stats.active_descriptors_count++;
+    return 0;
 }
 
-static void remove_desc(uint32_t tgid, int32_t fd) {
+static void remove_desc(uint32_t tgid, uint64_t start_time, int32_t fd) {
     if (fd < 0)
         return;
-    uint32_t idx = hash_desc(tgid, fd);
+    uint32_t idx = hash_desc(tgid, start_time, fd);
     struct correlator_desc **curr = &g_desc_table[idx];
     while (*curr) {
-        if ((*curr)->tgid == tgid && (*curr)->fd == fd) {
+        if ((*curr)->tgid == tgid && (*curr)->fd == fd &&
+            (start_time == 0 || (*curr)->start_time_ns == 0 || (*curr)->start_time_ns == start_time)) {
             struct correlator_desc *to_free = *curr;
             *curr = to_free->next;
             free(to_free);
@@ -234,7 +263,7 @@ int canonical_correlator_process_event(struct event *e) {
         }
         if (tok != 0) {
             e->object_token = tok;
-            set_desc(e->pid, e->fd, tok, e->dev_id, e->inode_no, e->timestamp_ns);
+            set_desc(e->pid, e->start_time_ns, e->fd, tok, e->dev_id, e->inode_no, e->timestamp_ns);
         } else {
             e->object_token = 0;
         }
@@ -243,30 +272,45 @@ int canonical_correlator_process_event(struct event *e) {
 
     case EVENT_MEMFD_COMPLETED: {
         if (e->ret_val < 0) {
-            /* Syscall failed */
-            e->op_type = 3; /* MEMFD_STATUS_FAILED */
+            /* Syscall failed: use named constant MEMFD_STATUS_FAILED (1) */
+            e->op_type = MEMFD_STATUS_FAILED;
             e->object_token = 0;
             g_stats.failed_creations++;
             if (e->fd >= 0)
-                remove_desc(e->pid, e->fd);
+                remove_desc(e->pid, e->start_time_ns, e->fd);
         } else {
+            /* Missing event tracking:
+             * 1. Missing entry observation: entry timestamp absent (0).
+             * 2. Missing install observation: no prior EVENT_FD_INSTALLED recorded for this descriptor.
+             */
+            if (e->entry_ts_ns == 0) {
+                g_stats.missing_entry_count++;
+            }
+            struct correlator_desc *desc = find_desc(e->pid, e->start_time_ns, e->ret_val);
+            if (!desc || desc->object_token == 0) {
+                g_stats.missing_install_count++;
+            }
+
             /* Syscall succeeded */
-            if (e->op_type == 2 /* MEMFD_STATUS_SUCCESS_CORRELATED */ &&
+            if (e->op_type == MEMFD_STATUS_SUCCESS_CORRELATED &&
                 (e->flags & 0x01 /* VFS_IDENTITY_INODE_VALID */) && e->inode_no != 0) {
                 struct correlator_obj *obj = upsert_object(e->dev_id, e->inode_no, e->entry_ts_ns,
                                                            e->pid, e->start_time_ns, e->name, e->path);
                 if (obj) {
                     e->object_token = obj->object_token;
-                    set_desc(e->pid, e->fd, obj->object_token, e->dev_id, e->inode_no, e->timestamp_ns);
+                    e->op_type = MEMFD_STATUS_SUCCESS_CORRELATED;
+                    set_desc(e->pid, e->start_time_ns, e->fd, obj->object_token, e->dev_id, e->inode_no, e->timestamp_ns);
                     g_stats.correlated_creations++;
                 } else {
+                    /* State allocation failure: classify truthfully as uncorrelated */
                     e->object_token = 0;
-                    e->op_type = 1; /* MEMFD_STATUS_SUCCESS_UNCORRELATED */
+                    e->op_type = MEMFD_STATUS_SUCCESS_UNCORRELATED;
                     g_stats.uncorrelated_creations++;
                 }
             } else {
+                /* Missing or invalid identity: classify truthfully as uncorrelated */
                 e->object_token = 0;
-                e->op_type = 1; /* MEMFD_STATUS_SUCCESS_UNCORRELATED */
+                e->op_type = MEMFD_STATUS_SUCCESS_UNCORRELATED;
                 g_stats.uncorrelated_creations++;
             }
         }
@@ -274,12 +318,12 @@ int canonical_correlator_process_event(struct event *e) {
     }
 
     case EVENT_FD_CLOSED: {
-        struct correlator_desc *desc = find_desc(e->pid, e->fd);
+        struct correlator_desc *desc = find_desc(e->pid, e->start_time_ns, e->fd);
         if (desc && desc->object_token != 0) {
             e->object_token = desc->object_token;
             e->inode_no = desc->inode_no;
             e->dev_id = desc->dev_id;
-            remove_desc(e->pid, e->fd);
+            remove_desc(e->pid, e->start_time_ns, e->fd);
         } else {
             e->object_token = 0;
             g_stats.untracked_closes++;
@@ -288,11 +332,17 @@ int canonical_correlator_process_event(struct event *e) {
     }
 
     case EVENT_MEMFD_WRITE: {
-        struct correlator_obj *obj = find_object(e->dev_id, e->inode_no);
-        if (obj) {
-            e->object_token = obj->object_token;
+        struct correlator_desc *desc = find_desc(e->pid, e->start_time_ns, e->fd);
+        if (desc && desc->object_token != 0) {
+            e->object_token = desc->object_token;
         } else {
-            e->object_token = 0;
+            struct correlator_obj *obj = find_object(e->dev_id, e->inode_no);
+            if (obj) {
+                e->object_token = obj->object_token;
+            } else {
+                e->object_token = 0;
+                g_stats.out_of_order_buffered++;
+            }
         }
         break;
     }
@@ -337,6 +387,27 @@ int canonical_correlator_process_event(struct event *e) {
 
     diag_last_processed_token = e->object_token;
     g_stats.canonical_events_out++;
+    return 0;
+}
+
+int canonical_correlator_process_event_canonical(const struct event *raw, struct canonical_event *canon) {
+    if (!raw || !canon)
+        return -1;
+    struct event temp = *raw;
+    int rc = canonical_correlator_process_event(&temp);
+    if (rc != 0)
+        return rc;
+
+    canon->type = temp.type;
+    canon->pid = temp.pid;
+    canon->tid = temp.tid;
+    canon->start_time_ns = temp.start_time_ns;
+    canon->fd = temp.fd;
+    canon->object_token = temp.object_token;
+    canon->inode_no = temp.inode_no;
+    canon->dev_id = temp.dev_id;
+    canon->op_type = temp.op_type;
+    canon->timestamp_ns = temp.timestamp_ns;
     return 0;
 }
 
