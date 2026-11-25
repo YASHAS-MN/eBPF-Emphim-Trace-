@@ -147,6 +147,8 @@ def build():
                 cap->fd = e->fd;
                 cap->op_type = e->op_type;
                 cap->flags = e->syscall_flags;
+                cap->raw_token = e->object_token;
+                cap->raw_op_type = e->op_type;
                 cap->token = e->object_token;
                 cap->inode_no = e->inode_no;
                 cap->dev_id = e->dev_id;
@@ -175,20 +177,61 @@ def build():
     u = replace(u, marker, wrapper + marker)
     u = replace(
         u,
-        "static inline void on_event_processed(int cap_idx, uint32_t pid) {\n    (void)cap_idx;\n    (void)pid;\n}",
-        """static inline void on_event_processed(int cap_idx, uint32_t pid) {
+        "static inline void on_event_processed(int cap_idx, uint32_t pid, const struct canonical_event *canon) {\n    (void)cap_idx;\n    (void)pid;\n    (void)canon;\n}",
+        """static inline void on_event_processed(int cap_idx, uint32_t pid, const struct canonical_event *canon) {
     diag_record_global_event_ts();
     if (cap_idx >= 0) {
         if (diag_full) {
             diag_captured_events[cap_idx].p_status = diag_p_get_last_status();
         }
-        if (diag_last_processed_token != 0) {
-            diag_captured_events[cap_idx].token = diag_last_processed_token;
+        if (canon) {
+            diag_captured_events[cap_idx].token = canon->object_token;
+            diag_captured_events[cap_idx].op_type = canon->op_type;
+            if (canon->inode_no != 0)
+                diag_captured_events[cap_idx].inode_no = canon->inode_no;
+            if (canon->dev_id != 0)
+                diag_captured_events[cap_idx].dev_id = canon->dev_id;
         }
     }
     if (pid == diag_pid) {
         diag_record_target_event_ts();
     }
+}""",
+    )
+    u = replace(
+        u,
+        """static void *worker_thread_fn(void *arg) {
+    (void)arg;
+    struct queue_entry entry;
+    while (event_queue_pop(g_queue, &entry) == 0) {
+        struct canonical_event canon;
+        if (canonical_correlator_process_event_canonical(&entry.e, &canon) == 0) {
+            handle_canonical_event(&entry.e, &canon);
+            on_event_processed(entry.cap_idx, entry.e.pid, &canon);
+        } else {
+            on_event_processed(entry.cap_idx, entry.e.pid, NULL);
+        }
+    }
+    return NULL;
+}""",
+        """static void *worker_thread_fn(void *arg) {
+    (void)arg;
+    struct queue_entry entry;
+    while (event_queue_pop(g_queue, &entry) == 0) {
+        uint64_t _t_cb_start = diag_time_now_ns();
+        struct canonical_event canon;
+        if (canonical_correlator_process_event_canonical(&entry.e, &canon) == 0) {
+            handle_canonical_event(&entry.e, &canon);
+            on_event_processed(entry.cap_idx, entry.e.pid, &canon);
+        } else {
+            on_event_processed(entry.cap_idx, entry.e.pid, NULL);
+        }
+        uint64_t _t_cb_end = diag_time_now_ns();
+        uint64_t _total_cb = _t_cb_end - _t_cb_start;
+        diag_timing_record(&g_diag_profile.total_callback, _total_cb);
+        diag_profile_record_latency_growth(_total_cb);
+    }
+    return NULL;
 }""",
     )
     u = replace(

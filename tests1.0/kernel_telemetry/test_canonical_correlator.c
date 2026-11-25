@@ -63,7 +63,12 @@ static void test_missing_events_and_uncertainty(void) {
     printf("[TEST 2] Missing events and uncertain attribution...\n");
     canonical_correlator_init();
 
-    /* Subcase A: Missing install event (install dropped, exit arrives with ret_val >= 0) */
+    /* Subcase A: Missing install event (entry arrives, exit arrives with ret_val >= 0, install dropped) */
+    struct event e_enter1;
+    init_mock_event(&e_enter1, EVENT_MEMFD_CREATE, 1002, 1002);
+    e_enter1.entry_ts_ns = 2000000100ULL;
+    canonical_correlator_process_event(&e_enter1);
+
     struct event e_exit1;
     init_mock_event(&e_exit1, EVENT_MEMFD_COMPLETED, 1002, 1002);
     e_exit1.fd = 4;
@@ -76,19 +81,54 @@ static void test_missing_events_and_uncertainty(void) {
     canonical_correlator_process_event(&e_exit1);
     assert(e_exit1.object_token != 0);
 
-    /* Subcase B: Missing entry event (entry dropped, entry_ts_ns == 0) */
+    /* Subcase B: Missing entry event (install arrives, exit arrives, entry dropped) */
+    struct event e_inst2;
+    init_mock_event(&e_inst2, EVENT_FD_INSTALLED, 1003, 1003);
+    e_inst2.fd = 5;
+    e_inst2.inode_no = 9903;
+    e_inst2.dev_id = 42;
+    canonical_correlator_process_event(&e_inst2);
+
     struct event e_exit2;
     init_mock_event(&e_exit2, EVENT_MEMFD_COMPLETED, 1003, 1003);
     e_exit2.fd = 5;
     e_exit2.ret_val = 5;
     e_exit2.inode_no = 9903;
     e_exit2.dev_id = 42;
-    e_exit2.entry_ts_ns = 0; /* Missing entry */
+    e_exit2.entry_ts_ns = 0; /* Missing entry observation */
     e_exit2.op_type = MEMFD_STATUS_SUCCESS_CORRELATED;
     e_exit2.flags = 0x01;
     canonical_correlator_process_event(&e_exit2);
 
-    /* Subcase C: Untracked descriptor close */
+    /* Subcase C: Ambiguous start time with multiple candidate descriptors across recycled PID */
+    /* Install fd 6 for PID 1004 generation 1 */
+    struct event e_inst_gen1;
+    init_mock_event(&e_inst_gen1, EVENT_FD_INSTALLED, 1004, 1004);
+    e_inst_gen1.start_time_ns = 100000ULL;
+    e_inst_gen1.fd = 6;
+    e_inst_gen1.inode_no = 9904;
+    e_inst_gen1.dev_id = 42;
+    canonical_correlator_process_event(&e_inst_gen1);
+
+    /* Install fd 6 for PID 1004 generation 2 */
+    struct event e_inst_gen2;
+    init_mock_event(&e_inst_gen2, EVENT_FD_INSTALLED, 1004, 1004);
+    e_inst_gen2.start_time_ns = 200000ULL;
+    e_inst_gen2.fd = 6;
+    e_inst_gen2.inode_no = 9905;
+    e_inst_gen2.dev_id = 42;
+    canonical_correlator_process_event(&e_inst_gen2);
+
+    /* An incoming write with start_time_ns == 0 faces multiple candidate descriptors */
+    struct event e_write_ambig;
+    init_mock_event(&e_write_ambig, EVENT_MEMFD_WRITE, 1004, 1004);
+    e_write_ambig.start_time_ns = 0; /* Unknown start time */
+    e_write_ambig.fd = 6;
+    canonical_correlator_process_event(&e_write_ambig);
+    /* Reliable correlation is impossible: must preserve uncertainty and not invent identity */
+    assert(e_write_ambig.object_token == 0);
+
+    /* Subcase D: Untracked descriptor close */
     struct event e_close;
     init_mock_event(&e_close, EVENT_FD_CLOSED, 1002, 1002);
     e_close.fd = 99; /* Never opened */
@@ -99,9 +139,10 @@ static void test_missing_events_and_uncertainty(void) {
     canonical_correlator_get_stats(&st);
     assert(st.missing_install_count >= 1);
     assert(st.missing_entry_count >= 1);
+    assert(st.uncertain_correlation_count >= 1);
     assert(st.untracked_closes == 1);
     canonical_correlator_destroy();
-    printf("  [PASS] Missing events and untracked closures accounted without synthetic invention\n");
+    printf("  [PASS] Missing events and uncertain attribution accounted without synthetic invention\n");
 }
 
 static void test_reopened_files_and_cross_process(void) {
@@ -167,35 +208,35 @@ static void test_reopened_files_and_cross_process(void) {
     assert(e_close1.object_token == tok1);
 
     canonical_correlator_destroy();
-    printf("  [PASS] Cross-process descriptor sharing correctly anchored to unique token\n");
+    printf("  [PASS] Cross-process descriptor installs and references resolved accurately\n");
 }
 
 static void test_descriptor_and_identity_reuse(void) {
-    printf("[TEST 4] Pointer, inode, PID, and descriptor reuse...\n");
+    printf("[TEST 4] PID recycling, descriptor reuse, and sub-millisecond inode reuse...\n");
     canonical_correlator_init();
 
-    /* A. Lifetime-safe PID reuse: same TGID (3001) but different start_time_ns */
-    struct event e1;
-    init_mock_event(&e1, EVENT_FD_INSTALLED, 3001, 3001);
-    e1.start_time_ns = 1000000ULL; /* First process generation */
-    e1.fd = 3;
-    e1.inode_no = 8801;
-    e1.dev_id = 42;
-    canonical_correlator_process_event(&e1);
-    uint64_t tok_gen1 = e1.object_token;
+    /* A. PID recycling: Process 3001 generation 1 opens FD 3 */
+    struct event e_inst_gen1;
+    init_mock_event(&e_inst_gen1, EVENT_FD_INSTALLED, 3001, 3001);
+    e_inst_gen1.start_time_ns = 1000000ULL;
+    e_inst_gen1.fd = 3;
+    e_inst_gen1.inode_no = 8801;
+    e_inst_gen1.dev_id = 42;
+    canonical_correlator_process_event(&e_inst_gen1);
+    uint64_t tok_gen1 = e_inst_gen1.object_token;
 
-    /* New process forks with recycled PID 3001, different start_time_ns */
-    struct event e1_recycled;
-    init_mock_event(&e1_recycled, EVENT_FD_INSTALLED, 3001, 3001);
-    e1_recycled.start_time_ns = 2000000ULL; /* Recycled process generation */
-    e1_recycled.fd = 3;
-    e1_recycled.inode_no = 8802;
-    e1_recycled.dev_id = 42;
-    canonical_correlator_process_event(&e1_recycled);
-    uint64_t tok_gen2 = e1_recycled.object_token;
-    assert(tok_gen2 != tok_gen1);
+    /* PID 3001 generation 2 opens FD 3 (without close in gen 1) */
+    struct event e_inst_gen2;
+    init_mock_event(&e_inst_gen2, EVENT_FD_INSTALLED, 3001, 3001);
+    e_inst_gen2.start_time_ns = 2000000ULL;
+    e_inst_gen2.fd = 3;
+    e_inst_gen2.inode_no = 8802;
+    e_inst_gen2.dev_id = 42;
+    canonical_correlator_process_event(&e_inst_gen2);
+    uint64_t tok_gen2 = e_inst_gen2.object_token;
+    assert(tok_gen1 != tok_gen2);
 
-    /* Closing FD 3 in recycled process generation targets tok_gen2 */
+    /* Closing FD 3 in generation 2 targets tok_gen2 */
     struct event e_close_gen2;
     init_mock_event(&e_close_gen2, EVENT_FD_CLOSED, 3001, 3001);
     e_close_gen2.start_time_ns = 2000000ULL;
@@ -232,6 +273,14 @@ static void test_descriptor_and_identity_reuse(void) {
     canonical_correlator_process_event(&e_evict);
     assert(e_evict.object_token == tok_orig);
 
+    /* Subsequent write to evicted inode fails to correlate and records uncertainty */
+    struct event e_evicted_write;
+    init_mock_event(&e_evicted_write, EVENT_MEMFD_WRITE, 3002, 3002);
+    e_evicted_write.inode_no = 8805;
+    e_evicted_write.dev_id = 42;
+    canonical_correlator_process_event(&e_evicted_write);
+    assert(e_evicted_write.object_token == 0);
+
     /* New creation reusing inode 8805 with birth difference of only 50 microseconds */
     struct event e_reuse;
     init_mock_event(&e_reuse, EVENT_MEMFD_COMPLETED, 3002, 3002);
@@ -244,10 +293,12 @@ static void test_descriptor_and_identity_reuse(void) {
     e_reuse.flags = 0x01;
     canonical_correlator_process_event(&e_reuse);
     assert(e_reuse.object_token != 0);
+    assert(e_reuse.object_token != tok_orig);
 
     struct correlator_stats st;
     canonical_correlator_get_stats(&st);
     assert(st.inode_reuses_detected >= 1);
+    assert(st.uncertain_correlation_count >= 1);
 
     canonical_correlator_destroy();
     printf("  [PASS] PID recycling and sub-millisecond inode reuse disambiguated safely\n");
@@ -298,57 +349,123 @@ static void test_file_release_vs_inode_destruction(void) {
 }
 
 static void test_failed_syscall_handling(void) {
-    printf("[TEST 6] Membership-map insertion and syscall failure handling...\n");
+    printf("[TEST 6] Failed syscall outcome handling...\n");
     canonical_correlator_init();
 
     struct event e_fail;
     init_mock_event(&e_fail, EVENT_MEMFD_COMPLETED, 5001, 5001);
     e_fail.fd = -1;
-    e_fail.ret_val = -24; /* -EMFILE */
+    e_fail.ret_val = -12; /* -ENOMEM */
     e_fail.op_type = MEMFD_STATUS_FAILED;
+    e_fail.entry_ts_ns = 5000000000ULL;
     canonical_correlator_process_event(&e_fail);
-    assert(e_fail.object_token == 0);
     assert(e_fail.op_type == MEMFD_STATUS_FAILED);
+    assert(e_fail.object_token == 0);
 
     struct correlator_stats st;
     canonical_correlator_get_stats(&st);
     assert(st.failed_creations == 1);
+    assert(st.correlated_creations == 0);
 
     canonical_correlator_destroy();
-    printf("  [PASS] Failed syscalls clean up provisional state and emit token 0 with MEMFD_STATUS_FAILED (1)\n");
+    printf("  [PASS] Failed syscall categorized truthfully with status code 1\n");
 }
 
-static void test_bounded_correlator_memory(void) {
-    printf("[TEST 7] Bounded correlator memory and lifecycle scaling...\n");
+static void test_correlator_state_retirement_and_exhaustion(void) {
+    printf("[TEST 7] Correlator state retirement, capacity exhaustion, and stats preservation...\n");
     canonical_correlator_init();
 
-    const int N = 10000;
-    for (int i = 0; i < N; i++) {
-        struct event e;
-        init_mock_event(&e, EVENT_MEMFD_COMPLETED, 6000 + (i % 10), 6000 + (i % 10));
-        e.fd = 3 + (i % 100);
-        e.ret_val = e.fd;
-        e.inode_no = 100000 + i;
-        e.dev_id = 42;
-        e.entry_ts_ns = 1000ULL + i;
-        e.op_type = MEMFD_STATUS_SUCCESS_CORRELATED;
-        e.flags = 0x01;
-        canonical_correlator_process_event(&e);
+    /* 1. Verify state retirement: create and destroy an object */
+    struct event e1;
+    init_mock_event(&e1, EVENT_MEMFD_COMPLETED, 6001, 6001);
+    e1.fd = 3;
+    e1.ret_val = 3;
+    e1.inode_no = 200001;
+    e1.dev_id = 42;
+    e1.op_type = MEMFD_STATUS_SUCCESS_CORRELATED;
+    e1.flags = 0x01;
+    canonical_correlator_process_event(&e1);
 
+    struct correlator_stats st1;
+    canonical_correlator_get_stats(&st1);
+    assert(st1.active_objects_count == 1);
+
+    /* Close descriptor and destroy object */
+    struct event e1_close;
+    init_mock_event(&e1_close, EVENT_FD_CLOSED, 6001, 6001);
+    e1_close.fd = 3;
+    canonical_correlator_process_event(&e1_close);
+
+    struct event e1_dest;
+    init_mock_event(&e1_dest, EVENT_MEMFD_DESTROYED, 6001, 6001);
+    e1_dest.inode_no = 200001;
+    e1_dest.dev_id = 42;
+    canonical_correlator_process_event(&e1_dest);
+
+    canonical_correlator_get_stats(&st1);
+    assert(st1.active_objects_count == 0);
+
+    /* 2. Verify stats reset preserves active counts */
+    /* Create an active object and descriptor */
+    struct event e2;
+    init_mock_event(&e2, EVENT_MEMFD_COMPLETED, 6002, 6002);
+    e2.fd = 4;
+    e2.ret_val = 4;
+    e2.inode_no = 200002;
+    e2.dev_id = 42;
+    e2.op_type = MEMFD_STATUS_SUCCESS_CORRELATED;
+    e2.flags = 0x01;
+    canonical_correlator_process_event(&e2);
+
+    canonical_correlator_get_stats(&st1);
+    assert(st1.active_objects_count == 1);
+    assert(st1.active_descriptors_count == 1);
+
+    /* Reset stats */
+    canonical_correlator_reset_stats();
+    canonical_correlator_get_stats(&st1);
+    /* Counters zeroed but active capacities preserved */
+    assert(st1.correlated_creations == 0);
+    assert(st1.active_objects_count == 1);
+    assert(st1.active_descriptors_count == 1);
+
+    /* 3. Evicted objects reaping on capacity pressure */
+    /* Fill table with evicted objects */
+    const int N = 100;
+    for (int i = 0; i < N; i++) {
         struct event ec;
-        init_mock_event(&ec, EVENT_FD_CLOSED, 6000 + (i % 10), 6000 + (i % 10));
-        ec.fd = 3 + (i % 100);
+        init_mock_event(&ec, EVENT_MEMFD_COMPLETED, 7000 + i, 7000 + i);
+        ec.fd = 5;
+        ec.ret_val = 5;
+        ec.inode_no = 300000 + i;
+        ec.dev_id = 42;
+        ec.op_type = MEMFD_STATUS_SUCCESS_CORRELATED;
+        ec.flags = 0x01;
         canonical_correlator_process_event(&ec);
+
+        struct event ed;
+        init_mock_event(&ed, EVENT_MEMFD_DESTROYED, 7000 + i, 7000 + i);
+        ed.inode_no = 300000 + i;
+        ed.dev_id = 42;
+        canonical_correlator_process_event(&ed);
     }
 
-    struct correlator_stats st;
-    canonical_correlator_get_stats(&st);
-    assert(st.correlated_creations == (uint64_t)N);
-    assert(st.active_descriptors_count == 0);
-    assert(st.allocation_failures == 0);
+    /* Reap evicted objects */
+    struct event enew;
+    init_mock_event(&enew, EVENT_MEMFD_COMPLETED, 8000, 8000);
+    enew.fd = 8;
+    enew.ret_val = 8;
+    enew.inode_no = 400000;
+    enew.dev_id = 42;
+    enew.op_type = MEMFD_STATUS_SUCCESS_CORRELATED;
+    enew.flags = 0x01;
+    canonical_correlator_process_event(&enew);
+
+    canonical_correlator_get_stats(&st1);
+    assert(st1.retired_objects_count >= (uint64_t)N);
 
     canonical_correlator_destroy();
-    printf("  [PASS] Correlator processed %d operations with zero lingering descriptors and 0 failures\n", N);
+    printf("  [PASS] State retirement safely bounds capacity; stats reset preserves active allocations\n");
 }
 
 static void test_raw_vs_canonical_separation(void) {
@@ -443,7 +560,7 @@ int main(void) {
     test_descriptor_and_identity_reuse();
     test_file_release_vs_inode_destruction();
     test_failed_syscall_handling();
-    test_bounded_correlator_memory();
+    test_correlator_state_retirement_and_exhaustion();
     test_raw_vs_canonical_separation();
     test_unrelated_hooks_passthrough();
 

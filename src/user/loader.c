@@ -1034,9 +1034,10 @@ static int handle_event(void *ctx, void *data, size_t size)
     return 0;
 }
 
-static inline void on_event_processed(int cap_idx, uint32_t pid) {
+static inline void on_event_processed(int cap_idx, uint32_t pid, const struct canonical_event *canon) {
     (void)cap_idx;
     (void)pid;
+    (void)canon;
 }
 
 static __attribute__((unused)) int acquisition_callback(void *ctx, void *data, size_t size) {
@@ -1100,8 +1101,10 @@ static void *worker_thread_fn(void *arg) {
         struct canonical_event canon;
         if (canonical_correlator_process_event_canonical(&entry.e, &canon) == 0) {
             handle_canonical_event(&entry.e, &canon);
+            on_event_processed(entry.cap_idx, entry.e.pid, &canon);
+        } else {
+            on_event_processed(entry.cap_idx, entry.e.pid, NULL);
         }
-        on_event_processed(entry.cap_idx, entry.e.pid);
     }
     return NULL;
 }

@@ -3,12 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define OBJECT_HASH_SIZE 8192
-#define DESC_HASH_SIZE 16384
+#define CORRELATOR_HASH_BUCKETS 4096
+#define PENDING_ENTRY_BUCKETS 1024
 
-uint64_t diag_last_processed_token = 0;
-
-/* Active memfd object tracked in userspace */
 struct correlator_obj {
     uint64_t object_token;
     uint64_t dev_id;
@@ -16,15 +13,13 @@ struct correlator_obj {
     uint64_t birth_ts_ns;
     uint32_t creator_tgid;
     uint64_t creator_start_time_ns;
-    char name[256];
-    char path[256];
-    bool is_evicted;
     bool is_released;
-    int ref_count;
+    bool is_evicted;
+    char name[64];
+    char path[128];
     struct correlator_obj *next;
 };
 
-/* Process file descriptor slot: keyed lifetime-safely by (tgid, start_time_ns, fd) */
 struct correlator_desc {
     uint32_t tgid;
     uint64_t start_time_ns;
@@ -36,77 +31,168 @@ struct correlator_desc {
     struct correlator_desc *next;
 };
 
-static struct correlator_obj *g_object_table[OBJECT_HASH_SIZE];
-static struct correlator_desc *g_desc_table[DESC_HASH_SIZE];
+struct pending_entry {
+    uint32_t pid;
+    uint32_t tid;
+    uint64_t entry_ts_ns;
+    struct pending_entry *next;
+};
+
+static struct correlator_obj *g_object_table[CORRELATOR_HASH_BUCKETS];
+static struct correlator_desc *g_desc_table[CORRELATOR_HASH_BUCKETS];
+static struct pending_entry *g_pending_entry_table[PENDING_ENTRY_BUCKETS];
+static uint32_t g_pending_entry_count = 0;
+
 static uint64_t g_next_object_token = 1;
 static struct correlator_stats g_stats;
+uint64_t diag_last_processed_token = 0;
 
 static inline uint32_t hash_ino_dev(uint64_t dev, uint64_t ino) {
-    uint64_t h = dev ^ (ino * 0x517cc1b727220a95ULL);
-    return (uint32_t)(h % OBJECT_HASH_SIZE);
+    uint64_t h = (dev ^ (ino * 0x517cc1b727220a95ULL));
+    return (uint32_t)(h % CORRELATOR_HASH_BUCKETS);
 }
 
 static inline uint32_t hash_desc(uint32_t tgid, int32_t fd) {
-    uint64_t h = ((uint64_t)tgid << 16) ^ (uint32_t)fd;
-    return (uint32_t)(h % DESC_HASH_SIZE);
+    uint64_t h = ((uint64_t)tgid ^ ((uint64_t)(uint32_t)fd * 0x517cc1b727220a95ULL));
+    return (uint32_t)(h % CORRELATOR_HASH_BUCKETS);
+}
+
+static inline uint32_t hash_pid_tid(uint32_t pid, uint32_t tid) {
+    return (pid ^ (tid * 31ULL)) % PENDING_ENTRY_BUCKETS;
 }
 
 void canonical_correlator_init(void) {
     memset(g_object_table, 0, sizeof(g_object_table));
     memset(g_desc_table, 0, sizeof(g_desc_table));
+    memset(g_pending_entry_table, 0, sizeof(g_pending_entry_table));
     memset(&g_stats, 0, sizeof(g_stats));
+    g_pending_entry_count = 0;
     g_next_object_token = 1;
     diag_last_processed_token = 0;
 }
 
 void canonical_correlator_destroy(void) {
-    for (size_t i = 0; i < OBJECT_HASH_SIZE; i++) {
-        struct correlator_obj *curr = g_object_table[i];
-        while (curr) {
-            struct correlator_obj *next = curr->next;
-            free(curr);
-            curr = next;
+    for (int i = 0; i < CORRELATOR_HASH_BUCKETS; i++) {
+        struct correlator_obj *curr_obj = g_object_table[i];
+        while (curr_obj) {
+            struct correlator_obj *to_free = curr_obj;
+            curr_obj = curr_obj->next;
+            free(to_free);
         }
         g_object_table[i] = NULL;
-    }
-    for (size_t i = 0; i < DESC_HASH_SIZE; i++) {
-        struct correlator_desc *curr = g_desc_table[i];
-        while (curr) {
-            struct correlator_desc *next = curr->next;
-            free(curr);
-            curr = next;
+
+        struct correlator_desc *curr_desc = g_desc_table[i];
+        while (curr_desc) {
+            struct correlator_desc *to_free = curr_desc;
+            curr_desc = curr_desc->next;
+            free(to_free);
         }
         g_desc_table[i] = NULL;
     }
+
+    for (int i = 0; i < PENDING_ENTRY_BUCKETS; i++) {
+        struct pending_entry *curr = g_pending_entry_table[i];
+        while (curr) {
+            struct pending_entry *to_free = curr;
+            curr = curr->next;
+            free(to_free);
+        }
+        g_pending_entry_table[i] = NULL;
+    }
+    g_pending_entry_count = 0;
     memset(&g_stats, 0, sizeof(g_stats));
-    g_next_object_token = 1;
-    diag_last_processed_token = 0;
+}
+
+static void record_pending_entry(uint32_t pid, uint32_t tid, uint64_t ts) {
+    uint32_t idx = hash_pid_tid(pid, tid);
+    struct pending_entry *curr = g_pending_entry_table[idx];
+    while (curr) {
+        if (curr->pid == pid && curr->tid == tid) {
+            curr->entry_ts_ns = ts;
+            return;
+        }
+        curr = curr->next;
+    }
+    if (g_pending_entry_count >= 4096)
+        return;
+
+    struct pending_entry *entry = (struct pending_entry *)calloc(1, sizeof(*entry));
+    if (!entry) return;
+    entry->pid = pid;
+    entry->tid = tid;
+    entry->entry_ts_ns = ts;
+    entry->next = g_pending_entry_table[idx];
+    g_pending_entry_table[idx] = entry;
+    g_pending_entry_count++;
+}
+
+static bool check_and_clear_pending_entry(uint32_t pid, uint32_t tid) {
+    uint32_t idx = hash_pid_tid(pid, tid);
+    struct pending_entry **curr = &g_pending_entry_table[idx];
+    while (*curr) {
+        if ((*curr)->pid == pid && (*curr)->tid == tid) {
+            struct pending_entry *to_free = *curr;
+            *curr = to_free->next;
+            free(to_free);
+            if (g_pending_entry_count > 0)
+                g_pending_entry_count--;
+            return true;
+        }
+        curr = &(*curr)->next;
+    }
+    return false;
 }
 
 static struct correlator_obj *find_object(uint64_t dev, uint64_t ino) {
-    if (ino == 0)
+    if (dev == 0 && ino == 0)
         return NULL;
     uint32_t idx = hash_ino_dev(dev, ino);
     struct correlator_obj *curr = g_object_table[idx];
     while (curr) {
-        if (curr->inode_no == ino && curr->dev_id == dev)
+        if (curr->dev_id == dev && curr->inode_no == ino && !curr->is_evicted)
             return curr;
         curr = curr->next;
     }
     return NULL;
 }
 
+static int reap_evicted_objects(void) {
+    int reaped = 0;
+    for (int i = 0; i < CORRELATOR_HASH_BUCKETS; i++) {
+        struct correlator_obj **curr = &g_object_table[i];
+        while (*curr) {
+            if ((*curr)->is_evicted) {
+                struct correlator_obj *to_free = *curr;
+                *curr = to_free->next;
+                free(to_free);
+                g_stats.retired_objects_count++;
+                reaped++;
+            } else {
+                curr = &(*curr)->next;
+            }
+        }
+    }
+    return reaped;
+}
+
 static struct correlator_obj *upsert_object(uint64_t dev, uint64_t ino, uint64_t birth_ts,
                                             uint32_t creator_tgid, uint64_t creator_start_time,
                                             const char *name, const char *path) {
-    if (ino == 0)
+    if (dev == 0 && ino == 0)
         return NULL;
-    struct correlator_obj *obj = find_object(dev, ino);
+
+    uint32_t idx = hash_ino_dev(dev, ino);
+    struct correlator_obj *obj = g_object_table[idx];
+    while (obj) {
+        if (obj->dev_id == dev && obj->inode_no == ino)
+            break;
+        obj = obj->next;
+    }
+
     if (obj) {
         /* Inode reuse detection:
-         * 1. Inode was explicitly evicted via shmem_evict_inode (is_evicted = true).
-         * 2. Birth timestamp inequality: birth_ts != 0 && obj->birth_ts_ns != 0 && birth_ts != obj->birth_ts_ns.
-         * Note: Removed arbitrary 1-second heuristic.
+         * 1. Object was previously evicted/destroyed.
+         * 2. Or birth timestamps differ.
          */
         if (obj->is_evicted ||
             (birth_ts != 0 && obj->birth_ts_ns != 0 && birth_ts != obj->birth_ts_ns)) {
@@ -115,7 +201,10 @@ static struct correlator_obj *upsert_object(uint64_t dev, uint64_t ino, uint64_t
             obj->birth_ts_ns = birth_ts;
             obj->creator_tgid = creator_tgid;
             obj->creator_start_time_ns = creator_start_time;
-            obj->is_evicted = false;
+            if (obj->is_evicted) {
+                obj->is_evicted = false;
+                g_stats.active_objects_count++;
+            }
             obj->is_released = false;
             if (name && name[0])
                 snprintf(obj->name, sizeof(obj->name), "%s", name);
@@ -130,13 +219,15 @@ static struct correlator_obj *upsert_object(uint64_t dev, uint64_t ino, uint64_t
         return obj;
     }
 
-    /* Bounded state check */
+    /* Bounded state check: enforce max active objects */
     if (g_stats.active_objects_count >= CORRELATOR_MAX_OBJECTS) {
         g_stats.allocation_failures++;
         return NULL;
     }
 
-    uint32_t idx = hash_ino_dev(dev, ino);
+    /* Reap evicted objects if table capacity is approached */
+    reap_evicted_objects();
+
     obj = (struct correlator_obj *)calloc(1, sizeof(*obj));
     if (!obj) {
         g_stats.allocation_failures++;
@@ -164,11 +255,34 @@ static struct correlator_desc *find_desc(uint32_t tgid, uint64_t start_time, int
         return NULL;
     uint32_t idx = hash_desc(tgid, fd);
     struct correlator_desc *curr = g_desc_table[idx];
+
+    if (start_time != 0) {
+        while (curr) {
+            if (curr->tgid == tgid && curr->fd == fd &&
+                (curr->start_time_ns == start_time || curr->start_time_ns == 0))
+                return curr;
+            curr = curr->next;
+        }
+        return NULL;
+    }
+
+    /* start_time == 0: incoming event lacks process start time */
+    struct correlator_desc *match = NULL;
+    int match_count = 0;
     while (curr) {
-        if (curr->tgid == tgid && curr->fd == fd &&
-            (start_time == 0 || curr->start_time_ns == 0 || curr->start_time_ns == start_time))
-            return curr;
+        if (curr->tgid == tgid && curr->fd == fd) {
+            match = curr;
+            match_count++;
+        }
         curr = curr->next;
+    }
+
+    if (match_count == 1) {
+        return match;
+    } else if (match_count > 1) {
+        /* Ambiguity across multiple generations of recycled PID: preserve uncertainty */
+        g_stats.uncertain_correlation_count++;
+        return NULL;
     }
     return NULL;
 }
@@ -179,15 +293,13 @@ static int set_desc(uint32_t tgid, uint64_t start_time, int32_t fd,
         return -1;
     struct correlator_desc *desc = find_desc(tgid, start_time, fd);
     if (desc) {
-        if (desc->object_token != 0 && desc->object_token != token) {
-            /* Descriptor reuse without close detected */
-            g_stats.fd_reuses_without_close++;
-        }
+        /* Descriptor reassignment without prior close */
+        g_stats.fd_reuses_without_close++;
         desc->object_token = token;
         desc->dev_id = dev;
         desc->inode_no = ino;
         desc->installed_ts_ns = install_ts;
-        if (start_time != 0 && desc->start_time_ns == 0)
+        if (start_time != 0)
             desc->start_time_ns = start_time;
         return 0;
     }
@@ -248,6 +360,7 @@ int canonical_correlator_process_event(struct event *e) {
     case EVENT_MEMFD_CREATE: {
         /* Syscall attempt: tokens are never allocated on entry */
         e->object_token = 0;
+        record_pending_entry(e->pid, e->tid, e->entry_ts_ns ? e->entry_ts_ns : e->timestamp_ns);
         break;
     }
 
@@ -265,11 +378,20 @@ int canonical_correlator_process_event(struct event *e) {
             set_desc(e->pid, e->start_time_ns, e->fd, tok, e->dev_id, e->inode_no, e->timestamp_ns);
         } else {
             e->object_token = 0;
+            g_stats.uncertain_correlation_count++;
         }
         break;
     }
 
     case EVENT_MEMFD_COMPLETED: {
+        bool had_entry = check_and_clear_pending_entry(e->pid, e->tid);
+        if (!had_entry && e->entry_ts_ns == 0) {
+            g_stats.missing_entry_count++;
+        } else if (!had_entry) {
+            /* Entry event was not received in userspace */
+            g_stats.missing_entry_count++;
+        }
+
         if (e->ret_val < 0) {
             /* Syscall failed: use named constant MEMFD_STATUS_FAILED (1) */
             e->op_type = MEMFD_STATUS_FAILED;
@@ -278,13 +400,7 @@ int canonical_correlator_process_event(struct event *e) {
             if (e->fd >= 0)
                 remove_desc(e->pid, e->start_time_ns, e->fd);
         } else {
-            /* Missing event tracking:
-             * 1. Missing entry observation: entry timestamp absent (0).
-             * 2. Missing install observation: no prior EVENT_FD_INSTALLED recorded for this descriptor.
-             */
-            if (e->entry_ts_ns == 0) {
-                g_stats.missing_entry_count++;
-            }
+            /* Missing install observation check */
             struct correlator_desc *desc = find_desc(e->pid, e->start_time_ns, e->ret_val);
             if (!desc || desc->object_token == 0) {
                 g_stats.missing_install_count++;
@@ -328,6 +444,7 @@ int canonical_correlator_process_event(struct event *e) {
         } else {
             e->object_token = 0;
             g_stats.untracked_closes++;
+            g_stats.uncertain_correlation_count++;
         }
         break;
     }
@@ -344,7 +461,7 @@ int canonical_correlator_process_event(struct event *e) {
                 e->object_token = obj->object_token;
             } else {
                 e->object_token = 0;
-                g_stats.out_of_order_buffered++;
+                g_stats.uncertain_correlation_count++;
             }
         }
         break;
@@ -357,6 +474,7 @@ int canonical_correlator_process_event(struct event *e) {
             obj->is_released = true;
         } else {
             e->object_token = 0;
+            g_stats.uncertain_correlation_count++;
         }
         break;
     }
@@ -366,8 +484,11 @@ int canonical_correlator_process_event(struct event *e) {
         if (obj) {
             e->object_token = obj->object_token;
             obj->is_evicted = true;
+            if (g_stats.active_objects_count > 0)
+                g_stats.active_objects_count--;
         } else {
             e->object_token = 0;
+            g_stats.uncertain_correlation_count++;
         }
         break;
     }
@@ -379,6 +500,7 @@ int canonical_correlator_process_event(struct event *e) {
             e->object_token = obj->object_token;
         } else {
             e->object_token = 0;
+            g_stats.uncertain_correlation_count++;
         }
         break;
     }
@@ -432,5 +554,15 @@ void canonical_correlator_get_stats(struct correlator_stats *out) {
 }
 
 void canonical_correlator_reset_stats(void) {
+    uint64_t act_obj = g_stats.active_objects_count;
+    uint64_t act_desc = g_stats.active_descriptors_count;
     memset(&g_stats, 0, sizeof(g_stats));
+    g_stats.active_objects_count = act_obj;
+    g_stats.active_descriptors_count = act_desc;
+}
+
+int diag_get_correlator_stats(struct correlator_stats *cs) {
+    if (cs)
+        canonical_correlator_get_stats(cs);
+    return 0;
 }

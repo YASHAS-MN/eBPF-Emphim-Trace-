@@ -14,6 +14,14 @@ struct diag_queue_stats {
 };
 #endif
 
+#ifndef DIAG_HAS_CORRELATOR_STATS
+struct correlator_stats;
+__attribute__((weak)) int diag_get_correlator_stats(struct correlator_stats *cs) {
+    (void)cs;
+    return -1;
+}
+#endif
+
 #ifndef DIAG_HAS_QUEUE_STATS
 __attribute__((weak)) int diag_get_queue_stats(struct diag_queue_stats *qs) {
     (void)qs;
@@ -155,6 +163,8 @@ struct diag_captured_event {
     uint64_t entry_ts;
     uint64_t ts;
     uint32_t p_status;
+    uint64_t raw_token;
+    uint32_t raw_op_type;
     char     name[64];
 };
 
@@ -205,10 +215,10 @@ static int diag_report(struct bpf_object *obj) {
         if (fputs("[\n", cf) == EOF) { fclose(cf); return -1; }
         for (uint32_t i = 0; i < diag_captured_count; i++) {
             struct diag_captured_event *ce = &diag_captured_events[i];
-            if (fprintf(cf, "%s{\"type\":%u,\"pid\":%u,\"tid\":%u,\"ret\":%d,\"fd\":%d,\"op\":%u,\"token\":%llu,\"inode\":%llu,\"dev\":%llu,\"entry_ts\":%llu,\"ts\":%llu,\"p\":%u,\"name\":\"",
+            if (fprintf(cf, "%s{\"type\":%u,\"pid\":%u,\"tid\":%u,\"ret\":%d,\"fd\":%d,\"op\":%u,\"token\":%llu,\"inode\":%llu,\"dev\":%llu,\"entry_ts\":%llu,\"ts\":%llu,\"p\":%u,\"raw_token\":%llu,\"raw_op\":%u,\"name\":\"",
                     i ? ",\n" : "", ce->type, ce->pid, ce->tid, ce->ret_val, ce->fd, ce->op_type,
                     (unsigned long long)ce->token, (unsigned long long)ce->inode_no, (unsigned long long)ce->dev_id,
-                    (unsigned long long)ce->entry_ts, (unsigned long long)ce->ts, ce->p_status) < 0) {
+                    (unsigned long long)ce->entry_ts, (unsigned long long)ce->ts, ce->p_status, (unsigned long long)ce->raw_token, ce->raw_op_type) < 0) {
                 fclose(cf); return -1;
             }
             json_print_escaped_str(cf, ce->name);
@@ -248,10 +258,10 @@ static int diag_report(struct bpf_object *obj) {
     if (!cap_file || !cap_file[0] || diag_captured_count <= 2000) {
         for (uint32_t i=0; i < diag_captured_count; i++) {
             struct diag_captured_event *ce = &diag_captured_events[i];
-            printf("%s{\"type\":%u,\"pid\":%u,\"tid\":%u,\"ret\":%d,\"fd\":%d,\"op\":%u,\"token\":%llu,\"inode\":%llu,\"dev\":%llu,\"entry_ts\":%llu,\"ts\":%llu,\"p\":%u,\"name\":\"",
+            printf("%s{\"type\":%u,\"pid\":%u,\"tid\":%u,\"ret\":%d,\"fd\":%d,\"op\":%u,\"token\":%llu,\"inode\":%llu,\"dev\":%llu,\"entry_ts\":%llu,\"ts\":%llu,\"p\":%u,\"raw_token\":%llu,\"raw_op\":%u,\"name\":\"",
                    i?",":"", ce->type, ce->pid, ce->tid, ce->ret_val, ce->fd, ce->op_type,
                    (unsigned long long)ce->token, (unsigned long long)ce->inode_no, (unsigned long long)ce->dev_id,
-                   (unsigned long long)ce->entry_ts, (unsigned long long)ce->ts, ce->p_status);
+                   (unsigned long long)ce->entry_ts, (unsigned long long)ce->ts, ce->p_status, (unsigned long long)ce->raw_token, ce->raw_op_type);
             json_print_escaped_str(stdout, ce->name);
             fputs("\"}", stdout);
         }
@@ -357,6 +367,19 @@ static int diag_report(struct bpf_object *obj) {
            (unsigned long long)act_u_cpu, (unsigned long long)act_s_cpu,
            (unsigned long long)tot_u_cpu, (unsigned long long)tot_s_cpu,
            (unsigned long long)max_rss);
+
+    struct correlator_stats cst;
+    if (diag_get_correlator_stats(&cst) == 0) {
+        printf(",\"correlator\":{\"raw_events_in\":%llu,\"canonical_events_out\":%llu,\"correlated_creations\":%llu,\"uncorrelated_creations\":%llu,\"failed_creations\":%llu,\"missing_entry_count\":%llu,\"missing_install_count\":%llu,\"untracked_closes\":%llu,\"fd_reuses_without_close\":%llu,\"pointer_reuses_detected\":%llu,\"inode_reuses_detected\":%llu,\"uncertain_correlation_count\":%llu,\"allocation_failures\":%llu,\"active_objects_count\":%llu,\"active_descriptors_count\":%llu,\"retired_objects_count\":%llu}",
+               (unsigned long long)cst.raw_events_in, (unsigned long long)cst.canonical_events_out,
+               (unsigned long long)cst.correlated_creations, (unsigned long long)cst.uncorrelated_creations,
+               (unsigned long long)cst.failed_creations, (unsigned long long)cst.missing_entry_count,
+               (unsigned long long)cst.missing_install_count, (unsigned long long)cst.untracked_closes,
+               (unsigned long long)cst.fd_reuses_without_close, (unsigned long long)cst.pointer_reuses_detected,
+               (unsigned long long)cst.inode_reuses_detected, (unsigned long long)cst.uncertain_correlation_count,
+               (unsigned long long)cst.allocation_failures, (unsigned long long)cst.active_objects_count,
+               (unsigned long long)cst.active_descriptors_count, (unsigned long long)cst.retired_objects_count);
+    }
 
     struct diag_queue_stats qs;
     if (diag_get_queue_stats(&qs) == 0) {

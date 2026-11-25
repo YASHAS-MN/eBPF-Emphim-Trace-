@@ -22,10 +22,12 @@ struct correlator_stats {
   uint64_t fd_reuses_without_close;
   uint64_t pointer_reuses_detected;
   uint64_t inode_reuses_detected;
+  uint64_t uncertain_correlation_count;
   uint64_t out_of_order_buffered;
   uint64_t allocation_failures;
   uint64_t active_objects_count;
   uint64_t active_descriptors_count;
+  uint64_t retired_objects_count;
 };
 
 /* Reconstructed canonical event separating canonical truth from raw
@@ -78,7 +80,10 @@ int canonical_correlator_process_event_canonical(const struct event *raw,
 /* Retrieve current correlator statistics */
 void canonical_correlator_get_stats(struct correlator_stats *out);
 
-/* Reset stats counters */
+/* Reset stats counters without corrupting active capacity counts */
 void canonical_correlator_reset_stats(void);
+
+/* Diagnostic export interface */
+int diag_get_correlator_stats(struct correlator_stats *cs);
 
 #endif /* CANONICAL_CORRELATOR_H */
