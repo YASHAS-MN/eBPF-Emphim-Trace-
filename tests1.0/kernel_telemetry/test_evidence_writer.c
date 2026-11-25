@@ -201,8 +201,38 @@ static void test_incomplete_record_truncation(void) {
     printf("  [PASS] test_incomplete_record_truncation (detected EOF truncation)\n");
 }
 
+static void test_exclusive_open_prevention(void) {
+    const char *test_path = "/tmp/test_evidence_exclusive.evid";
+    unlink(test_path);
+
+    /* First open: creates the file */
+    struct evidence_writer w1;
+    int rc1 = evidence_writer_init(&w1, test_path, EVIDENCE_MODE_ONLINE, 111, 4096, 0);
+    assert(rc1 == 0);
+
+    /* Second open on existing file: MUST fail due to O_EXCL (preventing overwrite) */
+    struct evidence_writer w2;
+    int rc2 = evidence_writer_init(&w2, test_path, EVIDENCE_MODE_ONLINE, 222, 4096, 0);
+    assert(rc2 == -1);
+    assert(w2.error_occurred == true);
+    assert(w2.stats.write_errors > 0);
+
+    evidence_writer_close(&w1);
+    unlink(test_path);
+    printf("  [PASS] test_exclusive_open_prevention (O_EXCL prevents evidence overwrite)\n");
+}
+
+static void test_wire_format_sizes(void) {
+    assert(sizeof(struct evidence_file_header) == 64);
+    assert(sizeof(struct evidence_record_frame) == 32);
+    assert(sizeof(struct event) == 664);
+    printf("  [PASS] test_wire_format_sizes (header 64B, frame 32B, event 664B)\n");
+}
+
 int main(void) {
-    printf("[TEST] Running evidence_io deterministic tests...\n");
+        printf("[TEST] Running evidence_io deterministic tests...\n");
+    test_wire_format_sizes();
+    test_exclusive_open_prevention();
     test_normal_write_and_replay();
     test_capacity_bound();
     test_crc_and_corruption_detection();

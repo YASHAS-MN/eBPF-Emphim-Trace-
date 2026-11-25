@@ -6,13 +6,13 @@ Compares persistent evidence experiment results between:
 - Model P (Deferred): Receive -> Preserve original evidence -> Complete -> Replay -> Graph
 
 Audits:
-1. Persisted evidence completeness (records_written / records_received)
-2. Stage-wise evidence losses (ring, transport, persistence, sync, replay)
-3. Evidence and reconstruction fidelity (framing/CRC32, outcome invariants)
-4. Collection throughput (ops/sec)
-5. Persistence drain latency (ms)
-6. Replay duration (ms) and total time to graph (ms)
-7. CPU, memory and storage consumption (bytes, bytes/op)
+1. Persisted evidence completeness (independently reconciled create pairs from disk readback)
+2. Stage-wise evidence losses (ring, transport, persistence, sync, verification, replay)
+3. Evidence and reconstruction fidelity (framing/CRC32, outcome invariants, Model M graph equivalence)
+4. Useful throughput (ops/sec using total time to graph)
+5. Persistence drain latency (ms from workload done to sync complete)
+6. Replay duration (ms) and total time to graph (ms from workload start to graph complete)
+7. CPU (collection vs replay), memory and storage consumption (bytes, bytes/op)
 """
 
 import argparse
@@ -22,7 +22,7 @@ import math
 import pathlib
 import sys
 
-WORKLOADS = ["W_PACED", "W_BURST", "W_SUSTAIN", "W_CONTENTION", "W_REGISTRY"]
+WORKLOADS = ["W_PACED", "W_BURST", "W_SUSTAIN"]
 
 
 def stats(values):
@@ -61,6 +61,16 @@ def parse_trial(filepath: pathlib.Path):
     w_name = d.get("test", {}).get("name", filepath.stem)
     base_name = w_name.rsplit("_", 1)[0]
 
+    p_comp = ev.get("persisted_completeness")
+    if p_comp is None:
+        p_comp = pa.get("persisted_completeness", (ev.get("records_written", 0) / ev.get("records_received", 1)) if ev.get("records_received", 0) > 0 else 1.0)
+
+    rec_recv = ev.get("records_received", 0)
+    rec_writ = ev.get("records_written", 0)
+    rec_sync = ev.get("records_synced", 0)
+    rec_veri = ev.get("records_verified", rec_sync)
+    rec_repl = ev.get("records_replayed", rec_veri)
+
     return {
         "file": str(filepath),
         "name": w_name,
@@ -71,19 +81,16 @@ def parse_trial(filepath: pathlib.Path):
         "incomplete_fraction_f": pa.get("incomplete_fraction_f", 0.0),
         "ring_loss": pa.get("ring_loss", 0),
         "transport_loss": pa.get("target_transport_loss", 0),
-        "persisted_received": ev.get("records_received", 0),
-        "persisted_written": ev.get("records_written", 0),
-        "persisted_synced": ev.get("records_synced", 0),
-        "persisted_replayed": ev.get("records_replayed", 0),
-        "persistence_loss": ev.get("records_received", 0)
-        - ev.get("records_written", 0),
-        "sync_loss": ev.get("records_written", 0) - ev.get("records_synced", 0),
-        "replay_loss": ev.get("records_synced", 0) - ev.get("records_replayed", 0),
-        "persisted_completeness": (
-            ev.get("records_written", 0) / ev.get("records_received", 1)
-            if ev.get("records_received", 0) > 0
-            else 1.0
-        ),
+        "persisted_received": rec_recv,
+        "persisted_written": rec_writ,
+        "persisted_synced": rec_sync,
+        "persisted_verified": rec_veri,
+        "persisted_replayed": rec_repl,
+        "persistence_loss": rec_recv - rec_writ,
+        "sync_loss": rec_writ - rec_sync,
+        "verification_loss": rec_sync - rec_veri,
+        "replay_loss": rec_veri - rec_repl,
+        "persisted_completeness": p_comp,
         "write_errors": ev.get("write_errors", 0),
         "corrupt_records": ev.get("corrupt_records", 0),
         "seq_gaps": ev.get("seq_gaps", 0),
@@ -97,15 +104,18 @@ def parse_trial(filepath: pathlib.Path):
         "offered_throughput": thru.get("offered_throughput_ops_sec", 0.0),
         "useful_throughput": thru.get("useful_throughput_ops_sec", 0.0),
         "drain_latency_ms": thru.get("drain_latency_ms", 0.0),
-        "persist_drain_latency_ms": ev.get("persist_drain_latency_ns", 0) / 1e6,
-        "replay_duration_ms": ev.get("replay_duration_ns", 0) / 1e6,
-        "total_time_to_graph_ms": ev.get("total_time_to_graph_ns", 0) / 1e6,
+        "persist_drain_latency_ms": ev.get("persist_drain_latency_ms", ev.get("persist_drain_latency_ns", 0) / 1e6),
+        "replay_duration_ms": ev.get("replay_duration_ms", ev.get("replay_duration_ns", 0) / 1e6),
+        "total_time_to_graph_ms": ev.get("total_time_to_graph_ms", ev.get("total_time_to_graph_ns", 0) / 1e6),
         "workload_cpu_us": res.get("workload_cpu_us", 0),
         "loader_active_cpu_us": res.get("loader_active_cpu_us", 0),
+        "collection_cpu_us": res.get("collection_cpu_us", res.get("loader_active_cpu_us", 0)),
+        "replay_cpu_us": res.get("replay_cpu_us", 0),
         "loader_total_cpu_us": res.get("loader_total_cpu_us", 0),
         "peak_rss_mib": res.get("loader_max_rss_mib", 0.0),
         "measurement_valid": analysis.get("measurement_valid", True),
         "telemetry_fidelity_valid": analysis.get("telemetry_fidelity_valid", True),
+        "model_m_replay_equivalence": ev.get("model_m_replay_equivalence", True),
         "incorrect_outcomes": rec.get("incorrect_outcome_count", 0),
     }
 
@@ -143,7 +153,9 @@ def audit_results_dir(results_dir: pathlib.Path):
     for t in trials_p:
         by_wl_p.setdefault(t["base_workload"], []).append(t)
 
-    all_wls = sorted(set(list(by_wl_m.keys()) + list(by_wl_p.keys())))
+    all_wls = [w for w in WORKLOADS if (w in by_wl_m or w in by_wl_p)]
+    if not all_wls:
+        all_wls = sorted(set(list(by_wl_m.keys()) + list(by_wl_p.keys())))
 
     print(
         "===================================================================================================="
@@ -169,6 +181,9 @@ def audit_results_dir(results_dir: pathlib.Path):
         sm_p_comp = stats([x["persisted_completeness"] * 100 for x in tm])
         sp_p_comp = stats([x["persisted_completeness"] * 100 for x in tp])
 
+        sm_useful_thru = stats([x["useful_throughput"] for x in tm])
+        sp_useful_thru = stats([x["useful_throughput"] for x in tp])
+
         sm_storage = stats([x["storage_bytes"] / 1024 for x in tm])  # KiB
         sp_storage = stats([x["storage_bytes"] / 1024 for x in tp])
 
@@ -182,6 +197,12 @@ def audit_results_dir(results_dir: pathlib.Path):
 
         sm_act_cpu = stats([x["loader_active_cpu_us"] / 1000 for x in tm])  # ms
         sp_act_cpu = stats([x["loader_active_cpu_us"] / 1000 for x in tp])
+
+        sm_coll_cpu = stats([x["collection_cpu_us"] / 1000 for x in tm])
+        sp_coll_cpu = stats([x["collection_cpu_us"] / 1000 for x in tp])
+
+        sm_repl_cpu = stats([x["replay_cpu_us"] / 1000 for x in tm])
+        sp_repl_cpu = stats([x["replay_cpu_us"] / 1000 for x in tp])
 
         sm_wkl_cpu = stats([x["workload_cpu_us"] / 1000 for x in tm])
         sp_wkl_cpu = stats([x["workload_cpu_us"] / 1000 for x in tp])
@@ -203,6 +224,9 @@ def audit_results_dir(results_dir: pathlib.Path):
             f"  E2E Graph Completeness:  Model M: {sm_comp['mean']:6.2f}% | Model P: {sp_comp['mean']:6.2f}%"
         )
         print(
+            f"  Useful Throughput:       Model M: {sm_useful_thru['mean']:8.1f} ops/s | Model P: {sp_useful_thru['mean']:8.1f} ops/s"
+        )
+        print(
             f"  Persistence Drain Lat:   Model M: {sm_persist_drain['mean']:8.2f} ms | Model P: {sp_persist_drain['mean']:8.2f} ms"
         )
         print(
@@ -213,6 +237,12 @@ def audit_results_dir(results_dir: pathlib.Path):
         )
         print(
             f"  Storage Consumed:        Model M: {sm_storage['mean']:8.1f} KiB | Model P: {sp_storage['mean']:8.1f} KiB"
+        )
+        print(
+            f"  Collection CPU:          Model M: {sm_coll_cpu['mean']:8.2f} ms  | Model P: {sp_coll_cpu['mean']:8.2f} ms"
+        )
+        print(
+            f"  Replay CPU:              Model M: {sm_repl_cpu['mean']:8.2f} ms  | Model P: {sp_repl_cpu['mean']:8.2f} ms"
         )
         print(
             f"  Loader Active CPU:       Model M: {sm_act_cpu['mean']:8.2f} ms  | Model P: {sp_act_cpu['mean']:8.2f} ms"
@@ -231,8 +261,9 @@ def audit_results_dir(results_dir: pathlib.Path):
         p_incomplete = sum(x["incomplete_records"] for x in tp)
         m_errors = sum(x["write_errors"] for x in tm)
         p_errors = sum(x["write_errors"] for x in tp)
+        m_equiv = all(x["model_m_replay_equivalence"] for x in tm)
         print(
-            f"  Integrity & Fidelity:    M (corrupt={m_corrupt}, trunc={m_incomplete}, errs={m_errors}) | P (corrupt={p_corrupt}, trunc={p_incomplete}, errs={p_errors})"
+            f"  Integrity & Fidelity:    M (corrupt={m_corrupt}, trunc={m_incomplete}, errs={m_errors}, equiv={m_equiv}) | P (corrupt={p_corrupt}, trunc={p_incomplete}, errs={p_errors})"
         )
         print()
 
@@ -240,17 +271,26 @@ def audit_results_dir(results_dir: pathlib.Path):
             "model_m": {
                 "completeness": sm_comp,
                 "persisted_completeness": sm_p_comp,
+                "useful_throughput": sm_useful_thru,
+                "persist_drain_ms": sm_persist_drain,
                 "time_to_graph_ms": sm_time_to_graph,
                 "storage_kib": sm_storage,
+                "collection_cpu_ms": sm_coll_cpu,
+                "replay_cpu_ms": sm_repl_cpu,
                 "active_cpu_ms": sm_act_cpu,
                 "rss_mib": sm_rss,
+                "replay_equivalence": m_equiv,
             },
             "model_p": {
                 "completeness": sp_comp,
                 "persisted_completeness": sp_p_comp,
+                "useful_throughput": sp_useful_thru,
+                "persist_drain_ms": sp_persist_drain,
                 "replay_ms": sp_replay,
                 "time_to_graph_ms": sp_time_to_graph,
                 "storage_kib": sp_storage,
+                "collection_cpu_ms": sp_coll_cpu,
+                "replay_cpu_ms": sp_repl_cpu,
                 "active_cpu_ms": sp_act_cpu,
                 "rss_mib": sp_rss,
             },

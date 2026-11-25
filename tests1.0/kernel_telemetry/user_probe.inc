@@ -381,12 +381,13 @@ static int diag_report(struct bpf_object *obj) {
 
     if (g_diag_persist_mode != EVIDENCE_MODE_NONE) {
         const char *mode_str = (g_diag_persist_mode == EVIDENCE_MODE_ONLINE) ? "M" : "P";
-        printf(",\"evidence\":{\"mode\":\"%s\",\"path\":\"%s\",\"records_received\":%llu,\"records_written\":%llu,\"records_synced\":%llu,\"records_replayed\":%llu,\"write_errors\":%llu,\"corrupt_records\":%llu,\"seq_gaps\":%llu,\"incomplete_records\":%llu,\"storage_bytes\":%llu,\"flush_count\":%llu,\"sync_duration_ns\":%llu,\"persist_drain_latency_ns\":%llu,\"replay_duration_ns\":%llu,\"total_time_to_graph_ns\":%llu}",
+        printf(",\"evidence\":{\"mode\":\"%s\",\"path\":\"%s\",\"records_received\":%llu,\"records_written\":%llu,\"records_synced\":%llu,\"records_verified\":%llu,\"records_replayed\":%llu,\"write_errors\":%llu,\"corrupt_records\":%llu,\"seq_gaps\":%llu,\"incomplete_records\":%llu,\"storage_bytes\":%llu,\"flush_count\":%llu,\"sync_duration_ns\":%llu,\"persist_drain_latency_ns\":%llu,\"replay_duration_ns\":%llu,\"total_time_to_graph_ns\":%llu}",
                mode_str,
                g_diag_evidence_path,
                (unsigned long long)g_diag_writer.stats.records_received,
                (unsigned long long)g_diag_writer.stats.records_written,
                (unsigned long long)g_diag_writer.stats.records_synced,
+               (unsigned long long)g_diag_writer.stats.records_verified,
                (unsigned long long)g_diag_writer.stats.records_replayed,
                (unsigned long long)g_diag_writer.stats.write_errors,
                (unsigned long long)g_diag_writer.stats.corrupt_records,

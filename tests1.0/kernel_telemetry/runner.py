@@ -9,6 +9,8 @@ import os
 import pathlib
 import re
 import select
+import struct
+import zlib
 import shlex
 import signal
 import subprocess
@@ -290,7 +292,10 @@ def build():
     /* Complete persistence drain & sync */
     uint64_t _t_persist_sync_start = diag_time_now_ns();
     if (g_diag_writer_active) {
-        evidence_writer_close(&g_diag_writer);
+        if (evidence_writer_close(&g_diag_writer) != 0) {
+            g_diag_writer.stats.write_errors++;
+            g_diag_writer.error_occurred = true;
+        }
         g_diag_writer_active = 0;
     }
     uint64_t _t_persist_sync_end = diag_time_now_ns();
@@ -300,6 +305,8 @@ def build():
         g_diag_writer.stats.persist_drain_latency_ns = _t_persist_sync_end - _t_persist_sync_start;
     }
 
+    const char *graph_export_path = getenv("EPHIM_GRAPH_EXPORT_PATH");
+
     /* Model P (Deferred): Execute Replay Phase */
     if (g_diag_persist_mode == EVIDENCE_MODE_DEFERRED && diag_full) {
         uint64_t _t_replay_start = diag_time_now_ns();
@@ -307,26 +314,42 @@ def build():
         if (evidence_reader_open(&reader, g_diag_evidence_path) == 0) {
             struct event ev_replay;
             struct evidence_record_frame f_replay;
-            uint32_t replay_cap_idx = 0;
             while (evidence_reader_read_next(&reader, &ev_replay, &f_replay) == 1) {
                 handle_event(NULL, &ev_replay, sizeof(ev_replay));
                 uint32_t p_st = diag_p_get_last_status();
                 if (ev_replay.pid == diag_pid && (ev_replay.type == 2 || ev_replay.type == 12)) {
-                    if (replay_cap_idx < diag_captured_count) {
-                        diag_captured_events[replay_cap_idx++].p_status = p_st;
+                    for (uint32_t ci = 0; ci < diag_captured_count; ci++) {
+                        if (diag_captured_events[ci].type == ev_replay.type &&
+                            diag_captured_events[ci].tid == ev_replay.tid &&
+                            diag_captured_events[ci].entry_ts == ev_replay.entry_ts_ns &&
+                            diag_captured_events[ci].p_status == P_STATUS_UNAVAILABLE) {
+                            diag_captured_events[ci].p_status = p_st;
+                            break;
+                        }
                     }
                 }
             }
+            g_diag_writer.stats.records_verified = reader.stats.records_verified;
             g_diag_writer.stats.records_replayed = reader.stats.records_replayed;
             g_diag_writer.stats.corrupt_records += reader.stats.corrupt_records;
             g_diag_writer.stats.seq_gaps += reader.stats.seq_gaps;
             g_diag_writer.stats.incomplete_records += reader.stats.incomplete_records;
             evidence_reader_close(&reader);
+        } else {
+            g_diag_writer.stats.incomplete_records++;
+            g_diag_writer.error_occurred = true;
+        }
+        if (graph_export_path && graph_export_path[0]) {
+            prov_engine_export_dot(graph_export_path);
         }
         uint64_t _t_replay_end = diag_time_now_ns();
         g_diag_writer.stats.replay_duration_ns = _t_replay_end - _t_replay_start;
         g_diag_writer.stats.total_time_to_graph_ns = g_diag_writer.stats.persist_drain_latency_ns + g_diag_writer.stats.replay_duration_ns;
     } else if (g_diag_persist_mode == EVIDENCE_MODE_ONLINE) {
+        if (graph_export_path && graph_export_path[0] && diag_full) {
+            prov_engine_export_dot(graph_export_path);
+        }
+        g_diag_writer.stats.records_verified = g_diag_writer.stats.records_written;
         g_diag_writer.stats.records_replayed = g_diag_writer.stats.records_written;
         g_diag_writer.stats.replay_duration_ns = 0;
         g_diag_writer.stats.total_time_to_graph_ns = g_diag_writer.stats.persist_drain_latency_ns;
@@ -673,6 +696,24 @@ def build():
         "kernel": os.uname().release,
         "ring_bytes": 1048576,
     }
+    run(
+        cc
+        + [
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-I",
+            "src/user",
+            str(HERE / "replay_provenance.c"),
+            str(BUILD / "provenance.diag.c"),
+            "-o",
+            str(BUILD / "replay_provenance"),
+        ]
+    )
+    info["workload_sha256"] = hashlib.sha256((BUILD / "workload").read_bytes()).hexdigest()
+    info["diag_loader_sha256"] = hashlib.sha256((BUILD / "loader.diag").read_bytes()).hexdigest()
+    info["diag_bpf_sha256"] = hashlib.sha256((BUILD / "monitor.diag.bpf.o").read_bytes()).hexdigest()
+    info["replay_provenance_sha256"] = hashlib.sha256((BUILD / "replay_provenance").read_bytes()).hexdigest()
     (BUILD / "build_info.json").write_text(json.dumps(info, indent=2))
     print("Diagnostic build complete:", info, flush=True)
 
@@ -718,6 +759,86 @@ def get_result(log):
     if len(lines) != 1:
         raise RuntimeError("missing or duplicate diagnostic report")
     return json.loads(lines[0])
+
+
+def read_evidence_events(evid_path: pathlib.Path, target_pid=None):
+    """Independently reads back and validates binary evidence records from disk."""
+    if not evid_path.exists():
+        return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 0, "storage_bytes": 0}
+    data = evid_path.read_bytes()
+    if len(data) < 64:
+        return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 1, "storage_bytes": len(data)}
+    hdr_tuple = struct.unpack("=4sIIIQIIQQ12sI", data[:64])
+    magic, ver, mode, pid, session_start, ev_size, hdr_size, max_b, max_rec, _, hdr_crc = hdr_tuple
+    if magic != b"EVID" or ver != 1 or ev_size != 664 or hdr_size != 64:
+        return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 0, "storage_bytes": len(data)}
+    if (zlib.crc32(data[:60]) & 0xFFFFFFFF) != hdr_crc:
+        return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 0, "storage_bytes": len(data)}
+
+    offset = 64
+    expected_seq = 0
+    records_verified = 0
+    corrupt_records = 0
+    seq_gaps = 0
+    incomplete_records = 0
+    events = []
+    ev_fmt = "=IIIIIiI4xQiHH16s256sIII4xQQQQIiiIQI256sIQ"
+
+    while offset < len(data):
+        if offset + 32 > len(data):
+            incomplete_records += 1
+            break
+        f_magic, f_flags, f_seq, f_ts, f_len, f_crc = struct.unpack("=4sIQQII", data[offset:offset+32])
+        offset += 32
+        if f_magic != b"RECD":
+            corrupt_records += 1
+            break
+        if f_seq != expected_seq:
+            if f_seq > expected_seq:
+                seq_gaps += (f_seq - expected_seq)
+            else:
+                corrupt_records += 1
+                break
+            expected_seq = f_seq
+        if offset + f_len > len(data) or f_len != 664:
+            incomplete_records += 1
+            break
+        payload = data[offset:offset+f_len]
+        offset += f_len
+        if (zlib.crc32(payload) & 0xFFFFFFFF) != f_crc:
+            corrupt_records += 1
+            break
+        tup = struct.unpack(ev_fmt, payload)
+        ev_type, ev_pid, ev_tid = tup[0], tup[1], tup[2]
+        ev_ts, ev_fd = tup[7], tup[8]
+        ev_name = tup[12].split(b"\0", 1)[0].decode("utf-8", errors="replace")
+        ev_inode, ev_dev, ev_ret, ev_op, ev_entry_ts, ev_token = tup[19], tup[20], tup[22], tup[23], tup[25], tup[29]
+        if target_pid is None or ev_pid == target_pid:
+            events.append({
+                "type": ev_type,
+                "pid": ev_pid,
+                "tid": ev_tid,
+                "ret": ev_ret,
+                "fd": ev_fd,
+                "op": ev_op,
+                "token": ev_token,
+                "inode": ev_inode,
+                "dev": ev_dev,
+                "entry_ts": ev_entry_ts,
+                "ts": ev_ts,
+                "p": 1 if ev_op == 2 else (2 if ev_type == 2 else 0),
+                "name": ev_name,
+            })
+        records_verified += 1
+        expected_seq += 1
+
+    return events, {
+        "records_verified": records_verified,
+        "corrupt_records": corrupt_records,
+        "seq_gaps": seq_gaps,
+        "incomplete_records": incomplete_records,
+        "storage_bytes": len(data),
+    }
 
 
 def reconcile_events(records, captured_events, p_available=False):
@@ -1104,31 +1225,46 @@ def analyse(d, w, timing=None):
         rec_received = evidence_info.get("records_received", 0)
         rec_written = evidence_info.get("records_written", 0)
         rec_synced = evidence_info.get("records_synced", 0)
-        rec_replayed = evidence_info.get("records_replayed", 0)
+        rec_verified = evidence_info.get("records_verified", rec_synced)
+        rec_replayed = evidence_info.get("records_replayed", rec_verified)
+        p_comp = evidence_info.get("persisted_completeness")
+        if p_comp is None:
+            p_comp = (rec_written / rec_received) if rec_received > 0 else 1.0
+
+        persist_drain_ms = timing.get("persist_drain_latency_sec", 0.0) * 1000.0 if (timing and "persist_drain_latency_sec" in timing) else (evidence_info.get("persist_drain_latency_ns", 0) / 1e6)
+        replay_ms = evidence_info.get("replay_duration_ns", 0) / 1e6
+        total_graph_ms = timing.get("total_time_to_graph_sec", 0.0) * 1000.0 if (timing and "total_time_to_graph_sec" in timing) else (evidence_info.get("total_time_to_graph_ns", 0) / 1e6)
+
         backend_findings["persistence"] = {
             "mode": evidence_info.get("mode"),
             "path": evidence_info.get("path"),
             "records_received": rec_received,
             "records_written": rec_written,
             "records_synced": rec_synced,
+            "records_verified": rec_verified,
             "records_replayed": rec_replayed,
             "persistence_loss": rec_received - rec_written,
             "sync_loss": rec_written - rec_synced,
-            "replay_loss": rec_synced - rec_replayed,
+            "verification_loss": rec_synced - rec_verified,
+            "replay_loss": rec_verified - rec_replayed,
+            "persisted_completeness": p_comp,
             "write_errors": evidence_info.get("write_errors", 0),
             "corrupt_records": evidence_info.get("corrupt_records", 0),
             "seq_gaps": evidence_info.get("seq_gaps", 0),
             "incomplete_records": evidence_info.get("incomplete_records", 0),
             "storage_bytes": evidence_info.get("storage_bytes", 0),
-            "persist_drain_latency_ms": evidence_info.get("persist_drain_latency_ns", 0) / 1e6,
-            "replay_duration_ms": evidence_info.get("replay_duration_ns", 0) / 1e6,
-            "total_time_to_graph_ms": evidence_info.get("total_time_to_graph_ns", 0) / 1e6,
+            "persist_drain_latency_ms": persist_drain_ms,
+            "replay_duration_ms": replay_ms,
+            "total_time_to_graph_ms": total_graph_ms,
+            "model_m_replay_equivalence": evidence_info.get("model_m_replay_equivalence", True),
         }
         if (evidence_info.get("corrupt_records", 0) > 0 or
             evidence_info.get("seq_gaps", 0) > 0 or
             evidence_info.get("incomplete_records", 0) > 0 or
-            evidence_info.get("write_errors", 0) > 0):
+            evidence_info.get("write_errors", 0) > 0 or
+            (evidence_info.get("mode") == "M" and evidence_info.get("model_m_replay_equivalence") is False)):
             telemetry_fidelity_valid = False
+            measurement_issues.append("evidence persistence integrity or replay equivalence violation")
 
     thru = {}
     if timing:
@@ -1144,21 +1280,31 @@ def analyse(d, w, timing=None):
         thru["total_duration_sec"] = tot_dur
 
     if evidence_info:
-        thru["persist_drain_latency_ms"] = evidence_info.get("persist_drain_latency_ns", 0) / 1e6
-        thru["replay_duration_ms"] = evidence_info.get("replay_duration_ns", 0) / 1e6
-        thru["total_time_to_graph_ms"] = evidence_info.get("total_time_to_graph_ns", 0) / 1e6
+        persist_drain_ms = timing.get("persist_drain_latency_sec", 0.0) * 1000.0 if (timing and "persist_drain_latency_sec" in timing) else (evidence_info.get("persist_drain_latency_ns", 0) / 1e6)
+        replay_ms = evidence_info.get("replay_duration_ns", 0) / 1e6
+        total_graph_ms = timing.get("total_time_to_graph_sec", 0.0) * 1000.0 if (timing and "total_time_to_graph_sec" in timing) else (evidence_info.get("total_time_to_graph_ns", 0) / 1e6)
+        thru["persist_drain_latency_ms"] = persist_drain_ms
+        thru["replay_duration_ms"] = replay_ms
+        thru["total_time_to_graph_ms"] = total_graph_ms
         thru["storage_bytes"] = evidence_info.get("storage_bytes", 0)
         thru["storage_per_op_bytes"] = (evidence_info.get("storage_bytes", 0) / n_ops_attempted) if n_ops_attempted > 0 else 0.0
+        tot_graph_s = total_graph_ms / 1000.0
+        if tot_graph_s > 0:
+            thru["useful_throughput_ops_sec"] = n_reconstructed / tot_graph_s
 
     loader_ru = d.get("rusage", {})
     loader_active_cpu_us = loader_ru.get("active_user_cpu_us", loader_ru.get("user_cpu_us", 0)) + loader_ru.get("active_sys_cpu_us", loader_ru.get("sys_cpu_us", 0))
     loader_total_cpu_us = loader_ru.get("total_user_cpu_us", loader_active_cpu_us) + loader_ru.get("total_sys_cpu_us", 0)
     loader_max_rss_kb = loader_ru.get("max_rss_kb", 0)
     workload_cpu_us = w.get("user_cpu_us", 0) + w.get("sys_cpu_us", 0)
+    replay_cpu_us = evidence_info.get("replay_cpu_us", 0) if evidence_info else 0
+    collection_cpu_us = max(0, loader_active_cpu_us - replay_cpu_us) if (evidence_info and evidence_info.get("mode") == "P") else loader_active_cpu_us
     resources = {
         "workload_cpu_us": workload_cpu_us,
         "loader_active_cpu_us": loader_active_cpu_us,
         "loader_total_cpu_us": loader_total_cpu_us,
+        "collection_cpu_us": collection_cpu_us,
+        "replay_cpu_us": replay_cpu_us,
         "loader_cpu_us": loader_active_cpu_us,
         "loader_max_rss_kb": loader_max_rss_kb,
         "loader_max_rss_mib": round(loader_max_rss_kb / 1024.0, 2),
@@ -1196,14 +1342,16 @@ def analyse(d, w, timing=None):
         "residual": accounting_residual,
     }
     if evidence_info:
-        pipeline_accounting["persisted_received"] = evidence_info.get("records_received", 0)
-        pipeline_accounting["persisted_written"] = evidence_info.get("records_written", 0)
-        pipeline_accounting["persisted_synced"] = evidence_info.get("records_synced", 0)
-        pipeline_accounting["persisted_replayed"] = evidence_info.get("records_replayed", 0)
-        pipeline_accounting["persistence_loss"] = evidence_info.get("records_received", 0) - evidence_info.get("records_written", 0)
-        pipeline_accounting["sync_loss"] = evidence_info.get("records_written", 0) - evidence_info.get("records_synced", 0)
-        pipeline_accounting["replay_loss"] = evidence_info.get("records_synced", 0) - evidence_info.get("records_replayed", 0)
-        pipeline_accounting["persisted_completeness"] = (evidence_info.get("records_written", 0) / evidence_info.get("records_received", 0)) if evidence_info.get("records_received", 0) > 0 else 1.0
+        pipeline_accounting["persisted_received"] = rec_received
+        pipeline_accounting["persisted_written"] = rec_written
+        pipeline_accounting["persisted_synced"] = rec_synced
+        pipeline_accounting["persisted_verified"] = rec_verified
+        pipeline_accounting["persisted_replayed"] = rec_replayed
+        pipeline_accounting["persistence_loss"] = rec_received - rec_written
+        pipeline_accounting["sync_loss"] = rec_written - rec_synced
+        pipeline_accounting["verification_loss"] = rec_synced - rec_verified
+        pipeline_accounting["replay_loss"] = rec_verified - rec_replayed
+        pipeline_accounting["persisted_completeness"] = p_comp
 
     return {
         "measurement_valid": measurement_valid,
@@ -1319,8 +1467,14 @@ def trial(
         )
         if persist_mode:
             evid_path = out / (name + ".evid")
+            dot_live_path = out / (name + "_live.dot")
+            dot_replay_path = out / (name + "_replay.dot")
+            evid_path.unlink(missing_ok=True)
+            dot_live_path.unlink(missing_ok=True)
+            dot_replay_path.unlink(missing_ok=True)
             env["EPHIM_PERSIST_MODE"] = persist_mode
             env["EPHIM_EVIDENCE_PATH"] = str(evid_path)
+            env["EPHIM_GRAPH_EXPORT_PATH"] = str(dot_live_path)
             spec["persist_mode"] = persist_mode
             spec["evidence_file"] = str(evid_path)
         loader_cmd = [str(BUILD / "loader.diag")]
@@ -1359,6 +1513,59 @@ def trial(
             t_processing_complete = time.monotonic()
 
         d = get_result(log)
+        persist_drain_latency_sec = max(0.0, t_processing_complete - t_workload_done)
+        total_time_to_graph_sec = max(0.0, t_processing_complete - t_workload_start)
+
+        if persist_mode and evid_path.exists():
+            d.setdefault("evidence", {})
+            # 1. Independent binary readback and verification
+            persisted_events, p_stats = read_evidence_events(evid_path, target_pid=w.pid)
+            d["evidence"]["records_verified"] = p_stats["records_verified"]
+            d["evidence"]["corrupt_records"] = d["evidence"].get("corrupt_records", 0) + p_stats["corrupt_records"]
+            d["evidence"]["seq_gaps"] = d["evidence"].get("seq_gaps", 0) + p_stats["seq_gaps"]
+            d["evidence"]["incomplete_records"] = d["evidence"].get("incomplete_records", 0) + p_stats["incomplete_records"]
+
+            # 2. Independent reconciliation against syscall ground truth
+            p_rec = reconcile_events(truth.get("records", []), persisted_events, p_available=False)
+            persisted_reconstructed = len(p_rec["reconstructed_records"])
+            persisted_incomplete = len(p_rec["incomplete_records"])
+            n_ops = truth.get("create_attempts", len(truth.get("records", [])))
+            d["evidence"]["persisted_reconstructed"] = persisted_reconstructed
+            d["evidence"]["persisted_incomplete"] = persisted_incomplete
+            d["evidence"]["persisted_create_pairs"] = persisted_reconstructed
+            d["evidence"]["persisted_completeness"] = (persisted_reconstructed / n_ops) if n_ops > 0 else 1.0
+            d["evidence"]["truthful_uncorrelated"] = len(p_rec.get("truthful_uncorrelated", []))
+            d["evidence"]["persisted_missing_create"] = len(p_rec["missing_create"])
+            d["evidence"]["persisted_missing_complete"] = len(p_rec["missing_complete"])
+            d["evidence"]["persisted_corrupted"] = len(p_rec["corrupted_events"])
+            d["evidence"]["persisted_incorrect_outcome"] = len(p_rec["incorrect_outcome"])
+
+            # 3. Native trace replay via replay_provenance
+            replay_bin = BUILD / "replay_provenance"
+            if replay_bin.exists():
+                res_rep = subprocess.run([str(replay_bin), str(evid_path), str(dot_replay_path)], capture_output=True, text=True)
+                try:
+                    rep_lines = [ln for ln in res_rep.stdout.strip().splitlines() if ln.startswith("{")]
+                    if rep_lines:
+                        rep_json = json.loads(rep_lines[-1])
+                        d["evidence"]["records_replayed"] = rep_json.get("records_replayed", 0)
+                        d["evidence"]["replay_nodes"] = rep_json.get("nodes", 0)
+                        d["evidence"]["replay_edges"] = rep_json.get("edges", 0)
+                        d["evidence"]["replay_cpu_us"] = rep_json.get("replay_cpu_us", 0)
+                        if persist_mode == "M":
+                            d["evidence"]["replay_duration_ns"] = rep_json.get("replay_duration_ns", 0)
+                except Exception as ex:
+                    d["evidence"]["replay_error"] = str(ex)
+
+            # 4. For Model M: Verify Graph Equivalence between online graph and replayed graph
+            if persist_mode == "M":
+                if dot_live_path.exists() and dot_replay_path.exists():
+                    live_dot = dot_live_path.read_text()
+                    rep_dot = dot_replay_path.read_text()
+                    d["evidence"]["model_m_replay_equivalence"] = (live_dot == rep_dot)
+                else:
+                    d["evidence"]["model_m_replay_equivalence"] = False
+
         meas_timing = d.get("timing", {})
         start_ts_ns = truth.get("start_ts_ns", 0)
         done_ts_ns = truth.get("done_ts_ns", 0)
@@ -1399,7 +1606,9 @@ def trial(
             "workload_duration_sec": workload_duration_sec,
             "drain_latency_sec": drain_latency_sec,
             "global_backlog_drain_sec": global_backlog_drain_sec,
-            "total_duration_sec": total_duration_sec,
+            "persist_drain_latency_sec": persist_drain_latency_sec,
+            "total_time_to_graph_sec": total_time_to_graph_sec,
+            "total_duration_sec": total_time_to_graph_sec if persist_mode else total_duration_sec,
         }
         if d["pid"] != w.pid:
             raise RuntimeError("wrong target PID")

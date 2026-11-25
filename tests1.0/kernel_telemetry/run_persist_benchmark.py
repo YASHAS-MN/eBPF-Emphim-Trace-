@@ -7,6 +7,9 @@ Evaluates the two persistent evidence modes:
 
 In --smoke mode, executes exactly 6 trials:
   3 workloads (W_PACED, W_BURST, W_SUSTAIN) x 2 modes (Model M, Model P) x 1 repetition.
+
+In full benchmark mode:
+  3 workloads (W_PACED, W_BURST, W_SUSTAIN) x 2 modes x 3 paired repetitions (18 trials total).
 """
 
 import argparse
@@ -64,7 +67,7 @@ def main():
         description="Run paired randomized benchmark trials between Model M (Online) and Model P (Deferred)."
     )
     parser.add_argument(
-        "--repeat", type=int, default=5, help="Number of paired blocks (default: 5)"
+        "--repeat", type=int, default=3, help="Number of paired blocks (default: 3)"
     )
     parser.add_argument(
         "--smoke",
@@ -72,7 +75,10 @@ def main():
         help="Run 6-trial smoke test (3 workloads x 2 modes, 1 repetition)",
     )
     parser.add_argument(
-        "--quiet", action="store_true", help="Enable quiet mode in loader"
+        "--quiet", action="store_true", default=True, help="Enable quiet mode in loader (default: True)"
+    )
+    parser.add_argument(
+        "--non-quiet", action="store_false", dest="quiet", help="Disable quiet mode"
     )
     parser.add_argument(
         "--seed", type=int, default=42, help="Random seed for paired trial ordering"
@@ -96,7 +102,7 @@ def main():
     out_p.mkdir(parents=True, exist_ok=True)
 
     if args.smoke:
-        print("[MODE] Running 6-trial smoke test suite (3 workloads x 2 modes)...")
+        print("[MODE] Running 6-trial smoke test suite (3 workloads x 2 modes, 1 repetition)...")
         repeat = 1
         cases = [
             ("W_PACED", 50, 1, 1000, True, False, 0, False),
@@ -105,16 +111,32 @@ def main():
         ]
     else:
         print(
-            f"[MODE] Running full comparative benchmark suite ({args.repeat} paired blocks)..."
+            f"[MODE] Running full comparative benchmark suite ({args.repeat} paired blocks, 3 approved workloads)..."
         )
         repeat = args.repeat
         cases = [
             ("W_PACED", 500, 1, 1000, True, False, 0, False),
             ("W_BURST", 2500, 4, 0, True, False, 0, False),
             ("W_SUSTAIN", 15000, 4, 50, True, False, 0, False),
-            ("W_CONTENTION", 5000, 8, 0, True, False, 0, False),
-            ("W_REGISTRY", 10000, 1, 100, True, False, 0, True),
         ]
+
+    # Preflight Provenance Record
+    commit_sha = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    branch_name = subprocess.run(["git", "branch", "--show-current"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    build_info = json.loads((ROOT / "build" / "telemetry_lab" / "build_info.json").read_text())
+    preflight = {
+        "timestamp": ts,
+        "commit": commit_sha,
+        "branch": branch_name,
+        "kernel": os.uname().release,
+        "seed": args.seed,
+        "quiet": args.quiet,
+        "repeat": repeat,
+        "workloads": [c[0] for c in cases],
+        "workload_configurations": cases,
+        "binaries": build_info,
+    }
+    (out_base / "preflight_provenance.json").write_text(json.dumps(preflight, indent=2))
 
     total_pairs = repeat * len(cases)
     current_pair = 0

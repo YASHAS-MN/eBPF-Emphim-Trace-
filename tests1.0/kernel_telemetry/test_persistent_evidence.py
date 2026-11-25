@@ -360,6 +360,89 @@ def test_model_p_deferred_pipeline():
     print("  -> Model P deferred pipeline metrics & fidelity enforcement verified!\n")
 
 
+def test_independent_disk_readback_and_ground_truth_reconciliation():
+    print("[TEST 3.5] Testing independent disk readback, CRC validation, and ground truth reconciliation...")
+    import zlib
+    evid_path = pathlib.Path("/tmp/test_reconcile_disk.evid")
+    evid_path.unlink(missing_ok=True)
+
+    # 1. Build a valid binary evidence file with 10 pairs (20 records)
+    hdr_bytes = struct.pack("=4sIIIQIIQQ12s", b"EVID", 1, 1, 4321, 1000000, 664, 64, 1024*1024, 0, b"\0"*12)
+    hdr_crc = zlib.crc32(hdr_bytes) & 0xFFFFFFFF
+    file_bytes = bytearray(hdr_bytes + struct.pack("=I", hdr_crc))
+
+    ev_fmt = "=IIIIIiI4xQiHH16s256sIII4xQQQQIiiIQI256sIQ"
+    path_bytes = b"\0" * 256
+
+    truth_records = [
+        {"op_id": i, "name": f"mem_{i}", "pid": 4321, "tid": 4321, "ret": 3 + i, "errno": 0, "success": 1}
+        for i in range(10)
+    ]
+
+    seq = 0
+    for i in range(10):
+        # Entry event (type 2)
+        name_bytes = f"mem_{i}\0".encode().ljust(256, b"\0")
+        p2 = struct.pack(ev_fmt, 2, 4321, 4321, 0, 0, -1, 0, 1000000 + i*1000, -1, 0, 0, b"\0"*16, name_bytes, 0, 0, 0, 1000, 0, 100 + i, 1, 0, 0, 0, 0, 1000000 + i*1000, 0, path_bytes, 0, 0)
+        crc2 = zlib.crc32(p2) & 0xFFFFFFFF
+        f2 = struct.pack("=4sIQQII", b"RECD", 0, seq, 1000000 + i*1000, 664, crc2)
+        file_bytes += f2 + p2
+        seq += 1
+
+        # Completion event (type 12)
+        p12 = struct.pack(ev_fmt, 12, 4321, 4321, 0, 0, -1, 0, 1000000 + i*1000 + 500, 3 + i, 0, 0, b"\0"*16, name_bytes, 0, 0, 0, 1000, 0, 100 + i, 1, 0, 3 + i, 2, 0, 1000000 + i*1000, 0, path_bytes, 0, 9000 + i)
+        crc12 = zlib.crc32(p12) & 0xFFFFFFFF
+        f12 = struct.pack("=4sIQQII", b"RECD", 0, seq, 1000000 + i*1000 + 500, 664, crc12)
+        file_bytes += f12 + p12
+        seq += 1
+
+    evid_path.write_bytes(file_bytes)
+
+    # 2. Read back using runner.read_evidence_events
+    events, stats = runner.read_evidence_events(evid_path, target_pid=4321)
+    assert stats["records_verified"] == 20
+    assert stats["corrupt_records"] == 0
+    assert stats["seq_gaps"] == 0
+    assert stats["incomplete_records"] == 0
+    assert len(events) == 20
+
+    # 3. Independent ground truth reconciliation
+    rec = runner.reconcile_events(truth_records, events, p_available=False)
+    assert len(rec["reconstructed_records"]) == 10
+    assert len(rec["missing_create"]) == 0
+    assert len(rec["missing_complete"]) == 0
+    assert len(rec["corrupted_events"]) == 0
+    assert len(rec["incorrect_outcome"]) == 0
+
+    # 4. Replay via replay_provenance binary
+    replay_bin = ROOT / "build" / "telemetry_lab" / "replay_provenance"
+    dot_out = pathlib.Path("/tmp/test_reconcile_disk.dot")
+    dot_out.unlink(missing_ok=True)
+    res_rep = subprocess.run([str(replay_bin), str(evid_path), str(dot_out)], capture_output=True, text=True, check=True)
+    rep_json = json.loads(res_rep.stdout.strip().splitlines()[-1])
+    assert rep_json["status"] == "OK"
+    assert rep_json["records_replayed"] == 20
+    assert rep_json["nodes"] > 0
+    assert rep_json["edges"] > 0
+    assert dot_out.exists()
+
+    # 5. Test bit-flip corruption detection
+    corrupt_bytes = bytearray(file_bytes)
+    corrupt_bytes[150] ^= 0xFF
+    evid_path.write_bytes(corrupt_bytes)
+    _, stats_c = runner.read_evidence_events(evid_path, target_pid=4321)
+    assert stats_c["corrupt_records"] > 0
+
+    # 6. Test truncation detection
+    trunc_bytes = file_bytes[:-25]
+    evid_path.write_bytes(trunc_bytes)
+    _, stats_t = runner.read_evidence_events(evid_path, target_pid=4321)
+    assert stats_t["incomplete_records"] > 0
+
+    evid_path.unlink(missing_ok=True)
+    dot_out.unlink(missing_ok=True)
+    print("  -> Independent disk readback, CRC validation, and reconciliation verified!\n")
+
 def test_comparative_auditor():
     print(
         "[TEST 4/5] Testing comparative auditor with synthetic Model M and Model P trial sets..."
