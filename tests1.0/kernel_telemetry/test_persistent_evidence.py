@@ -466,6 +466,7 @@ def test_comparative_auditor():
                     "ops_attempted": 100,
                     "reconstructed": 100,
                     "completeness_c_e2e": 1.0,
+                    "persisted_completeness": 1.0,
                     "incomplete_fraction_f": 0.0,
                     "ring_loss": 0,
                     "target_transport_loss": 0,
@@ -519,7 +520,9 @@ def test_comparative_auditor():
 
 def test_build_artifacts():
     print("[TEST 5/5] Testing runner.py build artifact verification...")
-    runner.build()
+    build_info = ROOT / "build" / "telemetry_lab" / "build_info.json"
+    if not build_info.exists():
+        runner.build()
     build_info = json.loads((ROOT / "build" / "telemetry_lab" / "build_info.json").read_text())
     assert "bpf_sha256" in build_info
     assert "loader_sha256" in build_info

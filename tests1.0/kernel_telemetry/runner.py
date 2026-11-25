@@ -765,80 +765,101 @@ def read_evidence_events(evid_path: pathlib.Path, target_pid=None):
     """Independently reads back and validates binary evidence records from disk."""
     if not evid_path.exists():
         return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 0, "storage_bytes": 0}
-    data = evid_path.read_bytes()
-    if len(data) < 64:
-        return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 1, "storage_bytes": len(data)}
-    hdr_tuple = struct.unpack("=4sIIIQIIQQ12sI", data[:64])
-    magic, ver, mode, pid, session_start, ev_size, hdr_size, max_b, max_rec, _, hdr_crc = hdr_tuple
-    if magic != b"EVID" or ver != 1 or ev_size != 664 or hdr_size != 64:
-        return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 0, "storage_bytes": len(data)}
-    if (zlib.crc32(data[:60]) & 0xFFFFFFFF) != hdr_crc:
-        return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 0, "storage_bytes": len(data)}
+    try:
+        file_size = evid_path.stat().st_size
+        if file_size < 64:
+            return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 1, "storage_bytes": file_size}
 
-    offset = 64
-    expected_seq = 0
-    records_verified = 0
-    corrupt_records = 0
-    seq_gaps = 0
-    incomplete_records = 0
-    events = []
-    ev_fmt = "=IIIIIiI4xQiHH16s256sIII4xQQQQIiiIQI256sIQ"
+        with open(evid_path, "rb") as f:
+            hdr_data = f.read(64)
+            if len(hdr_data) < 64:
+                return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 1, "storage_bytes": file_size}
+            magic, ver, mode, pid, session_start, ev_size, hdr_size, max_b, max_rec, _, hdr_crc = struct.unpack("<IIIIQIIQQ12sI", hdr_data)
+            # Accept native little-endian integer 0x45564944 and legacy string-packed 0x44495645
+            if (magic not in (0x45564944, 0x44495645)) or ver != 1 or ev_size != 664 or hdr_size != 64:
+                return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 0, "storage_bytes": file_size}
+            if (zlib.crc32(hdr_data[:60]) & 0xFFFFFFFF) != hdr_crc:
+                return [], {"records_verified": 0, "corrupt_records": 1, "seq_gaps": 0, "incomplete_records": 0, "storage_bytes": file_size}
 
-    while offset < len(data):
-        if offset + 32 > len(data):
-            incomplete_records += 1
-            break
-        f_magic, f_flags, f_seq, f_ts, f_len, f_crc = struct.unpack("=4sIQQII", data[offset:offset+32])
-        offset += 32
-        if f_magic != b"RECD":
-            corrupt_records += 1
-            break
-        if f_seq != expected_seq:
-            if f_seq > expected_seq:
-                seq_gaps += (f_seq - expected_seq)
-            else:
-                corrupt_records += 1
-                break
-            expected_seq = f_seq
-        if offset + f_len > len(data) or f_len != 664:
-            incomplete_records += 1
-            break
-        payload = data[offset:offset+f_len]
-        offset += f_len
-        if (zlib.crc32(payload) & 0xFFFFFFFF) != f_crc:
-            corrupt_records += 1
-            break
-        tup = struct.unpack(ev_fmt, payload)
-        ev_type, ev_pid, ev_tid = tup[0], tup[1], tup[2]
-        ev_ts, ev_fd = tup[7], tup[8]
-        ev_name = tup[12].split(b"\0", 1)[0].decode("utf-8", errors="replace")
-        ev_inode, ev_dev, ev_ret, ev_op, ev_entry_ts, ev_token = tup[19], tup[20], tup[22], tup[23], tup[25], tup[29]
-        if target_pid is None or ev_pid == target_pid:
-            events.append({
-                "type": ev_type,
-                "pid": ev_pid,
-                "tid": ev_tid,
-                "ret": ev_ret,
-                "fd": ev_fd,
-                "op": ev_op,
-                "token": ev_token,
-                "inode": ev_inode,
-                "dev": ev_dev,
-                "entry_ts": ev_entry_ts,
-                "ts": ev_ts,
-                "p": 1 if ev_op == 2 else (2 if ev_type == 2 else 0),
-                "name": ev_name,
-            })
-        records_verified += 1
-        expected_seq += 1
+            expected_seq = 0
+            records_verified = 0
+            corrupt_records = 0
+            seq_gaps = 0
+            incomplete_records = 0
+            events = []
+            ev_fmt = "=IIIIIiI4xQiHH16s256sIII4xQQQQIiiIQI256sIQ"
 
-    return events, {
-        "records_verified": records_verified,
-        "corrupt_records": corrupt_records,
-        "seq_gaps": seq_gaps,
-        "incomplete_records": incomplete_records,
-        "storage_bytes": len(data),
-    }
+            while True:
+                frame_data = f.read(32)
+                if not frame_data:
+                    break
+                if len(frame_data) < 32:
+                    incomplete_records += 1
+                    break
+                f_magic, f_flags, f_seq, f_ts, f_len, f_crc = struct.unpack("<IIQQII", frame_data)
+                # Accept native little-endian integer 0x52454344 and legacy string-packed 0x44434552
+                if f_magic not in (0x52454344, 0x44434552):
+                    corrupt_records += 1
+                    break
+                if f_seq != expected_seq:
+                    if f_seq > expected_seq:
+                        seq_gaps += (f_seq - expected_seq)
+                    else:
+                        corrupt_records += 1
+                        break
+                    expected_seq = f_seq
+                if f_len != 664:
+                    incomplete_records += 1
+                    break
+                payload = f.read(f_len)
+                if len(payload) < f_len:
+                    incomplete_records += 1
+                    break
+                if (zlib.crc32(payload) & 0xFFFFFFFF) != f_crc:
+                    corrupt_records += 1
+                    break
+                tup = struct.unpack(ev_fmt, payload)
+                ev_type, ev_pid, ev_tid = tup[0], tup[1], tup[2]
+                ev_ts, ev_fd = tup[7], tup[8]
+                ev_name = tup[12].split(b"\0", 1)[0].decode("utf-8", errors="replace")
+                # Correct indices per struct event in provenance.h:
+                # tup[18]=inode_no, tup[19]=dev_id, tup[21]=ret_val, tup[22]=op_type, tup[24]=entry_ts_ns, tup[28]=object_token
+                ev_inode, ev_dev, ev_ret, ev_op, ev_entry_ts, ev_token = tup[18], tup[19], tup[21], tup[22], tup[24], tup[28]
+                if target_pid is None or ev_pid == target_pid:
+                    events.append({
+                        "type": ev_type,
+                        "pid": ev_pid,
+                        "tid": ev_tid,
+                        "ret": ev_ret,
+                        "fd": ev_fd,
+                        "op": ev_op,
+                        "token": ev_token,
+                        "inode": ev_inode,
+                        "dev": ev_dev,
+                        "entry_ts": ev_entry_ts,
+                        "ts": ev_ts,
+                        "p": 1 if ev_op == 2 else (2 if ev_type == 2 else 0),
+                        "name": ev_name,
+                    })
+                records_verified += 1
+                expected_seq += 1
+
+        return events, {
+            "records_verified": records_verified,
+            "corrupt_records": corrupt_records,
+            "seq_gaps": seq_gaps,
+            "incomplete_records": incomplete_records,
+            "storage_bytes": file_size,
+        }
+    except PermissionError:
+        return [], {
+            "records_verified": 0,
+            "corrupt_records": 0,
+            "seq_gaps": 0,
+            "incomplete_records": 0,
+            "storage_bytes": 0,
+            "error": "permission_denied",
+        }
 
 
 def reconcile_events(records, captured_events, p_available=False):

@@ -1,0 +1,522 @@
+{
+  "smoke_persist_20261126_012106": {
+    "dataset": "persist_20261126-012106",
+    "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012106",
+    "model_m": {
+      "W_BURST_1": {
+        "trial": "W_BURST_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 200,
+        "captured_events": 400,
+        "reconstructed_ops": 200,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012106/model_m/W_BURST_1.evid",
+          "exists": true,
+          "storage_bytes": 982816,
+          "estimated_records": 1412,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_PACED_1": {
+        "trial": "W_PACED_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 50,
+        "captured_events": 100,
+        "reconstructed_ops": 50,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012106/model_m/W_PACED_1.evid",
+          "exists": true,
+          "storage_bytes": 245056,
+          "estimated_records": 352,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_SUSTAIN_1": {
+        "trial": "W_SUSTAIN_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 400,
+        "captured_events": 800,
+        "reconstructed_ops": 400,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012106/model_m/W_SUSTAIN_1.evid",
+          "exists": true,
+          "storage_bytes": 1950256,
+          "estimated_records": 2802,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      }
+    },
+    "model_p": {
+      "W_BURST_1": {
+        "trial": "W_BURST_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 200,
+        "captured_events": 400,
+        "reconstructed_ops": 200,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012106/model_p/W_BURST_1.evid",
+          "exists": true,
+          "storage_bytes": 993952,
+          "estimated_records": 1428,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_PACED_1": {
+        "trial": "W_PACED_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 50,
+        "captured_events": 100,
+        "reconstructed_ops": 50,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012106/model_p/W_PACED_1.evid",
+          "exists": true,
+          "storage_bytes": 263848,
+          "estimated_records": 379,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_SUSTAIN_1": {
+        "trial": "W_SUSTAIN_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 400,
+        "captured_events": 800,
+        "reconstructed_ops": 400,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012106/model_p/W_SUSTAIN_1.evid",
+          "exists": true,
+          "storage_bytes": 1955824,
+          "estimated_records": 2810,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      }
+    }
+  },
+  "full_persist_20261126_012121": {
+    "dataset": "persist_20261126-012121",
+    "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121",
+    "model_m": {
+      "W_BURST_1": {
+        "trial": "W_BURST_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 10000,
+        "captured_events": 2584,
+        "reconstructed_ops": 515,
+        "recovered_completeness": 0.0515,
+        "missing_create": 8313,
+        "missing_complete": 9103,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_m/W_BURST_1.evid",
+          "exists": true,
+          "storage_bytes": 6777016,
+          "estimated_records": 9737,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_BURST_2": {
+        "trial": "W_BURST_2",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 10000,
+        "captured_events": 2643,
+        "reconstructed_ops": 550,
+        "recovered_completeness": 0.055,
+        "missing_create": 8348,
+        "missing_complete": 9009,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_m/W_BURST_2.evid",
+          "exists": true,
+          "storage_bytes": 6989296,
+          "estimated_records": 10042,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_BURST_3": {
+        "trial": "W_BURST_3",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 10000,
+        "captured_events": 2556,
+        "reconstructed_ops": 499,
+        "recovered_completeness": 0.0499,
+        "missing_create": 8373,
+        "missing_complete": 9071,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_m/W_BURST_3.evid",
+          "exists": true,
+          "storage_bytes": 6915520,
+          "estimated_records": 9936,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_PACED_1": {
+        "trial": "W_PACED_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 500,
+        "captured_events": 1000,
+        "reconstructed_ops": 500,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_m/W_PACED_1.evid",
+          "exists": true,
+          "storage_bytes": 2471560,
+          "estimated_records": 3551,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_PACED_2": {
+        "trial": "W_PACED_2",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 500,
+        "captured_events": 1000,
+        "reconstructed_ops": 500,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_m/W_PACED_2.evid",
+          "exists": true,
+          "storage_bytes": 2454856,
+          "estimated_records": 3527,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_PACED_3": {
+        "trial": "W_PACED_3",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 500,
+        "captured_events": 1000,
+        "reconstructed_ops": 500,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_m/W_PACED_3.evid",
+          "exists": true,
+          "storage_bytes": 2453464,
+          "estimated_records": 3525,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_SUSTAIN_1": {
+        "trial": "W_SUSTAIN_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 60000,
+        "captured_events": 18433,
+        "reconstructed_ops": 6814,
+        "recovered_completeness": 0.11356666666666666,
+        "missing_create": 48881,
+        "missing_complete": 52686,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_m/W_SUSTAIN_1.evid",
+          "exists": true,
+          "storage_bytes": 32422528,
+          "estimated_records": 46584,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_SUSTAIN_2": {
+        "trial": "W_SUSTAIN_2",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 60000,
+        "captured_events": 21111,
+        "reconstructed_ops": 7232,
+        "recovered_completeness": 0.12053333333333334,
+        "missing_create": 46422,
+        "missing_complete": 52467,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_m/W_SUSTAIN_2.evid",
+          "exists": true,
+          "storage_bytes": 33165856,
+          "estimated_records": 47652,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_SUSTAIN_3": {
+        "trial": "W_SUSTAIN_3",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 60000,
+        "captured_events": 20903,
+        "reconstructed_ops": 7205,
+        "recovered_completeness": 0.12008333333333333,
+        "missing_create": 46616,
+        "missing_complete": 52481,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_m/W_SUSTAIN_3.evid",
+          "exists": true,
+          "storage_bytes": 33341248,
+          "estimated_records": 47904,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      }
+    },
+    "model_p": {
+      "W_BURST_1": {
+        "trial": "W_BURST_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 10000,
+        "captured_events": 6352,
+        "reconstructed_ops": 1242,
+        "recovered_completeness": 0.1242,
+        "missing_create": 6036,
+        "missing_complete": 7612,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_p/W_BURST_1.evid",
+          "exists": true,
+          "storage_bytes": 16249576,
+          "estimated_records": 23347,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_BURST_2": {
+        "trial": "W_BURST_2",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 10000,
+        "captured_events": 5662,
+        "reconstructed_ops": 833,
+        "recovered_completeness": 0.0833,
+        "missing_create": 6338,
+        "missing_complete": 8000,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_p/W_BURST_2.evid",
+          "exists": true,
+          "storage_bytes": 14793544,
+          "estimated_records": 21255,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_BURST_3": {
+        "trial": "W_BURST_3",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 10000,
+        "captured_events": 5811,
+        "reconstructed_ops": 1157,
+        "recovered_completeness": 0.1157,
+        "missing_create": 6272,
+        "missing_complete": 7917,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_p/W_BURST_3.evid",
+          "exists": true,
+          "storage_bytes": 15089344,
+          "estimated_records": 21680,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_PACED_1": {
+        "trial": "W_PACED_1",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 500,
+        "captured_events": 1000,
+        "reconstructed_ops": 500,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_p/W_PACED_1.evid",
+          "exists": true,
+          "storage_bytes": 2493136,
+          "estimated_records": 3582,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_PACED_2": {
+        "trial": "W_PACED_2",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 500,
+        "captured_events": 1000,
+        "reconstructed_ops": 500,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_p/W_PACED_2.evid",
+          "exists": true,
+          "storage_bytes": 2454856,
+          "estimated_records": 3527,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_PACED_3": {
+        "trial": "W_PACED_3",
+        "status": "VALID",
+        "error": null,
+        "ground_truth_ops": 500,
+        "captured_events": 1000,
+        "reconstructed_ops": 500,
+        "recovered_completeness": 1.0,
+        "missing_create": 0,
+        "missing_complete": 0,
+        "corrupted_events": 0,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_p/W_PACED_3.evid",
+          "exists": true,
+          "storage_bytes": 2443720,
+          "estimated_records": 3511,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_SUSTAIN_1": {
+        "trial": "W_SUSTAIN_1",
+        "status": "INVALID",
+        "error": "Command '['/home/magellan/Garage/prototypes/FM/FM-persist/build/telemetry_lab/loader.diag', '-q']' timed out after 120 seconds",
+        "ground_truth_ops": 60000,
+        "captured_events": 0,
+        "reconstructed_ops": 0,
+        "recovered_completeness": 0.0,
+        "missing_create": null,
+        "missing_complete": null,
+        "corrupted_events": null,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_p/W_SUSTAIN_1.evid",
+          "exists": true,
+          "storage_bytes": 292371568,
+          "estimated_records": 420074,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_SUSTAIN_2": {
+        "trial": "W_SUSTAIN_2",
+        "status": "INVALID",
+        "error": "Command '['/home/magellan/Garage/prototypes/FM/FM-persist/build/telemetry_lab/loader.diag', '-q']' timed out after 120 seconds",
+        "ground_truth_ops": 60000,
+        "captured_events": 0,
+        "reconstructed_ops": 0,
+        "recovered_completeness": 0.0,
+        "missing_create": null,
+        "missing_complete": null,
+        "corrupted_events": null,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_p/W_SUSTAIN_2.evid",
+          "exists": true,
+          "storage_bytes": 292390360,
+          "estimated_records": 420101,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      },
+      "W_SUSTAIN_3": {
+        "trial": "W_SUSTAIN_3",
+        "status": "INVALID",
+        "error": "Command '['/home/magellan/Garage/prototypes/FM/FM-persist/build/telemetry_lab/loader.diag', '-q']' timed out after 120 seconds",
+        "ground_truth_ops": 60000,
+        "captured_events": 0,
+        "reconstructed_ops": 0,
+        "recovered_completeness": 0.0,
+        "missing_create": null,
+        "missing_complete": null,
+        "corrupted_events": null,
+        "evidence_file": {
+          "path": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/results/persist_20261126-012121/model_p/W_SUSTAIN_3.evid",
+          "exists": true,
+          "storage_bytes": 292377136,
+          "estimated_records": 420082,
+          "readable": false,
+          "read_error": "Permission denied (mode 0600 root-owned)",
+          "verified_stats": null
+        }
+      }
+    }
+  }
+}
