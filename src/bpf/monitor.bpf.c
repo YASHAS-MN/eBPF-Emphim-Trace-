@@ -159,33 +159,36 @@ struct pending_memfd {
     __u32 install_count;
 };
 
-struct memfd_object_entry {
-    __u64 object_token;
+struct compact_inode_meta {
     __u64 inode_no;
     __u64 dev_id;
+    __u64 birth_ts_ns;
     __u32 creator_tgid;
-    __u32 creator_tid;
-    __u64 creator_start_time_ns;
-    __u32 creation_flags;
     __u32 state;
-    __u64 creation_ts_ns;
-    char name[256];
 };
 
-/* Inode-anchored registry: struct inode * -> memfd_object_entry */
+/* Inode-anchored compact registry: struct inode * -> compact_inode_meta */
 struct {
     __uint(type, BPF_MAP_TYPE_HASH);
-    __uint(max_entries, 4096);
+    __uint(max_entries, 16384);
     __type(key, __u64);
-    __type(value, struct memfd_object_entry);
+    __type(value, struct compact_inode_meta);
 } memfd_inode_registry SEC(".maps");
 
-/* Open-file lookup registry: struct file * -> object_token */
+struct compact_file_meta {
+    __u64 inode_no;
+    __u64 dev_id;
+    __u64 birth_ts_ns;
+    __u32 creator_tgid;
+    __u32 flags;
+};
+
+/* Open-file lookup registry: struct file * -> compact_file_meta */
 struct {
     __uint(type, BPF_MAP_TYPE_HASH);
-    __uint(max_entries, 8192);
+    __uint(max_entries, 32768);
     __type(key, __u64);
-    __type(value, __u64);
+    __type(value, struct compact_file_meta);
 } memfd_file_registry SEC(".maps");
 
 struct descriptor_key {
@@ -194,35 +197,26 @@ struct descriptor_key {
 };
 
 struct descriptor_entry {
-    __u64 object_token;
     __u64 file_ptr;
     __u64 installed_ts_ns;
+    __u64 inode_no;
 };
 
-/* Descriptor registry: (tgid, fd) -> (object_token, file_ptr, installed_ts_ns) */
+/* Descriptor registry: (tgid, fd) -> (file_ptr, installed_ts_ns, inode_no) */
 struct {
     __uint(type, BPF_MAP_TYPE_HASH);
-    __uint(max_entries, 16384);
+    __uint(max_entries, 32768);
     __type(key, struct descriptor_key);
     __type(value, struct descriptor_entry);
 } memfd_desc_registry SEC(".maps");
 
-/* Pending memfd execution tracking: tid -> object_token */
+/* Pending memfd execution tracking: tid -> inode_no */
 struct {
     __uint(type, BPF_MAP_TYPE_HASH);
     __uint(max_entries, 1024);
     __type(key, __u32);
     __type(value, __u64);
 } pending_memfd_exec SEC(".maps");
-
-
-/* Monotonic token generator */
-struct {
-    __uint(type, BPF_MAP_TYPE_ARRAY);
-    __uint(max_entries, 1);
-    __type(key, __u32);
-    __type(value, __u64);
-} memfd_token_generator SEC(".maps");
 
 struct {
     __uint(type, BPF_MAP_TYPE_HASH);
@@ -1290,23 +1284,23 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
             bpf_core_read(&inode, sizeof(inode), &file->f_inode);
             if (inode) {
                 __u64 inode_key = (__u64)inode;
-                struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &inode_key);
+                struct compact_inode_meta *obj = bpf_map_lookup_elem(&memfd_inode_registry, &inode_key);
                 if (obj && obj->state == REG_STATE_COMMITTED) {
                     __u64 file_key = (__u64)file;
                     __u32 op_type = 0;
-                    int res_fil = bpf_map_update_elem(&memfd_file_registry, &file_key, &obj->object_token, BPF_NOEXIST);
+                    struct compact_file_meta fm;
+                    __builtin_memset(&fm, 0, sizeof(fm));
+                    fm.inode_no = obj->inode_no;
+                    fm.dev_id = obj->dev_id;
+                    fm.birth_ts_ns = obj->birth_ts_ns;
+                    fm.creator_tgid = obj->creator_tgid;
+
+                    int res_fil = bpf_map_update_elem(&memfd_file_registry, &file_key, &fm, BPF_NOEXIST);
                     if (res_fil == 0) {
                         inc_counter(CNT_REG_REOPEN_MATCH);
                         inc_counter(CNT_REG_FILE_INSERT_OK);
                         op_type = FD_INSTALL_OP_REOPEN;
                     } else if (res_fil == -17 /* -EEXIST */) {
-                        __u64 *existing_tok = bpf_map_lookup_elem(&memfd_file_registry, &file_key);
-                        if (existing_tok) {
-                            if (*existing_tok != obj->object_token) {
-                                inc_counter(CNT_REG_TOKEN_MISMATCH);
-                                return 0;
-                            }
-                        }
                         op_type = FD_INSTALL_OP_DUP;
                     } else {
                         inc_counter(CNT_REG_FILE_INSERT_ERR);
@@ -1322,15 +1316,17 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
 
                     struct descriptor_entry de;
                     __builtin_memset(&de, 0, sizeof(de));
-                    de.object_token = obj->object_token;
                     de.file_ptr = file_key;
+                    de.inode_no = obj->inode_no;
                     de.installed_ts_ns = bpf_ktime_get_ns();
                     bpf_map_update_elem(&memfd_desc_registry, &dk, &de, BPF_ANY);
 
                     struct event *e = new_event(EVENT_FD_INSTALLED);
                     if (e) {
                         e->fd = (__s32)fd;
-                        e->object_token = obj->object_token;
+                        e->inode_no = obj->inode_no;
+                        e->dev_id = obj->dev_id;
+                        e->object_token = 0;
                         e->op_type = op_type;
                         bpf_ringbuf_submit(e, 0);
                     }
@@ -1359,7 +1355,6 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
 
     ps->install_count++;
     if (ps->installed) {
-        /* Unexpected repeated matching fd_install for the same pending syscall */
         inc_counter(CNT_FD_INSTALL_ERR);
         return 0;
     }
@@ -1406,35 +1401,18 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
         }
     }
 
-    /* Allocate session-unique object token */
-    __u32 zero = 0;
-    __u64 *tok_ptr = bpf_map_lookup_elem(&memfd_token_generator, &zero);
-    __u64 token = 0;
-    if (tok_ptr) {
-        token = __sync_fetch_and_add(tok_ptr, 1) + 1;
-    }
-    if (token == 0) {
-        inc_counter(CNT_REG_TOKEN_ERR);
-        ps->file_cookie = 0;
-        return 0;
-    }
-    ps->file_cookie = token; /* Store assigned token */
+    ps->file_cookie = 1;
 
     /* Register provisional entry in inode registry */
     if (inode) {
         __u64 inode_key = (__u64)inode;
-        struct memfd_object_entry entry;
+        struct compact_inode_meta entry;
         __builtin_memset(&entry, 0, sizeof(entry));
-        entry.object_token = token;
         entry.inode_no = ps->inode_no;
         entry.dev_id = ps->dev_id;
+        entry.birth_ts_ns = ps->entry_ts_ns;
         entry.creator_tgid = ps->tgid;
-        entry.creator_tid = ps->tid;
-        entry.creator_start_time_ns = ps->start_time_ns;
-        entry.creation_flags = ps->flags;
         entry.state = REG_STATE_PROVISIONAL;
-        entry.creation_ts_ns = ps->entry_ts_ns;
-        __builtin_memcpy(entry.name, ps->dentry_name, sizeof(entry.name));
 
         int res_ino = bpf_map_update_elem(&memfd_inode_registry, &inode_key, &entry, BPF_ANY);
         if (res_ino == 0) {
@@ -1455,7 +1433,15 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
     /* Register provisional entry in open-file registry */
     if (file) {
         __u64 file_key = (__u64)file;
-        int res_fil = bpf_map_update_elem(&memfd_file_registry, &file_key, &token, BPF_NOEXIST);
+        struct compact_file_meta fm;
+        __builtin_memset(&fm, 0, sizeof(fm));
+        fm.inode_no = ps->inode_no;
+        fm.dev_id = ps->dev_id;
+        fm.birth_ts_ns = ps->entry_ts_ns;
+        fm.creator_tgid = ps->tgid;
+        fm.flags = ps->flags;
+
+        int res_fil = bpf_map_update_elem(&memfd_file_registry, &file_key, &fm, BPF_NOEXIST);
         if (res_fil == 0) {
             inc_counter(CNT_REG_FILE_INSERT_OK);
 
@@ -1466,8 +1452,8 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
 
             struct descriptor_entry de;
             __builtin_memset(&de, 0, sizeof(de));
-            de.object_token = token;
             de.file_ptr = file_key;
+            de.inode_no = ps->inode_no;
             de.installed_ts_ns = bpf_ktime_get_ns();
             int res_desc = bpf_map_update_elem(&memfd_desc_registry, &dk, &de, BPF_ANY);
             if (res_desc == 0) {
@@ -1476,7 +1462,9 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
                 struct event *e = new_event(EVENT_FD_INSTALLED);
                 if (e) {
                     e->fd = (__s32)fd;
-                    e->object_token = token;
+                    e->inode_no = ps->inode_no;
+                    e->dev_id = ps->dev_id;
+                    e->object_token = 0;
                     e->op_type = FD_INSTALL_OP_CREATION;
                     bpf_ringbuf_submit(e, 0);
                 }
@@ -1484,26 +1472,12 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
                 inc_counter(CNT_FD_INSTALL_ERR);
                 if (res_desc == -7 /* -E2BIG */ || res_desc == -28 /* -ENOSPC */)
                     inc_counter(CNT_REG_MAP_FULL_DROP);
-                /* Atomic rollback: remove file registry entry only if matching token */
-                __u64 *cur_tok = bpf_map_lookup_elem(&memfd_file_registry, &file_key);
-                if (cur_tok && __sync_val_compare_and_swap(cur_tok, token, 0) == token) {
-                    int del_fil = bpf_map_delete_elem(&memfd_file_registry, &file_key);
-                    if (del_fil != 0)
-                        inc_counter(CNT_REG_FILE_DELETE_ERR);
-                }
-                /* Atomic rollback: remove provisional entry from inode registry only if matching token */
+                bpf_map_delete_elem(&memfd_file_registry, &file_key);
+                inc_counter(CNT_REG_FILE_DELETE_OK);
                 if (ps->inode_ptr) {
                     __u64 inode_key = ps->inode_ptr;
-                    struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &inode_key);
-                    if (obj && obj->state == REG_STATE_PROVISIONAL) {
-                        if (__sync_val_compare_and_swap(&obj->object_token, token, 0) == token) {
-                            int del_res = bpf_map_delete_elem(&memfd_inode_registry, &inode_key);
-                            if (del_res == 0)
-                                inc_counter(CNT_REG_INODE_ROLLBACK);
-                            else
-                                inc_counter(CNT_REG_INODE_DELETE_ERR);
-                        }
-                    }
+                    bpf_map_delete_elem(&memfd_inode_registry, &inode_key);
+                    inc_counter(CNT_REG_INODE_ROLLBACK);
                 }
                 ps->file_cookie = 0;
                 return 0;
@@ -1512,19 +1486,10 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
             inc_counter(CNT_REG_FILE_INSERT_ERR);
             if (res_fil == -7 /* -E2BIG */ || res_fil == -28 /* -ENOSPC */)
                 inc_counter(CNT_REG_MAP_FULL_DROP);
-            /* Atomic rollback: remove provisional entry from inode registry only if matching token */
             if (ps->inode_ptr) {
                 __u64 inode_key = ps->inode_ptr;
-                struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &inode_key);
-                if (obj && obj->state == REG_STATE_PROVISIONAL) {
-                    if (__sync_val_compare_and_swap(&obj->object_token, token, 0) == token) {
-                        int del_res = bpf_map_delete_elem(&memfd_inode_registry, &inode_key);
-                        if (del_res == 0)
-                            inc_counter(CNT_REG_INODE_ROLLBACK);
-                        else
-                            inc_counter(CNT_REG_INODE_DELETE_ERR);
-                    }
-                }
+                bpf_map_delete_elem(&memfd_inode_registry, &inode_key);
+                inc_counter(CNT_REG_INODE_ROLLBACK);
             }
             ps->file_cookie = 0;
             return 0;
@@ -1533,16 +1498,8 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
         inc_counter(CNT_REG_FILE_INSERT_ERR);
         if (ps->inode_ptr) {
             __u64 inode_key = ps->inode_ptr;
-            struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &inode_key);
-            if (obj && obj->state == REG_STATE_PROVISIONAL) {
-                if (__sync_val_compare_and_swap(&obj->object_token, token, 0) == token) {
-                    int del_res = bpf_map_delete_elem(&memfd_inode_registry, &inode_key);
-                    if (del_res == 0)
-                        inc_counter(CNT_REG_INODE_ROLLBACK);
-                    else
-                        inc_counter(CNT_REG_INODE_DELETE_ERR);
-                }
-            }
+            bpf_map_delete_elem(&memfd_inode_registry, &inode_key);
+            inc_counter(CNT_REG_INODE_ROLLBACK);
         }
         ps->file_cookie = 0;
         return 0;
@@ -1602,42 +1559,28 @@ int capture_memfd_create_exit(struct sys_exit_ctx *ctx)
         if (ps->installed) {
             if (ps->captured_fd >= 0) {
                 struct descriptor_key dk = { .tgid = ps->tgid, .fd = ps->captured_fd };
-                struct descriptor_entry *de = bpf_map_lookup_elem(&memfd_desc_registry, &dk);
-                if (de && __sync_val_compare_and_swap(&de->object_token, ps->file_cookie, 0) == ps->file_cookie) {
-                    int res_d = bpf_map_delete_elem(&memfd_desc_registry, &dk);
-                    if (res_d != 0)
-                        inc_counter(CNT_FD_INSTALL_ERR);
-                }
+                bpf_map_delete_elem(&memfd_desc_registry, &dk);
             }
             if (ps->inode_ptr) {
                 __u64 ino_key = ps->inode_ptr;
-                struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &ino_key);
-                if (obj && obj->state == REG_STATE_PROVISIONAL) {
-                    if (__sync_val_compare_and_swap(&obj->object_token, ps->file_cookie, 0) == ps->file_cookie) {
-                        int res = bpf_map_delete_elem(&memfd_inode_registry, &ino_key);
-                        if (res != 0)
-                            inc_counter(CNT_REG_INODE_DELETE_ERR);
-                    }
-                }
+                bpf_map_delete_elem(&memfd_inode_registry, &ino_key);
+                inc_counter(CNT_REG_INODE_DELETE_ERR);
             }
             if (ps->file_ptr) {
                 __u64 fil_key = ps->file_ptr;
-                __u64 *cur_tok = bpf_map_lookup_elem(&memfd_file_registry, &fil_key);
-                if (cur_tok && __sync_val_compare_and_swap(cur_tok, ps->file_cookie, 0) == ps->file_cookie) {
-                    int res = bpf_map_delete_elem(&memfd_file_registry, &fil_key);
-                    if (res != 0)
-                        inc_counter(CNT_REG_FILE_DELETE_ERR);
-                }
+                bpf_map_delete_elem(&memfd_file_registry, &fil_key);
+                inc_counter(CNT_REG_FILE_DELETE_ERR);
             }
             inc_counter(CNT_REG_PROVISIONAL_DROPPED);
         }
         e->op_type = MEMFD_STATUS_FAILED;
-        e->fd = -1;
+        e->fd = (__s32)ret;
         e->flags = 0;
         e->inode_no = 0;
         e->dev_id = 0;
         e->mnt_ns_id = 0;
-        e->path[0] = '\0';
+        e->object_token = 0;
+        e->path[0] = 0;
         inc_counter(CNT_MEMFD_FAILED);
     } else {
         /* Syscall returned success (ret >= 0) */
@@ -1649,14 +1592,14 @@ int capture_memfd_create_exit(struct sys_exit_ctx *ctx)
             e->inode_no = ps->inode_no;
             e->dev_id = ps->dev_id;
             e->mnt_ns_id = 0;
-            e->object_token = ps->file_cookie;
+            e->object_token = 0;
             __builtin_memcpy(e->path, ps->dentry_name, sizeof(e->path));
             inc_counter(CNT_MEMFD_CORRELATED);
 
             /* Commit provisional entry in inode registry */
             if (ps->inode_ptr) {
                 __u64 ino_key = ps->inode_ptr;
-                struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &ino_key);
+                struct compact_inode_meta *obj = bpf_map_lookup_elem(&memfd_inode_registry, &ino_key);
                 if (obj) {
                     obj->state = REG_STATE_COMMITTED;
                     inc_counter(CNT_REG_COMMITTED);
@@ -1667,32 +1610,15 @@ int capture_memfd_create_exit(struct sys_exit_ctx *ctx)
             if (ps->installed) {
                 if (ps->captured_fd >= 0) {
                     struct descriptor_key dk = { .tgid = ps->tgid, .fd = ps->captured_fd };
-                    struct descriptor_entry *de = bpf_map_lookup_elem(&memfd_desc_registry, &dk);
-                    if (de && __sync_val_compare_and_swap(&de->object_token, ps->file_cookie, 0) == ps->file_cookie) {
-                        int res_d = bpf_map_delete_elem(&memfd_desc_registry, &dk);
-                        if (res_d != 0)
-                            inc_counter(CNT_FD_INSTALL_ERR);
-                    }
+                    bpf_map_delete_elem(&memfd_desc_registry, &dk);
                 }
                 if (ps->inode_ptr) {
                     __u64 ino_key = ps->inode_ptr;
-                    struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &ino_key);
-                    if (obj && obj->state == REG_STATE_PROVISIONAL) {
-                        if (__sync_val_compare_and_swap(&obj->object_token, ps->file_cookie, 0) == ps->file_cookie) {
-                            int res = bpf_map_delete_elem(&memfd_inode_registry, &ino_key);
-                            if (res != 0)
-                                inc_counter(CNT_REG_INODE_DELETE_ERR);
-                        }
-                    }
+                    bpf_map_delete_elem(&memfd_inode_registry, &ino_key);
                 }
                 if (ps->file_ptr) {
                     __u64 fil_key = ps->file_ptr;
-                    __u64 *cur_tok = bpf_map_lookup_elem(&memfd_file_registry, &fil_key);
-                    if (cur_tok && __sync_val_compare_and_swap(cur_tok, ps->file_cookie, 0) == ps->file_cookie) {
-                        int res = bpf_map_delete_elem(&memfd_file_registry, &fil_key);
-                        if (res != 0)
-                            inc_counter(CNT_REG_FILE_DELETE_ERR);
-                    }
+                    bpf_map_delete_elem(&memfd_file_registry, &fil_key);
                 }
                 inc_counter(CNT_REG_PROVISIONAL_DROPPED);
             }
@@ -1702,7 +1628,8 @@ int capture_memfd_create_exit(struct sys_exit_ctx *ctx)
             e->inode_no = 0;
             e->dev_id = 0;
             e->mnt_ns_id = 0;
-            e->path[0] = '\0';
+            e->object_token = 0;
+            e->path[0] = 0;
             inc_counter(CNT_MEMFD_UNCORRELATED);
         }
     }
@@ -1719,7 +1646,7 @@ int BPF_PROG(capture_shmem_evict_inode, struct inode *inode)
         return 0;
 
     __u64 inode_key = (__u64)inode;
-    struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &inode_key);
+    struct compact_inode_meta *obj = bpf_map_lookup_elem(&memfd_inode_registry, &inode_key);
     if (!obj)
         return 0;
 
@@ -1729,10 +1656,9 @@ int BPF_PROG(capture_shmem_evict_inode, struct inode *inode)
     if (e) {
         e->inode_no = obj->inode_no;
         e->dev_id = obj->dev_id;
-        e->object_token = obj->object_token;
-        e->entry_ts_ns = obj->creation_ts_ns;
+        e->object_token = 0;
+        e->entry_ts_ns = obj->birth_ts_ns;
         e->timestamp_ns = bpf_ktime_get_ns();
-        __builtin_memcpy(e->name, obj->name, sizeof(e->name));
         bpf_ringbuf_submit(e, 0);
     }
 
@@ -1750,11 +1676,13 @@ int BPF_PROG(capture_fput, struct file *file)
         return 0;
 
     __u64 file_key = (__u64)file;
-    __u64 *token_ptr = bpf_map_lookup_elem(&memfd_file_registry, &file_key);
-    if (!token_ptr)
+    struct compact_file_meta *fm = bpf_map_lookup_elem(&memfd_file_registry, &file_key);
+    if (!fm)
         return 0;
 
-    __u64 token = *token_ptr;
+    __u64 ino = fm->inode_no;
+    __u64 dev = fm->dev_id;
+
     int res = bpf_map_delete_elem(&memfd_file_registry, &file_key);
     if (res == 0) {
         inc_counter(CNT_REG_FILE_DELETE_OK);
@@ -1764,14 +1692,9 @@ int BPF_PROG(capture_fput, struct file *file)
 
     struct event *e = new_event(EVENT_MEMFD_FILE_RELEASED);
     if (e) {
-        struct inode *inode = NULL;
-        bpf_core_read(&inode, sizeof(inode), &file->f_inode);
-        if (inode) {
-            __u64 ino = 0;
-            bpf_core_read(&ino, sizeof(ino), &inode->i_ino);
-            e->inode_no = ino;
-        }
-        e->object_token = token;
+        e->inode_no = ino;
+        e->dev_id = dev;
+        e->object_token = 0;
         e->timestamp_ns = bpf_ktime_get_ns();
         bpf_ringbuf_submit(e, 0);
     }
@@ -1791,11 +1714,10 @@ int BPF_PROG(capture_shmem_write_iter, struct kiocb *iocb, struct iov_iter *from
         return 0;
 
     __u64 file_key = (__u64)file;
-    __u64 *token_ptr = bpf_map_lookup_elem(&memfd_file_registry, &file_key);
-    if (!token_ptr)
+    struct compact_file_meta *fm = bpf_map_lookup_elem(&memfd_file_registry, &file_key);
+    if (!fm)
         return 0;
 
-    __u64 token = *token_ptr;
     loff_t pos = 0;
     bpf_core_read(&pos, sizeof(pos), &iocb->ki_pos);
     size_t count = 0;
@@ -1812,7 +1734,9 @@ int BPF_PROG(capture_shmem_write_iter, struct kiocb *iocb, struct iov_iter *from
     struct event *e = new_event(EVENT_MEMFD_WRITE);
     if (e) {
         e->fd = -1;
-        e->object_token = token;
+        e->inode_no = fm->inode_no;
+        e->dev_id = fm->dev_id;
+        e->object_token = 0;
         e->entry_ts_ns = (__u64)pos;
         e->ret_val = (__s32)count;
         e->flags = (__u32)ki_flags;
@@ -1837,21 +1761,18 @@ int BPF_PROG(capture_close_fd, unsigned int fd)
     if (!de)
         return 0;
 
-    __u64 token = __sync_lock_test_and_set(&de->object_token, 0);
-    if (token == 0)
-        return 0;
-
     __u64 now = bpf_ktime_get_ns();
     __u64 duration_ns = (now >= de->installed_ts_ns) ? (now - de->installed_ts_ns) : 0;
+    __u64 ino = de->inode_no;
 
-    /* Winner of atomic token claim deletes descriptor registry entry */
     bpf_map_delete_elem(&memfd_desc_registry, &dk);
     inc_counter(CNT_FD_CLOSED_MATCH);
 
     struct event *e = new_event(EVENT_FD_CLOSED);
     if (e) {
         e->fd = (__s32)fd;
-        e->object_token = token;
+        e->inode_no = ino;
+        e->object_token = 0;
         e->entry_ts_ns = duration_ns;
         bpf_ringbuf_submit(e, 0);
     }
@@ -1871,34 +1792,39 @@ int BPF_PROG(capture_bprm_check, struct linux_binprm *bprm)
         return 0;
 
     __u64 file_key = (__u64)file;
-    __u64 *token_ptr = bpf_map_lookup_elem(&memfd_file_registry, &file_key);
-    __u64 token = 0;
-    if (token_ptr) {
-        token = *token_ptr;
+    struct compact_file_meta *fm = bpf_map_lookup_elem(&memfd_file_registry, &file_key);
+    __u64 ino = 0;
+    __u64 dev = 0;
+    if (fm) {
+        ino = fm->inode_no;
+        dev = fm->dev_id;
     } else {
         struct inode *inode = NULL;
         bpf_core_read(&inode, sizeof(inode), &file->f_inode);
         if (inode) {
             __u64 inode_key = (__u64)inode;
-            struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &inode_key);
+            struct compact_inode_meta *obj = bpf_map_lookup_elem(&memfd_inode_registry, &inode_key);
             if (obj && obj->state == REG_STATE_COMMITTED) {
-                token = obj->object_token;
+                ino = obj->inode_no;
+                dev = obj->dev_id;
             }
         }
     }
 
-    if (token == 0)
+    if (ino == 0)
         return 0;
 
     __u64 pid_tgid = bpf_get_current_pid_tgid();
     __u32 tid = (__u32)pid_tgid;
 
-    bpf_map_update_elem(&pending_memfd_exec, &tid, &token, BPF_ANY);
+    bpf_map_update_elem(&pending_memfd_exec, &tid, &ino, BPF_ANY);
     inc_counter(CNT_MEMFD_EXEC_ATTEMPT);
 
     struct event *e = new_event(EVENT_MEMFD_EXEC_ATTEMPT);
     if (e) {
-        e->object_token = token;
+        e->inode_no = ino;
+        e->dev_id = dev;
+        e->object_token = 0;
         const char *filename_ptr = NULL;
         bpf_core_read(&filename_ptr, sizeof(filename_ptr), &bprm->filename);
         if (filename_ptr) {
@@ -1909,8 +1835,6 @@ int BPF_PROG(capture_bprm_check, struct linux_binprm *bprm)
 
     return 0;
 }
-
-/* Process lifecycle sensors */
 
 SEC("raw_tracepoint/sched_process_fork")
 int capture_process_fork(void *ctx)
@@ -1984,15 +1908,16 @@ int capture_process_exec(struct sched_exec_ctx *ctx)
     bpf_ringbuf_submit(e, 0);
 
     __u32 tid = (__u32)bpf_get_current_pid_tgid();
-    __u64 *token_ptr = bpf_map_lookup_elem(&pending_memfd_exec, &tid);
-    if (token_ptr) {
-        __u64 token = *token_ptr;
+    __u64 *ino_ptr = bpf_map_lookup_elem(&pending_memfd_exec, &tid);
+    if (ino_ptr) {
+        __u64 ino = *ino_ptr;
         bpf_map_delete_elem(&pending_memfd_exec, &tid);
         inc_counter(CNT_MEMFD_EXEC_SUCCESS);
 
         struct event *e_succ = new_event(EVENT_MEMFD_EXEC_SUCCESS);
         if (e_succ) {
-            e_succ->object_token = token;
+            e_succ->inode_no = ino;
+            e_succ->object_token = 0;
             bpf_probe_read_kernel_str(e_succ->name, sizeof(e_succ->name), filename);
             bpf_ringbuf_submit(e_succ, 0);
         }

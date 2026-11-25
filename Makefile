@@ -7,7 +7,7 @@ LIBBPF_LIBS ?= $(shell pkg-config --libs libbpf 2>/dev/null || echo "-lbpf")
 
 BUILD_DIR = build
 SRC_BPF = src/bpf/monitor.bpf.c
-SRC_LOADER = src/user/loader.c src/user/provenance.c
+SRC_LOADER = src/user/loader.c src/user/provenance.c src/user/canonical_correlator.c
 
 TEST_SRCS = $(wildcard tests/*.c)
 TEST_BINS = $(patsubst tests/%.c,$(BUILD_DIR)/%,$(TEST_SRCS))

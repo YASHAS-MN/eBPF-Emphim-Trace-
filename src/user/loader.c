@@ -20,6 +20,7 @@
 #include <ctype.h>
 #include "provenance.h"
 #include "event_queue.h"
+#include "canonical_correlator.h"
 
 #ifndef DIAG_QUEUE_STATS_DEF
 #define DIAG_QUEUE_STATS_DEF
@@ -1077,6 +1078,7 @@ static void *worker_thread_fn(void *arg) {
     (void)arg;
     struct queue_entry entry;
     while (event_queue_pop(g_queue, &entry) == 0) {
+        canonical_correlator_process_event(&entry.e);
         handle_event(NULL, &entry.e, sizeof(entry.e));
         on_event_processed(entry.cap_idx, entry.e.pid);
     }
@@ -1861,6 +1863,7 @@ int main(int argc, char **argv)
         goto cleanup;
     }
 
+    canonical_correlator_init();
     g_queue = event_queue_create(EVENT_QUEUE_CAPACITY);
     if (!g_queue) {
         log_error("Failed to allocate event queue");
@@ -1965,6 +1968,7 @@ cleanup:
         event_queue_destroy(g_queue);
         g_queue = NULL;
     }
+    canonical_correlator_destroy();
 
     for (size_t i = 0; i < NUM_REQUIRED_HOOKS; i++) {
         if (statuses[i].cpu_records) {

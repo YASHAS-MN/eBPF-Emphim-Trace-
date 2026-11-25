@@ -70,6 +70,7 @@ extern uint32_t diag_p_get_last_status(void);
 extern void diag_p_get_stats(struct diag_p_stats *out);
 extern void diag_p_reset(void);
 extern void diag_p_get_timing(uint64_t *count, uint64_t *total_ns, uint64_t *min_ns, uint64_t *max_ns);
+extern uint64_t diag_last_processed_token;
 
 static inline uint64_t diag_time_now_ns(void) {
     struct timespec ts;

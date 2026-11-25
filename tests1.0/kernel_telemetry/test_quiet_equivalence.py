@@ -56,6 +56,7 @@ def test_genuine_callback_equivalence():
             ".",
             str(HERE / "test_callback_equivalence.c"),
             str(BUILD / "provenance.diag.c"),
+            str(ROOT / "src/user/canonical_correlator.c"),
             "-lbpf",
             "-o",
             str(test_bin),

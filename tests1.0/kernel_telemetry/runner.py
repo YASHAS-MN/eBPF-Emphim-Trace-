@@ -180,6 +180,9 @@ def build():
     diag_record_global_event_ts();
     if (cap_idx >= 0) {
         diag_captured_events[cap_idx].p_status = diag_p_get_last_status();
+        if (diag_last_processed_token != 0) {
+            diag_captured_events[cap_idx].token = diag_last_processed_token;
+        }
     }
     if (pid == diag_pid) {
         diag_record_target_event_ts();
@@ -504,6 +507,7 @@ def build():
         + [
             str(BUILD / "loader.diag.c"),
             str(BUILD / "provenance.diag.c"),
+            str(ROOT / "src/user/canonical_correlator.c"),
             "-o",
             str(BUILD / "loader.diag"),
         ]
@@ -579,6 +583,7 @@ def build():
                 ".",
                 str(HERE / "test_callback_equivalence.c"),
                 str(BUILD / "provenance.diag.c"),
+                str(ROOT / "src/user/canonical_correlator.c"),
                 "-lbpf",
                 "-o",
                 str(BUILD / "test_callback_equivalence"),
