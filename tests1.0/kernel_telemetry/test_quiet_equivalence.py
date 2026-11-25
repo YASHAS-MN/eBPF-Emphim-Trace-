@@ -4,9 +4,14 @@ Equivalence Verification Test for Correction 4A (Quiet Mode vs Normal Mode).
 
 Verifies:
 1. Command line flags (-q, --quiet) and environment variable (EPHIM_QUIET=1) are properly supported.
-2. In-memory provenance graph nodes, edges, attributes, and Checkpoint P statuses are completely identical regardless of quiet mode.
-3. Presentation logging to stdout is completely silenced under quiet mode while diagnostic reports (DIAG_READY, DIAG_JSON) remain intact.
-4. Process state and event handling structures receive identical mutations.
+2. Genuine callback path equivalence: feeds a deterministic event sequence through the actual
+   handle_event() callback under both normal (quiet_mode=0) and quiet (quiet_mode=1) modes,
+   verifying identical process states, thread states, provenance DAG nodes/edges/attributes,
+   and Checkpoint P outcomes.
+3. Presentation logging to stdout is completely silenced under quiet mode (0 bytes vs >3000 bytes)
+   while structured diagnostic reports (DIAG_READY, DIAG_JSON) remain intact.
+4. Event reconciliation and analysis produce identical findings regardless of quiet mode.
+5. Profiling structure and exclusive provenance computation formulas are mathematically isolated.
 """
 
 import copy
@@ -17,6 +22,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
+BUILD = ROOT / "build" / "telemetry_lab"
 sys.path.insert(0, str(HERE))
 
 from runner import analyse, reconcile_events
@@ -33,15 +39,41 @@ def test_cli_and_help():
     print("  [PASS] -q and --quiet correctly integrated in loader help and usage text")
 
 
-def test_provenance_and_checkpoint_p_equivalence():
-    """Verify that identical events produce identical provenance state and Checkpoint P outcomes."""
-    print("\n[TEST 2] Provenance graph and Checkpoint P equivalence...")
-    # Run test_prov_p which tests all event types and outcomes
-    test_bin = ROOT / "build" / "telemetry_lab" / "test_prov_p"
+def test_genuine_callback_equivalence():
+    """Execute the C-level deterministic equivalence test exercising actual handle_event() in both modes."""
+    print("\n[TEST 2] Genuine callback path equivalence (normal vs quiet)...")
+    test_bin = BUILD / "test_callback_equivalence"
+    if not test_bin.exists():
+        # Compile if not already compiled by runner.py build
+        cmd = [
+            "gcc",
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-I",
+            "src/user",
+            "-I",
+            ".",
+            str(HERE / "test_callback_equivalence.c"),
+            str(BUILD / "provenance.diag.c"),
+            "-lbpf",
+            "-o",
+            str(test_bin),
+        ]
+        res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+        assert (
+            res.returncode == 0
+        ), f"Failed to compile test_callback_equivalence:\n{res.stderr}"
+
     res = subprocess.run([str(test_bin)], capture_output=True, text=True)
-    assert res.returncode == 0, f"test_prov_p failed: {res.stderr}"
+    assert (
+        res.returncode == 0
+    ), f"test_callback_equivalence failed ({res.returncode}):\n{res.stdout}\n{res.stderr}"
+    print(res.stdout)
+    assert "ALL CALLBACK EQUIVALENCE INVARIANTS VERIFIED" in res.stdout
+    assert "0 bytes vs" in res.stdout
     print(
-        "  [PASS] All node lookups, edge creations, suppression, and Checkpoint P outcomes match specification"
+        "  [PASS] Actual callback path equivalence verified across all 26 lifecycle events"
     )
 
 
@@ -149,7 +181,7 @@ def main():
     print("=== EphimTrace: Correction 4A Quiet Mode Equivalence Suite    ===")
     print("=================================================================")
     test_cli_and_help()
-    test_provenance_and_checkpoint_p_equivalence()
+    test_genuine_callback_equivalence()
     test_reconciliation_identical_under_quiet()
     test_logging_overhead_reduction()
     print("\n=================================================================")

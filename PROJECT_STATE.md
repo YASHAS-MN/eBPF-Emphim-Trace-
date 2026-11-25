@@ -36,20 +36,23 @@ Accepted within the tested memfd lifecycle scope:
 - Correction 1: Event initialization.
 - Correction 2: Ordinary descriptor-close coverage.
 - Correction 3: Truthful registry correlation outcomes.
+- Correction 4A: Optional quiet event logging (accepted strictly as diagnostic/benchmark optimization; not production evidence-equivalent).
 
 ## Current Checkpoint
 
-Correction 4A: Optional quiet event logging.
+Correction 4A accepted: Optional quiet event logging.
 
-Implementation exists locally and in the checkpoint.
-Comparative performance acceptance remains pending.
-Review the Antigravity report before further changes.
+Accepted strictly as a diagnostic and benchmark optimization.
+Deterministic callback equivalence verified.
+Quiet mode is NOT production evidence-equivalent: un-modeled observations
+(failed/uncorrelated memfds, file releases, syscall intent) are suppressed.
+Default presentation logging remains unchanged.
 
 ## Outstanding Work
 
 GitHub Issues is the authoritative task register.
 
-- #2: Review logging optimization.
+- #2: Review logging optimization (closed/accepted as diagnostic optimization).
 - #3: Evaluate asynchronous userspace acquisition.
 - #4: Evaluate minimal kernel-side state.
 - #5: Remaining descriptor and registry limitations.
@@ -63,6 +66,7 @@ GitHub Issues is the authoritative task register.
 - Diagnostic instrumentation overhead.
 - Production export reliability not fully validated.
 - Legacy Makefile test paths require correction.
+- Quiet mode suppresses observations absent from provenance schema (failed/uncorrelated memfd, file release); not production evidence-equivalent.
 
 ## Validation Infrastructure
 

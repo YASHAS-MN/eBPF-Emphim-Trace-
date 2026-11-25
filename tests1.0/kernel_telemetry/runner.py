@@ -558,6 +558,24 @@ def build():
                 str(BUILD / "test_registry_concurrency"),
             ]
         )
+    if (HERE / "test_callback_equivalence.c").exists():
+        run(
+            cc
+            + [
+                "-O2",
+                "-Wall",
+                "-Wextra",
+                "-I",
+                "src/user",
+                "-I",
+                ".",
+                str(HERE / "test_callback_equivalence.c"),
+                str(BUILD / "provenance.diag.c"),
+                "-lbpf",
+                "-o",
+                str(BUILD / "test_callback_equivalence"),
+            ]
+        )
     info = {
         "bpf_sha256": hashlib.sha256(bp.read_bytes()).hexdigest(),
         "loader_sha256": hashlib.sha256(up.read_bytes()).hexdigest(),
