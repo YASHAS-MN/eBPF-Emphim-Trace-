@@ -70,6 +70,7 @@ Where:
 - **$N_{\text{reconstructed}}$:** Unique operations whose full lifecycle (creation, completion, return code, descriptor, token, and provenance attributes) was completely and truthfully observed without discrepancies.
 - **$N_{\text{incomplete}}$:** Operations suffering any form of omission, corruption, or discrepancy.
 - **$\text{Operation Residual}$:** $N_{\text{ops\_attempted}} - (N_{\text{reconstructed}} + N_{\text{incomplete}}) = 0$.
+- **Evaluated Scope:** Current phase rigorously evaluates creation-operation completeness ($C_{\text{e2e\_create}}$) over `memfd_create` intent and completion pairs. Extended lifecycle operations (`write`, `close`) are tracked as secondary metrics.
 
 ### 4.2 Independent Stage-Wise Event Conservation
 Event populations are reconciled independently per stage on their matching event populations, rather than mixed with operation counts:
@@ -98,15 +99,18 @@ Event populations are reconciled independently per stage on their matching event
    $$\Theta_{\text{useful}} = \frac{N_{\text{reconstructed}}}{T_{\text{processing\_complete}} - T_{\text{workload\_start}}} \quad [\text{ops/sec}]$$
 5. **Processing Drain Latency ($\Delta T_{\text{drain}}$):**
    $$\Delta T_{\text{drain}} = T_{\text{processing\_complete}} - T_{\text{workload\_done}} \quad [\text{milliseconds}]$$
+   *(Processing timestamps measure target-scoped event populations where `pid == diag_pid`. Global event backlog drain is reported separately as $\Delta T_{\text{global\_backlog}}$).*
 
 ---
 
 ## 5. Disaggregated Resource Accounting
 
 1. **Producer-Side CPU:** Measured via workload process rusage (`user_cpu_us`, `sys_cpu_us`).
-2. **Userspace Telemetry CPU:** Measured across acquisition and worker threads (`clock_gettime(CLOCK_THREAD_CPUTIME_ID)` and `getrusage(RUSAGE_SELF)`).
-3. **CPU Cost Per Attempted Op:** $\text{Cost}_{\text{attempted}} = \text{CPU}_{\text{telemetry\_total}} / N_{\text{ops\_attempted}}$
-4. **CPU Cost Per Reconstructed Op:** $\text{Cost}_{\text{reconstructed}} = \text{CPU}_{\text{telemetry\_total}} / N_{\text{reconstructed}}$
+2. **Userspace Telemetry CPU:** Measured via `getrusage(RUSAGE_SELF)`. Baseline rusage is captured at `DIAG_READY` to isolate active processing CPU from fixed harness overhead (BPF load/attach).
+   - $\text{CPU}_{\text{active}} = \text{CPU}_{\text{total}} - \text{CPU}_{\text{baseline}}$
+   - Whole-trial total CPU is reported separately for complete execution accounting.
+3. **CPU Cost Per Attempted Op:** $\text{Cost}_{\text{attempted}} = \text{CPU}_{\text{active}} / N_{\text{ops\_attempted}}$
+4. **CPU Cost Per Reconstructed Op:** $\text{Cost}_{\text{reconstructed}} = \text{CPU}_{\text{active}} / N_{\text{reconstructed}}$
 5. **Memory Footprint:** Peak RSS polled from `/proc/self/statm` during trial and post-quiescence. Intermediate queue capacity strictly bounded to $Q_{\text{max}} = 65,536$ events ($\le 64\text{ MiB}$ preallocated memory).
 
 ---

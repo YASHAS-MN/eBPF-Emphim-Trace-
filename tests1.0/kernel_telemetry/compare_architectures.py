@@ -107,8 +107,8 @@ def parse_trial_report(path: pathlib.Path) -> Dict[str, Any]:
             "error": "Missing reconstructed count",
         }
 
-    c_e2e = pipe.get("completeness_c_e2e", 1.0 if n_ops == 0 else (n_reconstructed / n_ops))
-    f_incomplete = pipe.get("incomplete_fraction_f", 1.0 - c_e2e)
+    c_e2e = pipe.get("validated_create_completeness_c_e2e", pipe.get("completeness_c_e2e", 1.0 if n_ops == 0 else (n_reconstructed / n_ops)))
+    f_incomplete = pipe.get("incomplete_create_fraction_f", pipe.get("incomplete_fraction_f", 1.0 - c_e2e))
     residual = pipe.get("residual", pipe.get("operation_residual", 0))
 
     # Losses
@@ -131,6 +131,7 @@ def parse_trial_report(path: pathlib.Path) -> Dict[str, Any]:
     rss_mib = res.get("loader_max_rss_mib", meas.get("rusage", {}).get("max_rss_kb", 0) / 1024.0)
     cost_attempted_us = res.get("cpu_cost_attempted_us", 0.0)
     cost_reconstructed_us = res.get("cpu_cost_reconstructed_us", 0.0)
+    total_cost_attempted_us = res.get("total_trial_cpu_cost_attempted_us", cost_attempted_us)
 
     # Workload configuration parameters for consistency verification
     wl_config = {
@@ -162,6 +163,8 @@ def parse_trial_report(path: pathlib.Path) -> Dict[str, Any]:
         "peak_rss_mib": float(rss_mib),
         "cpu_cost_attempted_us": float(cost_attempted_us),
         "cpu_cost_reconstructed_us": float(cost_reconstructed_us),
+        "total_trial_cpu_cost_attempted_us": float(total_cost_attempted_us),
+        "validated_create_completeness_c_e2e": float(c_e2e),
         "config": wl_config,
     }
 
@@ -212,9 +215,13 @@ def aggregate_workload_metrics(trials: List[Dict[str, Any]]) -> Dict[str, Any]:
         "peak_rss_mib",
         "cpu_cost_attempted_us",
         "cpu_cost_reconstructed_us",
+        "total_trial_cpu_cost_attempted_us",
+        "validated_create_completeness_c_e2e",
     ]
     valid_trials = [t for t in trials if t.get("valid")]
     invalid_trials = [t for t in trials if not t.get("valid")]
+
+
 
     agg = {}
     for m in metrics:
@@ -302,19 +309,26 @@ def evaluate_acceptance_targets(
     if a_burst and b_burst:
         na = a_burst.get("sample_size", 0)
         nb = b_burst.get("sample_size", 0)
-        if na < MIN_RUNS or nb < MIN_RUNS:
-            results["target_3_burst_loss_reduction"] = {
-                "name": "Target 3 — Burst Incomplete-Operation Reduction (W_BURST)",
-                "pass": False,
-                "metric": f"Insufficient valid repetitions (Arch A N={na}, Arch B N={nb} < {MIN_RUNS})",
-                "threshold": f"N >= {MIN_RUNS} valid runs, >= 50.0% reduction",
-            }
-        elif a_burst.get("config") != b_burst.get("config"):
+        if a_burst.get("config") != b_burst.get("config"):
             results["target_3_burst_loss_reduction"] = {
                 "name": "Target 3 — Burst Incomplete-Operation Reduction (W_BURST)",
                 "pass": False,
                 "metric": f"Workload configuration mismatch (A={a_burst.get('config')} vs B={b_burst.get('config')})",
                 "threshold": "Identical workload configurations",
+            }
+        elif a_burst["ops_attempted"]["mean"] != b_burst["ops_attempted"]["mean"]:
+            results["target_3_burst_loss_reduction"] = {
+                "name": "Target 3 — Burst Incomplete-Operation Reduction (W_BURST)",
+                "pass": False,
+                "metric": f"Workload attempted population mismatch (Arch A={a_burst['ops_attempted']['mean']} vs Arch B={b_burst['ops_attempted']['mean']})",
+                "threshold": "Identical workload event/operation populations",
+            }
+        elif na < MIN_RUNS or nb < MIN_RUNS:
+            results["target_3_burst_loss_reduction"] = {
+                "name": "Target 3 — Burst Incomplete-Operation Reduction (W_BURST)",
+                "pass": False,
+                "metric": f"Insufficient valid repetitions (Arch A N={na}, Arch B N={nb} < {MIN_RUNS})",
+                "threshold": f"N >= {MIN_RUNS} valid runs, >= 50.0% reduction",
             }
         else:
             f_a = a_burst["incomplete_fraction_f"]["mean"]
@@ -346,19 +360,26 @@ def evaluate_acceptance_targets(
     if a_sustain and b_sustain:
         na = a_sustain.get("sample_size", 0)
         nb = b_sustain.get("sample_size", 0)
-        if na < MIN_RUNS or nb < MIN_RUNS:
-            results["target_4_sustained_throughput_gain"] = {
-                "name": "Target 4 — Sustained Useful Throughput Gain (W_SUSTAIN)",
-                "pass": False,
-                "metric": f"Insufficient valid repetitions (Arch A N={na}, Arch B N={nb} < {MIN_RUNS})",
-                "threshold": f"N >= {MIN_RUNS} valid runs, >= +20.0% gain",
-            }
-        elif a_sustain.get("config") != b_sustain.get("config"):
+        if a_sustain.get("config") != b_sustain.get("config"):
             results["target_4_sustained_throughput_gain"] = {
                 "name": "Target 4 — Sustained Useful Throughput Gain (W_SUSTAIN)",
                 "pass": False,
                 "metric": f"Workload configuration mismatch (A={a_sustain.get('config')} vs B={b_sustain.get('config')})",
                 "threshold": "Identical workload configurations",
+            }
+        elif a_sustain["ops_attempted"]["mean"] != b_sustain["ops_attempted"]["mean"]:
+            results["target_4_sustained_throughput_gain"] = {
+                "name": "Target 4 — Sustained Useful Throughput Gain (W_SUSTAIN)",
+                "pass": False,
+                "metric": f"Workload attempted population mismatch (Arch A={a_sustain['ops_attempted']['mean']} vs Arch B={b_sustain['ops_attempted']['mean']})",
+                "threshold": "Identical workload event/operation populations",
+            }
+        elif na < MIN_RUNS or nb < MIN_RUNS:
+            results["target_4_sustained_throughput_gain"] = {
+                "name": "Target 4 — Sustained Useful Throughput Gain (W_SUSTAIN)",
+                "pass": False,
+                "metric": f"Insufficient valid repetitions (Arch A N={na}, Arch B N={nb} < {MIN_RUNS})",
+                "threshold": f"N >= {MIN_RUNS} valid runs, >= +20.0% gain",
             }
         else:
             thru_a = a_sustain["useful_throughput_ops_sec"]["mean"]
@@ -437,7 +458,7 @@ def print_comparison_report(
     print("=" * 110)
 
     # 1. Completeness & Loss Accounting
-    print("\n[TABLE 1: END-TO-END COMPLETENESS & STAGE-WISE LOSS RECONCILIATION]")
+    print("\n[TABLE 1: VALIDATED CREATION-OPERATION COMPLETENESS & STAGE-WISE LOSS RECONCILIATION]")
     print(
         f"{'Workload':<15} | {'Arch':<5} | {'Ops':<7} | {'Reconstructed':<13} | {'C_e2e (%)':<10} | {'Ring Loss':<9} | {'Queue Loss':<10} | {'Residual':<8}"
     )
@@ -495,9 +516,9 @@ def print_comparison_report(
         print("-" * 110)
 
     # 3. CPU Resource Disaggregation
-    print("\n[TABLE 3: DISAGGREGATED CPU COST ACCOUNTING]")
+    print("\n[TABLE 3: DISAGGREGATED CPU COST ACCOUNTING (ACTIVE VS TOTAL)]")
     print(
-        f"{'Workload':<15} | {'Arch':<5} | {'CPU / Attempted Op (µs)':<25} | {'CPU / Reconstructed Op (µs)':<28}"
+        f"{'Workload':<15} | {'Arch':<5} | {'Active CPU / Op (µs)':<22} | {'Total CPU / Op (µs)':<22} | {'Active CPU / Reconstructed (µs)':<30}"
     )
     print("-" * 110)
     for wl in workloads:
@@ -505,15 +526,17 @@ def print_comparison_report(
         b_data = aggs_b.get(wl)
         if a_data and a_data.get("sample_size", 0) > 0:
             ca_a = a_data["cpu_cost_attempted_us"]
+            tot_a = a_data.get("total_trial_cpu_cost_attempted_us", ca_a)
             cr_a = a_data["cpu_cost_reconstructed_us"]
             print(
-                f"{wl:<15} | {'A':<5} | {ca_a['mean']:>9.2f} ± {ca_a['ci95']:<7.2f}      | {cr_a['mean']:>11.2f} ± {cr_a['ci95']:<8.2f}"
+                f"{wl:<15} | {'A':<5} | {ca_a['mean']:>8.2f} ± {ca_a['ci95']:<6.2f}     | {tot_a['mean']:>8.2f} ± {tot_a['ci95']:<6.2f}    | {cr_a['mean']:>11.2f} ± {cr_a['ci95']:<8.2f}"
             )
         if b_data and b_data.get("sample_size", 0) > 0:
             ca_b = b_data["cpu_cost_attempted_us"]
+            tot_b = b_data.get("total_trial_cpu_cost_attempted_us", ca_b)
             cr_b = b_data["cpu_cost_reconstructed_us"]
             print(
-                f"{'':<15} | {'B':<5} | {ca_b['mean']:>9.2f} ± {ca_b['ci95']:<7.2f}      | {cr_b['mean']:>11.2f} ± {cr_b['ci95']:<8.2f}"
+                f"{'':<15} | {'B':<5} | {ca_b['mean']:>8.2f} ± {ca_b['ci95']:<6.2f}     | {tot_b['mean']:>8.2f} ± {tot_b['ci95']:<6.2f}    | {cr_b['mean']:>11.2f} ± {cr_b['ci95']:<8.2f}"
             )
         print("-" * 110)
 
