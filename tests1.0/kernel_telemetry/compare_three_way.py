@@ -155,6 +155,18 @@ def print_three_way_report(
         print(f"         Observed:  {tgt['metric']}")
         print(f"         Threshold: {tgt['threshold']}")
 
+    # 5. Invalid Trial Summary (if any)
+    all_invalid = []
+    for arch, aggs in [("Arch A", aggs_a), ("Arch B", aggs_b), ("Arch C", aggs_c)]:
+        for wl, agg in aggs.items():
+            for inv in agg.get("invalid_trials", []):
+                all_invalid.append((arch, wl, inv.get("name"), inv.get("error")))
+
+    if all_invalid:
+        print("\n[WARNING: INVALID TRIALS DETECTED IN EVIDENCE]")
+        for arch, wl, name, err in all_invalid:
+            print(f"  - [{arch}] {wl} / {name}: {err}")
+
     print("\n" + "=" * 115)
     overall_c = (
         "[PASS] Architecture C satisfies ALL numerical acceptance targets."
