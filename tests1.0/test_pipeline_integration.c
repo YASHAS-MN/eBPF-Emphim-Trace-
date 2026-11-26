@@ -124,6 +124,9 @@ static void test_writer_and_records(void) {
     e.pid = 5678;
     e.timestamp_ns = 1500000;
     e.start_time_ns = 1000000;
+    e.inode_no = 771122;
+    e.dev_id = 2049;
+    e.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID;
     e.ret_val = 0;
     strncpy(e.name, "child_worker", sizeof(e.name) - 1);
     strncpy(e.path, "/tmp/drop.tmp", sizeof(e.path) - 1);
@@ -737,6 +740,164 @@ static void test_unlinked_executable_provenance(void) {
     assert(proc_memfd->out_edges->dst == node_memfd);
     assert(prov_find_node("fs_0_12345") == NULL);
 
+    // Scenario 7: Partially unavailable identity in execution and unlink
+    // 7a: Execution with inode valid, but dev missing/invalid
+    struct event e_part_exec1 = {0};
+    e_part_exec1.type = EVENT_PROCESS_EXEC;
+    e_part_exec1.pid = 1009;
+    e_part_exec1.start_time_ns = 8000000;
+    e_part_exec1.timestamp_ns = 8050000;
+    e_part_exec1.inode_no = 6001;
+    e_part_exec1.dev_id = 0;
+    e_part_exec1.flags = VFS_IDENTITY_INODE_VALID; // Missing DEV_VALID
+    strncpy(e_part_exec1.name, "part_dev_missing", sizeof(e_part_exec1.name) - 1);
+    prov_engine_process_event(&e_part_exec1);
+
+    struct prov_node *proc_part1 = prov_find_node("proc_1009_8000000");
+    assert(proc_part1 != NULL);
+    assert(proc_part1->out_edges == NULL); // No EDGE_FS_EXEC_SUCCESS
+    assert(prov_find_node("fs_0_6001") == NULL);
+
+    // 7b: Execution with dev valid, but inode missing/zero
+    struct event e_part_exec2 = {0};
+    e_part_exec2.type = EVENT_PROCESS_EXEC;
+    e_part_exec2.pid = 1010;
+    e_part_exec2.start_time_ns = 8100000;
+    e_part_exec2.timestamp_ns = 8150000;
+    e_part_exec2.inode_no = 0;
+    e_part_exec2.dev_id = 2049;
+    e_part_exec2.flags = VFS_IDENTITY_DEV_VALID; // Missing INODE_VALID
+    strncpy(e_part_exec2.name, "part_ino_missing", sizeof(e_part_exec2.name) - 1);
+    prov_engine_process_event(&e_part_exec2);
+
+    struct prov_node *proc_part2 = prov_find_node("proc_1010_8100000");
+    assert(proc_part2 != NULL);
+    assert(proc_part2->out_edges == NULL); // No EDGE_FS_EXEC_SUCCESS
+    assert(prov_find_node("fs_2049_0") == NULL);
+
+    // 7c: Fully valid execution to set up target for unlink tests
+    struct event e_part_exec3 = {0};
+    e_part_exec3.type = EVENT_PROCESS_EXEC;
+    e_part_exec3.pid = 1011;
+    e_part_exec3.start_time_ns = 8200000;
+    e_part_exec3.timestamp_ns = 8250000;
+    e_part_exec3.inode_no = 6003;
+    e_part_exec3.dev_id = 2049;
+    e_part_exec3.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID;
+    strncpy(e_part_exec3.name, "part_target", sizeof(e_part_exec3.name) - 1);
+    strncpy(e_part_exec3.path, "/tmp/part_target", sizeof(e_part_exec3.path) - 1);
+    prov_engine_process_event(&e_part_exec3);
+
+    struct prov_node *fs_target = prov_find_node("fs_2049_6003");
+    assert(fs_target != NULL);
+    assert(fs_target->fs.is_unlinked == false);
+
+    // 7d: Unlink with matching path and inode, but dev missing/invalid (flags = INODE_VALID only)
+    struct event e_part_unlink1 = {0};
+    e_part_unlink1.type = EVENT_VFS_UNLINK_COMPLETED;
+    e_part_unlink1.pid = 1000;
+    e_part_unlink1.start_time_ns = 900000;
+    e_part_unlink1.timestamp_ns = 8300000;
+    e_part_unlink1.inode_no = 6003;
+    e_part_unlink1.dev_id = 0;
+    e_part_unlink1.flags = VFS_IDENTITY_INODE_VALID;
+    e_part_unlink1.ret_val = 0;
+    strncpy(e_part_unlink1.path, "/tmp/part_target", sizeof(e_part_unlink1.path) - 1);
+    prov_engine_process_event(&e_part_unlink1);
+
+    // Invalid unlink MUST NOT merge into fs_2049_6003!
+    assert(fs_target->fs.is_unlinked == false);
+    assert(prov_find_node("fs_0_6003") == NULL);
+
+    // 7e: Unlink with matching path and dev, but inode missing/zero (flags = DEV_VALID only)
+    struct event e_part_unlink2 = {0};
+    e_part_unlink2.type = EVENT_VFS_UNLINK_COMPLETED;
+    e_part_unlink2.pid = 1000;
+    e_part_unlink2.start_time_ns = 900000;
+    e_part_unlink2.timestamp_ns = 8350000;
+    e_part_unlink2.inode_no = 0;
+    e_part_unlink2.dev_id = 2049;
+    e_part_unlink2.flags = VFS_IDENTITY_DEV_VALID;
+    e_part_unlink2.ret_val = 0;
+    strncpy(e_part_unlink2.path, "/tmp/part_target", sizeof(e_part_unlink2.path) - 1);
+    prov_engine_process_event(&e_part_unlink2);
+
+    assert(fs_target->fs.is_unlinked == false);
+    assert(prov_find_node("fs_2049_0") == NULL);
+
+    // 7f: Completely missing unlink identity (flags = 0, inode_no = 0, dev_id = 0)
+    struct event e_part_unlink3 = {0};
+    e_part_unlink3.type = EVENT_VFS_UNLINK_COMPLETED;
+    e_part_unlink3.pid = 1000;
+    e_part_unlink3.start_time_ns = 900000;
+    e_part_unlink3.timestamp_ns = 8400000;
+    e_part_unlink3.inode_no = 0;
+    e_part_unlink3.dev_id = 0;
+    e_part_unlink3.flags = 0;
+    e_part_unlink3.ret_val = 0;
+    strncpy(e_part_unlink3.path, "/tmp/part_target", sizeof(e_part_unlink3.path) - 1);
+    prov_engine_process_event(&e_part_unlink3);
+
+    assert(fs_target->fs.is_unlinked == false);
+    assert(prov_find_node("fs_0_0") == NULL);
+
+    // Scenario 8: Identical inode numbers on different devices
+    // Process 1012 execs /mnt/devA/bin (Inode 7001, Dev 2049)
+    struct event e_devA_exec = {0};
+    e_devA_exec.type = EVENT_PROCESS_EXEC;
+    e_devA_exec.pid = 1012;
+    e_devA_exec.start_time_ns = 8500000;
+    e_devA_exec.timestamp_ns = 8550000;
+    e_devA_exec.inode_no = 7001;
+    e_devA_exec.dev_id = 2049;
+    e_devA_exec.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID;
+    strncpy(e_devA_exec.name, "shared_ino_worker", sizeof(e_devA_exec.name) - 1);
+    strncpy(e_devA_exec.path, "/mnt/devA/bin", sizeof(e_devA_exec.path) - 1);
+    prov_engine_process_event(&e_devA_exec);
+
+    // Process 1013 execs /mnt/devB/bin (Inode 7001, Dev 2050 - distinct device!)
+    struct event e_devB_exec = {0};
+    e_devB_exec.type = EVENT_PROCESS_EXEC;
+    e_devB_exec.pid = 1013;
+    e_devB_exec.start_time_ns = 8600000;
+    e_devB_exec.timestamp_ns = 8650000;
+    e_devB_exec.inode_no = 7001;
+    e_devB_exec.dev_id = 2050;
+    e_devB_exec.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID;
+    strncpy(e_devB_exec.name, "shared_ino_worker", sizeof(e_devB_exec.name) - 1);
+    strncpy(e_devB_exec.path, "/mnt/devB/bin", sizeof(e_devB_exec.path) - 1);
+    prov_engine_process_event(&e_devB_exec);
+
+    struct prov_node *fs_devA = prov_find_node("fs_2049_7001");
+    struct prov_node *fs_devB = prov_find_node("fs_2050_7001");
+    assert(fs_devA != NULL && fs_devB != NULL);
+    assert(fs_devA != fs_devB); // Two separate nodes despite identical inode 7001!
+    assert(fs_devA->fs.is_unlinked == false);
+    assert(fs_devB->fs.is_unlinked == false);
+
+    struct prov_node *proc_devA = prov_find_node("proc_1012_8500000");
+    struct prov_node *proc_devB = prov_find_node("proc_1013_8600000");
+    assert(proc_devA != NULL && proc_devB != NULL);
+    assert(proc_devA->out_edges != NULL && proc_devA->out_edges->dst == fs_devA);
+    assert(proc_devB->out_edges != NULL && proc_devB->out_edges->dst == fs_devB);
+
+    // Unlink only on Device 2049
+    struct event e_devA_unlink = {0};
+    e_devA_unlink.type = EVENT_VFS_UNLINK_COMPLETED;
+    e_devA_unlink.pid = 1000;
+    e_devA_unlink.start_time_ns = 900000;
+    e_devA_unlink.timestamp_ns = 8700000;
+    e_devA_unlink.inode_no = 7001;
+    e_devA_unlink.dev_id = 2049;
+    e_devA_unlink.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID;
+    e_devA_unlink.ret_val = 0; // Success
+    strncpy(e_devA_unlink.path, "/mnt/devA/bin", sizeof(e_devA_unlink.path) - 1);
+    prov_engine_process_event(&e_devA_unlink);
+
+    // Verify Device A file marked unlinked, while Device B file remains untouched!
+    assert(fs_devA->fs.is_unlinked == true);
+    assert(fs_devB->fs.is_unlinked == false);
+
     // Test Export Capabilities with EDGE_FS_EXEC_SUCCESS
     assert(prov_engine_export_dot(TEST_DOT_FILE) == 0);
     assert(prov_engine_export_json(TEST_JSON_FILE) == 0);
@@ -748,7 +909,7 @@ static void test_unlinked_executable_provenance(void) {
     unlink("/tmp/test_filtered.json");
 
     prov_engine_destroy();
-    printf("  All 6 unlinked executable provenance and regression scenarios verified successfully!\n");
+    printf("  All 8 unlinked executable provenance and regression scenarios verified successfully!\n");
 }
 
 int main(void) {

@@ -284,6 +284,9 @@ struct prov_node *prov_upsert_memfd(uint64_t object_token, uint32_t creator_pid,
 
 struct prov_node *prov_upsert_fs(uint64_t inode_no, uint64_t dev_id, uint32_t mnt_ns_id, const char *path)
 {
+    if (inode_no == 0 || dev_id == 0)
+        return NULL;
+
     char id[128];
     snprintf(id, sizeof(id), "fs_%llu_%llu", (unsigned long long)dev_id, (unsigned long long)inode_no);
 
@@ -394,8 +397,15 @@ void prov_engine_process_event(const struct event *e)
             snprintf(proc->proc.comm, sizeof(proc->proc.comm), "%s", e->name);
         }
 
-        /* If regular executable identity is valid and present, correlate process generation with backing FS object */
-        if (e->object_token == 0 && (e->flags & VFS_IDENTITY_INODE_VALID) && e->inode_no != 0) {
+        /* If regular executable identity is valid and present (both inode and device must be valid),
+         * correlate process generation with backing FS object */
+        bool fs_id_valid = (e->object_token == 0) &&
+                           ((e->flags & (VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID)) ==
+                            (VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID)) &&
+                           (e->inode_no != 0) &&
+                           (e->dev_id != 0);
+
+        if (fs_id_valid) {
             const char *path = e->path[0] ? e->path : (e->name[0] ? e->name : "<unknown>");
             struct prov_node *fs = prov_upsert_fs(e->inode_no, e->dev_id, e->mnt_ns_id, path);
             if (proc && fs) {
@@ -589,17 +599,30 @@ void prov_engine_process_event(const struct event *e)
     case EVENT_VFS_RMDIR_COMPLETED: {
         struct prov_node *proc = prov_upsert_process(e->pid, e->start_time_ns, e->ppid, NULL);
         const char *path = e->path[0] ? e->path : (e->name[0] ? e->name : "<unknown>");
-        struct prov_node *fs = prov_upsert_fs(e->inode_no, e->dev_id, e->mnt_ns_id, path);
-        if (fs && e->ret_val == 0)
-            fs->fs.is_unlinked = true;
 
-        struct prov_edge_attr attr = {
-            .timestamp_ns = e->timestamp_ns,
-            .fd = e->dirfd,
-        };
-        snprintf(attr.unlink.path, sizeof(attr.unlink.path), "%s", path);
-        snprintf(attr.unlink.status, sizeof(attr.unlink.status), "%s", (e->ret_val == 0) ? "SUCCESS" : "FAILED");
-        prov_add_edge(proc, fs, EDGE_UNLINK, &attr);
+        /* Require both inode and device validity to prevent invalid unlink identities
+         * from being merged into resolved filesystem objects */
+        bool fs_id_valid = (e->inode_no != 0) && (e->dev_id != 0);
+        if (e->flags != 0) {
+            if ((e->flags & (VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID)) !=
+                (VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID)) {
+                fs_id_valid = false;
+            }
+        }
+
+        if (fs_id_valid) {
+            struct prov_node *fs = prov_upsert_fs(e->inode_no, e->dev_id, e->mnt_ns_id, path);
+            if (fs && e->ret_val == 0)
+                fs->fs.is_unlinked = true;
+
+            struct prov_edge_attr attr = {
+                .timestamp_ns = e->timestamp_ns,
+                .fd = e->dirfd,
+            };
+            snprintf(attr.unlink.path, sizeof(attr.unlink.path), "%s", path);
+            snprintf(attr.unlink.status, sizeof(attr.unlink.status), "%s", (e->ret_val == 0) ? "SUCCESS" : "FAILED");
+            prov_add_edge(proc, fs, EDGE_UNLINK, &attr);
+        }
         break;
     }
 
