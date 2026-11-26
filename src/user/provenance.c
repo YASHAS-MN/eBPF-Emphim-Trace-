@@ -1101,9 +1101,9 @@ int prov_engine_export_dot(const char *filepath)
     }
 
     render_graph_dot(f, &full_graph);
-    fclose(f);
+    int err = (fflush(f) != 0 || ferror(f) != 0 || fclose(f) != 0) ? -EIO : 0;
     prov_graph_free(&full_graph);
-    return 0;
+    return err;
 }
 
 int prov_engine_export_json(const char *filepath)
@@ -1123,9 +1123,9 @@ int prov_engine_export_json(const char *filepath)
     }
 
     render_graph_json(f, &full_graph);
-    fclose(f);
+    int err = (fflush(f) != 0 || ferror(f) != 0 || fclose(f) != 0) ? -EIO : 0;
     prov_graph_free(&full_graph);
-    return 0;
+    return err;
 }
 
 int prov_engine_export_filtered_dot(const char *filepath, uint32_t target_pid, uint64_t target_token)
@@ -1145,9 +1145,9 @@ int prov_engine_export_filtered_dot(const char *filepath, uint32_t target_pid, u
     }
 
     render_graph_dot(f, &filtered);
-    fclose(f);
+    int err = (fflush(f) != 0 || ferror(f) != 0 || fclose(f) != 0) ? -EIO : 0;
     prov_graph_free(&filtered);
-    return 0;
+    return err;
 }
 
 int prov_engine_export_filtered_json(const char *filepath, uint32_t target_pid, uint64_t target_token)
@@ -1167,9 +1167,9 @@ int prov_engine_export_filtered_json(const char *filepath, uint32_t target_pid, 
     }
 
     render_graph_json(f, &filtered);
-    fclose(f);
+    int err = (fflush(f) != 0 || ferror(f) != 0 || fclose(f) != 0) ? -EIO : 0;
     prov_graph_free(&filtered);
-    return 0;
+    return err;
 }
 
 static int compare_edge_timestamps(const void *a, const void *b)
@@ -1378,9 +1378,9 @@ int prov_engine_export_timeline(const char *filepath, uint32_t target_pid, uint6
         }
     }
 
-    fclose(f);
+    int err = (fflush(f) != 0 || ferror(f) != 0 || fclose(f) != 0) ? -EIO : 0;
     prov_graph_free(&filtered);
-    return 0;
+    return err;
 }
 
 void prov_engine_destroy(void)

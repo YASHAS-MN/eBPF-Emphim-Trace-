@@ -27,7 +27,6 @@ static char g_evidence_path[256] = "ephimtrace.evid";
 static uint64_t g_max_bytes = EVIDENCE_DEFAULT_MAX_BYTES;
 static uint32_t g_target_pid = 0;
 static uint64_t g_sample_size_mismatches = 0;
-static uint64_t g_capture_write_errors = 0;
 
 enum log_level {
     LOG_LEVEL_ERROR = 0,
@@ -46,7 +45,7 @@ static int quiet_mode = 0;
 
 #define log_info(fmt, ...) \
     do { \
-        if (current_log_level >= LOG_LEVEL_INFO) \
+        if (!quiet_mode && current_log_level >= LOG_LEVEL_INFO) \
             fprintf(stdout, fmt "\n", ##__VA_ARGS__); \
     } while (0)
 
@@ -644,8 +643,8 @@ static int handle_event(void *ctx, void *data, size_t size)
 {
     (void)ctx;
 
-    /* Validate sample size before any memory access */
-    if (!data || size < sizeof(struct event)) {
+    /* Validate exact sample size before any memory access */
+    if (!data || size != sizeof(struct event)) {
         g_sample_size_mismatches++;
         return 0;
     }
@@ -657,7 +656,8 @@ static int handle_event(void *ctx, void *data, size_t size)
     if (g_writer_active) {
         int w_rc = evidence_writer_write(&g_evidence_writer, e, now_ns);
         if (w_rc != 0) {
-            g_capture_write_errors++;
+            log_error("Evidence writer fatal write failure (%s): halting capture loop", strerror(errno));
+            running = 0;
         }
     }
 
@@ -1416,14 +1416,14 @@ static uint32_t filter_pid = 0;
 static uint64_t filter_token = 0;
 static const char *timeline_filepath = "ephimtrace_timeline.md";
 
-static void print_session_manifest(int cnt_fd, int close_rc)
+static int print_session_manifest(int cnt_fd, int close_rc, int poll_errors, int drain_errors, int sync_errors)
 {
     printf("\n===============================================================\n");
     printf("           EphimTrace Telemetry Collection Summary             \n");
     printf("===============================================================\n");
     printf("Evidence File:             %s\n", g_evidence_path);
     printf("Session Target PID:        %u (%s)\n",
-           g_target_pid, g_target_pid ? "targeted" : "all processes");
+           g_target_pid, g_target_pid ? "workload metadata (collection is system-wide)" : "all processes");
     printf("Storage Bound:             %llu bytes\n", (unsigned long long)g_max_bytes);
     printf("Storage Written:           %llu bytes\n", (unsigned long long)g_evidence_writer.stats.storage_bytes);
     printf("Records Received:          %llu\n", (unsigned long long)g_evidence_writer.stats.records_received);
@@ -1435,28 +1435,84 @@ static void print_session_manifest(int cnt_fd, int close_rc)
     printf("---------------------------------------------------------------\n");
 
     /* Kernel loss counters */
+    bool counter_avail[CNT_MAX_COUNTERS] = {false};
     uint64_t c[CNT_MAX_COUNTERS] = {0};
     if (cnt_fd >= 0) {
         for (int i = 0; i < CNT_MAX_COUNTERS; i++) {
             uint32_t key = (uint32_t)i;
-            bpf_map_lookup_elem(cnt_fd, &key, &c[i]);
+            if (bpf_map_lookup_elem(cnt_fd, &key, &c[i]) == 0) {
+                counter_avail[i] = true;
+            }
         }
     }
-    printf("Kernel Registry Drops:     %llu\n", (unsigned long long)c[CNT_REG_MAP_FULL_DROP]);
-    printf("Kernel Token Errors:       %llu\n", (unsigned long long)c[CNT_REG_TOKEN_ERR]);
-    printf("Kernel Token Mismatches:   %llu\n", (unsigned long long)c[CNT_REG_TOKEN_MISMATCH]);
+    if (counter_avail[CNT_REG_MAP_FULL_DROP]) {
+        printf("Kernel Registry Drops:     %llu\n", (unsigned long long)c[CNT_REG_MAP_FULL_DROP]);
+    } else {
+        printf("Kernel Registry Drops:     <unavailable via BPF map lookup>\n");
+    }
+    if (counter_avail[CNT_REG_TOKEN_ERR]) {
+        printf("Kernel Token Errors:       %llu\n", (unsigned long long)c[CNT_REG_TOKEN_ERR]);
+    } else {
+        printf("Kernel Token Errors:       <unavailable via BPF map lookup>\n");
+    }
+    if (counter_avail[CNT_REG_TOKEN_MISMATCH]) {
+        printf("Kernel Token Mismatches:   %llu\n", (unsigned long long)c[CNT_REG_TOKEN_MISMATCH]);
+    } else {
+        printf("Kernel Token Mismatches:   <unavailable via BPF map lookup>\n");
+    }
     printf("Sample Size Mismatches:    %llu\n", (unsigned long long)g_sample_size_mismatches);
-    printf("Storage Write Errors:      %llu\n",
-           (unsigned long long)(g_evidence_writer.stats.write_errors + g_capture_write_errors));
+    printf("Storage Write Errors:      %llu\n", (unsigned long long)g_evidence_writer.stats.write_errors);
+    printf("Ring Buffer Poll Errors:   %d\n", poll_errors);
+    printf("Ring Buffer Drain Errors:  %d\n", drain_errors);
+    printf("Intermediate Sync Errors:  %d\n", sync_errors);
     printf("Ring Buffer Drops:         <unavailable via kernel ring_buffer API>\n");
     printf("---------------------------------------------------------------\n");
 
-    bool success = (close_rc == 0 && !g_evidence_writer.error_occurred && g_capture_write_errors == 0);
-    printf("Session Status:            %s\n",
-           success ? "COMPLETE (Successfully synchronized to disk)" :
-                     "INCOMPLETE / FAILED (Storage errors occurred)");
+    bool success = (close_rc == 0 &&
+                    !g_evidence_writer.error_occurred &&
+                    g_evidence_writer.stats.write_errors == 0 &&
+                    g_sample_size_mismatches == 0 &&
+                    poll_errors == 0 &&
+                    drain_errors == 0 &&
+                    sync_errors == 0);
+
+    /* Construct and persist private session manifest */
+    struct evidence_session_manifest manifest;
+    memset(&manifest, 0, sizeof(manifest));
+    manifest.version = 1;
+    manifest.target_pid = g_target_pid;
+    manifest.session_start_ns = g_evidence_writer.session_start_ns;
+    manifest.session_end_ns = evidence_time_now_ns();
+    manifest.record_count = g_evidence_writer.stats.records_synced;
+    manifest.storage_bytes = g_evidence_writer.stats.storage_bytes;
+    manifest.finalized = success;
+    manifest.synchronized = (close_rc == 0 && !g_evidence_writer.error_occurred);
+    manifest.sample_size_mismatches = g_sample_size_mismatches;
+    manifest.write_errors = g_evidence_writer.stats.write_errors;
+    manifest.poll_errors = (uint64_t)poll_errors;
+    manifest.drain_errors = (uint64_t)drain_errors;
+    manifest.reg_map_full_drop = counter_avail[CNT_REG_MAP_FULL_DROP] ? (int64_t)c[CNT_REG_MAP_FULL_DROP] : -1;
+    manifest.token_alloc_err = counter_avail[CNT_REG_TOKEN_ERR] ? (int64_t)c[CNT_REG_TOKEN_ERR] : -1;
+    manifest.token_mismatch = counter_avail[CNT_REG_TOKEN_MISMATCH] ? (int64_t)c[CNT_REG_TOKEN_MISMATCH] : -1;
+    snprintf(manifest.ring_buffer_drops, sizeof(manifest.ring_buffer_drops),
+             "unavailable via kernel ring_buffer API");
+
+    int manifest_rc = evidence_write_manifest(g_evidence_path, &manifest);
+    if (manifest_rc == 0) {
+        printf("Private Session Manifest:  %s.manifest (Persisted & synchronized, mode 0600)\n", g_evidence_path);
+    } else {
+        printf("Private Session Manifest:  FAILED TO PERSIST: error %d (%s)\n",
+               manifest_rc, strerror(manifest_rc < 0 ? -manifest_rc : manifest_rc));
+        success = false;
+    }
+
+    printf("Session Finalization:      %s\n",
+           success ? "COMPLETE (Cleanly detached, drained, and synchronized)" :
+                     "INCOMPLETE / FAILED (Errors occurred during capture or finalization)");
     printf("===============================================================\n\n");
     fflush(stdout);
+
+    return success ? 0 : 1;
 }
 
 int main(int argc, char **argv)
@@ -1513,7 +1569,9 @@ int main(int argc, char **argv)
             printf("Options:\n");
             printf("  -o, --output <file.evid>    Path to write binary evidence file\n");
             printf("                              (default: ephimtrace.evid)\n");
-            printf("  -p, --filter-pid <pid>      Target workload PID to record in session metadata\n");
+            printf("  -p, --filter-pid <pid>      Target workload PID recorded as session metadata\n");
+            printf("                              (NOTE: collection is system-wide; -p does not\n");
+            printf("                              filter in-kernel. Filter during replay via -p)\n");
             printf("                              (default: 0 = monitor all processes)\n");
             printf("  -b, --max-bytes <bytes>     Maximum evidence file size bound in bytes\n");
             printf("                              (default: 1073741824 = 1 GiB)\n");
@@ -1567,6 +1625,7 @@ int main(int argc, char **argv)
     }
 
     signal(SIGINT, handle_sigint);
+    signal(SIGTERM, handle_sigint);
     signal(SIGUSR1, handle_sigusr1);
     signal(SIGUSR2, handle_sigusr2);
 
@@ -1861,6 +1920,9 @@ int main(int argc, char **argv)
 
     time_t last_counter_print = time(NULL);
 
+    int poll_errors = 0;
+    int sync_errors = 0;
+
     while (running) {
         int poll_err = ring_buffer__poll(rb, 250);
 
@@ -1872,10 +1934,15 @@ int main(int argc, char **argv)
         if (sigusr2_received) {
             sigusr2_received = 0;
             if (g_writer_active) {
-                evidence_writer_sync(&g_evidence_writer);
-                log_info("[EVIDENCE] Intermediate sync complete: %llu records written (%llu bytes)",
-                         (unsigned long long)g_evidence_writer.stats.records_written,
-                         (unsigned long long)g_evidence_writer.stats.storage_bytes);
+                int sync_rc = evidence_writer_sync(&g_evidence_writer);
+                if (sync_rc == 0) {
+                    log_info("[EVIDENCE] Intermediate sync complete: %llu records written (%llu bytes)",
+                             (unsigned long long)g_evidence_writer.stats.records_written,
+                             (unsigned long long)g_evidence_writer.stats.storage_bytes);
+                } else {
+                    log_error("[EVIDENCE] Intermediate sync FAILED: %d (%s)", sync_rc, strerror(errno));
+                    sync_errors++;
+                }
             }
         }
 
@@ -1890,6 +1957,7 @@ int main(int argc, char **argv)
 
         if (poll_err < 0) {
             log_error("Ring buffer polling failed: %d", poll_err);
+            poll_errors++;
             break;
         }
     }
@@ -1921,9 +1989,21 @@ int main(int argc, char **argv)
 
     /* 2. Drain: Consume all pending events remaining in the ring buffer */
     log_info("Draining remaining events from kernel ring buffer...");
+    int drain_errors = 0;
     if (rb) {
-        while (ring_buffer__consume(rb) > 0) {
-            /* Handled in handle_event */
+        while (1) {
+            int drain_rc = ring_buffer__consume(rb);
+            if (drain_rc > 0) {
+                continue;
+            } else if (drain_rc == 0) {
+                break;
+            } else if (drain_rc == -EINTR) {
+                continue;
+            } else {
+                log_error("Ring buffer drain failed: %d", drain_rc);
+                drain_errors++;
+                break;
+            }
         }
     }
 
@@ -1936,9 +2016,9 @@ int main(int argc, char **argv)
     }
 
     /* 4. Display Session Manifest & Loss Accounting */
-    print_session_manifest(cnt_fd, close_rc);
+    int manifest_err = print_session_manifest(cnt_fd, close_rc, poll_errors, drain_errors, sync_errors);
 
-    bool session_ok = (close_rc == 0 && !g_evidence_writer.error_occurred && g_capture_write_errors == 0);
+    bool session_ok = (manifest_err == 0);
     ret = session_ok ? 0 : 2;
 
 cleanup:
