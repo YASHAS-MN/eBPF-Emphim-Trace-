@@ -229,6 +229,12 @@ struct prov_edge *prov_add_edge(struct prov_node *src, struct prov_node *dst,
                                 enum prov_edge_type type,
                                 const struct prov_edge_attr *attr);
 
+/* Search mode & comparison telemetry for adjacency lookup experiment */
+void prov_engine_set_search_mode(int mode);
+int prov_engine_get_search_mode(void);
+uint64_t prov_engine_get_edge_comparisons(void);
+void prov_engine_reset_edge_comparisons(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -434,14 +434,41 @@ def build():
                                                         name, e->inode_no, e->dev_id);
             /* Check if creation edge already recorded */
             bool has_create_edge = false;
-            if (proc) {
-                struct prov_edge *edge = proc->out_edges;
-                while (edge) {
-                    if (edge->type == EDGE_MEMFD_CREATE && edge->dst == memfd) {
-                        has_create_edge = true;
-                        break;
+            if (g_search_mode == 1) {
+                /* [REFERENCE IMPLEMENTATION - Outgoing Adjacency Search]:
+                 * Traverses proc->out_edges. Under sustained single-process workloads,
+                 * proc->out_edges grows to O(N) edges, making duplicate creation checks
+                 * quadratic overall. Preserved here as an exact behavioral reference.
+                 */
+                if (proc) {
+                    struct prov_edge *edge = proc->out_edges;
+                    while (edge) {
+                        g_edge_comparison_count++;
+                        if (edge->type == EDGE_MEMFD_CREATE && edge->dst == memfd) {
+                            has_create_edge = true;
+                            break;
+                        }
+                        edge = edge->next_out;
                     }
-                    edge = edge->next_out;
+                }
+            } else {
+                /* [INCOMING ADJACENCY SEARCH - Default]:
+                 * Traverses memfd->in_edges. Each memfd object node has bounded in-degree
+                 * (typically 0 or 1 creation edge), reducing duplicate check from O(N_process_edges)
+                 * to O(1) while matching the exact same (src == proc, dst == memfd, EDGE_MEMFD_CREATE)
+                 * directed relationship and preserving graph semantics, attributes, and insertion order.
+                 * Null nodes are safely guarded.
+                 */
+                if (proc && memfd) {
+                    struct prov_edge *edge = memfd->in_edges;
+                    while (edge) {
+                        g_edge_comparison_count++;
+                        if (edge->type == EDGE_MEMFD_CREATE && edge->src == proc) {
+                            has_create_edge = true;
+                            break;
+                        }
+                        edge = edge->next_in;
+                    }
                 }
             }
             if (!has_create_edge) {
@@ -502,8 +529,8 @@ def build():
             struct prov_node *pre_proc = prov_find_node(proc_id);
             bool pre_edge_existed = false;
             if (pre_proc && pre_memfd) {
-                for (struct prov_edge *ed = pre_proc->out_edges; ed; ed = ed->next_out) {
-                    if (ed->type == EDGE_MEMFD_CREATE && ed->dst == pre_memfd) {
+                for (struct prov_edge *ed = pre_memfd->in_edges; ed; ed = ed->next_in) {
+                    if (ed->type == EDGE_MEMFD_CREATE && ed->src == pre_proc) {
                         pre_edge_existed = true;
                         break;
                     }
@@ -521,14 +548,29 @@ def build():
                 memfd = NULL;
             }
             bool has_create_edge = false;
-            if (proc && memfd) {
-                struct prov_edge *edge = proc->out_edges;
-                while (edge) {
-                    if (edge->type == EDGE_MEMFD_CREATE && edge->dst == memfd) {
-                        has_create_edge = true;
-                        break;
+            if (g_search_mode == 1) {
+                if (proc) {
+                    struct prov_edge *edge = proc->out_edges;
+                    while (edge) {
+                        g_edge_comparison_count++;
+                        if (edge->type == EDGE_MEMFD_CREATE && edge->dst == memfd) {
+                            has_create_edge = true;
+                            break;
+                        }
+                        edge = edge->next_out;
                     }
-                    edge = edge->next_out;
+                }
+            } else {
+                if (proc && memfd) {
+                    struct prov_edge *edge = memfd->in_edges;
+                    while (edge) {
+                        g_edge_comparison_count++;
+                        if (edge->type == EDGE_MEMFD_CREATE && edge->src == proc) {
+                            has_create_edge = true;
+                            break;
+                        }
+                        edge = edge->next_in;
+                    }
                 }
             }
             if (!has_create_edge && proc && memfd) {
@@ -547,11 +589,13 @@ def build():
                 diag_record_p_outcome(P_STATUS_EDGE_SUPPRESSED);
             } else {
                 bool edge_verified = false;
-                for (struct prov_edge *ed = proc->out_edges; ed; ed = ed->next_out) {
-                    if (ed->type == EDGE_MEMFD_CREATE && ed->dst == memfd &&
-                        ed->attr.fd == e->fd && ed->attr.timestamp_ns == e->timestamp_ns) {
-                        edge_verified = true;
-                        break;
+                if (memfd) {
+                    for (struct prov_edge *ed = memfd->in_edges; ed; ed = ed->next_in) {
+                        if (ed->type == EDGE_MEMFD_CREATE && ed->src == proc &&
+                            ed->attr.fd == e->fd && ed->attr.timestamp_ns == e->timestamp_ns) {
+                            edge_verified = true;
+                            break;
+                        }
                     }
                 }
                 diag_record_p_outcome(edge_verified ? P_STATUS_SUCCESS : P_STATUS_FAILED);
@@ -705,7 +749,7 @@ def build():
             "-I",
             "src/user",
             str(HERE / "replay_provenance.c"),
-            str(BUILD / "provenance.diag.c"),
+            "src/user/provenance.c",
             "-o",
             str(BUILD / "replay_provenance"),
         ]

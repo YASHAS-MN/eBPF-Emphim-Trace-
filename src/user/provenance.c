@@ -27,6 +27,8 @@ static size_t g_node_count = 0;
 static struct prov_edge *g_edges_head = NULL;
 static struct prov_edge *g_edges_tail = NULL;
 static size_t g_edge_count = 0;
+static uint64_t g_edge_comparison_count = 0;
+static int g_search_mode = 0; /* 0 = incoming adjacency (default), 1 = outgoing adjacency (reference) */
 
 /* FNV-1a hash function */
 static inline uint32_t hash_str(const char *str)
@@ -117,6 +119,7 @@ int prov_engine_init(void)
     g_edges_head = NULL;
     g_edges_tail = NULL;
     g_edge_count = 0;
+    g_edge_comparison_count = 0;
 
     return 0;
 }
@@ -127,6 +130,26 @@ void prov_engine_get_counts(size_t *node_count, size_t *edge_count)
         *node_count = g_node_count;
     if (edge_count)
         *edge_count = g_edge_count;
+}
+
+void prov_engine_set_search_mode(int mode)
+{
+    g_search_mode = mode;
+}
+
+int prov_engine_get_search_mode(void)
+{
+    return g_search_mode;
+}
+
+uint64_t prov_engine_get_edge_comparisons(void)
+{
+    return g_edge_comparison_count;
+}
+
+void prov_engine_reset_edge_comparisons(void)
+{
+    g_edge_comparison_count = 0;
 }
 
 struct prov_node *prov_find_node(const char *id)
@@ -405,14 +428,41 @@ void prov_engine_process_event(const struct event *e)
                                                         name, e->inode_no, e->dev_id);
             /* Check if creation edge already recorded */
             bool has_create_edge = false;
-            if (proc) {
-                struct prov_edge *edge = proc->out_edges;
-                while (edge) {
-                    if (edge->type == EDGE_MEMFD_CREATE && edge->dst == memfd) {
-                        has_create_edge = true;
-                        break;
+            if (g_search_mode == 1) {
+                /* [REFERENCE IMPLEMENTATION - Outgoing Adjacency Search]:
+                 * Traverses proc->out_edges. Under sustained single-process workloads,
+                 * proc->out_edges grows to O(N) edges, making duplicate creation checks
+                 * quadratic overall. Preserved here as an exact behavioral reference.
+                 */
+                if (proc) {
+                    struct prov_edge *edge = proc->out_edges;
+                    while (edge) {
+                        g_edge_comparison_count++;
+                        if (edge->type == EDGE_MEMFD_CREATE && edge->dst == memfd) {
+                            has_create_edge = true;
+                            break;
+                        }
+                        edge = edge->next_out;
                     }
-                    edge = edge->next_out;
+                }
+            } else {
+                /* [INCOMING ADJACENCY SEARCH - Default]:
+                 * Traverses memfd->in_edges. Each memfd object node has bounded in-degree
+                 * (typically 0 or 1 creation edge), reducing duplicate check from O(N_process_edges)
+                 * to O(1) while matching the exact same (src == proc, dst == memfd, EDGE_MEMFD_CREATE)
+                 * directed relationship and preserving graph semantics, attributes, and insertion order.
+                 * Null nodes are safely guarded.
+                 */
+                if (proc && memfd) {
+                    struct prov_edge *edge = memfd->in_edges;
+                    while (edge) {
+                        g_edge_comparison_count++;
+                        if (edge->type == EDGE_MEMFD_CREATE && edge->src == proc) {
+                            has_create_edge = true;
+                            break;
+                        }
+                        edge = edge->next_in;
+                    }
                 }
             }
             if (!has_create_edge) {
@@ -1345,6 +1395,7 @@ void prov_engine_destroy(void)
     g_edges_head = NULL;
     g_edges_tail = NULL;
     g_edge_count = 0;
+    g_edge_comparison_count = 0;
 
     /* Free nodes */
     struct prov_node *node = g_nodes_head;

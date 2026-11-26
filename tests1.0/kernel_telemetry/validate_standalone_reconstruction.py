@@ -10,7 +10,7 @@ Validation criteria:
 2. Number of records processed (matches 420,074 verified records).
 3. Provenance node and edge counts.
 4. Graph export success and semantic correctness against 60,000 ground truth syscall operations.
-5. Reconstruction duration and peak memory (RSS).
+5. Reconstruction duration, edge comparisons, and peak memory (RSS) within 120-second bounded execution limit.
 6. Repeatability across independent runs from identical immutable evidence.
 """
 
@@ -61,20 +61,41 @@ def parse_time_output(stderr_text: str):
 
 
 def execute_replay_run(
-    replay_bin: pathlib.Path, evid_path: pathlib.Path, dot_out: pathlib.Path
+    replay_bin: pathlib.Path,
+    evid_path: pathlib.Path,
+    dot_out: pathlib.Path,
+    timeout_sec: float = 120.0,
+    search_mode: str = "incoming",
 ):
-    """Executes replay_provenance with /usr/bin/time -v and captures outputs."""
+    """Executes replay_provenance with /usr/bin/time -v and captures outputs within timeout."""
     time_bin = "/usr/bin/time"
-    cmd = [time_bin, "-v", str(replay_bin), str(evid_path), str(dot_out)]
+    mode_flag = f"--{search_mode}"
+    cmd = [time_bin, "-v", str(replay_bin), str(evid_path), str(dot_out), mode_flag]
 
     t0 = time.monotonic()
-    proc = subprocess.run(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
-    )
-    t1 = time.monotonic()
+    timed_out = False
+    stdout = ""
+    stderr = ""
+    exit_code = -1
 
-    stdout = proc.stdout.strip()
-    stderr = proc.stderr.strip()
+    try:
+        proc = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=timeout_sec,
+        )
+        t1 = time.monotonic()
+        exit_code = proc.returncode
+        stdout = proc.stdout.strip()
+        stderr = proc.stderr.strip()
+    except subprocess.TimeoutExpired as e:
+        t1 = time.monotonic()
+        timed_out = True
+        exit_code = -999
+        stdout = (e.stdout or "").strip() if isinstance(e.stdout, str) else ""
+        stderr = (e.stderr or "").strip() if isinstance(e.stderr, str) else ""
 
     # Parse JSON output from replay_provenance
     replay_json = None
@@ -88,6 +109,7 @@ def execute_replay_run(
 
     time_metrics = parse_time_output(stderr)
     time_metrics["python_wall_time_sec"] = round(t1 - t0, 4)
+    time_metrics["timed_out"] = timed_out
 
     dot_size = dot_out.stat().st_size if dot_out.exists() else 0
     dot_sha256 = (
@@ -95,7 +117,8 @@ def execute_replay_run(
     )
 
     return {
-        "exit_code": proc.returncode,
+        "exit_code": exit_code,
+        "timed_out": timed_out,
         "replay_json": replay_json,
         "time_metrics": time_metrics,
         "dot_file": str(dot_out),
@@ -218,12 +241,26 @@ def main():
         default=420074,
         help="Expected record count in evidence file",
     )
+    parser.add_argument(
+        "--timeout",
+        type=float,
+        default=120.0,
+        help="Per-run timeout limit in seconds (default: 120)",
+    )
+    parser.add_argument(
+        "--search-mode",
+        choices=["incoming", "outgoing"],
+        default="incoming",
+        help="Adjacency search mode in EVENT_MEMFD_COMPLETED (default: incoming)",
+    )
     args = parser.parse_args()
 
     evid_path = args.evid.resolve()
     gt_path = args.gt.resolve()
     out_dir = args.outdir.resolve()
     expected_recs = args.expected_records
+    timeout_limit = args.timeout
+    search_mode = args.search_mode
 
     print(
         "===================================================================================================="
@@ -236,7 +273,9 @@ def main():
     )
     print(f"Target Evidence File: {evid_path}")
     print(f"Ground Truth File:    {gt_path}")
-    print(f"Fresh Output Dir:     {out_dir}\n")
+    print(f"Fresh Output Dir:     {out_dir}")
+    print(f"Search Mode:          {search_mode}")
+    print(f"Execution Timeout:    {timeout_limit}s\n")
 
     # Verify input file existence and accessibility
     if not evid_path.exists():
@@ -250,7 +289,7 @@ def main():
         )
         print("Please execute the following command:")
         print(
-            f"\n  sudo python3 tests1.0/kernel_telemetry/validate_standalone_reconstruction.py\n"
+            f"\n  sudo python3 tests1.0/kernel_telemetry/validate_standalone_reconstruction.py --timeout {timeout_limit}\n"
         )
         sys.exit(1)
 
@@ -264,8 +303,16 @@ def main():
     dot2 = out_dir / "W_SUSTAIN_1_run2.dot"
 
     # --- RUN 1 ---
-    print("[1/3] Executing Run 1 (reconstruction and graph export)...")
-    res1 = execute_replay_run(replay_bin, evid_path, dot1)
+    print(
+        f"[1/3] Executing Run 1 (reconstruction and graph export, search_mode={search_mode}, timeout={timeout_limit}s)..."
+    )
+    res1 = execute_replay_run(
+        replay_bin, evid_path, dot1, timeout_sec=timeout_limit, search_mode=search_mode
+    )
+    if res1["timed_out"]:
+        print(f"[FAIL] Run 1 timed out after {timeout_limit}s!")
+        print(f"Stderr: {res1['stderr']}")
+        sys.exit(1)
     if res1["exit_code"] != 0 or not res1["replay_json"]:
         print(f"[FAIL] Run 1 failed with exit code {res1['exit_code']}")
         print(f"Stdout: {res1['stdout']}")
@@ -281,19 +328,30 @@ def main():
         f"  -> Graph elements: {res1['replay_json']['nodes']} nodes, {res1['replay_json']['edges']} edges"
     )
     print(
+        f"  -> Edge comparisons: {res1['replay_json'].get('edge_comparisons', 'N/A')}"
+    )
+    print(
         f"  -> Exported DOT file: {dot1} ({res1['dot_size_bytes']:,} bytes, SHA256: {res1['dot_sha256'][:16]}...)"
     )
 
     # --- RUN 2 (REPEATABILITY) ---
     print(
-        "\n[2/3] Executing Run 2 (repeatability verification from same immutable evidence)..."
+        f"\n[2/3] Executing Run 2 (repeatability verification from same immutable evidence)..."
     )
-    res2 = execute_replay_run(replay_bin, evid_path, dot2)
+    res2 = execute_replay_run(
+        replay_bin, evid_path, dot2, timeout_sec=timeout_limit, search_mode=search_mode
+    )
+    if res2["timed_out"]:
+        print(f"[FAIL] Run 2 timed out after {timeout_limit}s!")
+        sys.exit(1)
     if res2["exit_code"] != 0 or not res2["replay_json"]:
         print(f"[FAIL] Run 2 failed with exit code {res2['exit_code']}")
         sys.exit(1)
     print(
         f"  -> Run 2 completed successfully in {res2['time_metrics']['wall_time_sec']}s (peak RSS: {res2['time_metrics']['max_rss_mib']} MiB)"
+    )
+    print(
+        f"  -> Edge comparisons: {res2['replay_json'].get('edge_comparisons', 'N/A')}"
     )
     print(
         f"  -> Exported DOT file: {dot2} ({res2['dot_size_bytes']:,} bytes, SHA256: {res2['dot_sha256'][:16]}...)"
@@ -346,6 +404,8 @@ def main():
         "evidence_file": str(evid_path),
         "ground_truth_file": str(gt_path),
         "output_directory": str(out_dir),
+        "search_mode": search_mode,
+        "timeout_seconds": timeout_limit,
         "reader_integrity": {
             "valid": reader_integrity,
             "corrupt_records": corrupt,
@@ -361,6 +421,8 @@ def main():
         "provenance_counts": {
             "nodes": r1_json.get("nodes"),
             "edges": r1_json.get("edges"),
+            "edge_comparisons_run1": r1_json.get("edge_comparisons"),
+            "edge_comparisons_run2": res2["replay_json"].get("edge_comparisons"),
             "dot_total_nodes": semantic_res.get("dot_total_nodes"),
             "dot_total_edges": semantic_res.get("dot_total_edges"),
         },
@@ -376,6 +438,7 @@ def main():
                 "sys_time_sec": res1["time_metrics"]["sys_time_sec"],
                 "max_rss_kb": res1["time_metrics"]["max_rss_kb"],
                 "max_rss_mib": res1["time_metrics"]["max_rss_mib"],
+                "edge_comparisons": r1_json.get("edge_comparisons"),
                 "events_per_sec": round(
                     r1_json.get("records_replayed", 0)
                     / (res1["time_metrics"]["wall_time_sec"] or 1e-4),
@@ -392,6 +455,7 @@ def main():
                 "sys_time_sec": res2["time_metrics"]["sys_time_sec"],
                 "max_rss_kb": res2["time_metrics"]["max_rss_kb"],
                 "max_rss_mib": res2["time_metrics"]["max_rss_mib"],
+                "edge_comparisons": res2["replay_json"].get("edge_comparisons"),
             },
         },
         "repeatability": {
@@ -404,6 +468,8 @@ def main():
             and (r1_json.get("records_verified") == expected_recs)
             and semantic_res.get("valid", False)
             and repeatable
+            and not res1["timed_out"]
+            and not res2["timed_out"]
         ),
     }
 
