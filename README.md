@@ -1,38 +1,68 @@
 # EphimTrace (eBPF-Emphim-Trace)
 
-A kernel-level eBPF tracing engine providing deterministic syscall-to-VFS pathname and filesystem identity correlation, alongside process lifecycle monitoring.
+A high-performance kernel-level eBPF forensic tracing engine providing deterministic syscall-to-VFS pathname and filesystem identity correlation, process lifecycle monitoring, and tamper-evident provenance reconstruction.
 
-## Overview
+## Architecture: Collection-First Decoupled Design
 
-EphimTrace correlates user-space syscall entry attempts with kernel-space VFS execution events and process lifecycle milestones:
-- **Syscall Entry**: Intercepts `sys_enter_unlink`, `sys_enter_unlinkat`, `sys_enter_rmdir`, `sys_enter_execve`, `sys_enter_memfd_create`, and `sys_enter_connect`.
-- **VFS Completion**: Captures resolved filesystem identity (`inode`, `dev_id`, `mnt_ns_id`, target basename, and return code) via `vfs_unlink` and `vfs_rmdir` trampolines (`fentry`/`fexit`).
-- **Process Lifecycle**: Monitors thread and process lifecycles via `sched_process_fork`, `sched_process_exec`, and `sched_process_exit`.
-- **Kernel Workaround for Linux 7.0**: Implements a per-CPU carrier perf-event attachment architecture to resolve the upstream/Ubuntu 7.0 (`7.0.0-42-generic`) syscall-entry tracepoint regression on faultable syscalls.
+EphimTrace employs a **collection-first decoupled architecture** (Model P) separating high-frequency kernel event capture from computational provenance graph reconstruction:
 
-## Architecture
+1. **Capture Agent (`build/loader`)**:
+   - Privileged kernel interface (`CAP_BPF` / `root`).
+   - Attaches eBPF tracepoints, per-CPU perf-event carrier hooks, and `fentry`/`fexit` trampolines.
+   - Streams raw kernel event payloads directly into an append-only, bounded, immutable binary evidence file (`.evid`) with IEEE 802.3 CRC32 framing and strict monotonic sequencing.
+   - Zero live graph computation or presentation overhead on the collection hot path.
+   - Orderly shutdown: detaches kernel hooks, drains ring buffers, flushes write buffers, synchronizes to disk (`fdatasync`), and logs a session manifest.
 
-- **Correlation Model**: Maps pending syscall entry contexts to VFS completion hooks via TID keys, validated against TGID, process start boot-time, and operation types.
-- **Fail-Safe Handling**: Explicitly classifies and handles unmatched operations, permission failures, nonexistent paths (`-ENOENT`), and truncated path buffers (>256 bytes) without corrupting telemetry.
-- **Ordered Teardown**: Performs reverse-ordered teardown of per-CPU carrier events, libbpf links, ring buffers, and BPF objects to prevent in-flight tracepoint invocations on deallocated memory.
+2. **Reconstruction Engine (`build/replay`)**:
+   - Completely unprivileged user-space utility (requires no root privileges or eBPF subsystem access).
+   - Validates session headers, frame integrity, CRC32 checksums, and sequence continuity.
+   - Reconstructs complete forensic DAGs using $O(1)$ incoming-adjacency lookup for instant scaling under sustained high-frequency workloads.
+   - Generates Graphviz DOT graphs, structured JSON graphs, and markdown forensic timelines, with optional PID/token subgraph filtering.
+
+```
++-------------------------------------------------------------+
+|                     COLLECTION PHASE                        |
+|                                                             |
+|  [Kernel Hooks] ---> [Ring Buffer] ---> [build/loader]      |
+|  (eBPF/carrier)                           |                 |
+|                                           v                 |
+|                                [evidence.evid (CRC32)]      |
++-------------------------------------------------------------+
+                               |
+                               v
++-------------------------------------------------------------+
+|                   RECONSTRUCTION PHASE                      |
+|                                                             |
+|  [evidence.evid] ---> [build/replay] (Unprivileged)         |
+|                             |                               |
+|        +--------------------+--------------------+          |
+|        v                    v                    v          |
+|   [graph.dot]          [graph.json]        [timeline.md]    |
++-------------------------------------------------------------+
+```
 
 ## Repository Structure
 
 ```
-├── Makefile                    # Build automation for BPF programs, loader, and tests
-├── GPT_Context                 # Environment verification notes
+├── Makefile                          # Build automation for BPF, loader, replay, and tests
 ├── src/
 │   ├── bpf/
-│   │   ├── monitor.bpf.c       # eBPF tracepoints, fentry/fexit trampolines, and maps
-│   │   └── vmlinux.h           # Kernel BTF type definitions
+│   │   ├── monitor.bpf.c             # eBPF tracepoints, trampolines, and maps
+│   │   └── vmlinux.h                 # Kernel BTF type definitions
 │   └── user/
-│       └── loader.c            # Userspace loader, per-CPU attachment, and event processor
-└── tests/
-    ├── test_syscall_correlation.c # 11-scenario correlation test suite
-    ├── test_lifecycle.c           # Process fork/thread/exec lifecycle harness
-    ├── test_pid_reuse.c           # Rapid PID reuse and generation validation
-    ├── test_unlink_identity.c     # Unlink target identity resolution
-    └── test_rmdir_identity.c      # Rmdir target identity resolution
+│       ├── loader.c                  # Privileged capture agent (streams to .evid)
+│       ├── replay.c                  # Unprivileged offline provenance reconstructor
+│       ├── evidence_io.h             # Bounded binary evidence reader/writer + CRC32
+│       ├── provenance.c              # Provenance DAG engine (O(1) incoming adjacency)
+│       └── provenance.h              # Provenance graph definitions and event types
+└── tests1.0/
+    ├── test_pipeline_integration.c   # End-to-end capture, replay, and fault-injection test
+    ├── test_syscall_correlation.c    # Correlation test suite
+    ├── test_lifecycle.c              # Process fork/exec/exit lifecycle harness
+    ├── test_pid_reuse.c              # Rapid PID reuse validation
+    ├── test_unlink_identity.c        # Unlink target identity resolution
+    ├── test_rmdir_identity.c         # Rmdir target identity resolution
+    └── test_m6_dag.c                 # DAG construction and export test
 ```
 
 ## Requirements
@@ -45,10 +75,17 @@ EphimTrace correlates user-space syscall entry attempts with kernel-space VFS ex
 
 ## Building
 
-To build the eBPF object, the userspace loader, and all test suites:
+To build the eBPF object, the capture loader, the offline replay reconstructor, and all test suites:
 
 ```bash
 make
+```
+
+Or build specific components:
+
+```bash
+make loader    # Builds build/loader (capture agent)
+make replay    # Builds build/replay (offline reconstruction utility)
 ```
 
 To clean build artifacts:
@@ -59,26 +96,73 @@ make clean
 
 ## Usage
 
-Start the loader with root privileges:
+### Step 1: Capture Forensic Telemetry (`build/loader`)
+
+Start the capture agent with root privileges. By default, it captures kernel events into `ephimtrace.evid`:
 
 ```bash
-sudo ./build/loader
+# Monitor all processes and save evidence to custom path
+sudo ./build/loader -o /var/log/ephimtrace_session.evid
+
+# Monitor a specific target workload PID with a 2 GiB storage bound
+sudo ./build/loader -p 12345 -b 2147483648 -o session_12345.evid
 ```
 
-To enable verbose debug diagnostics:
+**Capture Options**:
+- `-o, --output <file.evid>`: Path to write immutable binary evidence file (default: `ephimtrace.evid`).
+- `-p, --filter-pid <pid>`: Target workload PID to record in session metadata (default: `0` = monitor all).
+- `-b, --max-bytes <bytes>`: Maximum evidence file size bound in bytes (default: 1 GiB).
+- `-v, --verbose`: Enable debug logging and kernel tracepoint diagnostics.
+- `-q, --quiet`: Suppress runtime event messages (default in capture mode).
+- `-h, --help`: Display help and options.
+
+To stop collection, press `Ctrl+C` or send `SIGINT`/`SIGTERM`. The loader detaches all kernel hooks, drains buffered ring-buffer events, flushes and synchronizes (`fdatasync`) the evidence file, and outputs an audit manifest.
+
+### Step 2: Reconstruct Provenance Offline (`build/replay`)
+
+Reconstruct provenance graphs offline from the saved `.evid` file without requiring root privileges or eBPF subsystem access:
 
 ```bash
-sudo ./build/loader --verbose
+# Standard reconstruction generating DOT, JSON, and timeline exports
+./build/replay session_12345.evid --dot dag.dot --json dag.json --timeline timeline.md
+
+# Filtered export targeting a specific PID or object token
+./build/replay session_12345.evid -p 12345 --filtered-dot target.dot --filtered-json target.json
+
+# Strict validation mode with machine-readable summary
+./build/replay session_12345.evid --strict --summary-json summary.json
 ```
+
+**Replay Options**:
+- `-d, --dot <filepath>`: Path to export full DAG in Graphviz DOT format (default: `ephimtrace_dag.dot`).
+- `-j, --json <filepath>`: Path to export full graph in JSON format (default: `ephimtrace_dag.json`).
+- `-t, --timeline <filepath>`: Path to export forensic timeline markdown (default: `ephimtrace_timeline.md`).
+- `-p, --filter-pid <pid>`: Target PID for filtered subgraph & timeline export.
+- `-k, --filter-token <token>`: Target object token for filtered export.
+- `--filtered-dot <filepath>`: Path to export filtered DOT graph (default: `ephimtrace_filtered.dot`).
+- `--filtered-json <filepath>`: Path to export filtered JSON graph (default: `ephimtrace_filtered.json`).
+- `--summary-json <filepath>`: Path to write machine-readable reconstruction summary.
+- `--strict`: Fail closed with non-zero exit code on sequence gaps or corrupt frames.
+- `--progress <n>`: Report reconstruction progress every N records (default: 50,000, `0` to disable).
+- `--incoming`: Use default incoming-adjacency search mode ($O(1)$ in-degree lookup).
+- `--outgoing`: Use reference outgoing search mode (for diagnostic benchmarking).
+- `-v, --verbose`: Enable verbose log output.
+- `-q, --quiet`: Suppress per-interval progress output.
+- `-h, --help`: Display help and options.
 
 ## Running Tests
 
-Execute the test suites in a separate terminal:
+Execute the integrated pipeline test and component test suites:
 
 ```bash
+# End-to-end collection, replay, and fault-injection test
+./build/test_pipeline_integration
+
+# Core unit tests
 ./build/test_syscall_correlation
 ./build/test_lifecycle
 ./build/test_pid_reuse
 ./build/test_unlink_identity
 ./build/test_rmdir_identity
+./build/test_m6_dag
 ```

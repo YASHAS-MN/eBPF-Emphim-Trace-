@@ -28,3 +28,4 @@ ephimtrace_timeline.md
 tests1.0/kernel_telemetry/results/
 __pycache__/
 *.pyc
+tests1.0/kernel_telemetry/standalone_reconstruction/

@@ -1,0 +1,365 @@
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
+#include <errno.h>
+#include <time.h>
+#include <sys/resource.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#include "provenance.h"
+#include "evidence_io.h"
+
+struct replay_config {
+    const char *evid_path;
+    const char *dot_path;
+    const char *json_path;
+    const char *timeline_path;
+    const char *filtered_dot_path;
+    const char *filtered_json_path;
+    const char *summary_json_path;
+    uint32_t filter_pid;
+    uint64_t filter_token;
+    uint64_t progress_interval;
+    bool strict;
+    bool verbose;
+    bool quiet;
+    int search_mode;
+};
+
+static void print_usage(const char *prog_name) {
+    printf("Usage: %s [OPTIONS] <evidence_file.evid>\n\n", prog_name);
+    printf("EphimTrace Offline Provenance Reconstruction Utility.\n");
+    printf("Reconstructs forensic provenance graphs offline from immutable binary evidence\n");
+    printf("without requiring eBPF programs, kernel hooks, or root privileges.\n\n");
+    printf("Options:\n");
+    printf("  -d, --dot <filepath>         Path to export full DAG in Graphviz DOT format\n");
+    printf("                               (default: ephimtrace_dag.dot)\n");
+    printf("  -j, --json <filepath>        Path to export full graph in JSON format\n");
+    printf("                               (default: ephimtrace_dag.json)\n");
+    printf("  -t, --timeline <filepath>    Path to export forensic timeline markdown\n");
+    printf("                               (default: ephimtrace_timeline.md)\n");
+    printf("  -p, --filter-pid <pid>       Target PID for filtered graph & timeline export\n");
+    printf("  -k, --filter-token <token>   Target object token for filtered export\n");
+    printf("  --filtered-dot <filepath>    Path to export filtered DOT graph\n");
+    printf("                               (default: ephimtrace_filtered.dot)\n");
+    printf("  --filtered-json <filepath>   Path to export filtered JSON graph\n");
+    printf("                               (default: ephimtrace_filtered.json)\n");
+    printf("  --summary-json <filepath>    Path to write machine-readable reconstruction summary\n");
+    printf("  --strict                     Fail closed with non-zero exit code on sequence gaps\n");
+    printf("  --progress <n>               Report progress every N records (default: 50000, 0=disable)\n");
+    printf("  --outgoing                   Use reference outgoing search mode (for benchmarking)\n");
+    printf("  --incoming                   Use default incoming search mode (O(1) in-degree)\n");
+    printf("  -v, --verbose                Enable verbose log output\n");
+    printf("  -q, --quiet                  Suppress per-interval progress output\n");
+    printf("  -h, --help                   Show this help message\n\n");
+}
+
+int main(int argc, char *argv[]) {
+    struct replay_config cfg = {
+        .evid_path = NULL,
+        .dot_path = "ephimtrace_dag.dot",
+        .json_path = "ephimtrace_dag.json",
+        .timeline_path = "ephimtrace_timeline.md",
+        .filtered_dot_path = "ephimtrace_filtered.dot",
+        .filtered_json_path = "ephimtrace_filtered.json",
+        .summary_json_path = NULL,
+        .filter_pid = 0,
+        .filter_token = 0,
+        .progress_interval = 50000,
+        .strict = false,
+        .verbose = false,
+        .quiet = false,
+        .search_mode = 0, /* Incoming adjacency default */
+    };
+
+    const char *env_mode = getenv("PROV_SEARCH_MODE");
+    if (env_mode && atoi(env_mode) == 1) {
+        cfg.search_mode = 1;
+    }
+
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-d") == 0 || strcmp(argv[i], "--dot") == 0) {
+            if (i + 1 < argc) { cfg.dot_path = argv[++i]; }
+            else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
+        } else if (strcmp(argv[i], "-j") == 0 || strcmp(argv[i], "--json") == 0) {
+            if (i + 1 < argc) { cfg.json_path = argv[++i]; }
+            else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
+        } else if (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--timeline") == 0) {
+            if (i + 1 < argc) { cfg.timeline_path = argv[++i]; }
+            else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
+        } else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--filter-pid") == 0) {
+            if (i + 1 < argc) { cfg.filter_pid = (uint32_t)strtoul(argv[++i], NULL, 10); }
+            else { fprintf(stderr, "Error: %s requires a PID\n", argv[i]); return 1; }
+        } else if (strcmp(argv[i], "-k") == 0 || strcmp(argv[i], "--filter-token") == 0) {
+            if (i + 1 < argc) { cfg.filter_token = (uint64_t)strtoull(argv[++i], NULL, 10); }
+            else { fprintf(stderr, "Error: %s requires a token\n", argv[i]); return 1; }
+        } else if (strcmp(argv[i], "--filtered-dot") == 0) {
+            if (i + 1 < argc) { cfg.filtered_dot_path = argv[++i]; }
+            else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
+        } else if (strcmp(argv[i], "--filtered-json") == 0) {
+            if (i + 1 < argc) { cfg.filtered_json_path = argv[++i]; }
+            else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
+        } else if (strcmp(argv[i], "--summary-json") == 0) {
+            if (i + 1 < argc) { cfg.summary_json_path = argv[++i]; }
+            else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
+        } else if (strcmp(argv[i], "--strict") == 0) {
+            cfg.strict = true;
+        } else if (strcmp(argv[i], "--progress") == 0) {
+            if (i + 1 < argc) { cfg.progress_interval = (uint64_t)strtoull(argv[++i], NULL, 10); }
+            else { fprintf(stderr, "Error: %s requires a number\n", argv[i]); return 1; }
+        } else if (strcmp(argv[i], "--incoming") == 0) {
+            cfg.search_mode = 0;
+        } else if (strcmp(argv[i], "--outgoing") == 0) {
+            cfg.search_mode = 1;
+        } else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
+            cfg.verbose = true;
+        } else if (strcmp(argv[i], "-q") == 0 || strcmp(argv[i], "--quiet") == 0) {
+            cfg.quiet = true;
+            cfg.progress_interval = 0;
+        } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
+            print_usage(argv[0]);
+            return 0;
+        } else if (argv[i][0] != '-' && !cfg.evid_path) {
+            cfg.evid_path = argv[i];
+        } else {
+            fprintf(stderr, "Unknown or unexpected argument: %s\n", argv[i]);
+            print_usage(argv[0]);
+            return 1;
+        }
+    }
+
+    if (!cfg.evid_path) {
+        fprintf(stderr, "Error: Missing required evidence file path.\n\n");
+        print_usage(argv[0]);
+        return 1;
+    }
+
+    /* Open and validate evidence file header */
+    struct evidence_reader reader;
+    int open_rc = evidence_reader_open(&reader, cfg.evid_path);
+    if (open_rc != 0) {
+        fprintf(stderr, "[ERROR] Failed to open evidence file '%s': error %d (%s)\n",
+                cfg.evid_path, open_rc,
+                (open_rc == -1) ? "file not found or access denied" :
+                (open_rc == -2) ? "magic/version mismatch" :
+                (open_rc == -3) ? "header CRC32 corruption" : "unknown header error");
+        return 2;
+    }
+
+    /* Initialize provenance reconstruction engine */
+    if (prov_engine_init() != 0) {
+        evidence_reader_close(&reader);
+        fprintf(stderr, "[ERROR] Failed to initialize provenance engine\n");
+        return 3;
+    }
+
+    prov_engine_set_search_mode(cfg.search_mode);
+
+    if (cfg.verbose) {
+        printf("[INFO] Replaying evidence: %s (Mode: %u, Target PID: %u)\n",
+               cfg.evid_path, reader.header.mode, reader.header.target_pid);
+        printf("[INFO] Search mode: %s\n", (cfg.search_mode == 0) ? "incoming (O(1))" : "outgoing (reference)");
+    }
+
+    struct rusage ru_start, ru_end;
+    getrusage(RUSAGE_SELF, &ru_start);
+    uint64_t t0 = evidence_time_now_ns();
+
+    struct event ev;
+    struct evidence_record_frame frame;
+    int read_rc = 0;
+
+    while ((read_rc = evidence_reader_read_next(&reader, &ev, &frame)) == 1) {
+        prov_engine_process_event(&ev);
+
+        if (!cfg.quiet && cfg.progress_interval > 0 &&
+            reader.stats.records_replayed > 0 &&
+            reader.stats.records_replayed % cfg.progress_interval == 0) {
+            uint64_t cur_ts = evidence_time_now_ns();
+            double elapsed_s = (double)(cur_ts - t0) / 1e9;
+            double rate = (elapsed_s > 0) ? ((double)reader.stats.records_replayed / elapsed_s) : 0;
+            size_t cur_nodes = 0, cur_edges = 0;
+            prov_engine_get_counts(&cur_nodes, &cur_edges);
+            fprintf(stderr, "[replay] Progress: %llu records replayed (%zu nodes, %zu edges, %.2fs, %.1f rec/s)\n",
+                    (unsigned long long)reader.stats.records_replayed,
+                    cur_nodes, cur_edges, elapsed_s, rate);
+        }
+    }
+    uint64_t t1 = evidence_time_now_ns();
+    getrusage(RUSAGE_SELF, &ru_end);
+
+    if (read_rc < 0) {
+        fprintf(stderr, "[ERROR] Evidence reader stopped with error %d: %s\n",
+                read_rc,
+                (read_rc == -1) ? "frame magic / CRC32 corruption detected" :
+                (read_rc == -2) ? "incomplete/truncated record at EOF" : "read failure");
+    }
+
+    /* Graph Element Counts */
+    size_t total_nodes = 0, total_edges = 0;
+    prov_engine_get_counts(&total_nodes, &total_edges);
+    uint64_t edge_comparisons = prov_engine_get_edge_comparisons();
+
+    /* Perform Exports */
+    int dot_rc = 0, json_rc = 0, timeline_rc = 0;
+    int filtered_dot_rc = 0, filtered_json_rc = 0;
+
+    if (cfg.dot_path && cfg.dot_path[0]) {
+        dot_rc = prov_engine_export_dot(cfg.dot_path);
+        if (dot_rc != 0) {
+            fprintf(stderr, "[ERROR] Failed to export DOT graph to '%s': %d\n", cfg.dot_path, dot_rc);
+        }
+    }
+
+    if (cfg.json_path && cfg.json_path[0]) {
+        json_rc = prov_engine_export_json(cfg.json_path);
+        if (json_rc != 0) {
+            fprintf(stderr, "[ERROR] Failed to export JSON graph to '%s': %d\n", cfg.json_path, json_rc);
+        }
+    }
+
+    if (cfg.timeline_path && cfg.timeline_path[0]) {
+        timeline_rc = prov_engine_export_timeline(cfg.timeline_path, cfg.filter_pid, cfg.filter_token);
+        if (timeline_rc != 0) {
+            fprintf(stderr, "[ERROR] Failed to export timeline to '%s': %d\n", cfg.timeline_path, timeline_rc);
+        }
+    }
+
+    bool has_filter = (cfg.filter_pid != 0 || cfg.filter_token != 0);
+    if (has_filter) {
+        if (cfg.filtered_dot_path && cfg.filtered_dot_path[0]) {
+            filtered_dot_rc = prov_engine_export_filtered_dot(cfg.filtered_dot_path, cfg.filter_pid, cfg.filter_token);
+            if (filtered_dot_rc != 0) {
+                fprintf(stderr, "[ERROR] Failed to export filtered DOT graph to '%s': %d\n", cfg.filtered_dot_path, filtered_dot_rc);
+            }
+        }
+        if (cfg.filtered_json_path && cfg.filtered_json_path[0]) {
+            filtered_json_rc = prov_engine_export_filtered_json(cfg.filtered_json_path, cfg.filter_pid, cfg.filter_token);
+            if (filtered_json_rc != 0) {
+                fprintf(stderr, "[ERROR] Failed to export filtered JSON graph to '%s': %d\n", cfg.filtered_json_path, filtered_json_rc);
+            }
+        }
+    }
+
+    /* Clean up engine and reader */
+    prov_engine_destroy();
+    evidence_reader_close(&reader);
+
+    /* Compute Metrics */
+    uint64_t replay_duration_ns = (t1 > t0) ? (t1 - t0) : 0;
+    double replay_duration_s = (double)replay_duration_ns / 1e9;
+    long user_cpu_us = (ru_end.ru_utime.tv_sec - ru_start.ru_utime.tv_sec) * 1000000L +
+                       (ru_end.ru_utime.tv_usec - ru_start.ru_utime.tv_usec);
+    long sys_cpu_us = (ru_end.ru_stime.tv_sec - ru_start.ru_stime.tv_sec) * 1000000L +
+                      (ru_end.ru_stime.tv_usec - ru_start.ru_stime.tv_usec);
+    long max_rss_kb = ru_end.ru_maxrss;
+    double max_rss_mib = (double)max_rss_kb / 1024.0;
+    double events_per_sec = (replay_duration_s > 0) ? ((double)reader.stats.records_replayed / replay_duration_s) : 0;
+
+    /* Get File Sizes for Exports */
+    struct stat st_dot = {0}, st_json = {0}, st_tl = {0};
+    if (cfg.dot_path) stat(cfg.dot_path, &st_dot);
+    if (cfg.json_path) stat(cfg.json_path, &st_json);
+    if (cfg.timeline_path) stat(cfg.timeline_path, &st_tl);
+
+    /* Success Criteria */
+    bool clean_eof = (read_rc == 0);
+    bool no_corruption = (reader.stats.corrupt_records == 0);
+    bool no_incompleteness = (reader.stats.incomplete_records == 0);
+    bool gaps_acceptable = (!cfg.strict || reader.stats.seq_gaps == 0);
+    bool exports_ok = (dot_rc == 0 && json_rc == 0 && timeline_rc == 0 &&
+                       filtered_dot_rc == 0 && filtered_json_rc == 0);
+
+    bool overall_success = clean_eof && no_corruption && no_incompleteness && gaps_acceptable && exports_ok;
+
+    /* Print Structured Reconstruction Summary */
+    printf("\n=================================================================\n");
+    printf("         EphimTrace Provenance Reconstruction Summary            \n");
+    printf("=================================================================\n");
+    printf("Evidence File:             %s\n", cfg.evid_path);
+    printf("Session Target PID:        %u\n", reader.header.target_pid);
+    printf("Session Mode:              %u (%s)\n",
+           reader.header.mode,
+           (reader.header.mode == EVIDENCE_MODE_ONLINE) ? "Online (M)" :
+           (reader.header.mode == EVIDENCE_MODE_DEFERRED) ? "Deferred (P)" : "Unknown");
+    printf("Records Verified:          %llu\n", (unsigned long long)reader.stats.records_verified);
+    printf("Records Replayed:          %llu\n", (unsigned long long)reader.stats.records_replayed);
+    printf("Corrupt Records:           %llu\n", (unsigned long long)reader.stats.corrupt_records);
+    printf("Sequence Gaps:             %llu\n", (unsigned long long)reader.stats.seq_gaps);
+    printf("Incomplete / Short Records:%llu\n", (unsigned long long)reader.stats.incomplete_records);
+    printf("-----------------------------------------------------------------\n");
+    printf("Provenance Nodes:          %zu\n", total_nodes);
+    printf("Provenance Edges:          %zu\n", total_edges);
+    printf("Adjacency Comparisons:     %llu (%s mode)\n",
+           (unsigned long long)edge_comparisons,
+           (cfg.search_mode == 0) ? "incoming O(1)" : "outgoing reference");
+    printf("-----------------------------------------------------------------\n");
+    printf("Reconstruction Duration:   %.3f s (%.1f events/s)\n", replay_duration_s, events_per_sec);
+    printf("CPU Time:                  %.3f s (user: %.3fs, sys: %.3fs)\n",
+           (double)(user_cpu_us + sys_cpu_us) / 1e6, (double)user_cpu_us / 1e6, (double)sys_cpu_us / 1e6);
+    printf("Peak Memory (RSS):         %.2f MiB (%ld KiB)\n", max_rss_mib, max_rss_kb);
+    printf("-----------------------------------------------------------------\n");
+    printf("DOT Graph Export:          %s (%lld bytes, status: %s)\n",
+           cfg.dot_path, (long long)st_dot.st_size, (dot_rc == 0) ? "OK" : "FAILED");
+    printf("JSON Graph Export:         %s (%lld bytes, status: %s)\n",
+           cfg.json_path, (long long)st_json.st_size, (json_rc == 0) ? "OK" : "FAILED");
+    printf("Timeline Export:           %s (%lld bytes, status: %s)\n",
+           cfg.timeline_path, (long long)st_tl.st_size, (timeline_rc == 0) ? "OK" : "FAILED");
+    if (has_filter) {
+        printf("Filtered Exports:          PID=%u, Token=%llu (DOT: %s, JSON: %s)\n",
+               cfg.filter_pid, (unsigned long long)cfg.filter_token,
+               (filtered_dot_rc == 0) ? "OK" : "FAILED",
+               (filtered_json_rc == 0) ? "OK" : "FAILED");
+    }
+    printf("=================================================================\n");
+    printf("Reconstruction Status:     %s\n",
+           overall_success ? "SUCCESS" :
+           (!clean_eof || !no_incompleteness) ? "FAILED (Incomplete evidence / EOF truncation)" :
+           (!no_corruption) ? "FAILED (Corrupt records / CRC32 mismatch)" :
+           (!gaps_acceptable) ? "FAILED (Sequence gaps under strict mode)" : "FAILED (Export error)");
+    printf("=================================================================\n\n");
+    fflush(stdout);
+
+    /* Optional JSON summary file output */
+    if (cfg.summary_json_path && cfg.summary_json_path[0]) {
+        FILE *fj = fopen(cfg.summary_json_path, "w");
+        if (fj) {
+            fprintf(fj, "{\n");
+            fprintf(fj, "  \"status\": \"%s\",\n", overall_success ? "OK" : "ERROR");
+            fprintf(fj, "  \"evidence_file\": \"%s\",\n", cfg.evid_path);
+            fprintf(fj, "  \"records_verified\": %llu,\n", (unsigned long long)reader.stats.records_verified);
+            fprintf(fj, "  \"records_replayed\": %llu,\n", (unsigned long long)reader.stats.records_replayed);
+            fprintf(fj, "  \"corrupt_records\": %llu,\n", (unsigned long long)reader.stats.corrupt_records);
+            fprintf(fj, "  \"seq_gaps\": %llu,\n", (unsigned long long)reader.stats.seq_gaps);
+            fprintf(fj, "  \"incomplete_records\": %llu,\n", (unsigned long long)reader.stats.incomplete_records);
+            fprintf(fj, "  \"nodes\": %zu,\n", total_nodes);
+            fprintf(fj, "  \"edges\": %zu,\n", total_edges);
+            fprintf(fj, "  \"edge_comparisons\": %llu,\n", (unsigned long long)edge_comparisons);
+            fprintf(fj, "  \"duration_s\": %.4f,\n", replay_duration_s);
+            fprintf(fj, "  \"events_per_sec\": %.1f,\n", events_per_sec);
+            fprintf(fj, "  \"user_cpu_us\": %ld,\n", user_cpu_us);
+            fprintf(fj, "  \"sys_cpu_us\": %ld,\n", sys_cpu_us);
+            fprintf(fj, "  \"peak_rss_kb\": %ld,\n", max_rss_kb);
+            fprintf(fj, "  \"peak_rss_mib\": %.2f,\n", max_rss_mib);
+            fprintf(fj, "  \"dot_bytes\": %lld,\n", (long long)st_dot.st_size);
+            fprintf(fj, "  \"json_bytes\": %lld,\n", (long long)st_json.st_size);
+            fprintf(fj, "  \"timeline_bytes\": %lld\n", (long long)st_tl.st_size);
+            fprintf(fj, "}\n");
+            fclose(fj);
+        }
+    }
+
+    if (!overall_success) {
+        if (!clean_eof || !no_incompleteness) return 4;
+        if (!no_corruption) return 4;
+        if (!gaps_acceptable) return 5;
+        if (!exports_ok) return 6;
+        return 1;
+    }
+
+    return 0;
+}

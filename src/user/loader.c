@@ -19,6 +19,15 @@
 #include <linux/perf_event.h>
 #include <ctype.h>
 #include "provenance.h"
+#include "evidence_io.h"
+
+static struct evidence_writer g_evidence_writer;
+static bool g_writer_active = false;
+static char g_evidence_path[256] = "ephimtrace.evid";
+static uint64_t g_max_bytes = EVIDENCE_DEFAULT_MAX_BYTES;
+static uint32_t g_target_pid = 0;
+static uint64_t g_sample_size_mismatches = 0;
+static uint64_t g_capture_write_errors = 0;
 
 enum log_level {
     LOG_LEVEL_ERROR = 0,
@@ -368,7 +377,7 @@ static void print_process_state(const struct process_state *p)
     printf("Active: %s\n", p->active ? "yes" : "no");
 }
 
-static void update_process_state(const struct event *e)
+static void __attribute__((unused)) update_process_state(const struct event *e)
 {
     if (e->type == EVENT_DEBUG)
         return;
@@ -635,15 +644,24 @@ static int handle_event(void *ctx, void *data, size_t size)
 {
     (void)ctx;
 
-    const struct event *e = data;
-
-    update_process_state(e);
-    prov_engine_process_event(e);
-
-    if (size != sizeof(*e))
+    /* Validate sample size before any memory access */
+    if (!data || size < sizeof(struct event)) {
+        g_sample_size_mismatches++;
         return 0;
+    }
 
-    if (quiet_mode)
+    const struct event *e = (const struct event *)data;
+    uint64_t now_ns = evidence_time_now_ns();
+
+    /* Write original kernel event payload directly to persistent evidence */
+    if (g_writer_active) {
+        int w_rc = evidence_writer_write(&g_evidence_writer, e, now_ns);
+        if (w_rc != 0) {
+            g_capture_write_errors++;
+        }
+    }
+
+    if (current_log_level < LOG_LEVEL_DEBUG)
         return 0;
 
     switch (e->type) {
@@ -1398,25 +1416,46 @@ static uint32_t filter_pid = 0;
 static uint64_t filter_token = 0;
 static const char *timeline_filepath = "ephimtrace_timeline.md";
 
-static void export_provenance_data(uint32_t target_pid, uint64_t target_token, const char *timeline_path)
+static void print_session_manifest(int cnt_fd, int close_rc)
 {
-    prov_engine_export_dot("ephimtrace_dag.dot");
-    prov_engine_export_json("ephimtrace_dag.json");
-    size_t nc = 0, ec = 0;
-    prov_engine_get_counts(&nc, &ec);
-    printf("[PROVENANCE] Graph exported: %zu nodes, %zu edges\n", nc, ec);
+    printf("\n===============================================================\n");
+    printf("           EphimTrace Telemetry Collection Summary             \n");
+    printf("===============================================================\n");
+    printf("Evidence File:             %s\n", g_evidence_path);
+    printf("Session Target PID:        %u (%s)\n",
+           g_target_pid, g_target_pid ? "targeted" : "all processes");
+    printf("Storage Bound:             %llu bytes\n", (unsigned long long)g_max_bytes);
+    printf("Storage Written:           %llu bytes\n", (unsigned long long)g_evidence_writer.stats.storage_bytes);
+    printf("Records Received:          %llu\n", (unsigned long long)g_evidence_writer.stats.records_received);
+    printf("Records Serialized:        %llu\n", (unsigned long long)g_evidence_writer.stats.records_written);
+    printf("Records Synchronized:      %llu\n", (unsigned long long)g_evidence_writer.stats.records_synced);
+    printf("Flushes / Fsyncs:          %llu flushes (%llu ns sync duration)\n",
+           (unsigned long long)g_evidence_writer.stats.flush_count,
+           (unsigned long long)g_evidence_writer.stats.sync_duration_ns);
+    printf("---------------------------------------------------------------\n");
 
-    if (target_pid != 0 || target_token != 0) {
-        prov_engine_export_filtered_dot("ephimtrace_filtered.dot", target_pid, target_token);
-        prov_engine_export_filtered_json("ephimtrace_filtered.json", target_pid, target_token);
-        printf("[PROVENANCE] Filtered graph exported (PID=%u, Token=%llu): ephimtrace_filtered.dot, ephimtrace_filtered.json\n",
-               target_pid, (unsigned long long)target_token);
+    /* Kernel loss counters */
+    uint64_t c[CNT_MAX_COUNTERS] = {0};
+    if (cnt_fd >= 0) {
+        for (int i = 0; i < CNT_MAX_COUNTERS; i++) {
+            uint32_t key = (uint32_t)i;
+            bpf_map_lookup_elem(cnt_fd, &key, &c[i]);
+        }
     }
+    printf("Kernel Registry Drops:     %llu\n", (unsigned long long)c[CNT_REG_MAP_FULL_DROP]);
+    printf("Kernel Token Errors:       %llu\n", (unsigned long long)c[CNT_REG_TOKEN_ERR]);
+    printf("Kernel Token Mismatches:   %llu\n", (unsigned long long)c[CNT_REG_TOKEN_MISMATCH]);
+    printf("Sample Size Mismatches:    %llu\n", (unsigned long long)g_sample_size_mismatches);
+    printf("Storage Write Errors:      %llu\n",
+           (unsigned long long)(g_evidence_writer.stats.write_errors + g_capture_write_errors));
+    printf("Ring Buffer Drops:         <unavailable via kernel ring_buffer API>\n");
+    printf("---------------------------------------------------------------\n");
 
-    if (timeline_path && timeline_path[0]) {
-        prov_engine_export_timeline(timeline_path, target_pid, target_token);
-        printf("[PROVENANCE] Timeline exported: %s\n", timeline_path);
-    }
+    bool success = (close_rc == 0 && !g_evidence_writer.error_occurred && g_capture_write_errors == 0);
+    printf("Session Status:            %s\n",
+           success ? "COMPLETE (Successfully synchronized to disk)" :
+                     "INCOMPLETE / FAILED (Storage errors occurred)");
+    printf("===============================================================\n\n");
     fflush(stdout);
 }
 
@@ -1431,9 +1470,24 @@ int main(int argc, char **argv)
             current_log_level = LOG_LEVEL_DEBUG;
         } else if (strcmp(argv[i], "-q") == 0 || strcmp(argv[i], "--quiet") == 0) {
             quiet_mode = 1;
+        } else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0) {
+            if (i + 1 < argc) {
+                snprintf(g_evidence_path, sizeof(g_evidence_path), "%s", argv[++i]);
+            } else {
+                fprintf(stderr, "Error: %s requires an evidence file path\n", argv[i]);
+                return 1;
+            }
+        } else if (strcmp(argv[i], "-b") == 0 || strcmp(argv[i], "--max-bytes") == 0) {
+            if (i + 1 < argc) {
+                g_max_bytes = (uint64_t)strtoull(argv[++i], NULL, 10);
+            } else {
+                fprintf(stderr, "Error: %s requires byte count\n", argv[i]);
+                return 1;
+            }
         } else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--filter-pid") == 0) {
             if (i + 1 < argc) {
                 filter_pid = (uint32_t)strtoul(argv[++i], NULL, 10);
+                g_target_pid = filter_pid;
             } else {
                 fprintf(stderr, "Error: %s requires a PID argument\n", argv[i]);
                 return 1;
@@ -1453,18 +1507,26 @@ int main(int argc, char **argv)
                 return 1;
             }
         } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-            printf("Usage: %s [OPTIONS]\n", argv[0]);
+            printf("Usage: %s [OPTIONS]\n\n", argv[0]);
+            printf("EphimTrace eBPF forensic telemetry collection agent.\n");
+            printf("Preserves original kernel event payloads into bounded immutable binary evidence.\n\n");
             printf("Options:\n");
-            printf("  -v, --verbose               Enable verbose/debug logging\n");
-            printf("  -q, --quiet                 Bypass per-event presentation logging\n");
-            printf("  -p, --filter-pid <pid>      Set target PID for filtered export\n");
-            printf("  -t, --filter-token <token>  Set target object token for filtered export\n");
-            printf("  --timeline <filepath>       Path to write forensic timeline (default: ephimtrace_timeline.md)\n");
-            printf("  -h, --help                  Show this help message\n");
+            printf("  -o, --output <file.evid>    Path to write binary evidence file\n");
+            printf("                              (default: ephimtrace.evid)\n");
+            printf("  -p, --filter-pid <pid>      Target workload PID to record in session metadata\n");
+            printf("                              (default: 0 = monitor all processes)\n");
+            printf("  -b, --max-bytes <bytes>     Maximum evidence file size bound in bytes\n");
+            printf("                              (default: 1073741824 = 1 GiB)\n");
+            printf("  -v, --verbose               Enable debug logging and kernel tracepoint diagnostics\n");
+            printf("  -q, --quiet                 Suppress runtime event messages (default in capture mode)\n");
+            printf("  -h, --help                  Show this help message\n\n");
+            printf("Reconstruction:\n");
+            printf("  To reconstruct provenance graphs offline from saved evidence, run:\n");
+            printf("    ./build/replay <file.evid> [OPTIONS]\n\n");
             return 0;
         } else {
             fprintf(stderr, "Unknown option: %s\n", argv[i]);
-            fprintf(stderr, "Usage: %s [-v|--verbose] [-q|--quiet] [-p|--filter-pid <pid>] [-t|--filter-token <token>] [--timeline <file>] [-h|--help]\n", argv[0]);
+            fprintf(stderr, "Usage: %s [-o <file.evid>] [-p <pid>] [-b <bytes>] [-v|--verbose] [-q|--quiet] [-h|--help]\n", argv[0]);
             return 1;
         }
     }
@@ -1508,10 +1570,13 @@ int main(int argc, char **argv)
     signal(SIGUSR1, handle_sigusr1);
     signal(SIGUSR2, handle_sigusr2);
 
-    if (prov_engine_init() != 0) {
-        log_error("Failed to initialize provenance engine");
-        goto cleanup;
+    if (evidence_writer_init(&g_evidence_writer, g_evidence_path, EVIDENCE_MODE_DEFERRED, g_target_pid, 0, g_max_bytes) != 0) {
+        log_error("Failed to initialize evidence file %s: file exists (O_EXCL) or storage error (%s)",
+                  g_evidence_path, strerror(errno));
+        if (online_cpus) free(online_cpus);
+        return 1;
     }
+    g_writer_active = true;
 
     if (cpus_parsed != 0 || online_cpu_count <= 0) {
         log_error("Failed to parse online CPUs from sysfs");
@@ -1806,7 +1871,12 @@ int main(int argc, char **argv)
 
         if (sigusr2_received) {
             sigusr2_received = 0;
-            export_provenance_data(filter_pid, filter_token, timeline_filepath);
+            if (g_writer_active) {
+                evidence_writer_sync(&g_evidence_writer);
+                log_info("[EVIDENCE] Intermediate sync complete: %llu records written (%llu bytes)",
+                         (unsigned long long)g_evidence_writer.stats.records_written,
+                         (unsigned long long)g_evidence_writer.stats.storage_bytes);
+            }
         }
 
         time_t now = time(NULL);
@@ -1829,13 +1899,55 @@ int main(int argc, char **argv)
         print_counters_table(cnt_fd);
     }
 
-    export_provenance_data(filter_pid, filter_token, timeline_filepath);
+    /* Orderly shutdown sequence:
+     * 1. Detach: Disable and close all per-CPU perf events and destroy BPF links
+     *    to halt kernel event generation into the ring buffer.
+     */
+    log_info("Detaching BPF programs from kernel hooks...");
+    for (size_t i = 0; i < NUM_REQUIRED_HOOKS; i++) {
+        if (statuses[i].cpu_records) {
+            close_cpu_attachments(statuses[i].cpu_records, statuses[i].cpus_total);
+            free(statuses[i].cpu_records);
+            statuses[i].cpu_records = NULL;
+        }
+    }
 
-    ret = 0;
+    for (size_t i = 0; i < NUM_REQUIRED_HOOKS; i++) {
+        if (links[i]) {
+            bpf_link__destroy(links[i]);
+            links[i] = NULL;
+        }
+    }
+
+    /* 2. Drain: Consume all pending events remaining in the ring buffer */
+    log_info("Draining remaining events from kernel ring buffer...");
+    if (rb) {
+        while (ring_buffer__consume(rb) > 0) {
+            /* Handled in handle_event */
+        }
+    }
+
+    /* 3. Flush & Synchronize: Flush write buffer and issue fdatasync to storage */
+    log_info("Synchronizing persistent evidence to disk...");
+    int close_rc = 0;
+    if (g_writer_active) {
+        close_rc = evidence_writer_close(&g_evidence_writer);
+        g_writer_active = false;
+    }
+
+    /* 4. Display Session Manifest & Loss Accounting */
+    print_session_manifest(cnt_fd, close_rc);
+
+    bool session_ok = (close_rc == 0 && !g_evidence_writer.error_occurred && g_capture_write_errors == 0);
+    ret = session_ok ? 0 : 2;
 
 cleanup:
-    prov_engine_destroy();
     cleanup_diag_instance();
+
+    if (g_writer_active) {
+        evidence_writer_close(&g_evidence_writer);
+        g_writer_active = false;
+    }
 
     /* 1. Disable and close all per-CPU perf-event FDs first to stop event generation */
     for (size_t i = 0; i < NUM_REQUIRED_HOOKS; i++) {
