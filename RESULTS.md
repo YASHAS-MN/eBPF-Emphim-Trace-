@@ -277,3 +277,16 @@ The experiment provides direct evidence that removing immediate graph constructi
 **Recommendation (not owner approval):** retain A's kernel-assisted identity and adopt a P-derived collection-first persistence architecture, with separate replayable provenance analysis. Make live graphs optional and independent of acquisition. Scope remaining work to integration and correctness validation after owner lock-in; do not revive B/C or general performance tuning without explicit need.
 
 [Final direct disk-readback audit and review](https://github.com/YASHAS-MN/eBPF-Emphim-Trace-/issues/7#issuecomment-7182734475).
+
+### 7.4 Standalone provenance reconstruction — targeted adjacency correction (26 November 2026)
+
+At checkpoint `031c863`, standalone replay of the same W_SUSTAIN_1 evidence was interrupted after 272.97 s wall (271.83 s user CPU, 99% CPU, 65,796 KiB peak RSS); no graph exported. This removed the diagnostic sidecar matching loop as the sole explanation. The source-confirmed duplicate creation-edge lookup traversed the source process's outgoing adjacency, which grows with the workload. Checkpoint `29d695d99984ecba0ae50da146d49ec9566cf8b4` changes the default lookup to the destination object's incoming adjacency, preserving the same source/destination/type predicate and original edge insertion order. Complexity is O(destination in-degree), not generally O(1). No kernel changes or new graph indexes. Reported synthetic comparisons for 100/500/1000 creations: outgoing 4950/124750/499500 vs incoming 0/0/0; 200 creations plus duplicate completions: 40000 vs 200. Duplicate/multiple-process graph equivalence reported on small fixtures.
+
+| Metric | Standalone run 1 | Standalone run 2 |
+|---|---:|---:|
+| Wall reconstruction + export (s) | 1.53 | 1.47 |
+| Peak RSS (MiB) | 116.38 | 116.50 |
+| Edge comparisons | 60005 | 60005 |
+| DOT bytes | 46400508 | 46400508 |
+
+Run 1 reports 420074 verified/replayed records, 60022 nodes, 240042 edges; both exports reported identical SHA256 (prefix 735e25251a0ce533). All 60000 expected target memfd names and target PID 41121 appear. This is a completed replay and node-name coverage demonstration on one saved sustained session, not per-edge causal/identity/attribute validation or full attack-chain correctness. No exact old/new speedup can be calculated because the old run was interrupted. The validator checks first-run integrity and name/PID presence; strict sequence-gap propagation and both-run accounting remain integration requirements. Local evidence/exports not independently accessed by reviewer; source inspected and native output supplied by owner. Correction accepted within tested scope; move to production integration and bounded forensic acceptance, not another benchmark campaign. See [Issue #7 review](https://github.com/YASHAS-MN/eBPF-Emphim-Trace-/issues/7#issuecomment-7185160384).
