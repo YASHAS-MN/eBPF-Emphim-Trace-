@@ -242,3 +242,38 @@ Known limits: only tested memfd creation-pair scope; no persistent production ev
 - [Final audit review and pause](https://github.com/YASHAS-MN/eBPF-Emphim-Trace-/issues/4#issuecomment-7165662311)
 
 **Conclusion:** The experimental phase establishes a working bounded proof of concept and measured architectural trade-offs, not a production-qualified system. Final architecture selection is deferred to the project owner.
+
+
+## 7. Persistence experiment — online versus deferred reconstruction (26 November 2026)
+
+This subsequent owner-approved experiment (Issue #7) freezes A's kernel hooks, identity, registries, 1 MiB ring and existing graph engine. M appends evidence then constructs provenance online; P uses the same bounded evidence writer during collection and defers graph processing until capture ends. Neither uses B/C's intermediate FIFO. This is an exploratory diagnostic experiment, not a production-qualified storage design.
+
+Native run: `persist_20261126-012121` (18 trials, 3 paired repetitions, seed 42, matched quiet mode), with preceding corrected six-trial smoke `persist_20261126-012106`. Native capture commit `3774978f75305fa15101c79478bfd076adc11b8a`; offline reader correction `c4c9cf91b3520e911b315d1a0961203bf89457be`. Original analyzer reports contain erroneous 0% persistence and corruption flags due to Python integer-magic byte order and payload-index defects. Preserve original reports; corrected owner-executed read-only disk audit used actual binary files, target PID, event types 2/12, and independent syscall ground truth with P evaluation disabled. No workload reruns. Audit results are user-supplied terminal measurements, not raw files independently accessed by the reviewer.
+
+### 7.1 Verified persisted creation pairs
+
+| Workload | Attempts per trial | M reconstructed, trials 1/2/3 | P reconstructed, trials 1/2/3 | M completeness | P completeness |
+|---|---:|---|---|---:|---:|
+| W_PACED | 500 | 500 / 500 / 500 | 500 / 500 / 500 | 100.0000% | 100.0000% |
+| W_BURST | 10000 | 515 / 550 / 499 | 1242 / 833 / 1157 | 5.2133% | 10.7733% |
+| W_SUSTAIN | 60000 | 6814 / 7232 / 7205 | 60000 / 60000 / 60000 | 11.8061% | 100.0000% |
+
+All six smoke files reconcile every attempted operation (50 paced, 200 burst, 400 sustained per mode). Full experiment: M and P each preserve 1500/1500 paced pairs; burst M 1564/30000 vs P 3232/30000 (2.07x retained pairs); sustained M 21251/180000 vs P 180000/180000 (8.47x retained pairs, +88.19 percentage points). Both models retain original wire records; completion correlation is assessed with the existing kernel token and return/descriptor fields. This is verified correlated creation-pair completeness, not whole-lifecycle or graph completeness.
+
+### 7.2 Verified evidence records (all recorded event types)
+
+| Workload | M verified records, trials 1/2/3 | P verified records, trials 1/2/3 |
+|---|---|---|
+| W_PACED | 3551 / 3527 / 3525 | 3582 / 3527 / 3511 |
+| W_BURST | 9737 / 10042 / 9936 | 23347 / 21255 / 21680 |
+| W_SUSTAIN | 46584 / 47652 / 47904 | 420074 / 420101 / 420082 |
+
+All 24 audited files report zero detected CRC/framing corruption, sequence gaps or truncations. P sustained contains 1,260,257 verified records across three trials. File framing and sequence integrity do not prove zero upstream loss, complete kernel coverage, adversarial tamper resistance, or successful power-loss durability. The three P sustained sessions timed out during native graph replay; their saved files were readable and intact, but successful final synchronization is not independently recorded in completed reports. Treat those sessions as valid evidence-readback observations with unavailable native end-to-end graph and phase metrics. Do not infer graph completion, graph throughput, or zero ring loss from disk reconciliation.
+
+### 7.3 Interpretation and remaining boundaries
+
+The experiment provides direct evidence that removing immediate graph construction from the collection path improves retained creation completeness in the tested sustained workload, without changing the underlying kernel approach. Burst capture remains highly incomplete (P 10.77%); this architecture is not generally lossless. Native M/P comparison is not equivalent to the earlier A/B/C graph-completeness comparison. The P sustained replay timeout is a genuine unresolved end-to-end limitation; source inspection reveals an O(n^2) diagnostic lookup, but its sole causal responsibility has not been established. Graph-engine complexity, actual production sink throughput, storage failure and crash durability, full lifecycle coverage and external collector parity are not proven. The raw evidence and ground truth remain locally preserved. No further performance reruns are recommended for architectural selection.
+
+**Recommendation (not owner approval):** retain A's kernel-assisted identity and adopt a P-derived collection-first persistence architecture, with separate replayable provenance analysis. Make live graphs optional and independent of acquisition. Scope remaining work to integration and correctness validation after owner lock-in; do not revive B/C or general performance tuning without explicit need.
+
+[Final direct disk-readback audit and review](https://github.com/YASHAS-MN/eBPF-Emphim-Trace-/issues/7#issuecomment-7182734475).
