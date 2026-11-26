@@ -544,6 +544,213 @@ static void test_output_alias_and_collision_protection(void) {
     printf("  All alias, collision, and strict export-suppression protections verified!\n");
 }
 
+static void test_unlinked_executable_provenance(void) {
+    printf("[9/9] Testing unlinked executable provenance and regression suite...\n");
+    prov_engine_destroy();
+    assert(prov_engine_init() == 0);
+
+    // Scenario 1: Matching executable and unlink identities
+    // Process 1001 execs /usr/local/bin/worker (Inode 5555, Dev 2049)
+    struct event e1 = {0};
+    e1.type = EVENT_PROCESS_EXEC;
+    e1.pid = 1001;
+    e1.ppid = 1000;
+    e1.start_time_ns = 1000000;
+    e1.timestamp_ns = 1050000;
+    e1.inode_no = 5555;
+    e1.dev_id = 2049;
+    e1.mnt_ns_id = 4026531840U;
+    e1.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID | VFS_IDENTITY_MNT_VALID;
+    strncpy(e1.name, "worker", sizeof(e1.name) - 1);
+    strncpy(e1.path, "/usr/local/bin/worker", sizeof(e1.path) - 1);
+    prov_engine_process_event(&e1);
+
+    // Process 1000 unlinks /usr/local/bin/worker (Inode 5555, Dev 2049)
+    struct event e2 = {0};
+    e2.type = EVENT_VFS_UNLINK_COMPLETED;
+    e2.pid = 1000;
+    e2.ppid = 1;
+    e2.start_time_ns = 900000;
+    e2.timestamp_ns = 1100000;
+    e2.inode_no = 5555;
+    e2.dev_id = 2049;
+    e2.mnt_ns_id = 4026531840U;
+    e2.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID | VFS_IDENTITY_MNT_VALID | VFS_IDENTITY_SYSCALL_VALID;
+    e2.ret_val = 0; // Success
+    strncpy(e2.name, "worker", sizeof(e2.name) - 1);
+    strncpy(e2.path, "/usr/local/bin/worker", sizeof(e2.path) - 1);
+    prov_engine_process_event(&e2);
+
+    struct prov_node *fs1 = prov_find_node("fs_2049_5555");
+    assert(fs1 != NULL);
+    assert(fs1->type == NODE_FS_OBJECT);
+    assert(fs1->fs.is_unlinked == true);
+    assert(strcmp(fs1->fs.path, "/usr/local/bin/worker") == 0);
+
+    struct prov_node *proc1 = prov_find_node("proc_1001_1000000");
+    assert(proc1 != NULL);
+    assert(proc1->out_edges != NULL);
+    assert(proc1->out_edges->type == EDGE_FS_EXEC_SUCCESS);
+    assert(proc1->out_edges->dst == fs1);
+
+    // Scenario 2: Same pathname with different inode identities
+    // Process 1003 execs /tmp/service (Inode 7777, Dev 2049)
+    struct event e3 = {0};
+    e3.type = EVENT_PROCESS_EXEC;
+    e3.pid = 1003;
+    e3.start_time_ns = 2000000;
+    e3.timestamp_ns = 2050000;
+    e3.inode_no = 7777;
+    e3.dev_id = 2049;
+    e3.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID;
+    strncpy(e3.name, "service", sizeof(e3.name) - 1);
+    strncpy(e3.path, "/tmp/service", sizeof(e3.path) - 1);
+    prov_engine_process_event(&e3);
+
+    // Process 1004 execs /tmp/service (Inode 8888, Dev 2049) - replaced file with same name
+    struct event e4 = {0};
+    e4.type = EVENT_PROCESS_EXEC;
+    e4.pid = 1004;
+    e4.start_time_ns = 3000000;
+    e4.timestamp_ns = 3050000;
+    e4.inode_no = 8888;
+    e4.dev_id = 2049;
+    e4.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID;
+    strncpy(e4.name, "service", sizeof(e4.name) - 1);
+    strncpy(e4.path, "/tmp/service", sizeof(e4.path) - 1);
+    prov_engine_process_event(&e4);
+
+    // Unlink only the first inode 7777
+    struct event e5 = {0};
+    e5.type = EVENT_VFS_UNLINK_COMPLETED;
+    e5.pid = 1000;
+    e5.start_time_ns = 900000;
+    e5.timestamp_ns = 3100000;
+    e5.inode_no = 7777;
+    e5.dev_id = 2049;
+    e5.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID;
+    e5.ret_val = 0;
+    strncpy(e5.path, "/tmp/service", sizeof(e5.path) - 1);
+    prov_engine_process_event(&e5);
+
+    struct prov_node *fs_old = prov_find_node("fs_2049_7777");
+    struct prov_node *fs_new = prov_find_node("fs_2049_8888");
+    assert(fs_old != NULL && fs_new != NULL);
+    assert(fs_old != fs_new); // Distinct nodes!
+    assert(fs_old->fs.is_unlinked == true);
+    assert(fs_new->fs.is_unlinked == false); // Inode 8888 was not unlinked!
+
+    // Scenario 3: Missing executable identity (e.g. inode_no = 0 or flags unpopulated)
+    struct event e6 = {0};
+    e6.type = EVENT_PROCESS_EXEC;
+    e6.pid = 1005;
+    e6.start_time_ns = 4000000;
+    e6.timestamp_ns = 4050000;
+    e6.inode_no = 0;
+    e6.flags = 0; // Invalid / missing identity
+    strncpy(e6.name, "unknown_exec", sizeof(e6.name) - 1);
+    prov_engine_process_event(&e6);
+
+    struct prov_node *proc_missing = prov_find_node("proc_1005_4000000");
+    assert(proc_missing != NULL);
+    assert(proc_missing->out_edges == NULL); // No bogus edge or fs_0_0 created!
+    assert(prov_find_node("fs_0_0") == NULL);
+
+    // Scenario 4: Failed unlink operation (ret_val != 0)
+    struct event e7 = {0};
+    e7.type = EVENT_PROCESS_EXEC;
+    e7.pid = 1006;
+    e7.start_time_ns = 5000000;
+    e7.timestamp_ns = 5050000;
+    e7.inode_no = 9999;
+    e7.dev_id = 2049;
+    e7.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID;
+    strncpy(e7.name, "protected", sizeof(e7.name) - 1);
+    strncpy(e7.path, "/etc/protected", sizeof(e7.path) - 1);
+    prov_engine_process_event(&e7);
+
+    struct event e8 = {0};
+    e8.type = EVENT_VFS_UNLINK_COMPLETED;
+    e8.pid = 1000;
+    e8.start_time_ns = 900000;
+    e8.timestamp_ns = 5100000;
+    e8.inode_no = 9999;
+    e8.dev_id = 2049;
+    e8.flags = VFS_IDENTITY_INODE_VALID | VFS_IDENTITY_DEV_VALID;
+    e8.ret_val = -1; // Failed unlink (e.g. EPERM)
+    strncpy(e8.path, "/etc/protected", sizeof(e8.path) - 1);
+    prov_engine_process_event(&e8);
+
+    struct prov_node *fs_fail = prov_find_node("fs_2049_9999");
+    assert(fs_fail != NULL);
+    assert(fs_fail->fs.is_unlinked == false); // Failed unlink must not mark unlinked!
+
+    // Scenario 5: Historical evidence compatibility
+    struct event e_legacy = {0};
+    e_legacy.type = EVENT_PROCESS_EXEC;
+    e_legacy.pid = 1007;
+    e_legacy.start_time_ns = 6000000;
+    e_legacy.timestamp_ns = 6050000;
+    strncpy(e_legacy.name, "legacy_worker", sizeof(e_legacy.name) - 1);
+    prov_engine_process_event(&e_legacy);
+    struct prov_node *proc_legacy = prov_find_node("proc_1007_6000000");
+    assert(proc_legacy != NULL);
+    assert(proc_legacy->out_edges == NULL);
+
+    // Scenario 6: Memfd reconstruction regression
+    struct event e_memfd_create = {0};
+    e_memfd_create.type = EVENT_MEMFD_CREATE;
+    e_memfd_create.pid = 1008;
+    e_memfd_create.start_time_ns = 7000000;
+    e_memfd_create.timestamp_ns = 7050000;
+    e_memfd_create.object_token = 0xFEEDFACEULL;
+    strncpy(e_memfd_create.name, "shm_regress", sizeof(e_memfd_create.name) - 1);
+    prov_engine_process_event(&e_memfd_create);
+
+    struct event e_memfd_exec = {0};
+    e_memfd_exec.type = EVENT_PROCESS_EXEC;
+    e_memfd_exec.pid = 1008;
+    e_memfd_exec.start_time_ns = 7000000;
+    e_memfd_exec.timestamp_ns = 7100000;
+    e_memfd_exec.object_token = 0xFEEDFACEULL; // Non-zero token indicates memfd
+    e_memfd_exec.inode_no = 12345;
+    e_memfd_exec.dev_id = 0;
+    e_memfd_exec.flags = VFS_IDENTITY_INODE_VALID;
+    strncpy(e_memfd_exec.name, "shm_regress", sizeof(e_memfd_exec.name) - 1);
+    prov_engine_process_event(&e_memfd_exec);
+
+    struct event e_memfd_succ = {0};
+    e_memfd_succ.type = EVENT_MEMFD_EXEC_SUCCESS;
+    e_memfd_succ.pid = 1008;
+    e_memfd_succ.start_time_ns = 7000000;
+    e_memfd_succ.timestamp_ns = 7150000;
+    e_memfd_succ.object_token = 0xFEEDFACEULL;
+    strncpy(e_memfd_succ.name, "shm_regress", sizeof(e_memfd_succ.name) - 1);
+    prov_engine_process_event(&e_memfd_succ);
+
+    struct prov_node *proc_memfd = prov_find_node("proc_1008_7000000");
+    struct prov_node *node_memfd = prov_find_node("memfd_4277009102");
+    assert(proc_memfd != NULL && node_memfd != NULL);
+    assert(node_memfd->type == NODE_MEMFD);
+    assert(proc_memfd->out_edges != NULL);
+    assert(proc_memfd->out_edges->type == EDGE_MEMFD_EXEC_SUCCESS);
+    assert(proc_memfd->out_edges->dst == node_memfd);
+    assert(prov_find_node("fs_0_12345") == NULL);
+
+    // Test Export Capabilities with EDGE_FS_EXEC_SUCCESS
+    assert(prov_engine_export_dot(TEST_DOT_FILE) == 0);
+    assert(prov_engine_export_json(TEST_JSON_FILE) == 0);
+    assert(prov_engine_export_timeline(TEST_TIMELINE_FILE, 0, 0) == 0);
+    assert(prov_engine_export_filtered_dot("/tmp/test_filtered.dot", 1001, 0) == 0);
+    assert(prov_engine_export_filtered_json("/tmp/test_filtered.json", 1001, 0) == 0);
+
+    unlink("/tmp/test_filtered.dot");
+    unlink("/tmp/test_filtered.json");
+
+    prov_engine_destroy();
+    printf("  All 6 unlinked executable provenance and regression scenarios verified successfully!\n");
+}
+
 int main(void) {
     printf("=== Starting EphimTrace Collection-First Integration & Reliability Tests ===\n");
     cleanup_files();
@@ -556,8 +763,9 @@ int main(void) {
     test_valid_record_boundary_truncation_detection();
     test_legacy_file_compatibility();
     test_output_alias_and_collision_protection();
+    test_unlinked_executable_provenance();
 
     cleanup_files();
-    printf("=== All 8 Integration & Reliability Tests Passed Successfully! ===\n");
+    printf("=== All 9 Integration & Reliability Tests Passed Successfully! ===\n");
     return 0;
 }

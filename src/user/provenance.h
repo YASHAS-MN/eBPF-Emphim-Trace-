@@ -18,6 +18,14 @@ enum prov_node_type {
   NODE_NET_ENDPOINT = 4,
 };
 
+#ifndef VFS_IDENTITY_INODE_VALID
+#define VFS_IDENTITY_INODE_VALID   (1 << 0)
+#define VFS_IDENTITY_DEV_VALID     (1 << 1)
+#define VFS_IDENTITY_MNT_VALID     (1 << 2)
+#define VFS_IDENTITY_NAME_VALID    (1 << 3)
+#define VFS_IDENTITY_SYSCALL_VALID (1 << 4)
+#endif
+
 /* Edge types */
 enum prov_edge_type {
   EDGE_FORK = 1,
@@ -29,6 +37,7 @@ enum prov_edge_type {
   EDGE_MEMFD_EXEC_SUCCESS = 7,
   EDGE_UNLINK = 8,
   EDGE_CONNECT = 9,
+  EDGE_FS_EXEC_SUCCESS = 10,
 };
 
 /* Node structures */

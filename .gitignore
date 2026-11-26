@@ -29,3 +29,6 @@ tests1.0/kernel_telemetry/results/
 __pycache__/
 *.pyc
 tests1.0/kernel_telemetry/standalone_reconstruction/
+
+# Native test execution directories (root-owned raw evidence)
+tests1.0/kernel_telemetry/native_*/

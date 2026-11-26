@@ -393,6 +393,21 @@ void prov_engine_process_event(const struct event *e)
         if (proc && e->name[0]) {
             snprintf(proc->proc.comm, sizeof(proc->proc.comm), "%s", e->name);
         }
+
+        /* If regular executable identity is valid and present, correlate process generation with backing FS object */
+        if (e->object_token == 0 && (e->flags & VFS_IDENTITY_INODE_VALID) && e->inode_no != 0) {
+            const char *path = e->path[0] ? e->path : (e->name[0] ? e->name : "<unknown>");
+            struct prov_node *fs = prov_upsert_fs(e->inode_no, e->dev_id, e->mnt_ns_id, path);
+            if (proc && fs) {
+                struct prov_edge_attr attr = {
+                    .timestamp_ns = e->timestamp_ns,
+                    .fd = -1,
+                };
+                snprintf(attr.exec_success.binary_comm, sizeof(attr.exec_success.binary_comm), "%s",
+                         e->name[0] ? e->name : "<unknown>");
+                prov_add_edge(proc, fs, EDGE_FS_EXEC_SUCCESS, &attr);
+            }
+        }
         break;
     }
 
@@ -746,6 +761,19 @@ int prov_engine_filter_subgraph(uint32_t target_pid, uint64_t target_token, stru
                 }
                 e = e->next_in;
             }
+        } else if (curr->type == NODE_FS_OBJECT) {
+            /* Inbound edges from processes that executed or unlinked this FS object */
+            struct prov_edge *e = curr->in_edges;
+            while (e) {
+                if (e->src && !e->src->filter_marked) {
+                    if (target_pid == 0 || e->src->proc.pid == target_pid) {
+                        e->src->filter_marked = true;
+                        if (q_tail < max_nodes)
+                            queue[q_tail++] = e->src;
+                    }
+                }
+                e = e->next_in;
+            }
         }
     }
 
@@ -924,6 +952,12 @@ static int render_graph_dot(FILE *f, const struct prov_graph *g)
                         edge->src->id, edge->dst->id, esc_buf1, (unsigned long long)edge->attr.timestamp_ns);
                 break;
 
+            case EDGE_FS_EXEC_SUCCESS:
+                escape_string(edge->attr.exec_success.binary_comm, esc_buf1, sizeof(esc_buf1));
+                fprintf(f, "    \"%s\" -> \"%s\" [label=\"fs_exec_success(%s)\\n@%llu ns\", color=\"#4A148C\", fontcolor=\"#4A148C\"];\n",
+                        edge->src->id, edge->dst->id, esc_buf1, (unsigned long long)edge->attr.timestamp_ns);
+                break;
+
             case EDGE_UNLINK:
                 escape_string(edge->attr.unlink.path, esc_buf1, sizeof(esc_buf1));
                 escape_string(edge->attr.unlink.status, esc_buf2, sizeof(esc_buf2));
@@ -1058,6 +1092,12 @@ static int render_graph_json(FILE *f, const struct prov_graph *g)
             case EDGE_MEMFD_EXEC_SUCCESS:
                 escape_string(edge->attr.exec_success.binary_comm, esc_buf1, sizeof(esc_buf1));
                 fprintf(f, "      \"type\": \"EDGE_MEMFD_EXEC_SUCCESS\",\n");
+                fprintf(f, "      \"binary_comm\": \"%s\"\n", esc_buf1);
+                break;
+
+            case EDGE_FS_EXEC_SUCCESS:
+                escape_string(edge->attr.exec_success.binary_comm, esc_buf1, sizeof(esc_buf1));
+                fprintf(f, "      \"type\": \"EDGE_FS_EXEC_SUCCESS\",\n");
                 fprintf(f, "      \"binary_comm\": \"%s\"\n", esc_buf1);
                 break;
 
@@ -1278,6 +1318,15 @@ int prov_engine_export_timeline(const char *filepath, uint32_t target_pid, uint6
                     (unsigned long long)edge->dst->memfd.object_token, esc_buf1);
             break;
 
+        case EDGE_FS_EXEC_SUCCESS:
+            escape_string(edge->attr.exec_success.binary_comm, esc_buf1, sizeof(esc_buf1));
+            escape_string(edge->dst->fs.path, esc_buf2, sizeof(esc_buf2));
+            fprintf(f, "- `[%llu ns]` `[FS_EXEC_SUCCESS]` Process %u (%s) -> exec_success() -> FS Object '%s' (Inode: %llu, Dev: %llu)\n",
+                    (unsigned long long)ts, src_pid, src_comm, esc_buf2,
+                    (unsigned long long)edge->dst->fs.inode_no,
+                    (unsigned long long)edge->dst->fs.dev_id);
+            break;
+
         case EDGE_UNLINK:
             escape_string(edge->attr.unlink.path, esc_buf1, sizeof(esc_buf1));
             escape_string(edge->attr.unlink.status, esc_buf2, sizeof(esc_buf2));
@@ -1359,6 +1408,15 @@ int prov_engine_export_timeline(const char *filepath, uint32_t target_pid, uint6
             fprintf(f, "| %llu | MEMFD_EXEC_SUCCESS | Process %u (%s) | exec_success() | Memfd %llu | Binary: %s, Name: %s |\n",
                     (unsigned long long)ts, src_pid, src_comm,
                     (unsigned long long)edge->dst->memfd.object_token, esc_buf1, esc_buf2);
+            break;
+
+        case EDGE_FS_EXEC_SUCCESS:
+            escape_string(edge->attr.exec_success.binary_comm, esc_buf1, sizeof(esc_buf1));
+            escape_string(edge->dst->fs.path, esc_buf2, sizeof(esc_buf2));
+            fprintf(f, "| %llu | FS_EXEC_SUCCESS | Process %u (%s) | exec_success() | FS Object %llu | Path: %s, Inode: %llu |\n",
+                    (unsigned long long)ts, src_pid, src_comm,
+                    (unsigned long long)edge->dst->fs.inode_no, esc_buf2,
+                    (unsigned long long)edge->dst->fs.inode_no);
             break;
 
         case EDGE_UNLINK:

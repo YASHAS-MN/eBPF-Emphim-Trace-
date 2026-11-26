@@ -1980,13 +1980,49 @@ int capture_process_exec(struct sched_exec_ctx *ctx)
     bpf_probe_read_kernel_str(
         e->name, sizeof(e->name), filename
     );
+    bpf_probe_read_kernel_str(
+        e->path, sizeof(e->path), filename
+    );
 
-    bpf_ringbuf_submit(e, 0);
+    /* Capture backing executable file identity via current task -> mm -> exe_file */
+    struct task_struct *task = (struct task_struct *)bpf_get_current_task_btf();
+    if (task) {
+        struct mm_struct *mm = NULL;
+        if (bpf_core_read(&mm, sizeof(mm), &task->mm) == 0 && mm != NULL) {
+            struct file *exe_file = NULL;
+            if (bpf_core_read(&exe_file, sizeof(exe_file), &mm->exe_file) == 0 && exe_file != NULL) {
+                struct inode *inode = NULL;
+                if (bpf_core_read(&inode, sizeof(inode), &exe_file->f_inode) == 0 && inode != NULL) {
+                    if (bpf_core_read(&e->inode_no, sizeof(e->inode_no), &inode->i_ino) == 0 && e->inode_no != 0) {
+                        e->flags |= VFS_IDENTITY_INODE_VALID;
+                    }
+                    struct super_block *sb = NULL;
+                    if (bpf_core_read(&sb, sizeof(sb), &inode->i_sb) == 0 && sb != NULL) {
+                        __u32 kdev = 0;
+                        if (bpf_core_read(&kdev, sizeof(kdev), &sb->s_dev) == 0) {
+                            e->dev_id = encode_user_dev(kdev);
+                            e->flags |= VFS_IDENTITY_DEV_VALID;
+                        }
+                    }
+                }
+            }
+        }
+        struct nsproxy *nsproxy = NULL;
+        if (bpf_core_read(&nsproxy, sizeof(nsproxy), &task->nsproxy) == 0 && nsproxy != NULL) {
+            struct mnt_namespace *mnt_ns = NULL;
+            if (bpf_core_read(&mnt_ns, sizeof(mnt_ns), &nsproxy->mnt_ns) == 0 && mnt_ns != NULL) {
+                if (bpf_core_read(&e->mnt_ns_id, sizeof(e->mnt_ns_id), &mnt_ns->ns.inum) == 0 && e->mnt_ns_id != 0) {
+                    e->flags |= VFS_IDENTITY_MNT_VALID;
+                }
+            }
+        }
+    }
 
     __u32 tid = (__u32)bpf_get_current_pid_tgid();
     __u64 *token_ptr = bpf_map_lookup_elem(&pending_memfd_exec, &tid);
     if (token_ptr) {
         __u64 token = *token_ptr;
+        e->object_token = token;
         bpf_map_delete_elem(&pending_memfd_exec, &tid);
         inc_counter(CNT_MEMFD_EXEC_SUCCESS);
 
@@ -1997,6 +2033,8 @@ int capture_process_exec(struct sched_exec_ctx *ctx)
             bpf_ringbuf_submit(e_succ, 0);
         }
     }
+
+    bpf_ringbuf_submit(e, 0);
 
     return 0;
 }
