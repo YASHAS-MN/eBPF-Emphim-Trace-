@@ -27,7 +27,9 @@ static char g_evidence_path[256] = "ephimtrace.evid";
 static uint64_t g_max_bytes = EVIDENCE_DEFAULT_MAX_BYTES;
 static uint32_t g_target_pid = 0;
 static uint64_t g_sample_size_mismatches = 0;
-static uint32_t g_ring_buffer_mb = 0;
+#define EPHIM_DEFAULT_RING_BUFFER_MB 64
+#define EPHIM_LOW_MEM_RING_BUFFER_MB 4
+static uint32_t g_ring_buffer_mb = EPHIM_DEFAULT_RING_BUFFER_MB;
 
 enum log_level {
     LOG_LEVEL_ERROR = 0,
@@ -1609,6 +1611,9 @@ int main(int argc, char **argv)
     if (getenv("EPHIM_RING_BUFFER_MB")) {
         g_ring_buffer_mb = (uint32_t)strtoul(getenv("EPHIM_RING_BUFFER_MB"), NULL, 10);
     }
+    if (getenv("EPHIM_LOW_MEMORY") && atoi(getenv("EPHIM_LOW_MEMORY"))) {
+        g_ring_buffer_mb = EPHIM_LOW_MEM_RING_BUFFER_MB;
+    }
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
@@ -1651,6 +1656,8 @@ int main(int argc, char **argv)
                 fprintf(stderr, "Error: --timeline requires a filepath argument\n");
                 return 1;
             }
+        } else if (strcmp(argv[i], "--low-memory") == 0 || strcmp(argv[i], "-l") == 0) {
+            g_ring_buffer_mb = EPHIM_LOW_MEM_RING_BUFFER_MB;
         } else if (strcmp(argv[i], "--ring-buffer-mb") == 0) {
             if (i + 1 < argc) {
                 unsigned long v = strtoul(argv[++i], NULL, 10);
@@ -1678,6 +1685,8 @@ int main(int argc, char **argv)
             printf("                              (default: 1073741824 = 1 GiB)\n");
             printf("  -v, --verbose               Enable debug logging and kernel tracepoint diagnostics\n");
             printf("  -q, --quiet                 Suppress runtime event messages (default in capture mode)\n");
+            printf("  --ring-buffer-mb <mb>       Ring buffer capacity in MiB (candidate default: 64)\n");
+            printf("  -l, --low-memory            Use 4 MiB low-memory ring buffer option\n");
             printf("  -h, --help                  Show this help message\n\n");
             printf("Reconstruction:\n");
             printf("  To reconstruct provenance graphs offline from saved evidence, run:\n");

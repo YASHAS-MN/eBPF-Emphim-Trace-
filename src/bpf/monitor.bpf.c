@@ -267,7 +267,7 @@ struct vfs_file_identity {
 
 struct {
     __uint(type, BPF_MAP_TYPE_RINGBUF);
-    __uint(max_entries, 1 << 20);
+    __uint(max_entries, 64 << 20); /* Candidate default 64 MiB */
 } events SEC(".maps");
 
 /* Bounded per-thread maps keyed by TID (__u32) */
