@@ -1694,42 +1694,41 @@ int capture_memfd_create_exit(struct sys_exit_ctx *ctx)
         }
     }
 
-    /* Unconditionally clean up pending syscall state */
-    bpf_map_delete_elem(&pending_memfd_map, &tid);
-
-    /* Attempt telemetry event emission */
+    /* Attempt telemetry event emission while pending syscall state is valid */
     struct event *e = new_event(EVENT_MEMFD_COMPLETED);
-    if (!e) {
-        inc_counter(CNT_MEMFD_RB_ERR);
-        return 0;
-    }
+    if (e) {
+        e->ret_val = (__s32)ret;
+        e->syscall_flags = ps->flags;
+        e->entry_ts_ns = ps->entry_ts_ns;
+        e->timestamp_ns = bpf_ktime_get_ns();
+        e->path_status = ps->path_status;
+        __builtin_memcpy(e->name, ps->name, sizeof(e->name));
+        e->op_type = op_type;
 
-    e->ret_val = (__s32)ret;
-    e->syscall_flags = ps->flags;
-    e->entry_ts_ns = ps->entry_ts_ns;
-    e->timestamp_ns = bpf_ktime_get_ns();
-    e->path_status = ps->path_status;
-    __builtin_memcpy(e->name, ps->name, sizeof(e->name));
-    e->op_type = op_type;
+        if (op_type == MEMFD_STATUS_SUCCESS_CORRELATED) {
+            e->fd = (__s32)ret;
+            e->flags = ps->identity_flags;
+            e->inode_no = ps->inode_no;
+            e->dev_id = ps->dev_id;
+            e->mnt_ns_id = 0;
+            e->object_token = ps->file_cookie;
+            __builtin_memcpy(e->path, ps->dentry_name, sizeof(e->path));
+        } else {
+            e->fd = (op_type == MEMFD_STATUS_FAILED) ? -1 : (__s32)ret;
+            e->flags = 0;
+            e->inode_no = 0;
+            e->dev_id = 0;
+            e->mnt_ns_id = 0;
+            e->path[0] = '\0';
+        }
 
-    if (op_type == MEMFD_STATUS_SUCCESS_CORRELATED) {
-        e->fd = (__s32)ret;
-        e->flags = ps->identity_flags;
-        e->inode_no = ps->inode_no;
-        e->dev_id = ps->dev_id;
-        e->mnt_ns_id = 0;
-        e->object_token = ps->file_cookie;
-        __builtin_memcpy(e->path, ps->dentry_name, sizeof(e->path));
+        bpf_ringbuf_submit(e, 0);
     } else {
-        e->fd = (op_type == MEMFD_STATUS_FAILED) ? -1 : (__s32)ret;
-        e->flags = 0;
-        e->inode_no = 0;
-        e->dev_id = 0;
-        e->mnt_ns_id = 0;
-        e->path[0] = '\0';
+        inc_counter(CNT_MEMFD_RB_ERR);
     }
 
-    bpf_ringbuf_submit(e, 0);
+    /* Unconditionally delete pending map entry AFTER all accesses to ps are complete */
+    bpf_map_delete_elem(&pending_memfd_map, &tid);
     return 0;
 }
 
@@ -1998,6 +1997,57 @@ int capture_process_exec(struct sched_exec_ctx *ctx)
     __u32 offset = ctx->filename_loc & 0xFFFF;
     const char *filename = (const char *)ctx + offset;
 
+    /* Preserve event ordering: emit EVENT_PROCESS_EXEC first */
+    struct event *e = new_event(EVENT_PROCESS_EXEC);
+    if (e) {
+        e->old_pid = (__u32)ctx->old_pid;
+        e->object_token = token;
+
+        bpf_probe_read_kernel_str(
+            e->name, sizeof(e->name), filename
+        );
+        bpf_probe_read_kernel_str(
+            e->path, sizeof(e->path), filename
+        );
+
+        /* Capture backing executable file identity via current task -> mm -> exe_file */
+        struct task_struct *task = (struct task_struct *)bpf_get_current_task_btf();
+        if (task) {
+            struct mm_struct *mm = NULL;
+            if (bpf_core_read(&mm, sizeof(mm), &task->mm) == 0 && mm != NULL) {
+                struct file *exe_file = NULL;
+                if (bpf_core_read(&exe_file, sizeof(exe_file), &mm->exe_file) == 0 && exe_file != NULL) {
+                    struct inode *inode = NULL;
+                    if (bpf_core_read(&inode, sizeof(inode), &exe_file->f_inode) == 0 && inode != NULL) {
+                        if (bpf_core_read(&e->inode_no, sizeof(e->inode_no), &inode->i_ino) == 0 && e->inode_no != 0) {
+                            e->flags |= VFS_IDENTITY_INODE_VALID;
+                        }
+                        struct super_block *sb = NULL;
+                        if (bpf_core_read(&sb, sizeof(sb), &inode->i_sb) == 0 && sb != NULL) {
+                            __u32 kdev = 0;
+                            if (bpf_core_read(&kdev, sizeof(kdev), &sb->s_dev) == 0) {
+                                e->dev_id = encode_user_dev(kdev);
+                                e->flags |= VFS_IDENTITY_DEV_VALID;
+                            }
+                        }
+                    }
+                }
+            }
+            struct nsproxy *nsproxy = NULL;
+            if (bpf_core_read(&nsproxy, sizeof(nsproxy), &task->nsproxy) == 0 && nsproxy != NULL) {
+                struct mnt_namespace *mnt_ns = NULL;
+                if (bpf_core_read(&mnt_ns, sizeof(mnt_ns), &nsproxy->mnt_ns) == 0 && mnt_ns != NULL) {
+                    if (bpf_core_read(&e->mnt_ns_id, sizeof(e->mnt_ns_id), &mnt_ns->ns.inum) == 0 && e->mnt_ns_id != 0) {
+                        e->flags |= VFS_IDENTITY_MNT_VALID;
+                    }
+                }
+            }
+        }
+
+        bpf_ringbuf_submit(e, 0);
+    }
+
+    /* Emit EVENT_MEMFD_EXEC_SUCCESS second, preserving event sequence */
     if (token != 0) {
         struct event *e_succ = new_event(EVENT_MEMFD_EXEC_SUCCESS);
         if (e_succ) {
@@ -2006,56 +2056,6 @@ int capture_process_exec(struct sched_exec_ctx *ctx)
             bpf_ringbuf_submit(e_succ, 0);
         }
     }
-
-    struct event *e = new_event(EVENT_PROCESS_EXEC);
-    if (!e)
-        return 0;
-
-    e->old_pid = (__u32)ctx->old_pid;
-    e->object_token = token;
-
-    bpf_probe_read_kernel_str(
-        e->name, sizeof(e->name), filename
-    );
-    bpf_probe_read_kernel_str(
-        e->path, sizeof(e->path), filename
-    );
-
-    /* Capture backing executable file identity via current task -> mm -> exe_file */
-    struct task_struct *task = (struct task_struct *)bpf_get_current_task_btf();
-    if (task) {
-        struct mm_struct *mm = NULL;
-        if (bpf_core_read(&mm, sizeof(mm), &task->mm) == 0 && mm != NULL) {
-            struct file *exe_file = NULL;
-            if (bpf_core_read(&exe_file, sizeof(exe_file), &mm->exe_file) == 0 && exe_file != NULL) {
-                struct inode *inode = NULL;
-                if (bpf_core_read(&inode, sizeof(inode), &exe_file->f_inode) == 0 && inode != NULL) {
-                    if (bpf_core_read(&e->inode_no, sizeof(e->inode_no), &inode->i_ino) == 0 && e->inode_no != 0) {
-                        e->flags |= VFS_IDENTITY_INODE_VALID;
-                    }
-                    struct super_block *sb = NULL;
-                    if (bpf_core_read(&sb, sizeof(sb), &inode->i_sb) == 0 && sb != NULL) {
-                        __u32 kdev = 0;
-                        if (bpf_core_read(&kdev, sizeof(kdev), &sb->s_dev) == 0) {
-                            e->dev_id = encode_user_dev(kdev);
-                            e->flags |= VFS_IDENTITY_DEV_VALID;
-                        }
-                    }
-                }
-            }
-        }
-        struct nsproxy *nsproxy = NULL;
-        if (bpf_core_read(&nsproxy, sizeof(nsproxy), &task->nsproxy) == 0 && nsproxy != NULL) {
-            struct mnt_namespace *mnt_ns = NULL;
-            if (bpf_core_read(&mnt_ns, sizeof(mnt_ns), &nsproxy->mnt_ns) == 0 && mnt_ns != NULL) {
-                if (bpf_core_read(&e->mnt_ns_id, sizeof(e->mnt_ns_id), &mnt_ns->ns.inum) == 0 && e->mnt_ns_id != 0) {
-                    e->flags |= VFS_IDENTITY_MNT_VALID;
-                }
-            }
-        }
-    }
-
-    bpf_ringbuf_submit(e, 0);
 
     return 0;
 }

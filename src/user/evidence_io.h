@@ -160,6 +160,10 @@ static inline const char *evidence_event_type_name(uint32_t type) {
   }
 }
 
+#ifndef EPHIM_MAX_EVENT_TYPE
+#define EPHIM_MAX_EVENT_TYPE 128
+#endif
+
 /* --- Private Session Manifest --- */
 
 struct evidence_session_manifest {
@@ -181,7 +185,7 @@ struct evidence_session_manifest {
   uint64_t poll_errors;
   uint64_t drain_errors;
   int64_t ring_buffer_total_drops; /* -1 if unavailable, >= 0 when measured */
-  uint64_t ring_buffer_per_type_drops[32]; /* per event type drops (0..31) */
+  int64_t ring_buffer_per_type_drops[EPHIM_MAX_EVENT_TYPE]; /* per-event type drops (-1 if unavailable) */
   char ring_buffer_drops[64];
 };
 
@@ -423,126 +427,118 @@ evidence_write_manifest(const char *evid_path,
   if (fd < 0)
     return -errno;
 
-  char buf[4096];
-  int len;
+  const char *persist_status = (m->finalized && m->synchronized) ? "PERSISTED_CLEAN" : "PERSIST_FAILED";
+  bool telemetry_lossless = (m->finalized && m->synchronized &&
+                             m->sample_size_mismatches == 0 &&
+                             m->write_errors == 0 &&
+                             m->poll_errors == 0 &&
+                             m->drain_errors == 0 &&
+                             m->reg_map_full_drop == 0 &&
+                             m->token_alloc_err == 0 &&
+                             m->token_mismatch == 0 &&
+                             m->ring_buffer_total_drops == 0);
+  const char *capture_status = (m->ring_buffer_total_drops < 0 || m->reg_map_full_drop < 0) ?
+                               "UNVERIFIED_COUNTERS_UNAVAILABLE" :
+                               (telemetry_lossless ? "COMPLETE_LOSSLESS" : "LOSSY_DROPS_RECORDED");
+
+  char drops_str[64];
   if (m->ring_buffer_total_drops >= 0) {
-    len = snprintf(
-        buf, sizeof(buf),
-        "{\n"
-        "  \"manifest_version\": 1,\n"
-        "  \"evidence_file\": \"%s\",\n"
-        "  \"target_pid\": %u,\n"
-        "  \"session_start_ns\": %llu,\n"
-        "  \"session_end_ns\": %llu,\n"
-        "  \"record_count\": %llu,\n"
-        "  \"storage_bytes\": %llu,\n"
-        "  \"finalization_status\": \"%s\",\n"
-        "  \"synchronization_status\": \"%s\",\n"
-        "  \"finalized\": %s,\n"
-        "  \"synchronized\": %s,\n"
-        "  \"loss_counters\": {\n"
-        "    \"reg_map_full_drop\": %lld,\n"
-        "    \"token_alloc_err\": %lld,\n"
-        "    \"token_mismatch\": %lld,\n"
-        "    \"sample_size_mismatches\": %llu,\n"
-        "    \"write_errors\": %llu,\n"
-        "    \"poll_errors\": %llu,\n"
-        "    \"drain_errors\": %llu,\n"
-        "    \"ring_buffer_total_drops\": %lld,\n"
-        "    \"ring_buffer_drops\": %lld,\n"
-        "    \"ring_buffer_per_type_drops\": {\n"
-        "      \"execve\": %llu,\n"
-        "      \"memfd_create\": %llu,\n"
-        "      \"unlink\": %llu,\n"
-        "      \"unlinkat\": %llu,\n"
-        "      \"connect\": %llu,\n"
-        "      \"fork\": %llu,\n"
-        "      \"process_exec\": %llu,\n"
-        "      \"process_exit\": %llu,\n"
-        "      \"vfs_unlink_completed\": %llu,\n"
-        "      \"vfs_rmdir_completed\": %llu,\n"
-        "      \"rmdir\": %llu,\n"
-        "      \"memfd_completed\": %llu,\n"
-        "      \"memfd_destroyed\": %llu,\n"
-        "      \"memfd_file_released\": %llu,\n"
-        "      \"fd_installed\": %llu,\n"
-        "      \"fd_closed\": %llu,\n"
-        "      \"memfd_write\": %llu,\n"
-        "      \"memfd_exec_attempt\": %llu,\n"
-        "      \"memfd_exec_success\": %llu\n"
-        "    }\n"
-        "  }\n"
-        "}\n",
-        evid_path, m->target_pid, (unsigned long long)m->session_start_ns,
-        (unsigned long long)m->session_end_ns,
-        (unsigned long long)m->record_count, (unsigned long long)m->storage_bytes,
-        m->finalized ? "COMPLETE" : "INCOMPLETE / FAILED",
-        m->synchronized ? "SYNCED" : "FAILED", m->finalized ? "true" : "false",
-        m->synchronized ? "true" : "false", (long long)m->reg_map_full_drop,
-        (long long)m->token_alloc_err, (long long)m->token_mismatch,
-        (unsigned long long)m->sample_size_mismatches,
-        (unsigned long long)m->write_errors, (unsigned long long)m->poll_errors,
-        (unsigned long long)m->drain_errors,
-        (long long)m->ring_buffer_total_drops,
-        (long long)m->ring_buffer_total_drops,
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_EXECVE],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_CREATE],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_UNLINK],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_UNLINKAT],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_CONNECT],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_FORK],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_PROCESS_EXEC],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_PROCESS_EXIT],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_VFS_UNLINK_COMPLETED],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_VFS_RMDIR_COMPLETED],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_RMDIR],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_COMPLETED],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_DESTROYED],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_FILE_RELEASED],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_FD_INSTALLED],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_FD_CLOSED],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_WRITE],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_EXEC_ATTEMPT],
-        (unsigned long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_EXEC_SUCCESS]);
+    snprintf(drops_str, sizeof(drops_str), "%lld", (long long)m->ring_buffer_total_drops);
+  } else if (m->ring_buffer_drops[0]) {
+    snprintf(drops_str, sizeof(drops_str), "%s", m->ring_buffer_drops);
   } else {
-    len = snprintf(
-        buf, sizeof(buf),
-        "{\n"
-        "  \"manifest_version\": 1,\n"
-        "  \"evidence_file\": \"%s\",\n"
-        "  \"target_pid\": %u,\n"
-        "  \"session_start_ns\": %llu,\n"
-        "  \"session_end_ns\": %llu,\n"
-        "  \"record_count\": %llu,\n"
-        "  \"storage_bytes\": %llu,\n"
-        "  \"finalization_status\": \"%s\",\n"
-        "  \"synchronization_status\": \"%s\",\n"
-        "  \"finalized\": %s,\n"
-        "  \"synchronized\": %s,\n"
-        "  \"loss_counters\": {\n"
-        "    \"reg_map_full_drop\": %lld,\n"
-        "    \"token_alloc_err\": %lld,\n"
-        "    \"token_mismatch\": %lld,\n"
-        "    \"sample_size_mismatches\": %llu,\n"
-        "    \"write_errors\": %llu,\n"
-        "    \"poll_errors\": %llu,\n"
-        "    \"drain_errors\": %llu,\n"
-        "    \"ring_buffer_total_drops\": -1,\n"
-        "    \"ring_buffer_drops\": \"%s\"\n"
-        "  }\n"
-        "}\n",
-        evid_path, m->target_pid, (unsigned long long)m->session_start_ns,
-        (unsigned long long)m->session_end_ns,
-        (unsigned long long)m->record_count, (unsigned long long)m->storage_bytes,
-        m->finalized ? "COMPLETE" : "INCOMPLETE / FAILED",
-        m->synchronized ? "SYNCED" : "FAILED", m->finalized ? "true" : "false",
-        m->synchronized ? "true" : "false", (long long)m->reg_map_full_drop,
-        (long long)m->token_alloc_err, (long long)m->token_mismatch,
-        (unsigned long long)m->sample_size_mismatches,
-        (unsigned long long)m->write_errors, (unsigned long long)m->poll_errors,
-        (unsigned long long)m->drain_errors,
-        m->ring_buffer_drops[0] ? m->ring_buffer_drops : "unavailable via kernel ring_buffer API");
+    snprintf(drops_str, sizeof(drops_str), "unavailable via kernel ring_buffer API");
   }
+
+  char buf[4096];
+  int len = snprintf(
+      buf, sizeof(buf),
+      "{\n"
+      "  \"manifest_version\": 1,\n"
+      "  \"evidence_file\": \"%s\",\n"
+      "  \"target_pid\": %u,\n"
+      "  \"session_start_ns\": %llu,\n"
+      "  \"session_end_ns\": %llu,\n"
+      "  \"record_count\": %llu,\n"
+      "  \"storage_bytes\": %llu,\n"
+      "  \"finalization_status\": \"%s\",\n"
+      "  \"synchronization_status\": \"%s\",\n"
+      "  \"persistence_status\": \"%s\",\n"
+      "  \"telemetry_capture_status\": \"%s\",\n"
+      "  \"telemetry_loss_free\": %s,\n"
+      "  \"finalized\": %s,\n"
+      "  \"synchronized\": %s,\n"
+      "  \"loss_counters\": {\n"
+      "    \"reg_map_full_drop\": %lld,\n"
+      "    \"token_alloc_err\": %lld,\n"
+      "    \"token_mismatch\": %lld,\n"
+      "    \"sample_size_mismatches\": %llu,\n"
+      "    \"write_errors\": %llu,\n"
+      "    \"poll_errors\": %llu,\n"
+      "    \"drain_errors\": %llu,\n"
+      "    \"ring_buffer_total_drops\": %lld,\n"
+      "    \"ring_buffer_drops\": \"%s\",\n"
+      "    \"ring_buffer_per_type_drops\": {\n"
+      "      \"execve\": %lld,\n"
+      "      \"memfd_create\": %lld,\n"
+      "      \"unlink\": %lld,\n"
+      "      \"unlinkat\": %lld,\n"
+      "      \"connect\": %lld,\n"
+      "      \"fork\": %lld,\n"
+      "      \"process_exec\": %lld,\n"
+      "      \"process_exit\": %lld,\n"
+      "      \"vfs_unlink_completed\": %lld,\n"
+      "      \"vfs_rmdir_completed\": %lld,\n"
+      "      \"rmdir\": %lld,\n"
+      "      \"memfd_completed\": %lld,\n"
+      "      \"memfd_destroyed\": %lld,\n"
+      "      \"memfd_file_released\": %lld,\n"
+      "      \"fd_installed\": %lld,\n"
+      "      \"fd_closed\": %lld,\n"
+      "      \"memfd_write\": %lld,\n"
+      "      \"memfd_exec_attempt\": %lld,\n"
+      "      \"memfd_exec_success\": %lld,\n"
+      "      \"debug\": %lld\n"
+      "    }\n"
+      "  }\n"
+      "}\n",
+      evid_path, m->target_pid, (unsigned long long)m->session_start_ns,
+      (unsigned long long)m->session_end_ns,
+      (unsigned long long)m->record_count, (unsigned long long)m->storage_bytes,
+      m->finalized ? "COMPLETE" : "INCOMPLETE / FAILED",
+      m->synchronized ? "SYNCED" : "FAILED",
+      persist_status, capture_status,
+      telemetry_lossless ? "true" : "false",
+      m->finalized ? "true" : "false",
+      m->synchronized ? "true" : "false",
+      (long long)m->reg_map_full_drop,
+      (long long)m->token_alloc_err, (long long)m->token_mismatch,
+      (unsigned long long)m->sample_size_mismatches,
+      (unsigned long long)m->write_errors, (unsigned long long)m->poll_errors,
+      (unsigned long long)m->drain_errors,
+      (long long)m->ring_buffer_total_drops,
+      drops_str,
+      (long long)m->ring_buffer_per_type_drops[EVENT_EXECVE],
+      (long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_CREATE],
+      (long long)m->ring_buffer_per_type_drops[EVENT_UNLINK],
+      (long long)m->ring_buffer_per_type_drops[EVENT_UNLINKAT],
+      (long long)m->ring_buffer_per_type_drops[EVENT_CONNECT],
+      (long long)m->ring_buffer_per_type_drops[EVENT_FORK],
+      (long long)m->ring_buffer_per_type_drops[EVENT_PROCESS_EXEC],
+      (long long)m->ring_buffer_per_type_drops[EVENT_PROCESS_EXIT],
+      (long long)m->ring_buffer_per_type_drops[EVENT_VFS_UNLINK_COMPLETED],
+      (long long)m->ring_buffer_per_type_drops[EVENT_VFS_RMDIR_COMPLETED],
+      (long long)m->ring_buffer_per_type_drops[EVENT_RMDIR],
+      (long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_COMPLETED],
+      (long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_DESTROYED],
+      (long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_FILE_RELEASED],
+      (long long)m->ring_buffer_per_type_drops[EVENT_FD_INSTALLED],
+      (long long)m->ring_buffer_per_type_drops[EVENT_FD_CLOSED],
+      (long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_WRITE],
+      (long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_EXEC_ATTEMPT],
+      (long long)m->ring_buffer_per_type_drops[EVENT_MEMFD_EXEC_SUCCESS],
+      (long long)m->ring_buffer_per_type_drops[EVENT_DEBUG]);
+
   if (len < 0 || (size_t)len >= sizeof(buf)) {
     close(fd);
     unlink(manifest_path);
@@ -587,6 +583,9 @@ evidence_read_manifest(const char *evid_path,
   out_m->token_alloc_err = -1;
   out_m->token_mismatch = -1;
   out_m->ring_buffer_total_drops = -1;
+  for (int i = 0; i < EPHIM_MAX_EVENT_TYPE; i++) {
+    out_m->ring_buffer_per_type_drops[i] = -1;
+  }
   snprintf(out_m->ring_buffer_drops, sizeof(out_m->ring_buffer_drops),
            "unavailable via kernel ring_buffer API");
   char manifest_path[512];
@@ -699,6 +698,38 @@ evidence_read_manifest(const char *evid_path,
     } else {
       long long v = strtoll(p, NULL, 10);
       snprintf(out_m->ring_buffer_drops, sizeof(out_m->ring_buffer_drops), "%lld", v);
+    }
+  }
+  static const struct {
+    uint32_t type;
+    const char *key;
+  } type_keys[] = {
+    {EVENT_EXECVE, "\"execve\":"},
+    {EVENT_MEMFD_CREATE, "\"memfd_create\":"},
+    {EVENT_UNLINK, "\"unlink\":"},
+    {EVENT_UNLINKAT, "\"unlinkat\":"},
+    {EVENT_CONNECT, "\"connect\":"},
+    {EVENT_FORK, "\"fork\":"},
+    {EVENT_PROCESS_EXEC, "\"process_exec\":"},
+    {EVENT_PROCESS_EXIT, "\"process_exit\":"},
+    {EVENT_VFS_UNLINK_COMPLETED, "\"vfs_unlink_completed\":"},
+    {EVENT_VFS_RMDIR_COMPLETED, "\"vfs_rmdir_completed\":"},
+    {EVENT_RMDIR, "\"rmdir\":"},
+    {EVENT_MEMFD_COMPLETED, "\"memfd_completed\":"},
+    {EVENT_MEMFD_DESTROYED, "\"memfd_destroyed\":"},
+    {EVENT_MEMFD_FILE_RELEASED, "\"memfd_file_released\":"},
+    {EVENT_FD_INSTALLED, "\"fd_installed\":"},
+    {EVENT_FD_CLOSED, "\"fd_closed\":"},
+    {EVENT_MEMFD_WRITE, "\"memfd_write\":"},
+    {EVENT_MEMFD_EXEC_ATTEMPT, "\"memfd_exec_attempt\":"},
+    {EVENT_MEMFD_EXEC_SUCCESS, "\"memfd_exec_success\":"},
+    {EVENT_DEBUG, "\"debug\":"},
+  };
+  for (size_t i = 0; i < sizeof(type_keys)/sizeof(type_keys[0]); i++) {
+    if ((p = strstr(buf, type_keys[i].key))) {
+      p += strlen(type_keys[i].key);
+      while (*p == ' ' || *p == '\t') p++;
+      out_m->ring_buffer_per_type_drops[type_keys[i].type] = (int64_t)strtoll(p, NULL, 10);
     }
   }
   return 0; /* Successfully read and parsed */

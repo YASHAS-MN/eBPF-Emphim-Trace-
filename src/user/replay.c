@@ -271,7 +271,10 @@ int main(int argc, char *argv[]) {
     int manifest_rc = evidence_read_manifest(cfg.evid_path, &manifest);
     bool manifest_present = (manifest_rc == 0 || manifest_rc < 0);
     bool manifest_verified = false;
-    const char *manifest_status = "UNKNOWN (Legacy v1 evidence file without manifest)";
+    bool telemetry_lossless = false;
+    const char *persist_desc = "UNKNOWN (Legacy v1 evidence file without manifest)";
+    const char *capture_desc = "UNKNOWN (Legacy v1 evidence file without manifest)";
+    const char *manifest_status = persist_desc;
 
     if (manifest_rc == 0) {
         bool size_match = (st_evid.st_size == (off_t)manifest.storage_bytes);
@@ -284,18 +287,37 @@ int main(int argc, char *argv[]) {
 
         if (size_match && count_match && final_clean && loss_clean) {
             manifest_verified = true;
-            manifest_status = "FINALIZED (Verified against private session manifest)";
+            persist_desc = "VERIFIED (Storage & CRC clean)";
         } else {
             manifest_verified = false;
-            manifest_status = "UNFINALIZED / INCOMPLETE (Discrepancy with session manifest)";
+            persist_desc = "DISCREPANCY (Storage corruption or size/count mismatch)";
         }
+
+        if (manifest.ring_buffer_total_drops < 0 || manifest.reg_map_full_drop < 0) {
+            telemetry_lossless = false;
+            capture_desc = "UNVERIFIED (Kernel loss counters unavailable in manifest)";
+        } else if (manifest.ring_buffer_total_drops == 0 &&
+                   manifest.reg_map_full_drop == 0 &&
+                   manifest.token_alloc_err == 0 &&
+                   manifest.token_mismatch == 0) {
+            telemetry_lossless = true;
+            capture_desc = "COMPLETE_LOSSLESS (0 drops recorded across all stages)";
+        } else {
+            telemetry_lossless = false;
+            capture_desc = "LOSSY (Drops recorded in kernel ring buffer or registry)";
+        }
+        manifest_status = persist_desc;
     } else if (manifest_rc < 0) {
         manifest_verified = false;
-        manifest_status = "FAILED (Corrupt manifest or symlink/alias rejected)";
+        persist_desc = "FAILED (Corrupt manifest or symlink/alias rejected)";
+        capture_desc = "FAILED (Corrupt manifest or symlink/alias rejected)";
+        manifest_status = persist_desc;
     } else {
         manifest_present = false;
         manifest_verified = false;
-        manifest_status = "UNKNOWN (Legacy v1 evidence file without manifest)";
+        persist_desc = "UNKNOWN (Legacy v1 evidence file without manifest)";
+        capture_desc = "UNKNOWN (Legacy v1 evidence file without manifest)";
+        manifest_status = persist_desc;
     }
 
     /* Success Criteria */
@@ -405,7 +427,11 @@ int main(int argc, char *argv[]) {
     printf("Corrupt Records:           %llu\n", (unsigned long long)reader.stats.corrupt_records);
     printf("Sequence Gaps:             %llu\n", (unsigned long long)reader.stats.seq_gaps);
     printf("Incomplete / Short Records:%llu\n", (unsigned long long)reader.stats.incomplete_records);
-    printf("Session Finalization:      %s\n", manifest_status);
+    printf("Storage Persistence:       %s\n", persist_desc);
+    printf("Telemetry Completeness:    %s\n", capture_desc);
+    if (manifest_rc == 0 && manifest.ring_buffer_total_drops > 0) {
+        printf("Ring Buffer Drops:         %lld\n", (long long)manifest.ring_buffer_total_drops);
+    }
     printf("-----------------------------------------------------------------\n");
     printf("Provenance Nodes:          %zu\n", total_nodes);
     printf("Provenance Edges:          %zu\n", total_edges);
@@ -436,7 +462,7 @@ int main(int argc, char *argv[]) {
     }
     printf("=================================================================\n");
     printf("Reconstruction Status:     %s\n",
-           overall_success ? "SUCCESS" :
+           overall_success ? (telemetry_lossless ? "SUCCESS (Complete & Lossless)" : "SUCCESS (Lossy Telemetry Captured)") :
            (!clean_eof || !no_incompleteness) ? "FAILED (Incomplete evidence / EOF truncation)" :
            (!no_corruption) ? "FAILED (Corrupt records / CRC32 mismatch)" :
            (!gaps_acceptable) ? "FAILED (Sequence gaps under strict mode)" :
@@ -455,6 +481,11 @@ int main(int argc, char *argv[]) {
             fprintf(fj, "  \"manifest_present\": %s,\n", manifest_present ? "true" : "false");
             fprintf(fj, "  \"manifest_verified\": %s,\n", manifest_verified ? "true" : "false");
             fprintf(fj, "  \"manifest_status\": \"%s\",\n", manifest_status);
+            fprintf(fj, "  \"persistence_verified\": %s,\n", manifest_verified ? "true" : "false");
+            fprintf(fj, "  \"persistence_status\": \"%s\",\n", persist_desc);
+            fprintf(fj, "  \"telemetry_loss_free\": %s,\n", telemetry_lossless ? "true" : "false");
+            fprintf(fj, "  \"telemetry_capture_status\": \"%s\",\n", capture_desc);
+            fprintf(fj, "  \"ring_buffer_total_drops\": %lld,\n", (manifest_rc == 0) ? (long long)manifest.ring_buffer_total_drops : -1LL);
             fprintf(fj, "  \"records_verified\": %llu,\n", (unsigned long long)reader.stats.records_verified);
             fprintf(fj, "  \"records_replayed\": %llu,\n", (unsigned long long)reader.stats.records_replayed);
             fprintf(fj, "  \"corrupt_records\": %llu,\n", (unsigned long long)reader.stats.corrupt_records);

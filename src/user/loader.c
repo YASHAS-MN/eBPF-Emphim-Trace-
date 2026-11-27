@@ -638,15 +638,23 @@ static void print_counters_table(int cnt_fd, int drop_fd)
         printf("  --------------------------------------------------------------\n");
         printf("  [RING_BUF_DROPS]\n");
         uint64_t total_drops = 0;
-        for (uint32_t t = 1; t < 32; t++) {
+        bool any_lookup_ok = false;
+        for (uint32_t t = 1; t < EPHIM_MAX_EVENT_TYPE; t++) {
             uint32_t key = t;
             uint64_t val = 0;
-            if (bpf_map_lookup_elem(drop_fd, &key, &val) == 0 && val > 0) {
-                printf("    %-24s: %llu\n", evidence_event_type_name(t), (unsigned long long)val);
+            if (bpf_map_lookup_elem(drop_fd, &key, &val) == 0) {
+                any_lookup_ok = true;
+                if (val > 0) {
+                    printf("    %-24s: %llu\n", evidence_event_type_name(t), (unsigned long long)val);
+                }
                 total_drops += val;
             }
         }
-        printf("    %-24s: %llu\n", "TOTAL", (unsigned long long)total_drops);
+        if (any_lookup_ok) {
+            printf("    %-24s: %llu\n", "TOTAL", (unsigned long long)total_drops);
+        } else {
+            printf("    %-24s: <unavailable>\n", "TOTAL");
+        }
     }
     printf("===============================================================\n\n");
     fflush(stdout);
@@ -1479,25 +1487,41 @@ static int print_session_manifest(int cnt_fd, int drop_fd, int close_rc, int pol
     printf("Ring Buffer Poll Errors:   %d\n", poll_errors);
     printf("Ring Buffer Drain Errors:  %d\n", drain_errors);
     printf("Intermediate Sync Errors:  %d\n", sync_errors);
-    uint64_t rb_drops[32] = {0};
-    uint64_t total_rb_drops = 0;
+    int64_t rb_drops[EPHIM_MAX_EVENT_TYPE];
+    for (int i = 0; i < EPHIM_MAX_EVENT_TYPE; i++) rb_drops[i] = -1;
+    int64_t total_rb_drops = -1;
     bool drop_avail = false;
     if (drop_fd >= 0) {
         drop_avail = true;
-        for (uint32_t t = 0; t < 32; t++) {
+        uint64_t sum = 0;
+        bool all_ok = true;
+        for (uint32_t t = 0; t < EPHIM_MAX_EVENT_TYPE; t++) {
             uint32_t key = t;
             uint64_t val = 0;
             if (bpf_map_lookup_elem(drop_fd, &key, &val) == 0) {
-                rb_drops[t] = val;
-                total_rb_drops += val;
+                rb_drops[t] = (int64_t)val;
+                sum += val;
+            } else {
+                rb_drops[t] = -1;
+                all_ok = false;
             }
         }
+        total_rb_drops = all_ok ? (int64_t)sum : -1;
     }
     if (drop_avail) {
-        printf("Ring Buffer Total Drops:   %llu\n", (unsigned long long)total_rb_drops);
-        for (uint32_t t = 1; t < 32; t++) {
-            if (rb_drops[t] > 0) {
-                printf("  - %-23s: %llu\n", evidence_event_type_name(t), (unsigned long long)rb_drops[t]);
+        if (total_rb_drops >= 0) {
+            printf("Ring Buffer Total Drops:   %lld\n", (long long)total_rb_drops);
+        } else {
+            printf("Ring Buffer Total Drops:   <unavailable via BPF map lookup>\n");
+        }
+        for (uint32_t t = 1; t < EPHIM_MAX_EVENT_TYPE; t++) {
+            const char *tname = evidence_event_type_name(t);
+            if (strcmp(tname, "unknown") != 0) {
+                if (rb_drops[t] > 0) {
+                    printf("  - %-23s: %lld\n", tname, (long long)rb_drops[t]);
+                } else if (rb_drops[t] < 0) {
+                    printf("  - %-23s: <unavailable>\n", tname);
+                }
             }
         }
     } else {
@@ -1505,13 +1529,20 @@ static int print_session_manifest(int cnt_fd, int drop_fd, int close_rc, int pol
     }
     printf("---------------------------------------------------------------\n");
 
-    bool success = (close_rc == 0 &&
-                    !g_evidence_writer.error_occurred &&
-                    g_evidence_writer.stats.write_errors == 0 &&
-                    g_sample_size_mismatches == 0 &&
-                    poll_errors == 0 &&
-                    drain_errors == 0 &&
-                    sync_errors == 0);
+    bool persist_ok = (close_rc == 0 &&
+                       !g_evidence_writer.error_occurred &&
+                       g_evidence_writer.stats.write_errors == 0 &&
+                       g_sample_size_mismatches == 0 &&
+                       poll_errors == 0 &&
+                       drain_errors == 0 &&
+                       sync_errors == 0);
+
+    bool loss_free = (persist_ok &&
+                      drop_avail &&
+                      total_rb_drops == 0 &&
+                      counter_avail[CNT_REG_MAP_FULL_DROP] && c[CNT_REG_MAP_FULL_DROP] == 0 &&
+                      counter_avail[CNT_REG_TOKEN_ERR] && c[CNT_REG_TOKEN_ERR] == 0 &&
+                      counter_avail[CNT_REG_TOKEN_MISMATCH] && c[CNT_REG_TOKEN_MISMATCH] == 0);
 
     /* Construct and persist private session manifest */
     struct evidence_session_manifest manifest;
@@ -1522,7 +1553,7 @@ static int print_session_manifest(int cnt_fd, int drop_fd, int close_rc, int pol
     manifest.session_end_ns = evidence_time_now_ns();
     manifest.record_count = g_evidence_writer.stats.records_synced;
     manifest.storage_bytes = g_evidence_writer.stats.storage_bytes;
-    manifest.finalized = success;
+    manifest.finalized = persist_ok;
     manifest.synchronized = (close_rc == 0 && !g_evidence_writer.error_occurred);
     manifest.sample_size_mismatches = g_sample_size_mismatches;
     manifest.write_errors = g_evidence_writer.stats.write_errors;
@@ -1531,11 +1562,11 @@ static int print_session_manifest(int cnt_fd, int drop_fd, int close_rc, int pol
     manifest.reg_map_full_drop = counter_avail[CNT_REG_MAP_FULL_DROP] ? (int64_t)c[CNT_REG_MAP_FULL_DROP] : -1;
     manifest.token_alloc_err = counter_avail[CNT_REG_TOKEN_ERR] ? (int64_t)c[CNT_REG_TOKEN_ERR] : -1;
     manifest.token_mismatch = counter_avail[CNT_REG_TOKEN_MISMATCH] ? (int64_t)c[CNT_REG_TOKEN_MISMATCH] : -1;
-    manifest.ring_buffer_total_drops = drop_avail ? (int64_t)total_rb_drops : -1;
-    if (drop_avail) {
-        memcpy(manifest.ring_buffer_per_type_drops, rb_drops, sizeof(manifest.ring_buffer_per_type_drops));
+    manifest.ring_buffer_total_drops = total_rb_drops;
+    memcpy(manifest.ring_buffer_per_type_drops, rb_drops, sizeof(manifest.ring_buffer_per_type_drops));
+    if (drop_avail && total_rb_drops >= 0) {
         snprintf(manifest.ring_buffer_drops, sizeof(manifest.ring_buffer_drops),
-                 "%llu", (unsigned long long)total_rb_drops);
+                 "%lld", (long long)total_rb_drops);
     } else {
         snprintf(manifest.ring_buffer_drops, sizeof(manifest.ring_buffer_drops),
                  "unavailable via kernel ring_buffer API");
@@ -1547,16 +1578,27 @@ static int print_session_manifest(int cnt_fd, int drop_fd, int close_rc, int pol
     } else {
         printf("Private Session Manifest:  FAILED TO PERSIST: error %d (%s)\n",
                manifest_rc, strerror(manifest_rc < 0 ? -manifest_rc : manifest_rc));
-        success = false;
+        persist_ok = false;
     }
 
-    printf("Session Finalization:      %s\n",
-           success ? "COMPLETE (Cleanly detached, drained, and synchronized)" :
-                     "INCOMPLETE / FAILED (Errors occurred during capture or finalization)");
+    printf("Storage Persistence:       %s\n",
+           persist_ok ? "SYNCHRONIZED (Storage & CRC clean)" :
+                        "FAILED / CORRUPT (Errors occurred during capture or finalization)");
+    if (!drop_avail || total_rb_drops < 0 || !counter_avail[CNT_REG_MAP_FULL_DROP]) {
+        printf("Telemetry Completeness:    UNVERIFIED (Kernel loss counters unavailable)\n");
+    } else if (loss_free) {
+        printf("Telemetry Completeness:    COMPLETE_LOSSLESS (0 drops recorded across all stages)\n");
+    } else {
+        printf("Telemetry Completeness:    LOSSY (Drops recorded in kernel ring buffer or registry)\n");
+    }
+    printf("Session Status:            %s\n",
+           (!persist_ok) ? "FAILURE / INCOMPLETE (Storage persistence error)" :
+           (!loss_free) ? "PARTIAL (Lossy Telemetry Captured - Persistence Clean)" :
+           "SUCCESS (Clean Persistence & Loss-Free Telemetry)");
     printf("===============================================================\n\n");
     fflush(stdout);
 
-    return success ? 0 : 1;
+    return persist_ok ? 0 : 1;
 }
 
 int main(int argc, char **argv)
