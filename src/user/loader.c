@@ -27,6 +27,7 @@ static char g_evidence_path[256] = "ephimtrace.evid";
 static uint64_t g_max_bytes = EVIDENCE_DEFAULT_MAX_BYTES;
 static uint32_t g_target_pid = 0;
 static uint64_t g_sample_size_mismatches = 0;
+static uint32_t g_ring_buffer_mb = 0;
 
 enum log_level {
     LOG_LEVEL_ERROR = 0,
@@ -1605,6 +1606,9 @@ int main(int argc, char **argv)
     if (getenv("EPHIM_QUIET") && atoi(getenv("EPHIM_QUIET"))) {
         quiet_mode = 1;
     }
+    if (getenv("EPHIM_RING_BUFFER_MB")) {
+        g_ring_buffer_mb = (uint32_t)strtoul(getenv("EPHIM_RING_BUFFER_MB"), NULL, 10);
+    }
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
@@ -1645,6 +1649,18 @@ int main(int argc, char **argv)
                 timeline_filepath = argv[++i];
             } else {
                 fprintf(stderr, "Error: --timeline requires a filepath argument\n");
+                return 1;
+            }
+        } else if (strcmp(argv[i], "--ring-buffer-mb") == 0) {
+            if (i + 1 < argc) {
+                unsigned long v = strtoul(argv[++i], NULL, 10);
+                if (v == 0 || v > 1024) {
+                    fprintf(stderr, "Error: --ring-buffer-mb must be between 1 and 1024 MiB\n");
+                    return 1;
+                }
+                g_ring_buffer_mb = (uint32_t)v;
+            } else {
+                fprintf(stderr, "Error: --ring-buffer-mb requires an integer argument\n");
                 return 1;
             }
         } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
@@ -1749,6 +1765,16 @@ int main(int argc, char **argv)
         print_startup_summary(statuses, NUM_REQUIRED_HOOKS, 0, 0, total_percpu_expected);
         if (online_cpus) free(online_cpus);
         return 1;
+    }
+
+    if (g_ring_buffer_mb > 0) {
+        struct bpf_map *events_map = bpf_object__find_map_by_name(obj, "events");
+        if (events_map) {
+            int set_rc = bpf_map__set_max_entries(events_map, g_ring_buffer_mb * 1024 * 1024);
+            if (set_rc != 0) {
+                log_error("Failed to set ring buffer capacity to %u MiB: %d", g_ring_buffer_mb, set_rc);
+            }
+        }
     }
 
     int load_err = bpf_object__load(obj);
