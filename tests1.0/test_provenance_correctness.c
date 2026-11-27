@@ -15,7 +15,23 @@
 #include "provenance.c"
 #include "evidence_io.h"
 
-/* Structure to track precision and recall metrics */
+/* Structure for explicit expected node matching */
+struct expected_node {
+    char id[128];
+    enum prov_node_type type;
+    bool matched;
+};
+
+/* Structure for explicit expected directed edge matching with multiplicity */
+struct expected_edge {
+    char src_id[128];
+    char dst_id[128];
+    enum prov_edge_type type;
+    int expected_count; /* Expected multiplicity */
+    int matched_count;  /* Actual matched count */
+};
+
+/* Structure to track precision, recall, and exposed deficiencies */
 struct metric_tracker {
     const char *test_name;
     size_t expected_nodes;
@@ -36,9 +52,87 @@ struct metric_tracker {
     size_t false_joins;
     size_t false_splits;
 
-    bool passed;
-    char notes[512];
+    bool test_execution_success;
+    size_t exposed_deficiencies_count;
+    char exposed_deficiencies[1024];
 };
+
+static void evaluate_graph_precision_recall(
+    struct expected_node *exp_nodes, size_t num_exp_nodes,
+    struct expected_edge *exp_edges, size_t num_exp_edges,
+    struct metric_tracker *m)
+{
+    m->expected_nodes = num_exp_nodes;
+    m->actual_nodes = g_node_count;
+    m->tp_nodes = 0;
+    m->fp_nodes = 0;
+    m->fn_nodes = 0;
+
+    /* 1. Exact Node Matching */
+    struct prov_node *curr_node = g_nodes_head;
+    while (curr_node) {
+        bool found = false;
+        for (size_t i = 0; i < num_exp_nodes; i++) {
+            if (strcmp(exp_nodes[i].id, curr_node->id) == 0 &&
+                exp_nodes[i].type == curr_node->type) {
+                if (!exp_nodes[i].matched) {
+                    exp_nodes[i].matched = true;
+                    m->tp_nodes++;
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (!found) {
+            m->fp_nodes++;
+        }
+        curr_node = curr_node->next_global;
+    }
+    for (size_t i = 0; i < num_exp_nodes; i++) {
+        if (!exp_nodes[i].matched) {
+            m->fn_nodes++;
+        }
+    }
+
+    /* 2. Exact Directed Edge Matching with Multiplicity */
+    m->expected_edges = 0;
+    for (size_t i = 0; i < num_exp_edges; i++) {
+        m->expected_edges += exp_edges[i].expected_count;
+    }
+    m->actual_edges = g_edge_count;
+    m->tp_edges = 0;
+    m->fp_edges = 0;
+    m->fn_edges = 0;
+
+    struct prov_edge *curr_edge = g_edges_head;
+    while (curr_edge) {
+        bool found = false;
+        if (curr_edge->src && curr_edge->dst) {
+            for (size_t i = 0; i < num_exp_edges; i++) {
+                if (curr_edge->type == exp_edges[i].type &&
+                    strcmp(curr_edge->src->id, exp_edges[i].src_id) == 0 &&
+                    strcmp(curr_edge->dst->id, exp_edges[i].dst_id) == 0) {
+                    if (exp_edges[i].matched_count < exp_edges[i].expected_count) {
+                        exp_edges[i].matched_count++;
+                        m->tp_edges++;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!found) {
+            m->fp_edges++;
+        }
+        curr_edge = curr_edge->next_global;
+    }
+
+    for (size_t i = 0; i < num_exp_edges; i++) {
+        if (exp_edges[i].matched_count < exp_edges[i].expected_count) {
+            m->fn_edges += (exp_edges[i].expected_count - exp_edges[i].matched_count);
+        }
+    }
+}
 
 static void print_metric_result(const struct metric_tracker *m)
 {
@@ -48,19 +142,24 @@ static void print_metric_result(const struct metric_tracker *m)
     double edge_rec  = (m->expected_edges > 0) ? ((double)m->tp_edges / m->expected_edges) : 1.0;
     double attr_fid  = (m->checked_attributes > 0) ? ((double)m->matched_attributes / m->checked_attributes) : 1.0;
 
-    printf("  [TEST: %-32s] Status: %s\n", m->test_name, m->passed ? "PASS" : "FAIL");
-    printf("    Nodes: exp=%zu, act=%zu, tp=%zu, fp=%zu, fn=%zu -> Prec: %.2f%%, Rec: %.2f%%\n",
+    printf("  [TEST: %-32s] Execution: %s\n", m->test_name, m->test_execution_success ? "SUCCESS" : "FAILED");
+    printf("    Node Metrics: exp=%zu, act=%zu | TP=%zu, FP=%zu, FN=%zu -> Precision: %.2f%%, Recall: %.2f%%\n",
            m->expected_nodes, m->actual_nodes, m->tp_nodes, m->fp_nodes, m->fn_nodes,
            node_prec * 100.0, node_rec * 100.0);
-    printf("    Edges: exp=%zu, act=%zu, tp=%zu, fp=%zu, fn=%zu -> Prec: %.2f%%, Rec: %.2f%%\n",
+    printf("    Edge Metrics: exp=%zu, act=%zu | TP=%zu, FP=%zu, FN=%zu -> Precision: %.2f%%, Recall: %.2f%%\n",
            m->expected_edges, m->actual_edges, m->tp_edges, m->fp_edges, m->fn_edges,
            edge_prec * 100.0, edge_rec * 100.0);
-    printf("    Attributes: checked=%zu, matched=%zu -> Fidelity: %.2f%%\n",
-           m->checked_attributes, m->matched_attributes, attr_fid * 100.0);
-    printf("    Identities: false_joins=%zu, false_splits=%zu\n", m->false_joins, m->false_splits);
-    if (m->notes[0]) {
-        printf("    Notes: %s\n", m->notes);
+    printf("    Attribute Fidelity: %zu/%zu fields matched (%.2f%%)\n",
+           m->matched_attributes, m->checked_attributes, attr_fid * 100.0);
+    printf("    Identity Invariants: False Joins: %zu, False Splits: %zu\n",
+           m->false_joins, m->false_splits);
+    if (m->exposed_deficiencies_count > 0) {
+        printf("    [EXPOSED DEFICIENCIES] (%zu reported):\n", m->exposed_deficiencies_count);
+        printf("      %s\n", m->exposed_deficiencies);
+    } else {
+        printf("    [EXPOSED DEFICIENCIES] None (all invariants strictly preserved).\n");
     }
+    printf("\n");
 }
 
 /* =========================================================================
@@ -68,22 +167,9 @@ static void print_metric_result(const struct metric_tracker *m)
  * ========================================================================= */
 static struct metric_tracker test_standard_lifecycle(void)
 {
-    struct metric_tracker m = { .test_name = "1. Standard Full Lifecycle", .passed = true };
+    struct metric_tracker m = { .test_name = "1. Standard Full Lifecycle", .test_execution_success = true };
     prov_engine_init();
 
-    /* Events:
-     * 1. FORK: parent (100) -> child (200)
-     * 2. MEMFD_CREATE: child (200) -> token 1001, fd 3
-     * 3. MEMFD_COMPLETED: child (200) -> token 1001, inode 5001, dev 1
-     * 4. MEMFD_WRITE: child (200) -> token 1001, off 0, bytes 1024
-     * 5. FD_INSTALLED: child (200) -> token 1001, fd 4 (DUP)
-     * 6. FD_CLOSED: child (200) -> token 1001, fd 3, dur 5000ns
-     * 7. MEMFD_EXEC_ATTEMPT: child (200) -> token 1001, target /dev/fd/4
-     * 8. MEMFD_EXEC_SUCCESS: child (200) -> token 1001, comm "worker_elf"
-     * 9. VFS_UNLINK_COMPLETED: parent (100) -> inode 7001, dev 2049, path "/tmp/data.bin"
-     * 10. CONNECT: child (200) -> 127.0.0.1:9000
-     * 11. PROCESS_EXIT: child (200) -> exit 0
-     */
     struct event evs[] = {
         { .type = EVENT_FORK, .pid = 100, .tid = 100, .ppid = 1, .start_time_ns = 1000,
           .child_tgid = 200, .child_pid = 200, .child_start_time_ns = 2000, .timestamp_ns = 2010, .name = "child_proc" },
@@ -104,56 +190,38 @@ static struct metric_tracker test_standard_lifecycle(void)
         prov_engine_process_event(&evs[i]);
     }
 
-    /* Expected Ground Truth:
-     * Nodes (5):
-     *   proc_100_1000 (Process)
-     *   proc_200_2000 (Process)
-     *   memfd_1001 (Memfd)
-     *   fs_2049_7001 (FS Object)
-     *   net_2_127.0.0.1_9000 (Net Endpoint)
-     * Edges (9):
-     *   FORK (proc_100 -> proc_200)
-     *   MEMFD_CREATE (proc_200 -> memfd_1001) [deduplicated with MEMFD_COMPLETED]
-     *   MEMFD_WRITE (proc_200 -> memfd_1001)
-     *   FD_INSTALLED (proc_200 -> memfd_1001)
-     *   FD_CLOSED (proc_200 -> memfd_1001)
-     *   MEMFD_EXEC_ATTEMPT (proc_200 -> memfd_1001)
-     *   MEMFD_EXEC_SUCCESS (proc_200 -> memfd_1001)
-     *   UNLINK (proc_100 -> fs_2049_7001)
-     *   CONNECT (proc_200 -> net_2_127.0.0.1_9000)
-     */
-    m.expected_nodes = 5;
-    m.expected_edges = 9;
+    /* Independently defined expected nodes */
+    struct expected_node exp_nodes[] = {
+        { .id = "proc_100_1000",       .type = NODE_PROCESS },
+        { .id = "proc_200_2000",       .type = NODE_PROCESS },
+        { .id = "memfd_1001",          .type = NODE_MEMFD },
+        { .id = "fs_2049_7001",        .type = NODE_FS_OBJECT },
+        { .id = "net_2_127.0.0.1_9000",.type = NODE_NET_ENDPOINT }
+    };
 
-    prov_engine_get_counts(&m.actual_nodes, &m.actual_edges);
+    /* Independently defined expected directed edges with multiplicity */
+    struct expected_edge exp_edges[] = {
+        { .src_id = "proc_100_1000", .dst_id = "proc_200_2000", .type = EDGE_FORK,               .expected_count = 1 },
+        { .src_id = "proc_200_2000", .dst_id = "memfd_1001",    .type = EDGE_MEMFD_CREATE,       .expected_count = 1 },
+        { .src_id = "proc_200_2000", .dst_id = "memfd_1001",    .type = EDGE_MEMFD_WRITE,        .expected_count = 1 },
+        { .src_id = "proc_200_2000", .dst_id = "memfd_1001",    .type = EDGE_FD_INSTALLED,       .expected_count = 1 },
+        { .src_id = "proc_200_2000", .dst_id = "memfd_1001",    .type = EDGE_FD_CLOSED,          .expected_count = 1 },
+        { .src_id = "proc_200_2000", .dst_id = "memfd_1001",    .type = EDGE_MEMFD_EXEC_ATTEMPT, .expected_count = 1 },
+        { .src_id = "proc_200_2000", .dst_id = "memfd_1001",    .type = EDGE_MEMFD_EXEC_SUCCESS, .expected_count = 1 },
+        { .src_id = "proc_100_1000", .dst_id = "fs_2049_7001",  .type = EDGE_UNLINK,             .expected_count = 1 },
+        { .src_id = "proc_200_2000", .dst_id = "net_2_127.0.0.1_9000", .type = EDGE_CONNECT,    .expected_count = 1 }
+    };
 
-    /* Verify nodes */
+    evaluate_graph_precision_recall(exp_nodes, sizeof(exp_nodes)/sizeof(exp_nodes[0]),
+                                    exp_edges, sizeof(exp_edges)/sizeof(exp_edges[0]), &m);
+
+    /* Verify attribute fidelity */
     struct prov_node *p100 = prov_find_node("proc_100_1000");
     struct prov_node *p200 = prov_find_node("proc_200_2000");
     struct prov_node *m1001 = prov_find_node("memfd_1001");
     struct prov_node *fs7001 = prov_find_node("fs_2049_7001");
     struct prov_node *net9000 = prov_find_node("net_2_127.0.0.1_9000");
 
-    if (p100) m.tp_nodes++; else m.fn_nodes++;
-    if (p200) m.tp_nodes++; else m.fn_nodes++;
-    if (m1001) m.tp_nodes++; else m.fn_nodes++;
-    if (fs7001) m.tp_nodes++; else m.fn_nodes++;
-    if (net9000) m.tp_nodes++; else m.fn_nodes++;
-
-    if (m.actual_nodes > m.tp_nodes) m.fp_nodes = m.actual_nodes - m.tp_nodes;
-
-    /* Verify edges count & types */
-    if (m.actual_edges == m.expected_edges) {
-        m.tp_edges = m.actual_edges;
-    } else if (m.actual_edges > m.expected_edges) {
-        m.tp_edges = m.expected_edges;
-        m.fp_edges = m.actual_edges - m.expected_edges;
-    } else {
-        m.tp_edges = m.actual_edges;
-        m.fn_edges = m.expected_edges - m.actual_edges;
-    }
-
-    /* Attribute fidelity checks */
     m.checked_attributes = 12;
     if (p200 && p200->proc.is_alive == false) m.matched_attributes++;
     if (p200 && p200->proc.exit_code == 0) m.matched_attributes++;
@@ -168,8 +236,9 @@ static struct metric_tracker test_standard_lifecycle(void)
     if (p100 && p100->proc.pid == 100) m.matched_attributes++;
     if (p200 && p200->proc.ppid == 100) m.matched_attributes++;
 
-    if (m.tp_nodes != m.expected_nodes || m.tp_edges != m.expected_edges || m.matched_attributes != m.checked_attributes) {
-        m.passed = false;
+    if (m.tp_nodes != m.expected_nodes || m.tp_edges != m.expected_edges ||
+        m.matched_attributes != m.checked_attributes) {
+        m.test_execution_success = false;
     }
 
     prov_engine_destroy();
@@ -181,16 +250,14 @@ static struct metric_tracker test_standard_lifecycle(void)
  * ========================================================================= */
 static struct metric_tracker test_pid_reuse(void)
 {
-    struct metric_tracker m = { .test_name = "2. PID Reuse & Generation Separation", .passed = true };
+    struct metric_tracker m = { .test_name = "2. PID Reuse & Generation Separation", .test_execution_success = true };
     prov_engine_init();
 
-    /* Generation 1: Process PID 3000, start_time 1000000. Spawns memfd 101. Exits. */
     struct event e1_fork = { .type = EVENT_FORK, .pid = 1, .start_time_ns = 500,
                             .child_tgid = 3000, .child_pid = 3000, .child_start_time_ns = 1000000, .timestamp_ns = 1000050, .name = "worker_gen1" };
     struct event e1_create = { .type = EVENT_MEMFD_CREATE, .pid = 3000, .start_time_ns = 1000000, .object_token = 101, .fd = 3, .timestamp_ns = 1000100, .name = "m_gen1" };
     struct event e1_exit = { .type = EVENT_PROCESS_EXIT, .pid = 3000, .start_time_ns = 1000000, .reserved = 1, .ret_val = 0, .timestamp_ns = 1000200 };
 
-    /* Generation 2: Reused PID 3000, start_time 2000000. Spawns memfd 102. Exits. */
     struct event e2_fork = { .type = EVENT_FORK, .pid = 1, .start_time_ns = 500,
                             .child_tgid = 3000, .child_pid = 3000, .child_start_time_ns = 2000000, .timestamp_ns = 2000050, .name = "worker_gen2" };
     struct event e2_create = { .type = EVENT_MEMFD_CREATE, .pid = 3000, .start_time_ns = 2000000, .object_token = 102, .fd = 3, .timestamp_ns = 2000100, .name = "m_gen2" };
@@ -204,49 +271,47 @@ static struct metric_tracker test_pid_reuse(void)
     prov_engine_process_event(&e2_create);
     prov_engine_process_event(&e2_exit);
 
-    /* Expected:
-     * Nodes (5): proc_1_500, proc_3000_1000000, proc_3000_2000000, memfd_101, memfd_102
-     * Edges (4): FORK (1->3000_g1), CREATE (3000_g1->101), FORK (1->3000_g2), CREATE (3000_g2->102)
-     */
-    m.expected_nodes = 5;
-    m.expected_edges = 4;
-    prov_engine_get_counts(&m.actual_nodes, &m.actual_edges);
+    struct expected_node exp_nodes[] = {
+        { .id = "proc_1_500",         .type = NODE_PROCESS },
+        { .id = "proc_3000_1000000",  .type = NODE_PROCESS },
+        { .id = "proc_3000_2000000",  .type = NODE_PROCESS },
+        { .id = "memfd_101",          .type = NODE_MEMFD },
+        { .id = "memfd_102",          .type = NODE_MEMFD }
+    };
+
+    struct expected_edge exp_edges[] = {
+        { .src_id = "proc_1_500",        .dst_id = "proc_3000_1000000", .type = EDGE_FORK,         .expected_count = 1 },
+        { .src_id = "proc_3000_1000000", .dst_id = "memfd_101",        .type = EDGE_MEMFD_CREATE, .expected_count = 1 },
+        { .src_id = "proc_1_500",        .dst_id = "proc_3000_2000000", .type = EDGE_FORK,         .expected_count = 1 },
+        { .src_id = "proc_3000_2000000", .dst_id = "memfd_102",        .type = EDGE_MEMFD_CREATE, .expected_count = 1 }
+    };
+
+    evaluate_graph_precision_recall(exp_nodes, sizeof(exp_nodes)/sizeof(exp_nodes[0]),
+                                    exp_edges, sizeof(exp_edges)/sizeof(exp_edges[0]), &m);
 
     struct prov_node *g1 = prov_find_node("proc_3000_1000000");
     struct prov_node *g2 = prov_find_node("proc_3000_2000000");
     struct prov_node *m1 = prov_find_node("memfd_101");
     struct prov_node *m2 = prov_find_node("memfd_102");
 
-    if (g1) m.tp_nodes++; else m.fn_nodes++;
-    if (g2) m.tp_nodes++; else m.fn_nodes++;
-    if (m1) m.tp_nodes++; else m.fn_nodes++;
-    if (m2) m.tp_nodes++; else m.fn_nodes++;
-    if (prov_find_node("proc_1_500")) m.tp_nodes++; else m.fn_nodes++;
-
-    m.tp_edges = m.actual_edges;
     m.checked_attributes = 4;
-
-    /* Verify separation: G1 and G2 must be completely distinct nodes */
     if (g1 && g2 && g1 != g2) {
         m.matched_attributes += 2;
     } else {
         m.false_joins++;
-        m.passed = false;
-        snprintf(m.notes, sizeof(m.notes), "DEFICIENCY: PID reuse caused false join between generations");
+        m.test_execution_success = false;
     }
-
-    /* Verify edge source attribution */
     if (m1 && m1->in_edges && m1->in_edges->src == g1) m.matched_attributes++;
     if (m2 && m2->in_edges && m2->in_edges->src == g2) m.matched_attributes++;
 
-    /* Test Case: PID reuse with start_time == 0 (Unresolved start_time fallback) */
-    /* If a third event arrives for PID 3000 with start_time 0 after G2 exited */
+    /* Deficiency Check: Test PID reuse behavior when start_time_ns is 0 */
     struct event e3_zero = { .type = EVENT_FD_INSTALLED, .pid = 3000, .start_time_ns = 0, .object_token = 102, .fd = 5, .timestamp_ns = 3000000 };
     prov_engine_process_event(&e3_zero);
     struct prov_node *fallback = prov_find_node("proc_3000_0");
-    if (!fallback) {
-        /* If find_active_proc returned NULL, it created proc_3000_0 */
-        m.false_splits++;
+    if (fallback) {
+        m.exposed_deficiencies_count++;
+        snprintf(m.exposed_deficiencies, sizeof(m.exposed_deficiencies),
+                 "PID Reuse with start_time=0 creates unindexed fallback 'proc_<pid>_0' when previous generation has exited.");
     }
 
     prov_engine_destroy();
@@ -258,13 +323,9 @@ static struct metric_tracker test_pid_reuse(void)
  * ========================================================================= */
 static struct metric_tracker test_fd_reuse_and_reopening(void)
 {
-    struct metric_tracker m = { .test_name = "3. FD Reuse & Memfd Reopening", .passed = true };
+    struct metric_tracker m = { .test_name = "3. FD Reuse & Memfd Reopening", .test_execution_success = true };
     prov_engine_init();
 
-    /* Process 500 creates memfd 201 on FD 3, writes, closes FD 3.
-     * Process 500 then creates memfd 202 on FD 3 (FD REUSE!).
-     * Process 600 opens memfd 201 via /dev/fd/3 (REOPEN).
-     */
     struct event e_create1 = { .type = EVENT_MEMFD_CREATE, .pid = 500, .start_time_ns = 1000, .object_token = 201, .fd = 3, .timestamp_ns = 10, .name = "m1" };
     struct event e_close1  = { .type = EVENT_FD_CLOSED,    .pid = 500, .start_time_ns = 1000, .object_token = 201, .fd = 3, .timestamp_ns = 20 };
     struct event e_create2 = { .type = EVENT_MEMFD_CREATE, .pid = 500, .start_time_ns = 1000, .object_token = 202, .fd = 3, .timestamp_ns = 30, .name = "m2" };
@@ -275,41 +336,36 @@ static struct metric_tracker test_fd_reuse_and_reopening(void)
     prov_engine_process_event(&e_create2);
     prov_engine_process_event(&e_reopen);
 
-    /* Expected:
-     * Nodes (4): proc_500_1000, proc_600_2000, memfd_201, memfd_202
-     * Edges (4): CREATE(500->201), CLOSED(500->201), CREATE(500->202), REOPEN(600->201)
-     */
-    m.expected_nodes = 4;
-    m.expected_edges = 4;
-    prov_engine_get_counts(&m.actual_nodes, &m.actual_edges);
+    struct expected_node exp_nodes[] = {
+        { .id = "proc_500_1000", .type = NODE_PROCESS },
+        { .id = "proc_600_2000", .type = NODE_PROCESS },
+        { .id = "memfd_201",     .type = NODE_MEMFD },
+        { .id = "memfd_202",     .type = NODE_MEMFD }
+    };
+
+    struct expected_edge exp_edges[] = {
+        { .src_id = "proc_500_1000", .dst_id = "memfd_201", .type = EDGE_MEMFD_CREATE, .expected_count = 1 },
+        { .src_id = "proc_500_1000", .dst_id = "memfd_201", .type = EDGE_FD_CLOSED,    .expected_count = 1 },
+        { .src_id = "proc_500_1000", .dst_id = "memfd_202", .type = EDGE_MEMFD_CREATE, .expected_count = 1 },
+        { .src_id = "proc_600_2000", .dst_id = "memfd_201", .type = EDGE_FD_INSTALLED, .expected_count = 1 }
+    };
+
+    evaluate_graph_precision_recall(exp_nodes, sizeof(exp_nodes)/sizeof(exp_nodes[0]),
+                                    exp_edges, sizeof(exp_edges)/sizeof(exp_edges[0]), &m);
 
     struct prov_node *m1 = prov_find_node("memfd_201");
     struct prov_node *m2 = prov_find_node("memfd_202");
-    struct prov_node *p500 = prov_find_node("proc_500_1000");
     struct prov_node *p600 = prov_find_node("proc_600_2000");
 
-    if (m1) m.tp_nodes++; else m.fn_nodes++;
-    if (m2) m.tp_nodes++; else m.fn_nodes++;
-    if (p500) m.tp_nodes++; else m.fn_nodes++;
-    if (p600) m.tp_nodes++; else m.fn_nodes++;
-
-    m.tp_edges = m.actual_edges;
     m.checked_attributes = 4;
-
-    /* Verify FD reuse did not merge memfd 201 and 202 */
-    if (m1 && m2 && m1 != m2) {
-        m.matched_attributes += 2;
-    } else {
-        m.false_joins++;
-        m.passed = false;
-        snprintf(m.notes, sizeof(m.notes), "DEFICIENCY: FD reuse caused false join of memfd nodes");
-    }
-
-    /* Verify reopen correctly linked p600 to m1 (token 201), not m2 */
+    if (m1 && m2 && m1 != m2) m.matched_attributes += 2;
     if (p600 && p600->out_edges && p600->out_edges->dst == m1 && p600->out_edges->type == EDGE_FD_INSTALLED) {
         m.matched_attributes += 2;
-    } else {
-        m.passed = false;
+    }
+
+    if (m.tp_nodes != m.expected_nodes || m.tp_edges != m.expected_edges ||
+        m.matched_attributes != m.checked_attributes) {
+        m.test_execution_success = false;
     }
 
     prov_engine_destroy();
@@ -321,21 +377,20 @@ static struct metric_tracker test_fd_reuse_and_reopening(void)
  * ========================================================================= */
 static struct metric_tracker test_exec_representation(void)
 {
-    struct metric_tracker m = { .test_name = "4. Exec Representation (Success vs Failure)", .passed = true };
+    struct metric_tracker m = { .test_name = "4. Exec Representation (Success vs Failure)", .test_execution_success = true };
     prov_engine_init();
 
-    /* Child 1 (PID 701): Successful memfd execution */
+    /* Child 701: Memfd exec success */
     struct event e1_fork = { .type = EVENT_FORK, .pid = 700, .start_time_ns = 1000, .child_tgid = 701, .child_pid = 701, .child_start_time_ns = 1100, .timestamp_ns = 1110, .name = "parent" };
     struct event e1_att  = { .type = EVENT_MEMFD_EXEC_ATTEMPT, .pid = 701, .start_time_ns = 1100, .object_token = 301, .timestamp_ns = 1120, .name = "/dev/fd/3" };
     struct event e1_succ = { .type = EVENT_MEMFD_EXEC_SUCCESS, .pid = 701, .start_time_ns = 1100, .object_token = 301, .timestamp_ns = 1130, .name = "success_binary" };
 
-    /* Child 2 (PID 702): Failed memfd execution (e.g. -ENOEXEC) */
+    /* Child 702: Memfd exec failure (-ENOEXEC abort) */
     struct event e2_fork = { .type = EVENT_FORK, .pid = 700, .start_time_ns = 1000, .child_tgid = 702, .child_pid = 702, .child_start_time_ns = 1200, .timestamp_ns = 1210, .name = "parent" };
     struct event e2_att  = { .type = EVENT_MEMFD_EXEC_ATTEMPT, .pid = 702, .start_time_ns = 1200, .object_token = 302, .timestamp_ns = 1220, .name = "/dev/fd/3" };
-    /* No EXEC_SUCCESS for Child 2! */
     struct event e2_exit = { .type = EVENT_PROCESS_EXIT, .pid = 702, .start_time_ns = 1200, .reserved = 1, .ret_val = 126, .timestamp_ns = 1230 };
 
-    /* Child 3 (PID 703): Regular FS Exec Success */
+    /* Child 703: Regular FS Exec success */
     struct event e3_fork = { .type = EVENT_FORK, .pid = 700, .start_time_ns = 1000, .child_tgid = 703, .child_pid = 703, .child_start_time_ns = 1300, .timestamp_ns = 1310, .name = "parent" };
     struct event e3_fsexec = { .type = EVENT_PROCESS_EXEC, .pid = 703, .start_time_ns = 1300, .object_token = 0,
                                .inode_no = 88123, .dev_id = 66309, .mnt_ns_id = 1,
@@ -353,29 +408,36 @@ static struct metric_tracker test_exec_representation(void)
     prov_engine_process_event(&e3_fork);
     prov_engine_process_event(&e3_fsexec);
 
-    /* Expected:
-     * Nodes (7): proc_700_1000, proc_701_1100, proc_702_1200, proc_703_1300, memfd_301, memfd_302, fs_66309_88123
-     * Edges (7): FORK(700->701), ATTEMPT(701->301), SUCCESS(701->301),
-     *            FORK(700->702), ATTEMPT(702->302),
-     *            FORK(700->703), FS_EXEC_SUCCESS(703->fs_66309_88123)
-     */
-    m.expected_nodes = 7;
-    m.expected_edges = 7;
-    prov_engine_get_counts(&m.actual_nodes, &m.actual_edges);
+    struct expected_node exp_nodes[] = {
+        { .id = "proc_700_1000",   .type = NODE_PROCESS },
+        { .id = "proc_701_1100",   .type = NODE_PROCESS },
+        { .id = "proc_702_1200",   .type = NODE_PROCESS },
+        { .id = "proc_703_1300",   .type = NODE_PROCESS },
+        { .id = "memfd_301",       .type = NODE_MEMFD },
+        { .id = "memfd_302",       .type = NODE_MEMFD },
+        { .id = "fs_66309_88123",  .type = NODE_FS_OBJECT }
+    };
 
-    m.tp_nodes = m.actual_nodes;
-    m.tp_edges = m.actual_edges;
+    struct expected_edge exp_edges[] = {
+        { .src_id = "proc_700_1000", .dst_id = "proc_701_1100",  .type = EDGE_FORK,               .expected_count = 1 },
+        { .src_id = "proc_701_1100", .dst_id = "memfd_301",       .type = EDGE_MEMFD_EXEC_ATTEMPT, .expected_count = 1 },
+        { .src_id = "proc_701_1100", .dst_id = "memfd_301",       .type = EDGE_MEMFD_EXEC_SUCCESS, .expected_count = 1 },
+        { .src_id = "proc_700_1000", .dst_id = "proc_702_1200",  .type = EDGE_FORK,               .expected_count = 1 },
+        { .src_id = "proc_702_1200", .dst_id = "memfd_302",       .type = EDGE_MEMFD_EXEC_ATTEMPT, .expected_count = 1 },
+        { .src_id = "proc_700_1000", .dst_id = "proc_703_1300",  .type = EDGE_FORK,               .expected_count = 1 },
+        { .src_id = "proc_703_1300", .dst_id = "fs_66309_88123", .type = EDGE_FS_EXEC_SUCCESS,   .expected_count = 1 }
+    };
+
+    evaluate_graph_precision_recall(exp_nodes, sizeof(exp_nodes)/sizeof(exp_nodes[0]),
+                                    exp_edges, sizeof(exp_edges)/sizeof(exp_edges[0]), &m);
 
     struct prov_node *p701 = prov_find_node("proc_701_1100");
     struct prov_node *p702 = prov_find_node("proc_702_1200");
     struct prov_node *p703 = prov_find_node("proc_703_1300");
 
     m.checked_attributes = 6;
-    /* p701 comm transformed to success_binary */
     if (p701 && strcmp(p701->proc.comm, "success_binary") == 0) m.matched_attributes++;
-    /* p702 comm NOT transformed (remains initial "parent") */
     if (p702 && strcmp(p702->proc.comm, "parent") == 0) m.matched_attributes++;
-    /* p702 has no EDGE_MEMFD_EXEC_SUCCESS */
     bool p702_has_success = false;
     if (p702) {
         struct prov_edge *e = p702->out_edges;
@@ -385,15 +447,15 @@ static struct metric_tracker test_exec_representation(void)
         }
     }
     if (!p702_has_success) m.matched_attributes++;
-    /* p702 recorded exit code 126 */
     if (p702 && p702->proc.exit_code == 126) m.matched_attributes++;
-    /* p703 comm transformed to target_elf */
     if (p703 && strcmp(p703->proc.comm, "target_elf") == 0) m.matched_attributes++;
-    /* p703 connected to fs object */
     struct prov_node *fs_node = prov_find_node("fs_66309_88123");
     if (fs_node && strcmp(fs_node->fs.path, "/usr/bin/target_elf") == 0) m.matched_attributes++;
 
-    if (m.matched_attributes != m.checked_attributes) m.passed = false;
+    if (m.tp_nodes != m.expected_nodes || m.tp_edges != m.expected_edges ||
+        m.matched_attributes != m.checked_attributes) {
+        m.test_execution_success = false;
+    }
 
     prov_engine_destroy();
     return m;
@@ -404,25 +466,68 @@ static struct metric_tracker test_exec_representation(void)
  * ========================================================================= */
 static struct metric_tracker test_missing_duplicate_reordered(void)
 {
-    struct metric_tracker m = { .test_name = "5. Robustness & Deficiency Exposure", .passed = true };
+    struct metric_tracker m = { .test_name = "5. Robustness & Deficiency Exposure", .test_execution_success = true };
     prov_engine_init();
 
     /* Scenario A: Missing parent fork (orphan process events arrive first) */
     struct event e_orphan_memfd = { .type = EVENT_MEMFD_CREATE, .pid = 801, .start_time_ns = 5000, .object_token = 401, .fd = 3, .timestamp_ns = 5010, .name = "m_orphan" };
     prov_engine_process_event(&e_orphan_memfd);
 
-    /* Verify: engine created proc_801_5000 with comm <unknown> */
-    struct prov_node *orphan = prov_find_node("proc_801_5000");
-    m.checked_attributes++;
-    if (orphan && strcmp(orphan->proc.comm, "<unknown>") == 0) m.matched_attributes++;
-
-    /* Scenario B: Duplicate fork event */
+    /* Scenario B: Duplicate fork event (Offering identical fork record twice) */
     struct event e_dup_fork1 = { .type = EVENT_FORK, .pid = 800, .start_time_ns = 1000, .child_tgid = 802, .child_pid = 802, .child_start_time_ns = 6000, .timestamp_ns = 6010, .name = "worker" };
     struct event e_dup_fork2 = { .type = EVENT_FORK, .pid = 800, .start_time_ns = 1000, .child_tgid = 802, .child_pid = 802, .child_start_time_ns = 6000, .timestamp_ns = 6010, .name = "worker" };
     prov_engine_process_event(&e_dup_fork1);
     prov_engine_process_event(&e_dup_fork2);
 
-    /* Verify: Does engine deduplicate duplicate FORK edges? */
+    /* Scenario C: Reordered event (write arrives before create) */
+    struct event e_reordered_write = { .type = EVENT_MEMFD_WRITE, .pid = 802, .start_time_ns = 6000, .object_token = 402, .entry_ts_ns = 0, .ret_val = 512, .timestamp_ns = 6020 };
+    struct event e_reordered_create = { .type = EVENT_MEMFD_CREATE, .pid = 802, .start_time_ns = 6000, .object_token = 402, .fd = 3, .timestamp_ns = 6030, .name = "m_late" };
+    prov_engine_process_event(&e_reordered_write);
+    prov_engine_process_event(&e_reordered_create);
+
+    /* Scenario D: Duplicate MEMFD_COMPLETED event (should be deduplicated by engine) */
+    struct event e_comp1 = { .type = EVENT_MEMFD_COMPLETED, .pid = 802, .start_time_ns = 6000, .object_token = 402, .inode_no = 999, .dev_id = 1, .fd = 3, .op_type = 2, .timestamp_ns = 6040, .name = "m_late" };
+    struct event e_comp2 = { .type = EVENT_MEMFD_COMPLETED, .pid = 802, .start_time_ns = 6000, .object_token = 402, .inode_no = 999, .dev_id = 1, .fd = 3, .op_type = 2, .timestamp_ns = 6050, .name = "m_late" };
+    prov_engine_process_event(&e_comp1);
+    prov_engine_process_event(&e_comp2);
+
+    /* Expected Nodes: 5
+     *   proc_801_5000 (orphan process created on demand)
+     *   memfd_401 (created by orphan)
+     *   proc_800_1000 (parent)
+     *   proc_802_6000 (child)
+     *   memfd_402 (created by child)
+     */
+    struct expected_node exp_nodes[] = {
+        { .id = "proc_801_5000", .type = NODE_PROCESS },
+        { .id = "memfd_401",     .type = NODE_MEMFD },
+        { .id = "proc_800_1000", .type = NODE_PROCESS },
+        { .id = "proc_802_6000", .type = NODE_PROCESS },
+        { .id = "memfd_402",     .type = NODE_MEMFD }
+    };
+
+    /* Expected Edges under Independent Ground Truth: 4
+     * (Ground truth dictates exactly 1 FORK edge, 1 MEMFD_WRITE edge, and 2 MEMFD_CREATE edges)
+     */
+    struct expected_edge exp_edges[] = {
+        { .src_id = "proc_801_5000", .dst_id = "memfd_401", .type = EDGE_MEMFD_CREATE, .expected_count = 1 },
+        { .src_id = "proc_800_1000", .dst_id = "proc_802_6000", .type = EDGE_FORK,     .expected_count = 1 },
+        { .src_id = "proc_802_6000", .dst_id = "memfd_402", .type = EDGE_MEMFD_WRITE,  .expected_count = 1 },
+        { .src_id = "proc_802_6000", .dst_id = "memfd_402", .type = EDGE_MEMFD_CREATE, .expected_count = 1 }
+    };
+
+    evaluate_graph_precision_recall(exp_nodes, sizeof(exp_nodes)/sizeof(exp_nodes[0]),
+                                    exp_edges, sizeof(exp_edges)/sizeof(exp_edges[0]), &m);
+
+    /* Attribute Fidelity */
+    struct prov_node *orphan = prov_find_node("proc_801_5000");
+    struct prov_node *m402 = prov_find_node("memfd_402");
+    m.checked_attributes = 3;
+    if (orphan && strcmp(orphan->proc.comm, "<unknown>") == 0) m.matched_attributes++;
+    if (m402 && strcmp(m402->memfd.name, "m_late") == 0) m.matched_attributes++;
+    if (m402 && m402->memfd.inode_no == 999) m.matched_attributes++;
+
+    /* Exposed Deficiency Checks */
     size_t fork_edge_count = 0;
     struct prov_node *p800 = prov_find_node("proc_800_1000");
     if (p800) {
@@ -432,56 +537,16 @@ static struct metric_tracker test_missing_duplicate_reordered(void)
             e = e->next_out;
         }
     }
-    m.checked_attributes++;
     if (fork_edge_count > 1) {
-        /* Exposed deficiency: Engine does not deduplicate fork edges */
-        m.fp_edges += (fork_edge_count - 1);
-        strcat(m.notes, "DEFICIENCY: Duplicate FORK edges not deduplicated. ");
-    } else {
-        m.matched_attributes++;
+        m.exposed_deficiencies_count++;
+        snprintf(m.exposed_deficiencies, sizeof(m.exposed_deficiencies),
+                 "Multiplicity Violation: Engine unconditionally appends duplicate EDGE_FORK edges "
+                 "(1 redundant edge produced; edge precision: %.2f%%).",
+                 (double)m.tp_edges / m.actual_edges * 100.0);
     }
 
-    /* Scenario C: Reordered event (write arrives before create) */
-    struct event e_reordered_write = { .type = EVENT_MEMFD_WRITE, .pid = 802, .start_time_ns = 6000, .object_token = 402, .entry_ts_ns = 0, .ret_val = 512, .timestamp_ns = 6020 };
-    struct event e_reordered_create = { .type = EVENT_MEMFD_CREATE, .pid = 802, .start_time_ns = 6000, .object_token = 402, .fd = 3, .timestamp_ns = 6030, .name = "m_late" };
-    prov_engine_process_event(&e_reordered_write);
-    prov_engine_process_event(&e_reordered_create);
-
-    /* Verify: memfd_402 exists and name was updated */
-    struct prov_node *m402 = prov_find_node("memfd_402");
-    m.checked_attributes++;
-    if (m402 && strcmp(m402->memfd.name, "m_late") == 0) {
-        m.matched_attributes++;
-    } else {
-        strcat(m.notes, "DEFICIENCY: Out-of-order write/create failed to update memfd name. ");
-    }
-
-    /* Scenario D: Duplicate MEMFD_COMPLETED event (should be deduplicated by engine) */
-    struct event e_comp1 = { .type = EVENT_MEMFD_COMPLETED, .pid = 802, .start_time_ns = 6000, .object_token = 402, .inode_no = 999, .dev_id = 1, .fd = 3, .op_type = 2, .timestamp_ns = 6040, .name = "m_late" };
-    struct event e_comp2 = { .type = EVENT_MEMFD_COMPLETED, .pid = 802, .start_time_ns = 6000, .object_token = 402, .inode_no = 999, .dev_id = 1, .fd = 3, .op_type = 2, .timestamp_ns = 6050, .name = "m_late" };
-    prov_engine_process_event(&e_comp1);
-    prov_engine_process_event(&e_comp2);
-
-    /* Count creation edges on memfd_402 */
-    size_t create_edge_count = 0;
-    if (m402) {
-        struct prov_edge *e = m402->in_edges;
-        while (e) {
-            if (e->type == EDGE_MEMFD_CREATE) create_edge_count++;
-            e = e->next_in;
-        }
-    }
-    m.checked_attributes++;
-    if (create_edge_count == 1) {
-        m.matched_attributes++;
-    } else {
-        strcat(m.notes, "DEFICIENCY: Duplicate MEMFD_COMPLETED not deduplicated. ");
-    }
-
-    prov_engine_get_counts(&m.actual_nodes, &m.actual_edges);
-    m.expected_nodes = 4; /* proc_801, memfd_401, proc_800, proc_802, memfd_402 -> wait, 5 nodes */
-    m.expected_nodes = 5;
-    m.tp_nodes = m.actual_nodes;
+    /* Test execution itself succeeded as a benchmark harness */
+    m.test_execution_success = (m.actual_nodes == 5 && m.tp_nodes == 5 && m.tp_edges == 4);
 
     prov_engine_destroy();
     return m;
@@ -492,6 +557,9 @@ int main(void)
     printf("=================================================================\n");
     printf("   EphimTrace Provenance Benchmark 01 — Correctness Evaluation   \n");
     printf("=================================================================\n");
+    printf("Matching Methodology: Exact typed, directed entity & multiplicity\n");
+    printf("Precision = TP / (TP + FP)  |  Recall = TP / (TP + FN)\n");
+    printf("=================================================================\n\n");
 
     struct metric_tracker results[5];
     results[0] = test_standard_lifecycle();
@@ -510,7 +578,7 @@ int main(void)
     print_metric_result(&results[4]);
 
     printf("=================================================================\n");
-    printf("Summary: Correctness Evaluation Complete.\n");
+    printf("Summary: Correctness Evaluation Complete across 5 suites.\n");
     printf("=================================================================\n");
     return 0;
 }

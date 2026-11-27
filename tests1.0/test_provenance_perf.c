@@ -97,8 +97,8 @@ static int generate_synthetic_evidence(const char *filepath, size_t num_events, 
     }
 
     uint32_t current_pid = 1000;
-    uint32_t target_pid = 1050; /* A specific child process */
-    uint64_t target_token = 500; /* A specific memfd token */
+    uint32_t target_pid = 1000; /* Coordinator process: has outbound edges to all forks and memfds */
+    uint64_t target_token = 1;  /* Target memfd: receives create, write, fd install, and exec */
     uint64_t base_ts = 1000000000ULL;
 
     for (size_t i = 0; i < num_events; i++) {
@@ -108,6 +108,10 @@ static int generate_synthetic_evidence(const char *filepath, size_t num_events, 
         ev.tid = current_pid;
         ev.start_time_ns = 1000000000ULL;
 
+        /* Prime cycle 23 decouples token assignment from the mod 100 selector,
+         * ensuring token 1 receives CREATE, WRITE, DUP, and EXEC events across all scales. */
+        uint64_t token = 1 + (i % 23);
+
         size_t mod = i % 100;
         if (mod < 10) {
             /* FORK: 10% */
@@ -116,31 +120,28 @@ static int generate_synthetic_evidence(const char *filepath, size_t num_events, 
             ev.child_tgid = ev.child_pid;
             ev.child_start_time_ns = ev.timestamp_ns;
             snprintf(ev.name, sizeof(ev.name), "proc_%u", ev.child_pid);
-            if (ev.child_pid == target_pid) {
-                target_pid = ev.child_pid;
-            }
         } else if (mod < 30) {
             /* MEMFD_CREATE: 20% */
             ev.type = EVENT_MEMFD_CREATE;
-            ev.object_token = 1 + (i % 2000);
+            ev.object_token = token;
             ev.fd = 3 + (int32_t)(i % 10);
             snprintf(ev.name, sizeof(ev.name), "memfd_%llu", (unsigned long long)ev.object_token);
         } else if (mod < 65) {
             /* MEMFD_WRITE: 35% */
             ev.type = EVENT_MEMFD_WRITE;
-            ev.object_token = 1 + (i % 2000);
+            ev.object_token = token;
             ev.entry_ts_ns = (i % 10) * 4096; /* offset */
             ev.ret_val = 4096; /* bytes */
         } else if (mod < 80) {
             /* FD_INSTALLED / FD_CLOSED: 15% */
             if (mod < 73) {
                 ev.type = EVENT_FD_INSTALLED;
-                ev.object_token = 1 + (i % 2000);
+                ev.object_token = token;
                 ev.fd = 4 + (int32_t)(i % 10);
                 ev.op_type = 3; /* DUP */
             } else {
                 ev.type = EVENT_FD_CLOSED;
-                ev.object_token = 1 + (i % 2000);
+                ev.object_token = token;
                 ev.fd = 3 + (int32_t)(i % 10);
                 ev.entry_ts_ns = 50000; /* duration */
             }
@@ -148,11 +149,11 @@ static int generate_synthetic_evidence(const char *filepath, size_t num_events, 
             /* EXEC: 10% */
             if (mod < 85) {
                 ev.type = EVENT_MEMFD_EXEC_ATTEMPT;
-                ev.object_token = 1 + (i % 2000);
+                ev.object_token = token;
                 snprintf(ev.name, sizeof(ev.name), "/dev/fd/%d", 3 + (int)(i % 5));
             } else {
                 ev.type = EVENT_MEMFD_EXEC_SUCCESS;
-                ev.object_token = 1 + (i % 2000);
+                ev.object_token = token;
                 snprintf(ev.name, sizeof(ev.name), "app_exec_%zu", i % 20);
             }
         } else {
@@ -244,15 +245,27 @@ static void run_single_trial_in_process(const char *evid_path, size_t scale, int
     /* Benchmark Subgraph Extraction Latency */
     struct prov_graph sub = { 0 };
     uint64_t tf0 = get_time_ns();
-    prov_engine_filter_subgraph(target_pid, 0, &sub);
+    int rc_fpid = prov_engine_filter_subgraph(target_pid, 0, &sub);
     uint64_t tf1 = get_time_ns();
     r.filter_pid_us = (double)(tf1 - tf0) / 1000.0;
+    if (rc_fpid != 0 || sub.node_count == 0 || sub.edge_count == 0) {
+        fprintf(stderr, "[ERROR] filter_subgraph(pid=%u) failed: rc=%d, nodes=%zu, edges=%zu\n",
+                target_pid, rc_fpid, sub.node_count, sub.edge_count);
+        prov_graph_free(&sub);
+        exit(1);
+    }
     prov_graph_free(&sub);
 
     uint64_t tk0 = get_time_ns();
-    prov_engine_filter_subgraph(0, target_token, &sub);
+    int rc_ftok = prov_engine_filter_subgraph(0, target_token, &sub);
     uint64_t tk1 = get_time_ns();
     r.filter_token_us = (double)(tk1 - tk0) / 1000.0;
+    if (rc_ftok != 0 || sub.node_count == 0 || sub.edge_count == 0) {
+        fprintf(stderr, "[ERROR] filter_subgraph(token=%llu) failed: rc=%d, nodes=%zu, edges=%zu\n",
+                (unsigned long long)target_token, rc_ftok, sub.node_count, sub.edge_count);
+        prov_graph_free(&sub);
+        exit(1);
+    }
     prov_graph_free(&sub);
 
     /* Benchmark Exports (Only measure export cost; keep files in /tmp) */
@@ -262,24 +275,80 @@ static void run_single_trial_in_process(const char *evid_path, size_t scale, int
     snprintf(tl_tmp, sizeof(tl_tmp), "/tmp/bench_%zu_r%d.md", scale, rep);
 
     uint64_t ed0 = get_time_ns();
-    prov_engine_export_dot(dot_tmp);
+    int rc_dot = prov_engine_export_dot(dot_tmp);
     uint64_t ed1 = get_time_ns();
     r.export_dot_ms = (double)(ed1 - ed0) / 1e6;
+    if (rc_dot != 0) {
+        fprintf(stderr, "[ERROR] export_dot failed: %d\n", rc_dot);
+        exit(1);
+    }
 
     uint64_t ej0 = get_time_ns();
-    prov_engine_export_json(json_tmp);
+    int rc_json = prov_engine_export_json(json_tmp);
     uint64_t ej1 = get_time_ns();
     r.export_json_ms = (double)(ej1 - ej0) / 1e6;
+    if (rc_json != 0) {
+        fprintf(stderr, "[ERROR] export_json failed: %d\n", rc_json);
+        exit(1);
+    }
 
     uint64_t et0 = get_time_ns();
-    prov_engine_export_timeline(tl_tmp, target_pid, 0);
+    int rc_tl = prov_engine_export_timeline(tl_tmp, target_pid, 0);
     uint64_t et1 = get_time_ns();
     r.export_timeline_ms = (double)(et1 - et0) / 1e6;
+    if (rc_tl != 0) {
+        fprintf(stderr, "[ERROR] export_timeline failed: %d\n", rc_tl);
+        exit(1);
+    }
 
     struct stat st;
-    if (stat(dot_tmp, &st) == 0) r.dot_bytes = st.st_size;
-    if (stat(json_tmp, &st) == 0) r.json_bytes = st.st_size;
-    if (stat(tl_tmp, &st) == 0) r.timeline_bytes = st.st_size;
+    if (stat(dot_tmp, &st) == 0 && st.st_size > 0) {
+        r.dot_bytes = st.st_size;
+    } else {
+        fprintf(stderr, "[ERROR] dot export missing or empty: %s\n", dot_tmp);
+        exit(1);
+    }
+    if (stat(json_tmp, &st) == 0 && st.st_size > 0) {
+        r.json_bytes = st.st_size;
+    } else {
+        fprintf(stderr, "[ERROR] json export missing or empty: %s\n", json_tmp);
+        exit(1);
+    }
+    if (stat(tl_tmp, &st) == 0 && st.st_size > 0) {
+        r.timeline_bytes = st.st_size;
+    } else {
+        fprintf(stderr, "[ERROR] timeline export missing or empty: %s\n", tl_tmp);
+        exit(1);
+    }
+
+    /* Content verification: verify headers and basic structure */
+    FILE *f_dot = fopen(dot_tmp, "r");
+    char hbuf[256];
+    if (f_dot && fgets(hbuf, sizeof(hbuf), f_dot)) {
+        if (strncmp(hbuf, "digraph", 7) != 0) {
+            fprintf(stderr, "[ERROR] dot export missing valid header: %s\n", hbuf);
+            exit(1);
+        }
+    }
+    if (f_dot) fclose(f_dot);
+
+    FILE *f_json = fopen(json_tmp, "r");
+    if (f_json && fgets(hbuf, sizeof(hbuf), f_json)) {
+        if (strchr(hbuf, '{') == NULL) {
+            fprintf(stderr, "[ERROR] json export missing valid header: %s\n", hbuf);
+            exit(1);
+        }
+    }
+    if (f_json) fclose(f_json);
+
+    FILE *f_tl = fopen(tl_tmp, "r");
+    if (f_tl && fgets(hbuf, sizeof(hbuf), f_tl)) {
+        if (strstr(hbuf, "# EphimTrace") == NULL) {
+            fprintf(stderr, "[ERROR] timeline export missing valid header: %s\n", hbuf);
+            exit(1);
+        }
+    }
+    if (f_tl) fclose(f_tl);
 
     unlink(dot_tmp);
     unlink(json_tmp);
@@ -341,6 +410,7 @@ int main(void)
     printf("Protocol: 4 Scales [1K, 10K, 100K, 1M], 5 Repetitions per Scale\n");
     printf("Execution: Isolated child process per trial (Accurate Peak RSS)\n");
     printf("Metrics: Throughput, CPU, RSS, Subgraph Extraction, Export Costs\n");
+    printf("Verification: Nonempty subgraphs, return codes == 0, valid contents\n");
     printf("=================================================================\n\n");
 
     struct trial_result all_trials[NUM_SCALES][NUM_REPS];
@@ -362,16 +432,18 @@ int main(void)
 
         struct stat st_evid;
         stat(evid_path, &st_evid);
-        printf("  -> File created: %s (%.2f MiB, %lld bytes)\n",
-               evid_path, (double)st_evid.st_size / (1024.0 * 1024.0), (long long)st_evid.st_size);
+        printf("  -> File created: %s (%.2f MiB, %lld bytes, Target PID: %u, Target Token: %llu)\n",
+               evid_path, (double)st_evid.st_size / (1024.0 * 1024.0), (long long)st_evid.st_size,
+               target_pid, (unsigned long long)target_token);
 
         for (int r = 0; r < NUM_REPS; r++) {
             printf("  [Rep %d/%d] Executing replay & export benchmarking...", r + 1, NUM_REPS);
             fflush(stdout);
             all_trials[s][r] = run_single_trial(evid_path, scale, r + 1, target_pid, target_token);
-            printf(" Done. (%.3fs, %.0f events/s, Isolated RSS: %.2f MiB)\n",
+            printf(" Done. (%.3fs, %.0f events/s, Isolated RSS: %.2f MiB, Subgraph PID: %.1fus, Token: %.1fus)\n",
                    all_trials[s][r].duration_s, all_trials[s][r].throughput_eps,
-                   (double)all_trials[s][r].peak_rss_kb / 1024.0);
+                   (double)all_trials[s][r].peak_rss_kb / 1024.0,
+                   all_trials[s][r].filter_pid_us, all_trials[s][r].filter_token_us);
         }
 
         /* Compute stats across 5 reps */

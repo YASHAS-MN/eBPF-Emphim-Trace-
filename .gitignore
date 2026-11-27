@@ -35,6 +35,7 @@ tests1.0/kernel_telemetry/results/
 tests1.0/kernel_telemetry/benchmark_01/data/
 tests1.0/kernel_telemetry/benchmark_01/data_baseline_056ec9b/
 tests1.0/kernel_telemetry/benchmark_01/burst_investigation/
+tests1.0/kernel_telemetry/benchmark_01/native_exports/
 tests1.0/kernel_telemetry/workload
 tests1.0/kernel_telemetry/osbench/
 __pycache__/
