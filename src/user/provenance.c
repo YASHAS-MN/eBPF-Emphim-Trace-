@@ -452,8 +452,8 @@ void prov_engine_process_event(const struct event *e)
         struct prov_node *proc = prov_upsert_process(e->pid, e->start_time_ns, e->ppid, e->name);
         if (proc && e->reserved) {
             proc->proc.is_alive = false;
-            proc->proc.exit_code = e->ret_val;
-            proc->proc.exit_code_known = true;
+            proc->proc.exit_code = -1;
+            proc->proc.exit_code_known = false;
             unregister_active_proc(e->pid);
         }
         break;

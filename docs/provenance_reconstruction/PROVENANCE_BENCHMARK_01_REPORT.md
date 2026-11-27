@@ -74,8 +74,8 @@ In accordance with user directives, three targeted issues were remediated in `sr
    - *Problem*: When an event arrived with `start_time_ns == 0`, the engine previously attempted heuristic active PID resolution or merged into a shared `proc_<pid>_0` bucket, risking false cross-generational joins across PID recycling cycles.
    - *Fix*: The engine now explicitly allocates `proc_<pid>_unresolved_<seq>` with `node->proc.is_unresolved = true`, preventing false joins into active processes. Serialized JSON explicitly emits `"identity_status": "unresolved"` and `"start_time_ns": null`.
 3. **Process Exit Status Fidelity**:
-   - *Problem*: Kernel BPF `sched/sched_process_exit` historically left `ret_val` as placeholder 0, causing processes without captured exit codes to be rendered as if they exited cleanly with status 0.
-   - *Fix*: Process exit status is now initialized as unavailable (`exit_code = -1`, `exit_code_known = false`). Only events with explicit exit records set `exit_code_known = true`. Unresolved exit status is rendered as `Exit: unknown` in DOT and `"exit_code": "unknown"` in JSON.
+   - *Problem*: The kernel producer (`monitor.bpf.c:capture_process_exit`) does not populate an exit code in `struct event` (only populating `e->reserved = ctx->group_dead`). Previously, treating non-zero `e->reserved` as validating `e->ret_val` caused all terminated processes to be falsely attributed with exit code zero (`Exit: 0`).
+   - *Fix*: Process exit status is initialized as unavailable (`exit_code = -1`, `exit_code_known = false`). When `EVENT_PROCESS_EXIT` fires with `reserved != 0` (`group_dead`), the process is marked as terminated (`is_alive = false`) while retaining exit status as unknown (`exit_code_known = false`, `exit_code = -1`). Unresolved exit status is rendered as `Exit: unknown` in DOT and `"exit_code": "unknown"` in JSON, preventing false zero attribution.
 
 ---
 

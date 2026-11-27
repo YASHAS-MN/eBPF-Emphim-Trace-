@@ -224,7 +224,7 @@ static struct metric_tracker test_standard_lifecycle(void)
 
     m.checked_attributes = 12;
     if (p200 && p200->proc.is_alive == false) m.matched_attributes++;
-    if (p200 && p200->proc.exit_code == 0) m.matched_attributes++;
+    if (p200 && p200->proc.exit_code_known == false && p200->proc.exit_code == -1) m.matched_attributes++;
     if (p200 && strcmp(p200->proc.comm, "worker_elf") == 0) m.matched_attributes++;
     if (m1001 && m1001->memfd.inode_no == 5001) m.matched_attributes++;
     if (m1001 && m1001->memfd.dev_id == 1) m.matched_attributes++;
@@ -394,7 +394,7 @@ static struct metric_tracker test_exec_representation(void)
     /* Child 702: Memfd exec failure (-ENOEXEC abort) */
     struct event e2_fork = { .type = EVENT_FORK, .pid = 700, .start_time_ns = 1000, .child_tgid = 702, .child_pid = 702, .child_start_time_ns = 1200, .timestamp_ns = 1210, .name = "parent" };
     struct event e2_att  = { .type = EVENT_MEMFD_EXEC_ATTEMPT, .pid = 702, .start_time_ns = 1200, .object_token = 302, .timestamp_ns = 1220, .name = "/dev/fd/3" };
-    struct event e2_exit = { .type = EVENT_PROCESS_EXIT, .pid = 702, .start_time_ns = 1200, .reserved = 1, .ret_val = 126, .timestamp_ns = 1230 };
+    struct event e2_exit = { .type = EVENT_PROCESS_EXIT, .pid = 702, .start_time_ns = 1200, .reserved = 1, .ret_val = 0, .timestamp_ns = 1230 };
 
     /* Child 703: Regular FS Exec success */
     struct event e3_fork = { .type = EVENT_FORK, .pid = 700, .start_time_ns = 1000, .child_tgid = 703, .child_pid = 703, .child_start_time_ns = 1300, .timestamp_ns = 1310, .name = "parent" };
@@ -453,7 +453,7 @@ static struct metric_tracker test_exec_representation(void)
         }
     }
     if (!p702_has_success) m.matched_attributes++;
-    if (p702 && p702->proc.exit_code == 126) m.matched_attributes++;
+    if (p702 && p702->proc.is_alive == false && !p702->proc.exit_code_known) m.matched_attributes++;
     if (p703 && strcmp(p703->proc.comm, "target_elf") == 0) m.matched_attributes++;
     struct prov_node *fs_node = prov_find_node("fs_66309_88123");
     if (fs_node && strcmp(fs_node->fs.path, "/usr/bin/target_elf") == 0) m.matched_attributes++;
@@ -613,15 +613,15 @@ static struct metric_tracker test_remediation_regressions(void)
     prov_engine_process_event(&e_p70);
     prov_engine_process_event(&e_p70_exit);
 
-    /* Process 80 exits cleanly with reserved = 1, ret_val = 0 (known exit code 0) */
-    struct event e_p80 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 80, .child_pid = 80, .child_start_time_ns = 8000, .timestamp_ns = 8010, .name = "p80_clean" };
-    struct event e_p80_exit = { .type = EVENT_PROCESS_EXIT, .pid = 80, .start_time_ns = 8000, .reserved = 1, .ret_val = 0, .timestamp_ns = 8020, .name = "p80_clean" };
+    /* Process 80 terminates process group under actual kernel contract (reserved = 1: group dead, ret_val = 0 unpopulated) */
+    struct event e_p80 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 80, .child_pid = 80, .child_start_time_ns = 8000, .timestamp_ns = 8010, .name = "p80_term" };
+    struct event e_p80_exit = { .type = EVENT_PROCESS_EXIT, .pid = 80, .start_time_ns = 8000, .reserved = 1, .ret_val = 0, .timestamp_ns = 8020, .name = "p80_term" };
     prov_engine_process_event(&e_p80);
     prov_engine_process_event(&e_p80_exit);
 
-    /* Process 90 exits with error reserved = 1, ret_val = 137 (known exit code 137) */
-    struct event e_p90 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 90, .child_pid = 90, .child_start_time_ns = 9000, .timestamp_ns = 9010, .name = "p90_sigkill" };
-    struct event e_p90_exit = { .type = EVENT_PROCESS_EXIT, .pid = 90, .start_time_ns = 9000, .reserved = 1, .ret_val = 137, .timestamp_ns = 9020, .name = "p90_sigkill" };
+    /* Process 90 terminates process group under actual kernel contract (reserved = 1: group dead, ret_val = 0 unpopulated) */
+    struct event e_p90 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 90, .child_pid = 90, .child_start_time_ns = 9000, .timestamp_ns = 9010, .name = "p90_term" };
+    struct event e_p90_exit = { .type = EVENT_PROCESS_EXIT, .pid = 90, .start_time_ns = 9000, .reserved = 1, .ret_val = 0, .timestamp_ns = 9020, .name = "p90_term" };
     prov_engine_process_event(&e_p90);
     prov_engine_process_event(&e_p90_exit);
 
@@ -666,7 +666,7 @@ static struct metric_tracker test_remediation_regressions(void)
     struct prov_node *p80 = prov_find_node("proc_80_8000");
     struct prov_node *p90 = prov_find_node("proc_90_9000");
 
-    m.checked_attributes = 10;
+    m.checked_attributes = 11;
     /* 1. Unresolved nodes distinct from active node */
     if (u1 && u1->proc.is_unresolved && u1 != p50_act) m.matched_attributes++;
     if (u2 && u2->proc.is_unresolved && u2 != p50_act && u2 != u1) m.matched_attributes++;
@@ -674,34 +674,37 @@ static struct metric_tracker test_remediation_regressions(void)
     if (prov_find_node("proc_50_0") == NULL) m.matched_attributes++;
     /* 3. Exit status unknown on alive process */
     if (p60 && p60->proc.is_alive && !p60->proc.exit_code_known) m.matched_attributes++;
-    /* 4. Exit status unknown on non-leader exit */
+    /* 4. Exit status unknown on non-leader exit (group alive) */
     if (p70 && p70->proc.is_alive && !p70->proc.exit_code_known) m.matched_attributes++;
-    /* 5. Exit status known 0 on clean exit */
-    if (p80 && !p80->proc.is_alive && p80->proc.exit_code_known && p80->proc.exit_code == 0) m.matched_attributes++;
-    /* 6. Exit status known 137 on sigkill exit */
-    if (p90 && !p90->proc.is_alive && p90->proc.exit_code_known && p90->proc.exit_code == 137) m.matched_attributes++;
+    /* 5. Process-group termination marks process terminated (is_alive=false) while retaining exit status as unknown */
+    if (p80 && !p80->proc.is_alive && !p80->proc.exit_code_known && p80->proc.exit_code == -1) m.matched_attributes++;
+    /* 6. Second process-group termination marks process terminated (is_alive=false) while retaining exit status as unknown */
+    if (p90 && !p90->proc.is_alive && !p90->proc.exit_code_known && p90->proc.exit_code == -1) m.matched_attributes++;
 
-    /* Export verification: JSON representation of unknown vs known exit codes */
+    /* Export verification: JSON representation under actual kernel contract */
     char json_tmp[256];
     snprintf(json_tmp, sizeof(json_tmp), "/tmp/test_remediation_%d.json", getpid());
     prov_engine_export_json(json_tmp);
     FILE *fj = fopen(json_tmp, "r");
     bool json_has_unknown_exit = false;
-    bool json_has_zero_exit = false;
+    bool json_has_false_zero_exit = false;
     bool json_has_unresolved_id = false;
+    bool json_has_terminated_dead = false;
     if (fj) {
         char line[512];
         while (fgets(line, sizeof(line), fj)) {
             if (strstr(line, "\"exit_code\": \"unknown\"")) json_has_unknown_exit = true;
-            if (strstr(line, "\"exit_code\": 0")) json_has_zero_exit = true;
+            if (strstr(line, "\"exit_code\": 0")) json_has_false_zero_exit = true;
             if (strstr(line, "\"identity_status\": \"unresolved\"")) json_has_unresolved_id = true;
+            if (strstr(line, "\"is_alive\": false")) json_has_terminated_dead = true;
         }
         fclose(fj);
         unlink(json_tmp);
     }
     if (json_has_unknown_exit) m.matched_attributes++;
-    if (json_has_zero_exit) m.matched_attributes++;
+    if (!json_has_false_zero_exit) m.matched_attributes++; /* Must NOT falsely report exit code 0 */
     if (json_has_unresolved_id) m.matched_attributes++;
+    if (json_has_terminated_dead) m.matched_attributes++;
 
     if (m.tp_nodes != m.expected_nodes || m.tp_edges != m.expected_edges ||
         m.matched_attributes != m.checked_attributes) {
