@@ -1,0 +1,24 @@
+digraph ScenarioSubgraph {
+    rankdir=LR;
+    compound=true;
+    node [fontsize=10, fontname="Helvetica"];
+    edge [fontsize=8, fontname="Helvetica"];
+
+    /* --- Nodes --- */
+    "proc_26659_5609148674364" [shape=box, style="filled,rounded", fillcolor="#E0F7FA", color="#00838F", fontcolor="#006064", label="Process\nPID: 26659 (PPID: 16535)\nComm: /usr/bin/timeout\nStart: 5609148674364 ns\n[DEAD]"];
+    "proc_26660_5609152354062" [shape=box, style="filled,rounded", fillcolor="#E0F7FA", color="#00838F", fontcolor="#006064", label="Process\nPID: 26660 (PPID: 26659)\nComm: ./build/test_m2_unlinked_exec\nStart: 5609152354062 ns\n[DEAD]"];
+    "fs_66309_1356602" [shape=folder, style="filled", fillcolor="#E8F5E9", color="#2E7D32", fontcolor="#1B5E20", label="FS Object\nPath: ./build/test_m2_unlinked_exec\nInode: 1356602\nDev: 66309\n[ACTIVE]"];
+    "proc_26661_5609153728961" [shape=box, style="filled,rounded", fillcolor="#E0F7FA", color="#00838F", fontcolor="#006064", label="Process\nPID: 26661 (PPID: 26660)\nComm: /tmp/ephim_unlinked_a9yQSP/unlinked_worker\nStart: 5609153728961 ns\n[DEAD]"];
+    "fs_66309_926197" [shape=folder, style="filled", fillcolor="#E8F5E9", color="#2E7D32", fontcolor="#1B5E20", label="FS Object\nPath: /tmp/ephim_unlinked_a9yQSP/unlinked_worker\nInode: 926197\nDev: 66309\n[UNLINKED]"];
+    "fs_66309_926187" [shape=folder, style="filled", fillcolor="#E8F5E9", color="#2E7D32", fontcolor="#1B5E20", label="FS Object\nPath: /tmp/ephim_unlinked_a9yQSP\nInode: 926187\nDev: 66309\n[UNLINKED]"];
+
+    /* --- Edges --- */
+    "proc_16535_2718654516589" -> "proc_26659_5609148674364" [label="fork()\n@5609148677399 ns", color="#0288D1", fontcolor="#0288D1"];
+    "proc_26659_5609148674364" -> "fs_66309_2515433" [label="fs_exec_success(/usr/bin/timeout)\n@5609151717734 ns", color="#4A148C", fontcolor="#4A148C"];
+    "proc_26659_5609148674364" -> "proc_26660_5609152354062" [label="fork()\n@5609152357068 ns", color="#0288D1", fontcolor="#0288D1"];
+    "proc_26660_5609152354062" -> "fs_66309_1356602" [label="fs_exec_success(./build/test_m2_unlinked_exec)\n@5609152700545 ns", color="#4A148C", fontcolor="#4A148C"];
+    "proc_26660_5609152354062" -> "proc_26661_5609153728961" [label="fork()\n@5609153731716 ns", color="#0288D1", fontcolor="#0288D1"];
+    "proc_26661_5609153728961" -> "fs_66309_926197" [label="fs_exec_success(/tmp/ephim_unlinked_a9yQSP/unlinked_worker)\n@5609154192924 ns", color="#4A148C", fontcolor="#4A148C"];
+    "proc_26660_5609152354062" -> "fs_66309_926197" [label="unlink(/tmp/ephim_unlinked_a9yQSP/unlinked_worker, SUCCESS)\n@5609154802662 ns", color="#388E3C", fontcolor="#388E3C"];
+    "proc_26660_5609152354062" -> "fs_66309_926187" [label="unlink(/tmp/ephim_unlinked_a9yQSP, SUCCESS)\n@5609155114530 ns", color="#388E3C", fontcolor="#388E3C"];
+}

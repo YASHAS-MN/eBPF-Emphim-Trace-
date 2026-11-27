@@ -1,0 +1,56 @@
+digraph ScenarioSubgraph {
+    rankdir=LR;
+    compound=true;
+    node [fontsize=10, fontname="Helvetica"];
+    edge [fontsize=8, fontname="Helvetica"];
+
+    /* --- Nodes --- */
+    "proc_17549_2791954584802" [shape=box, style="filled,rounded", fillcolor="#E0F7FA", color="#00838F", fontcolor="#006064", label="Process\nPID: 17549 (PPID: 16535)\nComm: ./build/test_m2_exec\nStart: 2791954584802 ns\n[DEAD]"];
+    "memfd_7" [shape=hexagon, style="filled", fillcolor="#FFF3E0", color="#E65100", fontcolor="#BF360C", label="Memfd Object\nToken: 7\nName: m2_exec_script_1\nInode: 8500\nDev: 1\n[DESTROYED]"];
+    "proc_17550_2791955716986" [shape=box, style="filled,rounded", fillcolor="#E0F7FA", color="#00838F", fontcolor="#006064", label="Process\nPID: 17550 (PPID: 17549)\nComm: /dev/fd/3\nStart: 2791955716986 ns\n[DEAD]"];
+    "memfd_8" [shape=hexagon, style="filled", fillcolor="#FFF3E0", color="#E65100", fontcolor="#BF360C", label="Memfd Object\nToken: 8\nName: m2_exec_fexecve\nInode: 8501\nDev: 1\n[DESTROYED]"];
+    "proc_17551_2791956906598" [shape=box, style="filled,rounded", fillcolor="#E0F7FA", color="#00838F", fontcolor="#006064", label="Process\nPID: 17551 (PPID: 17549)\nComm: /dev/fd/3\nStart: 2791956906598 ns\n[DEAD]"];
+    "memfd_9" [shape=hexagon, style="filled", fillcolor="#FFF3E0", color="#E65100", fontcolor="#BF360C", label="Memfd Object\nToken: 9\nName: m2_exec_proc_reopen\nInode: 8502\nDev: 1\n[DESTROYED]"];
+    "proc_17552_2791957899741" [shape=box, style="filled,rounded", fillcolor="#E0F7FA", color="#00838F", fontcolor="#006064", label="Process\nPID: 17552 (PPID: 17549)\nComm: /proc/self/fd/3\nStart: 2791957899741 ns\n[DEAD]"];
+    "memfd_10" [shape=hexagon, style="filled", fillcolor="#FFF3E0", color="#E65100", fontcolor="#BF360C", label="Memfd Object\nToken: 10\nName: m2_corrupt_exec\nInode: 8503\nDev: 1\n[DESTROYED]"];
+    "proc_17553_2791958800852" [shape=box, style="filled,rounded", fillcolor="#E0F7FA", color="#00838F", fontcolor="#006064", label="Process\nPID: 17553 (PPID: 17549)\nComm: test_m2_exec\nStart: 2791958800852 ns\n[DEAD]"];
+
+    /* --- Edges --- */
+    "proc_16535_2718654516589" -> "proc_17549_2791954584802" [label="fork()\n@2791954587206 ns", color="#0288D1", fontcolor="#0288D1"];
+    "proc_17549_2791954584802" -> "memfd_7" [label="fd_install(fd=3, CREATION)\n@2791955602371 ns", color="#FB8C00", fontcolor="#FB8C00"];
+    "proc_17549_2791954584802" -> "memfd_7" [label="memfd_create(fd=3)\n@2791955607060 ns", color="#F57C00", fontcolor="#F57C00"];
+    "proc_17549_2791954584802" -> "memfd_7" [label="write(off=0, bytes=17)\n@2791955610065 ns", color="#D84315", fontcolor="#D84315"];
+    "proc_17549_2791954584802" -> "proc_17550_2791955716986" [label="fork()\n@2791955719651 ns", color="#0288D1", fontcolor="#0288D1"];
+    "proc_17550_2791955716986" -> "memfd_7" [label="exec_attempt(/dev/fd/3)\n@2791955828986 ns", color="#C2185B", fontcolor="#C2185B"];
+    "proc_17550_2791955716986" -> "memfd_7" [label="exec_success(/dev/fd/3)\n@2791956044731 ns", color="#7B1FA2", fontcolor="#7B1FA2"];
+    "proc_17550_2791955716986" -> "memfd_7" [label="fd_install(fd=4, REOPEN)\n@2791956532336 ns", color="#FB8C00", fontcolor="#FB8C00"];
+    "proc_17550_2791955716986" -> "memfd_7" [label="fd_install(fd=10, DUP)\n@2791956539379 ns", color="#FB8C00", fontcolor="#FB8C00"];
+    "proc_17550_2791955716986" -> "memfd_7" [label="close_fd(fd=4, dur=9417 ns)\n@2791956541152 ns", color="#757575", fontcolor="#616161"];
+    "proc_17549_2791954584802" -> "memfd_7" [label="close_fd(fd=3, dur=1142925 ns)\n@2791956745215 ns", color="#757575", fontcolor="#616161"];
+    "proc_17549_2791954584802" -> "memfd_8" [label="fd_install(fd=3, CREATION)\n@2791956800729 ns", color="#FB8C00", fontcolor="#FB8C00"];
+    "proc_17549_2791954584802" -> "memfd_8" [label="memfd_create(fd=3)\n@2791956805077 ns", color="#F57C00", fontcolor="#F57C00"];
+    "proc_17549_2791954584802" -> "memfd_8" [label="write(off=0, bytes=17)\n@2791956807802 ns", color="#D84315", fontcolor="#D84315"];
+    "proc_17549_2791954584802" -> "proc_17551_2791956906598" [label="fork()\n@2791956909964 ns", color="#0288D1", fontcolor="#0288D1"];
+    "proc_17551_2791956906598" -> "memfd_8" [label="exec_attempt(/dev/fd/3)\n@2791957036752 ns", color="#C2185B", fontcolor="#C2185B"];
+    "proc_17551_2791956906598" -> "memfd_8" [label="exec_success(/dev/fd/3)\n@2791957200239 ns", color="#7B1FA2", fontcolor="#7B1FA2"];
+    "proc_17551_2791956906598" -> "memfd_8" [label="fd_install(fd=4, REOPEN)\n@2791957597254 ns", color="#FB8C00", fontcolor="#FB8C00"];
+    "proc_17551_2791956906598" -> "memfd_8" [label="fd_install(fd=10, DUP)\n@2791957603155 ns", color="#FB8C00", fontcolor="#FB8C00"];
+    "proc_17551_2791956906598" -> "memfd_8" [label="close_fd(fd=4, dur=7925 ns)\n@2791957604948 ns", color="#757575", fontcolor="#616161"];
+    "proc_17549_2791954584802" -> "memfd_8" [label="close_fd(fd=3, dur=978686 ns)\n@2791957779445 ns", color="#757575", fontcolor="#616161"];
+    "proc_17549_2791954584802" -> "memfd_9" [label="fd_install(fd=3, CREATION)\n@2791957810323 ns", color="#FB8C00", fontcolor="#FB8C00"];
+    "proc_17549_2791954584802" -> "memfd_9" [label="memfd_create(fd=3)\n@2791957811576 ns", color="#F57C00", fontcolor="#F57C00"];
+    "proc_17549_2791954584802" -> "memfd_9" [label="write(off=0, bytes=17)\n@2791957813189 ns", color="#D84315", fontcolor="#D84315"];
+    "proc_17549_2791954584802" -> "proc_17552_2791957899741" [label="fork()\n@2791957902025 ns", color="#0288D1", fontcolor="#0288D1"];
+    "proc_17552_2791957899741" -> "memfd_9" [label="exec_attempt(/proc/self/fd/3)\n@2791957998707 ns", color="#C2185B", fontcolor="#C2185B"];
+    "proc_17552_2791957899741" -> "memfd_9" [label="exec_success(/proc/self/fd/3)\n@2791958145031 ns", color="#7B1FA2", fontcolor="#7B1FA2"];
+    "proc_17552_2791957899741" -> "memfd_9" [label="fd_install(fd=4, REOPEN)\n@2791958514244 ns", color="#FB8C00", fontcolor="#FB8C00"];
+    "proc_17552_2791957899741" -> "memfd_9" [label="fd_install(fd=10, DUP)\n@2791958519784 ns", color="#FB8C00", fontcolor="#FB8C00"];
+    "proc_17552_2791957899741" -> "memfd_9" [label="close_fd(fd=4, dur=7304 ns)\n@2791958521458 ns", color="#757575", fontcolor="#616161"];
+    "proc_17549_2791954584802" -> "memfd_9" [label="close_fd(fd=3, dur=885902 ns)\n@2791958696466 ns", color="#757575", fontcolor="#616161"];
+    "proc_17549_2791954584802" -> "memfd_10" [label="fd_install(fd=3, CREATION)\n@2791958726823 ns", color="#FB8C00", fontcolor="#FB8C00"];
+    "proc_17549_2791954584802" -> "memfd_10" [label="memfd_create(fd=3)\n@2791958728065 ns", color="#F57C00", fontcolor="#F57C00"];
+    "proc_17549_2791954584802" -> "memfd_10" [label="write(off=0, bytes=45)\n@2791958729648 ns", color="#D84315", fontcolor="#D84315"];
+    "proc_17549_2791954584802" -> "proc_17553_2791958800852" [label="fork()\n@2791958803086 ns", color="#0288D1", fontcolor="#0288D1"];
+    "proc_17553_2791958800852" -> "memfd_10" [label="exec_attempt(/dev/fd/3)\n@2791958929733 ns", color="#C2185B", fontcolor="#C2185B"];
+    "proc_17549_2791954584802" -> "memfd_10" [label="close_fd(fd=3, dur=357651 ns)\n@2791959084784 ns", color="#757575", fontcolor="#616161"];
+}
