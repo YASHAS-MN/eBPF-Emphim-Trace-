@@ -39,6 +39,6 @@ $(BUILD_DIR)/%: tests1.0/%.c | $(BUILD_DIR)
 	$(CC) -O2 -pthread -I src/user -I src/bpf $< -o $@
 
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)/* 2>/dev/null || true
 
 .PHONY: all clean loader replay test_m2_integration test_m6_dag test_m6_filtering test_m7_scenarios
