@@ -1581,16 +1581,15 @@ static int print_session_manifest(int cnt_fd, int drop_fd, int close_rc, int pol
         persist_ok = false;
     }
 
+    const char *telemetry_desc = NULL;
+    int64_t computed_drops = 0;
+    enum evidence_loss_status loss_st = evidence_manifest_evaluate_loss(&manifest, &computed_drops, &telemetry_desc);
+    loss_free = (loss_st == EVIDENCE_LOSS_LOSSLESS);
+
     printf("Storage Persistence:       %s\n",
            persist_ok ? "SYNCHRONIZED (Storage & CRC clean)" :
                         "FAILED / CORRUPT (Errors occurred during capture or finalization)");
-    if (!drop_avail || total_rb_drops < 0 || !counter_avail[CNT_REG_MAP_FULL_DROP]) {
-        printf("Telemetry Completeness:    UNVERIFIED (Kernel loss counters unavailable)\n");
-    } else if (loss_free) {
-        printf("Telemetry Completeness:    COMPLETE_LOSSLESS (0 drops recorded across all stages)\n");
-    } else {
-        printf("Telemetry Completeness:    LOSSY (Drops recorded in kernel ring buffer or registry)\n");
-    }
+    printf("Telemetry Completeness:    %s\n", telemetry_desc);
     printf("Session Status:            %s\n",
            (!persist_ok) ? "FAILURE / INCOMPLETE (Storage persistence error)" :
            (!loss_free) ? "PARTIAL (Lossy Telemetry Captured - Persistence Clean)" :

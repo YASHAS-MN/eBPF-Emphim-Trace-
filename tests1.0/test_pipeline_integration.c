@@ -912,6 +912,436 @@ static void test_unlinked_executable_provenance(void) {
     printf("  All 8 unlinked executable provenance and regression scenarios verified successfully!\n");
 }
 
+/* 10. Test Loss Counter Parsing & Consistency (Positive, Zero, Unavailable, Malformed, Incomplete, Inconsistent) */
+static void test_loss_counter_parsing_and_consistency(void) {
+    printf("[10/10] Testing manifest loss counter parsing, validation, and consistency...\n");
+
+    const char *test_evid = "/tmp/test_loss_manifest.evid";
+    const char *test_mf = "/tmp/test_loss_manifest.evid.manifest";
+    unlink(test_evid);
+    unlink(test_mf);
+
+    // Copy the entire valid 6-record evidence file (4240 bytes)
+    int out = open(test_evid, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    assert(out >= 0);
+    int in = open(TEST_EVID_FILE, O_RDONLY);
+    assert(in >= 0);
+    char cbuf[4096];
+    ssize_t nbytes;
+    while ((nbytes = read(in, cbuf, sizeof(cbuf))) > 0) {
+        assert(write(out, cbuf, nbytes) == nbytes);
+    }
+    close(in);
+    close(out);
+
+    // Case 1: Positive Loss Counters (e.g., 8 drops in memfd_completed)
+    {
+        unlink(test_mf);
+        int mfd = open(test_mf, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        assert(mfd >= 0);
+        const char *json_pos =
+            "{\n"
+            "  \"manifest_version\": 1,\n"
+            "  \"evidence_file\": \"/tmp/test_loss_manifest.evid\",\n"
+            "  \"record_count\": 6,\n"
+            "  \"storage_bytes\": 4240,\n"
+            "  \"finalized\": true,\n"
+            "  \"synchronized\": true,\n"
+            "  \"loss_counters\": {\n"
+            "    \"reg_map_full_drop\": 0,\n"
+            "    \"token_alloc_err\": 0,\n"
+            "    \"token_mismatch\": 0,\n"
+            "    \"sample_size_mismatches\": 0,\n"
+            "    \"write_errors\": 0,\n"
+            "    \"poll_errors\": 0,\n"
+            "    \"drain_errors\": 0,\n"
+            "    \"ring_buffer_total_drops\": 8,\n"
+            "    \"ring_buffer_per_type_drops\": {\n"
+            "      \"execve\": 0,\n"
+            "      \"memfd_create\": 0,\n"
+            "      \"unlink\": 0,\n"
+            "      \"unlinkat\": 0,\n"
+            "      \"connect\": 0,\n"
+            "      \"fork\": 0,\n"
+            "      \"process_exec\": 0,\n"
+            "      \"process_exit\": 0,\n"
+            "      \"vfs_unlink_completed\": 0,\n"
+            "      \"vfs_rmdir_completed\": 0,\n"
+            "      \"rmdir\": 0,\n"
+            "      \"memfd_completed\": 8,\n"
+            "      \"memfd_destroyed\": 0,\n"
+            "      \"memfd_file_released\": 0,\n"
+            "      \"fd_installed\": 0,\n"
+            "      \"fd_closed\": 0,\n"
+            "      \"memfd_write\": 0,\n"
+            "      \"memfd_exec_attempt\": 0,\n"
+            "      \"memfd_exec_success\": 0,\n"
+            "      \"debug\": 0\n"
+            "    }\n"
+            "  }\n"
+            "}\n";
+        assert(write(mfd, json_pos, strlen(json_pos)) == (ssize_t)strlen(json_pos));
+        close(mfd);
+
+        struct evidence_session_manifest m;
+        int rc = evidence_read_manifest(test_evid, &m);
+        assert(rc == 0);
+        // Assert that ring_buffer_total_drops is parsed as 8 (NOT 0!)
+        assert(m.ring_buffer_total_drops == 8);
+        assert(m.ring_buffer_per_type_drops[EVENT_MEMFD_COMPLETED] == 8);
+        assert(m.ring_buffer_per_type_drops[EVENT_EXECVE] == 0);
+        assert(m.ring_buffer_per_type_drops[EVENT_DEBUG] == 0);
+
+        int64_t drops = 0;
+        const char *desc = NULL;
+        enum evidence_loss_status st = evidence_manifest_evaluate_loss(&m, &drops, &desc);
+        assert(st == EVIDENCE_LOSS_LOSSY);
+        assert(drops == 8);
+        assert(strstr(desc, "LOSSY") != NULL);
+        printf("  [PASS] Positive loss counters correctly parsed as 8 (never 0) and verdict is LOSSY.\n");
+    }
+
+    // Case 2: Zero Loss Counters (Lossless)
+    {
+        unlink(test_mf);
+        int mfd = open(test_mf, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        assert(mfd >= 0);
+        const char *json_zero =
+            "{\n"
+            "  \"manifest_version\": 1,\n"
+            "  \"evidence_file\": \"/tmp/test_loss_manifest.evid\",\n"
+            "  \"record_count\": 6,\n"
+            "  \"storage_bytes\": 4240,\n"
+            "  \"finalized\": true,\n"
+            "  \"synchronized\": true,\n"
+            "  \"loss_counters\": {\n"
+            "    \"reg_map_full_drop\": 0,\n"
+            "    \"token_alloc_err\": 0,\n"
+            "    \"token_mismatch\": 0,\n"
+            "    \"sample_size_mismatches\": 0,\n"
+            "    \"write_errors\": 0,\n"
+            "    \"poll_errors\": 0,\n"
+            "    \"drain_errors\": 0,\n"
+            "    \"ring_buffer_total_drops\": 0,\n"
+            "    \"ring_buffer_per_type_drops\": {\n"
+            "      \"execve\": 0,\n"
+            "      \"memfd_create\": 0,\n"
+            "      \"unlink\": 0,\n"
+            "      \"unlinkat\": 0,\n"
+            "      \"connect\": 0,\n"
+            "      \"fork\": 0,\n"
+            "      \"process_exec\": 0,\n"
+            "      \"process_exit\": 0,\n"
+            "      \"vfs_unlink_completed\": 0,\n"
+            "      \"vfs_rmdir_completed\": 0,\n"
+            "      \"rmdir\": 0,\n"
+            "      \"memfd_completed\": 0,\n"
+            "      \"memfd_destroyed\": 0,\n"
+            "      \"memfd_file_released\": 0,\n"
+            "      \"fd_installed\": 0,\n"
+            "      \"fd_closed\": 0,\n"
+            "      \"memfd_write\": 0,\n"
+            "      \"memfd_exec_attempt\": 0,\n"
+            "      \"memfd_exec_success\": 0,\n"
+            "      \"debug\": 0\n"
+            "    }\n"
+            "  }\n"
+            "}\n";
+        assert(write(mfd, json_zero, strlen(json_zero)) == (ssize_t)strlen(json_zero));
+        close(mfd);
+
+        struct evidence_session_manifest m;
+        int rc = evidence_read_manifest(test_evid, &m);
+        assert(rc == 0);
+        assert(m.ring_buffer_total_drops == 0);
+
+        int64_t drops = 0;
+        const char *desc = NULL;
+        enum evidence_loss_status st = evidence_manifest_evaluate_loss(&m, &drops, &desc);
+        assert(st == EVIDENCE_LOSS_LOSSLESS);
+        assert(drops == 0);
+        assert(strstr(desc, "COMPLETE_LOSSLESS") != NULL);
+        printf("  [PASS] Zero loss counters correctly evaluated as COMPLETE_LOSSLESS.\n");
+    }
+
+    // Case 3: Unavailable Loss Counters (Value is -1 or missing)
+    {
+        unlink(test_mf);
+        int mfd = open(test_mf, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        assert(mfd >= 0);
+        const char *json_unavail =
+            "{\n"
+            "  \"manifest_version\": 1,\n"
+            "  \"evidence_file\": \"/tmp/test_loss_manifest.evid\",\n"
+            "  \"record_count\": 6,\n"
+            "  \"storage_bytes\": 4240,\n"
+            "  \"finalized\": true,\n"
+            "  \"synchronized\": true,\n"
+            "  \"loss_counters\": {\n"
+            "    \"reg_map_full_drop\": -1,\n"
+            "    \"token_alloc_err\": -1,\n"
+            "    \"token_mismatch\": -1,\n"
+            "    \"sample_size_mismatches\": 0,\n"
+            "    \"write_errors\": 0,\n"
+            "    \"poll_errors\": 0,\n"
+            "    \"drain_errors\": 0,\n"
+            "    \"ring_buffer_total_drops\": -1\n"
+            "  }\n"
+            "}\n";
+        assert(write(mfd, json_unavail, strlen(json_unavail)) == (ssize_t)strlen(json_unavail));
+        close(mfd);
+
+        struct evidence_session_manifest m;
+        int rc = evidence_read_manifest(test_evid, &m);
+        assert(rc == 0);
+        assert(m.ring_buffer_total_drops == -1);
+        assert(m.reg_map_full_drop == -1);
+
+        int64_t drops = 0;
+        const char *desc = NULL;
+        enum evidence_loss_status st = evidence_manifest_evaluate_loss(&m, &drops, &desc);
+        assert(st == EVIDENCE_LOSS_UNVERIFIED);
+        assert(strstr(desc, "UNVERIFIED") != NULL);
+        printf("  [PASS] Unavailable counters remain -1 (never zero) and verdict is UNVERIFIED.\n");
+    }
+
+    // Case 4: Malformed Loss Counters (Non-numeric text / invalid syntax)
+    {
+        unlink(test_mf);
+        int mfd = open(test_mf, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        assert(mfd >= 0);
+        const char *json_malformed =
+            "{\n"
+            "  \"manifest_version\": 1,\n"
+            "  \"evidence_file\": \"/tmp/test_loss_manifest.evid\",\n"
+            "  \"record_count\": 6,\n"
+            "  \"storage_bytes\": 4240,\n"
+            "  \"finalized\": true,\n"
+            "  \"synchronized\": true,\n"
+            "  \"loss_counters\": {\n"
+            "    \"reg_map_full_drop\": \"corrupt_string\",\n"
+            "    \"token_alloc_err\": ::::bad_syntax,\n"
+            "    \"token_mismatch\": null,\n"
+            "    \"sample_size_mismatches\": 0,\n"
+            "    \"write_errors\": 0,\n"
+            "    \"poll_errors\": 0,\n"
+            "    \"drain_errors\": 0,\n"
+            "    \"ring_buffer_total_drops\": \"unavailable_via_api\"\n"
+            "  }\n"
+            "}\n";
+        assert(write(mfd, json_malformed, strlen(json_malformed)) == (ssize_t)strlen(json_malformed));
+        close(mfd);
+
+        struct evidence_session_manifest m;
+        int rc = evidence_read_manifest(test_evid, &m);
+        assert(rc == 0);
+        // Crucial requirement: Malformed counters MUST NEVER become zero!
+        assert(m.ring_buffer_total_drops == -1);
+        assert(m.reg_map_full_drop == -1);
+        assert(m.token_alloc_err == -1);
+
+        int64_t drops = 0;
+        const char *desc = NULL;
+        enum evidence_loss_status st = evidence_manifest_evaluate_loss(&m, &drops, &desc);
+        assert(st == EVIDENCE_LOSS_UNVERIFIED);
+        assert(strstr(desc, "UNVERIFIED") != NULL);
+        printf("  [PASS] Malformed counters reject non-numeric values and default to -1 (never zero).\n");
+    }
+
+    // Case 5: Incomplete Counters (Missing event types)
+    {
+        unlink(test_mf);
+        int mfd = open(test_mf, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        assert(mfd >= 0);
+        const char *json_incomplete =
+            "{\n"
+            "  \"manifest_version\": 1,\n"
+            "  \"evidence_file\": \"/tmp/test_loss_manifest.evid\",\n"
+            "  \"record_count\": 6,\n"
+            "  \"storage_bytes\": 4240,\n"
+            "  \"finalized\": true,\n"
+            "  \"synchronized\": true,\n"
+            "  \"loss_counters\": {\n"
+            "    \"reg_map_full_drop\": 0,\n"
+            "    \"token_alloc_err\": 0,\n"
+            "    \"token_mismatch\": 0,\n"
+            "    \"sample_size_mismatches\": 0,\n"
+            "    \"write_errors\": 0,\n"
+            "    \"poll_errors\": 0,\n"
+            "    \"drain_errors\": 0,\n"
+            "    \"ring_buffer_total_drops\": 0,\n"
+            "    \"ring_buffer_per_type_drops\": {\n"
+            "      \"execve\": 0,\n"
+            "      \"memfd_create\": 0\n"
+            "    }\n"
+            "  }\n"
+            "}\n";
+        assert(write(mfd, json_incomplete, strlen(json_incomplete)) == (ssize_t)strlen(json_incomplete));
+        close(mfd);
+
+        struct evidence_session_manifest m;
+        int rc = evidence_read_manifest(test_evid, &m);
+        assert(rc == 0);
+        assert(m.ring_buffer_per_type_drops[EVENT_DEBUG] == -1);
+        assert(m.ring_buffer_per_type_drops[EVENT_MEMFD_COMPLETED] == -1);
+
+        int64_t drops = 0;
+        const char *desc = NULL;
+        enum evidence_loss_status st = evidence_manifest_evaluate_loss(&m, &drops, &desc);
+        assert(st == EVIDENCE_LOSS_UNVERIFIED);
+        assert(strstr(desc, "incomplete") != NULL);
+        printf("  [PASS] Incomplete per-event drops cannot produce a lossless verdict (UNVERIFIED).\n");
+    }
+
+    // Case 6: Inconsistent Counters (Claims 0 total drops, but memfd_completed has 8 drops)
+    {
+        unlink(test_mf);
+        int mfd = open(test_mf, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        assert(mfd >= 0);
+        const char *json_inconsistent =
+            "{\n"
+            "  \"manifest_version\": 1,\n"
+            "  \"evidence_file\": \"/tmp/test_loss_manifest.evid\",\n"
+            "  \"record_count\": 6,\n"
+            "  \"storage_bytes\": 4240,\n"
+            "  \"finalized\": true,\n"
+            "  \"synchronized\": true,\n"
+            "  \"loss_counters\": {\n"
+            "    \"reg_map_full_drop\": 0,\n"
+            "    \"token_alloc_err\": 0,\n"
+            "    \"token_mismatch\": 0,\n"
+            "    \"sample_size_mismatches\": 0,\n"
+            "    \"write_errors\": 0,\n"
+            "    \"poll_errors\": 0,\n"
+            "    \"drain_errors\": 0,\n"
+            "    \"ring_buffer_total_drops\": 0,\n"
+            "    \"ring_buffer_per_type_drops\": {\n"
+            "      \"execve\": 0,\n"
+            "      \"memfd_create\": 0,\n"
+            "      \"unlink\": 0,\n"
+            "      \"unlinkat\": 0,\n"
+            "      \"connect\": 0,\n"
+            "      \"fork\": 0,\n"
+            "      \"process_exec\": 0,\n"
+            "      \"process_exit\": 0,\n"
+            "      \"vfs_unlink_completed\": 0,\n"
+            "      \"vfs_rmdir_completed\": 0,\n"
+            "      \"rmdir\": 0,\n"
+            "      \"memfd_completed\": 8,\n"
+            "      \"memfd_destroyed\": 0,\n"
+            "      \"memfd_file_released\": 0,\n"
+            "      \"fd_installed\": 0,\n"
+            "      \"fd_closed\": 0,\n"
+            "      \"memfd_write\": 0,\n"
+            "      \"memfd_exec_attempt\": 0,\n"
+            "      \"memfd_exec_success\": 0,\n"
+            "      \"debug\": 0\n"
+            "    }\n"
+            "  }\n"
+            "}\n";
+        assert(write(mfd, json_inconsistent, strlen(json_inconsistent)) == (ssize_t)strlen(json_inconsistent));
+        close(mfd);
+
+        struct evidence_session_manifest m;
+        int rc = evidence_read_manifest(test_evid, &m);
+        assert(rc == 0);
+        assert(m.ring_buffer_total_drops == 0);
+        assert(m.ring_buffer_per_type_drops[EVENT_MEMFD_COMPLETED] == 8);
+
+        int64_t drops = 0;
+        const char *desc = NULL;
+        enum evidence_loss_status st = evidence_manifest_evaluate_loss(&m, &drops, &desc);
+        // Crucial requirement: Inconsistent counters cannot produce a lossless verdict!
+        assert(st == EVIDENCE_LOSS_INCONSISTENT);
+        assert(strstr(desc, "INCONSISTENT") != NULL);
+        printf("  [PASS] Inconsistent total vs per-type drops rejected as INCONSISTENT (never lossless).\n");
+    }
+
+    // Case 7: End-to-End Replay Verification with Summary JSON
+    {
+        unlink(test_mf);
+        int mfd = open(test_mf, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        assert(mfd >= 0);
+        const char *json_pos_c7 =
+            "{\n"
+            "  \"manifest_version\": 1,\n"
+            "  \"evidence_file\": \"/tmp/test_loss_manifest.evid\",\n"
+            "  \"record_count\": 6,\n"
+            "  \"storage_bytes\": 4240,\n"
+            "  \"finalized\": true,\n"
+            "  \"synchronized\": true,\n"
+            "  \"loss_counters\": {\n"
+            "    \"reg_map_full_drop\": 0,\n"
+            "    \"token_alloc_err\": 0,\n"
+            "    \"token_mismatch\": 0,\n"
+            "    \"sample_size_mismatches\": 0,\n"
+            "    \"write_errors\": 0,\n"
+            "    \"poll_errors\": 0,\n"
+            "    \"drain_errors\": 0,\n"
+            "    \"ring_buffer_total_drops\": 8,\n"
+            "    \"ring_buffer_per_type_drops\": {\n"
+            "      \"execve\": 0,\n"
+            "      \"memfd_create\": 0,\n"
+            "      \"unlink\": 0,\n"
+            "      \"unlinkat\": 0,\n"
+            "      \"connect\": 0,\n"
+            "      \"fork\": 0,\n"
+            "      \"process_exec\": 0,\n"
+            "      \"process_exit\": 0,\n"
+            "      \"vfs_unlink_completed\": 0,\n"
+            "      \"vfs_rmdir_completed\": 0,\n"
+            "      \"rmdir\": 0,\n"
+            "      \"memfd_completed\": 8,\n"
+            "      \"memfd_destroyed\": 0,\n"
+            "      \"memfd_file_released\": 0,\n"
+            "      \"fd_installed\": 0,\n"
+            "      \"fd_closed\": 0,\n"
+            "      \"memfd_write\": 0,\n"
+            "      \"memfd_exec_attempt\": 0,\n"
+            "      \"memfd_exec_success\": 0,\n"
+            "      \"debug\": 0\n"
+            "    }\n"
+            "  }\n"
+            "}\n";
+        assert(write(mfd, json_pos_c7, strlen(json_pos_c7)) == (ssize_t)strlen(json_pos_c7));
+        close(mfd);
+
+        // Replay Case 1 (8 drops) using ./build/replay --strict
+        int pid = fork();
+        assert(pid >= 0);
+        if (pid == 0) {
+            int devnull = open("/dev/null", O_WRONLY);
+            dup2(devnull, STDOUT_FILENO);
+            dup2(devnull, STDERR_FILENO);
+            close(devnull);
+            execl("./build/replay", "./build/replay", test_evid, "--strict",
+                  "--summary-json", TEST_SUMMARY_JSON, NULL);
+            _exit(127);
+        }
+        int status = 0;
+        waitpid(pid, &status, 0);
+        assert(WIFEXITED(status));
+        assert(WEXITSTATUS(status) == 0);
+
+        FILE *fj = fopen(TEST_SUMMARY_JSON, "r");
+        assert(fj != NULL);
+        char sbuf[4096];
+        size_t sz = fread(sbuf, 1, sizeof(sbuf) - 1, fj);
+        fclose(fj);
+        sbuf[sz] = '\0';
+
+        assert(strstr(sbuf, "\"telemetry_loss_free\": false") != NULL);
+        assert(strstr(sbuf, "\"telemetry_capture_status\": \"LOSSY") != NULL);
+        assert(strstr(sbuf, "\"ring_buffer_total_drops\": 8") != NULL);
+        printf("  [PASS] Replay correctly exports telemetry_loss_free=false and 8 drops in summary JSON.\n");
+    }
+
+    unlink(test_evid);
+    unlink(test_mf);
+    unlink(TEST_SUMMARY_JSON);
+    printf("  All loss counter parsing, validation, and consistency tests passed!\n");
+}
+
 int main(void) {
     printf("=== Starting EphimTrace Collection-First Integration & Reliability Tests ===\n");
     cleanup_files();
@@ -925,8 +1355,9 @@ int main(void) {
     test_legacy_file_compatibility();
     test_output_alias_and_collision_protection();
     test_unlinked_executable_provenance();
+    test_loss_counter_parsing_and_consistency();
 
     cleanup_files();
-    printf("=== All 9 Integration & Reliability Tests Passed Successfully! ===\n");
+    printf("=== All 10 Integration & Reliability Tests Passed Successfully! ===\n");
     return 0;
 }

@@ -2,6 +2,7 @@
 #define EPHIM_EVIDENCE_IO_H
 
 #include <errno.h>
+#include <limits.h>
 #include <fcntl.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -401,6 +402,178 @@ static inline int evidence_writer_close(struct evidence_writer *w) {
   return 0;
 }
 
+/* --- Session Manifest Parser Helpers & Loss Evaluation --- */
+
+enum evidence_loss_status {
+  EVIDENCE_LOSS_LOSSLESS = 0,
+  EVIDENCE_LOSS_LOSSY = 1,
+  EVIDENCE_LOSS_UNVERIFIED = 2,
+  EVIDENCE_LOSS_INCONSISTENT = 3
+};
+
+static inline bool
+evidence_manifest_find_val(const char *buf, const char *key, const char **val_start) {
+  if (!buf || !key || !val_start)
+    return false;
+  const char *p = strstr(buf, key);
+  if (!p)
+    return false;
+  p += strlen(key);
+  while (*p == ' ' || *p == '\t')
+    p++;
+  if (*p == ':')
+    p++;
+  while (*p == ' ' || *p == '\t')
+    p++;
+  *val_start = p;
+  return true;
+}
+
+static inline bool
+evidence_manifest_parse_int64(const char *buf, const char *key, int64_t *out_val) {
+  const char *p = NULL;
+  if (!evidence_manifest_find_val(buf, key, &p))
+    return false;
+  char *end = NULL;
+  errno = 0;
+  long long v = strtoll(p, &end, 10);
+  if (end == p || errno != 0) {
+    return false;
+  }
+  if (out_val)
+    *out_val = (int64_t)v;
+  return true;
+}
+
+static inline bool
+evidence_manifest_parse_uint64(const char *buf, const char *key, uint64_t *out_val) {
+  const char *p = NULL;
+  if (!evidence_manifest_find_val(buf, key, &p))
+    return false;
+  if (*p == '-')
+    return false;
+  char *end = NULL;
+  errno = 0;
+  unsigned long long v = strtoull(p, &end, 10);
+  if (end == p || errno != 0) {
+    return false;
+  }
+  if (out_val)
+    *out_val = (uint64_t)v;
+  return true;
+}
+
+static inline bool
+evidence_manifest_parse_uint32(const char *buf, const char *key, uint32_t *out_val) {
+  uint64_t v = 0;
+  if (!evidence_manifest_parse_uint64(buf, key, &v))
+    return false;
+  if (v > UINT32_MAX)
+    return false;
+  if (out_val)
+    *out_val = (uint32_t)v;
+  return true;
+}
+
+static inline bool
+evidence_manifest_parse_bool(const char *buf, const char *key, bool *out_val) {
+  const char *p = NULL;
+  if (!evidence_manifest_find_val(buf, key, &p))
+    return false;
+  if (strncmp(p, "true", 4) == 0) {
+    if (out_val)
+      *out_val = true;
+    return true;
+  } else if (strncmp(p, "false", 5) == 0) {
+    if (out_val)
+      *out_val = false;
+    return true;
+  }
+  return false;
+}
+
+static inline enum evidence_loss_status
+evidence_manifest_evaluate_loss(const struct evidence_session_manifest *m,
+                                int64_t *out_computed_drops,
+                                const char **out_desc) {
+  if (!m) {
+    if (out_desc) *out_desc = "UNVERIFIED (No manifest provided)";
+    if (out_computed_drops) *out_computed_drops = -1;
+    return EVIDENCE_LOSS_UNVERIFIED;
+  }
+
+  /* 1. Storage persistence sanity */
+  if (!m->finalized || !m->synchronized ||
+      m->sample_size_mismatches != 0 ||
+      m->write_errors != 0 ||
+      m->poll_errors != 0 ||
+      m->drain_errors != 0) {
+    if (out_desc) *out_desc = "UNVERIFIED (Storage persistence errors or unfinalized)";
+    if (out_computed_drops) *out_computed_drops = -1;
+    return EVIDENCE_LOSS_UNVERIFIED;
+  }
+
+  /* 2. Check kernel counters availability */
+  if (m->reg_map_full_drop < 0 || m->token_alloc_err < 0 || m->token_mismatch < 0 ||
+      m->ring_buffer_total_drops < 0) {
+    if (out_desc) *out_desc = "UNVERIFIED (Kernel loss counters missing or unavailable in manifest)";
+    if (out_computed_drops) *out_computed_drops = -1;
+    return EVIDENCE_LOSS_UNVERIFIED;
+  }
+
+  /* 3. Check all defined event type counters */
+  static const uint32_t defined_types[] = {
+    EVENT_EXECVE, EVENT_MEMFD_CREATE, EVENT_UNLINK, EVENT_UNLINKAT,
+    EVENT_CONNECT, EVENT_FORK, EVENT_PROCESS_EXEC, EVENT_PROCESS_EXIT,
+    EVENT_VFS_UNLINK_COMPLETED, EVENT_VFS_RMDIR_COMPLETED, EVENT_RMDIR,
+    EVENT_MEMFD_COMPLETED, EVENT_MEMFD_DESTROYED, EVENT_MEMFD_FILE_RELEASED,
+    EVENT_FD_INSTALLED, EVENT_FD_CLOSED, EVENT_MEMFD_WRITE,
+    EVENT_MEMFD_EXEC_ATTEMPT, EVENT_MEMFD_EXEC_SUCCESS, EVENT_DEBUG
+  };
+
+  int64_t type_sum = 0;
+  bool any_missing = false;
+  bool any_drop = false;
+
+  for (size_t i = 0; i < sizeof(defined_types)/sizeof(defined_types[0]); i++) {
+    uint32_t t = defined_types[i];
+    int64_t d = m->ring_buffer_per_type_drops[t];
+    if (d < 0) {
+      any_missing = true;
+    } else if (d > 0) {
+      any_drop = true;
+      type_sum += d;
+    }
+  }
+
+  int64_t total = (m->ring_buffer_total_drops > type_sum) ?
+                   m->ring_buffer_total_drops : type_sum;
+  if (out_computed_drops) *out_computed_drops = total;
+
+  /* If any defined event counter is missing/unavailable, cannot verify lossless */
+  if (any_missing) {
+    if (out_desc) *out_desc = "UNVERIFIED (Per-event drop counters incomplete in manifest)";
+    return EVIDENCE_LOSS_UNVERIFIED;
+  }
+
+  /* 4. Check consistency: total drops must equal sum of per-type drops */
+  if (m->ring_buffer_total_drops != type_sum) {
+    if (out_desc) *out_desc = "INCONSISTENT (Discrepancy between total and per-type loss counters)";
+    return EVIDENCE_LOSS_INCONSISTENT;
+  }
+
+  /* 5. Lossy if any drop counter is positive */
+  if (m->ring_buffer_total_drops > 0 || any_drop ||
+      m->reg_map_full_drop > 0 || m->token_alloc_err > 0 || m->token_mismatch > 0) {
+    if (out_desc) *out_desc = "LOSSY (Drops recorded in kernel ring buffer or registry)";
+    return EVIDENCE_LOSS_LOSSY;
+  }
+
+  /* 6. Complete and lossless */
+  if (out_desc) *out_desc = "COMPLETE_LOSSLESS (0 drops recorded across all stages)";
+  return EVIDENCE_LOSS_LOSSLESS;
+}
+
 /* --- Session Manifest Persistence & Verification --- */
 
 static inline int
@@ -428,18 +601,10 @@ evidence_write_manifest(const char *evid_path,
     return -errno;
 
   const char *persist_status = (m->finalized && m->synchronized) ? "PERSISTED_CLEAN" : "PERSIST_FAILED";
-  bool telemetry_lossless = (m->finalized && m->synchronized &&
-                             m->sample_size_mismatches == 0 &&
-                             m->write_errors == 0 &&
-                             m->poll_errors == 0 &&
-                             m->drain_errors == 0 &&
-                             m->reg_map_full_drop == 0 &&
-                             m->token_alloc_err == 0 &&
-                             m->token_mismatch == 0 &&
-                             m->ring_buffer_total_drops == 0);
-  const char *capture_status = (m->ring_buffer_total_drops < 0 || m->reg_map_full_drop < 0) ?
-                               "UNVERIFIED_COUNTERS_UNAVAILABLE" :
-                               (telemetry_lossless ? "COMPLETE_LOSSLESS" : "LOSSY_DROPS_RECORDED");
+  const char *capture_status = NULL;
+  int64_t computed_drops = 0;
+  enum evidence_loss_status loss_st = evidence_manifest_evaluate_loss(m, &computed_drops, &capture_status);
+  bool telemetry_lossless = (loss_st == EVIDENCE_LOSS_LOSSLESS);
 
   char drops_str[64];
   if (m->ring_buffer_total_drops >= 0) {
@@ -623,83 +788,53 @@ evidence_read_manifest(const char *evid_path,
     return -1;
   buf[n] = '\0';
 
-  /* Parse simple key-values from JSON buffer */
-  char *p;
-  if ((p = strstr(buf, "\"record_count\":"))) {
-    out_m->record_count = (uint64_t)strtoull(p + 15, NULL, 10);
-  } else {
+  /* Required fields: record_count and storage_bytes */
+  if (!evidence_manifest_parse_uint64(buf, "\"record_count\":", &out_m->record_count)) {
     return -1;
   }
-  if ((p = strstr(buf, "\"storage_bytes\":"))) {
-    out_m->storage_bytes = (uint64_t)strtoull(p + 16, NULL, 10);
-  } else {
+  if (!evidence_manifest_parse_uint64(buf, "\"storage_bytes\":", &out_m->storage_bytes)) {
     return -1;
   }
-  if ((p = strstr(buf, "\"target_pid\":"))) {
-    out_m->target_pid = (uint32_t)strtoul(p + 13, NULL, 10);
-  }
-  if ((p = strstr(buf, "\"finalized\":"))) {
-    while (*p && *p != ':' && *p != '\n')
-      p++;
-    if (*p == ':') {
-      p++;
-      while (*p == ' ' || *p == '\t')
-        p++;
-      out_m->finalized = (strncmp(p, "true", 4) == 0);
-    }
-  }
-  if ((p = strstr(buf, "\"synchronized\":"))) {
-    while (*p && *p != ':' && *p != '\n')
-      p++;
-    if (*p == ':') {
-      p++;
-      while (*p == ' ' || *p == '\t')
-        p++;
-      out_m->synchronized = (strncmp(p, "true", 4) == 0);
-    }
-  }
-  if ((p = strstr(buf, "\"sample_size_mismatches\":"))) {
-    out_m->sample_size_mismatches = (uint64_t)strtoull(p + 25, NULL, 10);
-  }
-  if ((p = strstr(buf, "\"write_errors\":"))) {
-    out_m->write_errors = (uint64_t)strtoull(p + 15, NULL, 10);
-  }
-  if ((p = strstr(buf, "\"poll_errors\":"))) {
-    out_m->poll_errors = (uint64_t)strtoull(p + 14, NULL, 10);
-  }
-  if ((p = strstr(buf, "\"drain_errors\":"))) {
-    out_m->drain_errors = (uint64_t)strtoull(p + 15, NULL, 10);
-  }
-  if ((p = strstr(buf, "\"reg_map_full_drop\":"))) {
-    out_m->reg_map_full_drop = (int64_t)strtoll(p + 20, NULL, 10);
-  }
-  if ((p = strstr(buf, "\"token_alloc_err\":"))) {
-    out_m->token_alloc_err = (int64_t)strtoll(p + 18, NULL, 10);
-  }
-  if ((p = strstr(buf, "\"token_mismatch\":"))) {
-    out_m->token_mismatch = (int64_t)strtoll(p + 17, NULL, 10);
-  }
-  if ((p = strstr(buf, "\"ring_buffer_total_drops\":"))) {
-    out_m->ring_buffer_total_drops = (int64_t)strtoll(p + 25, NULL, 10);
-  }
-  if ((p = strstr(buf, "\"ring_buffer_drops\":"))) {
-    p += 20;
-    while (*p == ' ' || *p == '\t') p++;
-    if (*p == '"') {
-      p++;
-      char *end = strchr(p, '"');
+
+  evidence_manifest_parse_uint32(buf, "\"target_pid\":", &out_m->target_pid);
+  evidence_manifest_parse_bool(buf, "\"finalized\":", &out_m->finalized);
+  evidence_manifest_parse_bool(buf, "\"synchronized\":", &out_m->synchronized);
+
+  evidence_manifest_parse_uint64(buf, "\"sample_size_mismatches\":", &out_m->sample_size_mismatches);
+  evidence_manifest_parse_uint64(buf, "\"write_errors\":", &out_m->write_errors);
+  evidence_manifest_parse_uint64(buf, "\"poll_errors\":", &out_m->poll_errors);
+  evidence_manifest_parse_uint64(buf, "\"drain_errors\":", &out_m->drain_errors);
+
+  /* Loss accounting: initialized to -1 (unavailable), set only on valid numeric conversion */
+  evidence_manifest_parse_int64(buf, "\"reg_map_full_drop\":", &out_m->reg_map_full_drop);
+  evidence_manifest_parse_int64(buf, "\"token_alloc_err\":", &out_m->token_alloc_err);
+  evidence_manifest_parse_int64(buf, "\"token_mismatch\":", &out_m->token_mismatch);
+  evidence_manifest_parse_int64(buf, "\"ring_buffer_total_drops\":", &out_m->ring_buffer_total_drops);
+
+  /* Parse string/number for ring_buffer_drops */
+  const char *rb_drops_val = NULL;
+  if (evidence_manifest_find_val(buf, "\"ring_buffer_drops\":", &rb_drops_val)) {
+    if (*rb_drops_val == '"') {
+      rb_drops_val++;
+      const char *end = strchr(rb_drops_val, '"');
       if (end) {
-        size_t slen = (size_t)(end - p);
+        size_t slen = (size_t)(end - rb_drops_val);
         if (slen >= sizeof(out_m->ring_buffer_drops))
           slen = sizeof(out_m->ring_buffer_drops) - 1;
-        memcpy(out_m->ring_buffer_drops, p, slen);
+        memcpy(out_m->ring_buffer_drops, rb_drops_val, slen);
         out_m->ring_buffer_drops[slen] = '\0';
       }
     } else {
-      long long v = strtoll(p, NULL, 10);
-      snprintf(out_m->ring_buffer_drops, sizeof(out_m->ring_buffer_drops), "%lld", v);
+      char *end = NULL;
+      errno = 0;
+      long long v = strtoll(rb_drops_val, &end, 10);
+      if (end != rb_drops_val && errno == 0) {
+        snprintf(out_m->ring_buffer_drops, sizeof(out_m->ring_buffer_drops), "%lld", v);
+      }
     }
   }
+
+  /* Parse all defined per-type drops: only valid numeric conversions overwrite -1 */
   static const struct {
     uint32_t type;
     const char *key;
@@ -726,10 +861,9 @@ evidence_read_manifest(const char *evid_path,
     {EVENT_DEBUG, "\"debug\":"},
   };
   for (size_t i = 0; i < sizeof(type_keys)/sizeof(type_keys[0]); i++) {
-    if ((p = strstr(buf, type_keys[i].key))) {
-      p += strlen(type_keys[i].key);
-      while (*p == ' ' || *p == '\t') p++;
-      out_m->ring_buffer_per_type_drops[type_keys[i].type] = (int64_t)strtoll(p, NULL, 10);
+    int64_t val = -1;
+    if (evidence_manifest_parse_int64(buf, type_keys[i].key, &val)) {
+      out_m->ring_buffer_per_type_drops[type_keys[i].type] = val;
     }
   }
   return 0; /* Successfully read and parsed */
