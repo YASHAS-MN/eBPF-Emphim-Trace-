@@ -1,103 +1,92 @@
 # EphimTrace — Project State
 
-Last updated: 2026-11-25
+Last updated: 2026-11-27
 
 ## Objective
 
-Develop an eBPF-based forensic telemetry collection
-system prioritizing evidence completeness, fidelity,
-and reliable provenance reconstruction.
+Develop an eBPF-based forensic telemetry and provenance system prioritizing evidence completeness, fidelity, and reliable reconstruction of ephemeral and unlinked executable activity.
 
-## Project Resources
+## Resources
 
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Reference Architecture A checkpoint: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
-- Original remediation checkpoint: 355ed8a
-- Working branch: checkpoint/telemetry-remediation
+- Current implementation checkpoint: 9d5bb5176278f1dd7e75b74302daafbf1cfe96a6
+- Working branch: remediation/state-independence-and-loss-accountability
+- Initial production benchmark baseline: 056ec9b
+- Historical Architecture A reference: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
 
 ## Current Architecture
 
-Kernel hooks and BPF registries
-    -> Kernel ring buffer (1 MiB)
-    -> Synchronous userspace consumer
-    -> Provenance engine
+Kernel hooks and identity registries
+    -> Configurable kernel ring buffer (64 MiB candidate default; 4 MiB low-memory)
+    -> Synchronous userspace collector and evidence writer
+    -> Persistent binary records and loss manifest
+    -> Independent offline replay, provenance graph and exports
 
-Architecture B (asynchronous acquisition) is approved for scoped experimentation under #3, conditional on an agreed evidence contract and normalized benchmark protocol. Architecture C remains unapproved for implementation.
+Collection and reconstruction are separate. The current architecture is retained for the next evaluation, not approved as universally optimal or release-ready.
 
 ## Completed Work
 
-Accepted within the tested memfd lifecycle scope:
+- A/B/C and online/deferred experiments; deferred evidence-first acquisition selected.
+- Scoped native memfd execution and unlinked ELF reconstruction at 056ec9b.
+- Production Benchmark 01: OSBench and controlled syscall ground truth.
+- Remediation: registry-state independence for creation completion and exec cleanup, per-type ring reservation loss counters, distinction between persistence and capture completeness.
+- Controlled fault injection and replay loss discrimination validated within tested scope at 7fea4b9.
+- Capacity experiments (1/4/16/64 MiB); 64 MiB retained for tested bursts.
+- Production Benchmark 01 repeated at 9d5bb51, five trials each paced/burst/sustained, ten paired OSBench runs per task.
 
-- Independent syscall-based ground truth.
-- Telemetry loss-detection infrastructure.
-- Quantitative baseline experiments.
-- Correction 1: Event initialization.
-- Correction 2: Ordinary descriptor-close coverage.
-- Correction 3: Truthful registry correlation outcomes.
-- Correction 4A: Optional quiet event logging (accepted strictly as diagnostic/benchmark optimization; not production evidence-equivalent).
+## Telemetry Benchmark Status
 
-## Current Checkpoint
+Scoped performance and remediation cycle concluded. Owner-reported native results:
 
-Active task: #3 — comparative benchmark and evidence-contract design. No architecture implementation has started.
+| Metric | 056ec9b | 9d5bb51 |
+| --- | --- | --- |
+| Paced creation completion matches | 500/500 | 500/500 each trial |
+| Burst creation completion matches | 2212/10000 | 10000/10000 each trial |
+| Sustained creation completion matches | 60000/60000 | 60000/60000 each trial |
+| Ring reservation loss | unknown | zero reported in 15 trials |
+| OSBench process creation overhead | 8.92% | 8.60% |
+| OSBench program launch overhead | 0.41% | -0.03% |
+| OSBench file operations overhead | 19.64% | 19.95% |
+| Burst entry-to-reception p99 | 3.12 ms | 77.13 ms |
 
-Correction 4A accepted: Optional quiet event logging.
+Raw local evidence has not been independently inspected by reviewer. Source review confirms the report must label type-12 completion matches rather than creation pairs; drain throughput has mismatched numerator/denominator scope; mmap RSS and physical ring memory overlap. Correct those report claims from retained artifacts. Zero reported reservation drops is not a universal completeness guarantee. No industry certification, external collector parity, or production qualification claimed.
 
-Accepted strictly as a diagnostic and benchmark optimization.
-Deterministic callback equivalence verified.
-Quiet mode is NOT production evidence-equivalent: un-modeled observations
-(failed/uncorrelated memfds, file releases, syscall intent) are suppressed.
-Default presentation logging remains unchanged.
+See #7 and final benchmark review comment 7219218200.
 
-## Outstanding Work
+## Current Task
 
-GitHub Issues is the authoritative task register.
+#9 — Benchmark provenance reconstruction correctness and scalability.
 
-- #2: Review logging optimization (closed/accepted as diagnostic optimization).
-- #3: Evaluate asynchronous userspace acquisition (active: protocol/design review).
-- #4: Evaluate minimal kernel-side state.
-- #5: Remaining descriptor and registry limitations.
-- #6: Repair legacy test build paths.
+Freeze collector semantics and current checkpoint while evaluating graph construction independently. First produce inspectable DOT/SVG/PNG, JSON and timeline examples for verified memfd and unlinked ELF sessions, with explicit evidence-to-node/edge correspondence. Then evaluate normalized graph correctness, attribute fidelity, missing/duplicate evidence behavior, deterministic replay, scalability and export performance. Existing graph tests are partial functional checks, not comprehensive benchmarks. No GUI or algorithm redesign before measuring the baseline.
 
-## Known Limitations
+## Outstanding Release Work
 
-- Significant ring-buffer loss under heavy workloads.
-- Descriptor concurrency and registry cleanup risks.
-- Incomplete lifecycle and kernel compatibility coverage.
-- Diagnostic instrumentation overhead.
-- Production export reliability not fully validated.
-- Legacy Makefile test paths require correction.
-- Quiet mode suppresses observations absent from provenance schema (failed/uncorrelated memfd, file release); not production evidence-equivalent.
+- #5 descriptor/registry concurrency and lifetime limitations.
+- Broader telemetry coverage, field fidelity (notably process exit status placeholder), long-run operation, overload envelope, failure recovery, storage integrity and compatibility.
+- Evidence manifest/replay hardening, export alias protection and graph allocation failure handling.
+- End-to-end validation, deployment requirements and release qualification.
+- Benchmark reporting corrections noted above.
+- No merge or release implied by this update.
 
 ## Validation Infrastructure
 
-Location: tests1.0/kernel_telemetry/
+- tests1.0/kernel_telemetry/benchmark_01/
+- tests1.0/kernel_telemetry/runner.py (historical diagnostic lab, not production benchmarking)
+- tests1.0/test_pipeline_integration.c
+- tests1.0/test_m6_dag.c and test_m6_filtering.c
 
-Build:
-  python3 tests1.0/kernel_telemetry/runner.py build
-
-Quick suite:
-  sudo python3 tests1.0/kernel_telemetry/runner.py run --suite quick
-
-Pressure suite:
-  sudo python3 tests1.0/kernel_telemetry/runner.py run --suite pressure --iterations 5000 --workers 4 --repeat 3
-
-Historical results are preserved locally.
-Do not overwrite or silently discard evidence.
+Keep raw evidence and generated artifacts private and out of Git. Preserve previous results; do not overwrite evidence.
 
 ## Development Rules
 
-1. Read this file and the active GitHub issue first.
-2. Inspect actual source before proposing changes.
-3. Work on one implementation issue at a time.
-4. Obtain approval before architectural changes.
-5. Review source diffs and experimental evidence.
-6. Do not equate valid measurements with zero loss.
-7. Record decisions and unresolved limitations.
-8. Update project state when the active task changes.
-9. Keep generated artifacts and raw evidence out of Git.
-10. GUI development is currently out of scope.
+1. Read project state and active GitHub issue first; inspect actual source.
+2. Keep one scoped implementation task active; obtain approval before architectural changes.
+3. Review source and raw measurements; distinguish measured facts, assumptions and limitations.
+4. Never equate clean persistence with complete capture or a rendered graph with correct reconstruction.
+5. Record decisions and unresolved limitations; update this file when the active task changes.
+6. GUI development remains out of scope.
 
 ## Role Delegation
 
@@ -107,5 +96,4 @@ Antigravity: Scoped implementation and local validation.
 GitHub: Development history and task tracking.
 Obsidian: Technical knowledge and architectural decisions.
 
-This file is a handoff index, not a replacement for
-source code, experimental evidence or the knowledge base.
+This file is a handoff index, not a substitute for source, experiments or the knowledge base.
