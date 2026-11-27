@@ -391,6 +391,23 @@ static __always_inline void inc_counter(__u32 idx)
         __sync_fetch_and_add(val, 1);
 }
 
+struct {
+    __uint(type, BPF_MAP_TYPE_ARRAY);
+    __uint(max_entries, 128);
+    __type(key, __u32);
+    __type(value, __u64);
+} rb_drop_counters SEC(".maps");
+
+static __always_inline void count_rb_drop(__u32 type)
+{
+    __u32 key = type;
+    if (key < 128) {
+        __u64 *val = bpf_map_lookup_elem(&rb_drop_counters, &key);
+        if (val)
+            __sync_fetch_and_add(val, 1);
+    }
+}
+
 static __always_inline void fill_process_info(struct event *e)
 {
     struct task_struct *task;
@@ -428,8 +445,10 @@ static __always_inline struct event *new_event(__u32 type)
     struct event *e;
 
     e = bpf_ringbuf_reserve(&events, sizeof(*e), 0);
-    if (!e)
+    if (!e) {
+        count_rb_drop(type);
         return NULL;
+    }
 
     e->type = type;
     e->timestamp_ns = bpf_ktime_get_ns();
@@ -1582,20 +1601,8 @@ int capture_memfd_create_exit(struct sys_exit_ctx *ctx)
         return 0;
     }
 
-    struct event *e = new_event(EVENT_MEMFD_COMPLETED);
-    if (!e) {
-        inc_counter(CNT_MEMFD_RB_ERR);
-        bpf_map_delete_elem(&pending_memfd_map, &tid);
-        return 0;
-    }
-
     long ret = ctx->ret;
-    e->ret_val = (__s32)ret;
-    e->syscall_flags = ps->flags;
-    e->entry_ts_ns = ps->entry_ts_ns;
-    e->timestamp_ns = bpf_ktime_get_ns();
-    e->path_status = ps->path_status;
-    __builtin_memcpy(e->name, ps->name, sizeof(e->name));
+    __u32 op_type = 0;
 
     if (ret < 0) {
         /* Syscall failed: negative errno. Purge provisional registry entries */
@@ -1631,29 +1638,15 @@ int capture_memfd_create_exit(struct sys_exit_ctx *ctx)
             }
             inc_counter(CNT_REG_PROVISIONAL_DROPPED);
         }
-        e->op_type = MEMFD_STATUS_FAILED;
-        e->fd = -1;
-        e->flags = 0;
-        e->inode_no = 0;
-        e->dev_id = 0;
-        e->mnt_ns_id = 0;
-        e->path[0] = '\0';
+        op_type = MEMFD_STATUS_FAILED;
         inc_counter(CNT_MEMFD_FAILED);
     } else {
         /* Syscall returned success (ret >= 0) */
         if (ps->installed && ps->captured_fd == (__s32)ret && ps->install_count == 1 && ps->file_cookie != 0) {
-            /* Validated correlation */
-            e->op_type = MEMFD_STATUS_SUCCESS_CORRELATED;
-            e->fd = (__s32)ret;
-            e->flags = ps->identity_flags;
-            e->inode_no = ps->inode_no;
-            e->dev_id = ps->dev_id;
-            e->mnt_ns_id = 0;
-            e->object_token = ps->file_cookie;
-            __builtin_memcpy(e->path, ps->dentry_name, sizeof(e->path));
+            /* Validated correlation: commit provisional entry in inode registry */
+            op_type = MEMFD_STATUS_SUCCESS_CORRELATED;
             inc_counter(CNT_MEMFD_CORRELATED);
 
-            /* Commit provisional entry in inode registry */
             if (ps->inode_ptr) {
                 __u64 ino_key = ps->inode_ptr;
                 struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &ino_key);
@@ -1696,19 +1689,47 @@ int capture_memfd_create_exit(struct sys_exit_ctx *ctx)
                 }
                 inc_counter(CNT_REG_PROVISIONAL_DROPPED);
             }
-            e->op_type = MEMFD_STATUS_SUCCESS_UNCORRELATED;
-            e->fd = (__s32)ret;
-            e->flags = 0;
-            e->inode_no = 0;
-            e->dev_id = 0;
-            e->mnt_ns_id = 0;
-            e->path[0] = '\0';
+            op_type = MEMFD_STATUS_SUCCESS_UNCORRELATED;
             inc_counter(CNT_MEMFD_UNCORRELATED);
         }
     }
 
-    bpf_ringbuf_submit(e, 0);
+    /* Unconditionally clean up pending syscall state */
     bpf_map_delete_elem(&pending_memfd_map, &tid);
+
+    /* Attempt telemetry event emission */
+    struct event *e = new_event(EVENT_MEMFD_COMPLETED);
+    if (!e) {
+        inc_counter(CNT_MEMFD_RB_ERR);
+        return 0;
+    }
+
+    e->ret_val = (__s32)ret;
+    e->syscall_flags = ps->flags;
+    e->entry_ts_ns = ps->entry_ts_ns;
+    e->timestamp_ns = bpf_ktime_get_ns();
+    e->path_status = ps->path_status;
+    __builtin_memcpy(e->name, ps->name, sizeof(e->name));
+    e->op_type = op_type;
+
+    if (op_type == MEMFD_STATUS_SUCCESS_CORRELATED) {
+        e->fd = (__s32)ret;
+        e->flags = ps->identity_flags;
+        e->inode_no = ps->inode_no;
+        e->dev_id = ps->dev_id;
+        e->mnt_ns_id = 0;
+        e->object_token = ps->file_cookie;
+        __builtin_memcpy(e->path, ps->dentry_name, sizeof(e->path));
+    } else {
+        e->fd = (op_type == MEMFD_STATUS_FAILED) ? -1 : (__s32)ret;
+        e->flags = 0;
+        e->inode_no = 0;
+        e->dev_id = 0;
+        e->mnt_ns_id = 0;
+        e->path[0] = '\0';
+    }
+
+    bpf_ringbuf_submit(e, 0);
     return 0;
 }
 
@@ -1965,17 +1986,33 @@ int capture_process_fork(void *ctx)
 SEC("tracepoint/sched/sched_process_exec")
 int capture_process_exec(struct sched_exec_ctx *ctx)
 {
-    struct event *e = new_event(EVENT_PROCESS_EXEC);
-    __u32 offset;
-    const char *filename;
+    __u32 tid = (__u32)bpf_get_current_pid_tgid();
+    __u64 *token_ptr = bpf_map_lookup_elem(&pending_memfd_exec, &tid);
+    __u64 token = 0;
+    if (token_ptr) {
+        token = *token_ptr;
+        bpf_map_delete_elem(&pending_memfd_exec, &tid);
+        inc_counter(CNT_MEMFD_EXEC_SUCCESS);
+    }
 
+    __u32 offset = ctx->filename_loc & 0xFFFF;
+    const char *filename = (const char *)ctx + offset;
+
+    if (token != 0) {
+        struct event *e_succ = new_event(EVENT_MEMFD_EXEC_SUCCESS);
+        if (e_succ) {
+            e_succ->object_token = token;
+            bpf_probe_read_kernel_str(e_succ->name, sizeof(e_succ->name), filename);
+            bpf_ringbuf_submit(e_succ, 0);
+        }
+    }
+
+    struct event *e = new_event(EVENT_PROCESS_EXEC);
     if (!e)
         return 0;
 
     e->old_pid = (__u32)ctx->old_pid;
-
-    offset = ctx->filename_loc & 0xFFFF;
-    filename = (const char *)ctx + offset;
+    e->object_token = token;
 
     bpf_probe_read_kernel_str(
         e->name, sizeof(e->name), filename
@@ -2015,22 +2052,6 @@ int capture_process_exec(struct sched_exec_ctx *ctx)
                     e->flags |= VFS_IDENTITY_MNT_VALID;
                 }
             }
-        }
-    }
-
-    __u32 tid = (__u32)bpf_get_current_pid_tgid();
-    __u64 *token_ptr = bpf_map_lookup_elem(&pending_memfd_exec, &tid);
-    if (token_ptr) {
-        __u64 token = *token_ptr;
-        e->object_token = token;
-        bpf_map_delete_elem(&pending_memfd_exec, &tid);
-        inc_counter(CNT_MEMFD_EXEC_SUCCESS);
-
-        struct event *e_succ = new_event(EVENT_MEMFD_EXEC_SUCCESS);
-        if (e_succ) {
-            e_succ->object_token = token;
-            bpf_probe_read_kernel_str(e_succ->name, sizeof(e_succ->name), filename);
-            bpf_ringbuf_submit(e_succ, 0);
         }
     }
 

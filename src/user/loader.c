@@ -564,9 +564,9 @@ static void cleanup_diag_instance(void)
     rmdir(diag_instance_dir);
 }
 
-static void print_counters_table(int cnt_fd)
+static void print_counters_table(int cnt_fd, int drop_fd)
 {
-    if (cnt_fd < 0) return;
+    if (cnt_fd < 0 && drop_fd < 0) return;
 
     uint64_t c[CNT_MAX_COUNTERS] = {0};
     for (uint32_t k = 0; k < CNT_MAX_COUNTERS; k++) {
@@ -634,6 +634,20 @@ static void print_counters_table(int cnt_fd)
     printf("               token_err: %-6llu | token_mismatch: %-6llu | map_full_drop: %-6llu\n",
            (unsigned long long)c[CNT_REG_TOKEN_ERR], (unsigned long long)c[CNT_REG_TOKEN_MISMATCH],
            (unsigned long long)c[CNT_REG_MAP_FULL_DROP]);
+    if (drop_fd >= 0) {
+        printf("  --------------------------------------------------------------\n");
+        printf("  [RING_BUF_DROPS]\n");
+        uint64_t total_drops = 0;
+        for (uint32_t t = 1; t < 32; t++) {
+            uint32_t key = t;
+            uint64_t val = 0;
+            if (bpf_map_lookup_elem(drop_fd, &key, &val) == 0 && val > 0) {
+                printf("    %-24s: %llu\n", evidence_event_type_name(t), (unsigned long long)val);
+                total_drops += val;
+            }
+        }
+        printf("    %-24s: %llu\n", "TOTAL", (unsigned long long)total_drops);
+    }
     printf("===============================================================\n\n");
     fflush(stdout);
     dump_diag_instance();
@@ -1416,7 +1430,7 @@ static uint32_t filter_pid = 0;
 static uint64_t filter_token = 0;
 static const char *timeline_filepath = "ephimtrace_timeline.md";
 
-static int print_session_manifest(int cnt_fd, int close_rc, int poll_errors, int drain_errors, int sync_errors)
+static int print_session_manifest(int cnt_fd, int drop_fd, int close_rc, int poll_errors, int drain_errors, int sync_errors)
 {
     printf("\n===============================================================\n");
     printf("           EphimTrace Telemetry Collection Summary             \n");
@@ -1465,7 +1479,30 @@ static int print_session_manifest(int cnt_fd, int close_rc, int poll_errors, int
     printf("Ring Buffer Poll Errors:   %d\n", poll_errors);
     printf("Ring Buffer Drain Errors:  %d\n", drain_errors);
     printf("Intermediate Sync Errors:  %d\n", sync_errors);
-    printf("Ring Buffer Drops:         <unavailable via kernel ring_buffer API>\n");
+    uint64_t rb_drops[32] = {0};
+    uint64_t total_rb_drops = 0;
+    bool drop_avail = false;
+    if (drop_fd >= 0) {
+        drop_avail = true;
+        for (uint32_t t = 0; t < 32; t++) {
+            uint32_t key = t;
+            uint64_t val = 0;
+            if (bpf_map_lookup_elem(drop_fd, &key, &val) == 0) {
+                rb_drops[t] = val;
+                total_rb_drops += val;
+            }
+        }
+    }
+    if (drop_avail) {
+        printf("Ring Buffer Total Drops:   %llu\n", (unsigned long long)total_rb_drops);
+        for (uint32_t t = 1; t < 32; t++) {
+            if (rb_drops[t] > 0) {
+                printf("  - %-23s: %llu\n", evidence_event_type_name(t), (unsigned long long)rb_drops[t]);
+            }
+        }
+    } else {
+        printf("Ring Buffer Drops:         <unavailable via kernel ring_buffer API>\n");
+    }
     printf("---------------------------------------------------------------\n");
 
     bool success = (close_rc == 0 &&
@@ -1494,8 +1531,15 @@ static int print_session_manifest(int cnt_fd, int close_rc, int poll_errors, int
     manifest.reg_map_full_drop = counter_avail[CNT_REG_MAP_FULL_DROP] ? (int64_t)c[CNT_REG_MAP_FULL_DROP] : -1;
     manifest.token_alloc_err = counter_avail[CNT_REG_TOKEN_ERR] ? (int64_t)c[CNT_REG_TOKEN_ERR] : -1;
     manifest.token_mismatch = counter_avail[CNT_REG_TOKEN_MISMATCH] ? (int64_t)c[CNT_REG_TOKEN_MISMATCH] : -1;
-    snprintf(manifest.ring_buffer_drops, sizeof(manifest.ring_buffer_drops),
-             "unavailable via kernel ring_buffer API");
+    manifest.ring_buffer_total_drops = drop_avail ? (int64_t)total_rb_drops : -1;
+    if (drop_avail) {
+        memcpy(manifest.ring_buffer_per_type_drops, rb_drops, sizeof(manifest.ring_buffer_per_type_drops));
+        snprintf(manifest.ring_buffer_drops, sizeof(manifest.ring_buffer_drops),
+                 "%llu", (unsigned long long)total_rb_drops);
+    } else {
+        snprintf(manifest.ring_buffer_drops, sizeof(manifest.ring_buffer_drops),
+                 "unavailable via kernel ring_buffer API");
+    }
 
     int manifest_rc = evidence_write_manifest(g_evidence_path, &manifest);
     if (manifest_rc == 0) {
@@ -1915,6 +1959,9 @@ int main(int argc, char **argv)
     struct bpf_map *cnt_map = bpf_object__find_map_by_name(obj, "prog_counters");
     int cnt_fd = cnt_map ? bpf_map__fd(cnt_map) : -1;
 
+    struct bpf_map *drop_map = bpf_object__find_map_by_name(obj, "rb_drop_counters");
+    int drop_fd = drop_map ? bpf_map__fd(drop_map) : -1;
+
     printf("EphimTrace: Monitoring syscall, VFS, and process lifecycle events. Press Ctrl+C to stop.\n");
     fflush(stdout);
 
@@ -1928,7 +1975,7 @@ int main(int argc, char **argv)
 
         if (sigusr1_received) {
             sigusr1_received = 0;
-            print_counters_table(cnt_fd);
+            print_counters_table(cnt_fd, drop_fd);
         }
 
         if (sigusr2_received) {
@@ -1949,7 +1996,7 @@ int main(int argc, char **argv)
         time_t now = time(NULL);
         if (current_log_level >= LOG_LEVEL_DEBUG && (now - last_counter_print >= 2)) {
             last_counter_print = now;
-            print_counters_table(cnt_fd);
+            print_counters_table(cnt_fd, drop_fd);
         }
 
         if (poll_err == -EINTR)
@@ -1964,7 +2011,7 @@ int main(int argc, char **argv)
 
     if (current_log_level >= LOG_LEVEL_DEBUG) {
         printf("\nFinal counter summary at exit:\n");
-        print_counters_table(cnt_fd);
+        print_counters_table(cnt_fd, drop_fd);
     }
 
     /* Orderly shutdown sequence:
@@ -2016,7 +2063,7 @@ int main(int argc, char **argv)
     }
 
     /* 4. Display Session Manifest & Loss Accounting */
-    int manifest_err = print_session_manifest(cnt_fd, close_rc, poll_errors, drain_errors, sync_errors);
+    int manifest_err = print_session_manifest(cnt_fd, drop_fd, close_rc, poll_errors, drain_errors, sync_errors);
 
     bool session_ok = (manifest_err == 0);
     ret = session_ok ? 0 : 2;
