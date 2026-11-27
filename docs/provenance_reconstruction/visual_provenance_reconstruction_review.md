@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary & Verification State
 
-To fulfill the first deliverable of **GitHub Issue #9**, this document presents inspectable visual provenance graphs generated from **verified, native, lossless evidence sessions** collected during Milestone M2 validation. No synthetic evidence, mock structures, or graph engine modifications were introduced.
+To fulfill the first deliverable of **GitHub Issue #9**, this document presents inspectable visual provenance graphs generated from **verified, native evidence sessions with verified clean storage persistence (kernel loss counters unavailable in historical M2.4 manifests)** collected during Milestone M2 validation. No synthetic evidence, mock structures, or graph engine modifications were introduced.
 
 Both mandated forensic scenarios were rendered using Graphviz `dot` (Graphviz 2.43.0) directly from the output files of the existing offline provenance engine (`build/replay`):
 1. **Benign Memfd Execution** (`native_exec_7Q2iUm/session.evid` — 599 verified records, SHA-256 verified)
@@ -24,7 +24,7 @@ For each scenario, both the complete, unfiltered session graph (capturing all co
 - **Evidence Path**: `tests1.0/kernel_telemetry/native_exec_7Q2iUm/session.evid`
 - **Session SHA-256**: `569aef51377e93defa7929a2244864091ecdaa862c7380cfe38b0b2c59aafae1`
 - **Manifest SHA-256**: `80656619285a68fc9395aa6a1005729fefb5e0f7b0394004a030a480cc2ebe37`
-- **Validation Verdict**: `FINALIZED (Lossless)` — 599 records verified, 599 replayed, 0 sequence gaps, 0 corruptions.
+- **Validation Verdict**: `FINALIZED (Clean Persistence, Kernel Loss Counters Unavailable)` — 599 records verified, 599 replayed, 0 sequence gaps, 0 corruptions (kernel ring buffer drop counters were not captured in historical M2.4 manifests).
 - **Reconstruction DAG Metrics**: 103 Nodes, 227 Edges (Full Session); Reconstructed in 1.9 ms (309,101 events/s).
 
 ### 2.2 Visual Graph Artifacts
@@ -119,7 +119,7 @@ For each scenario, both the complete, unfiltered session graph (capturing all co
 - **Evidence Path**: `tests1.0/kernel_telemetry/native_unlinked_T4pJiz/session.evid`
 - **Session SHA-256**: `63d7f3dc079b711f16d46563e92e5cda09aaef9af4817969d5bd3df47a6fea6e`
 - **Manifest SHA-256**: `809f0b8b4ea042724f62a0383e6c875ea0355028e8815a16c1e0e6e7f2d6c96d`
-- **Validation Verdict**: `FINALIZED (Lossless)` — 385 records verified, 385 replayed, 0 sequence gaps, 0 corruptions.
+- **Validation Verdict**: `FINALIZED (Clean Persistence, Kernel Loss Counters Unavailable)` — 385 records verified, 385 replayed, 0 sequence gaps, 0 corruptions (kernel ring buffer drop counters were not captured in historical M2.4 manifests).
 - **Reconstruction DAG Metrics**: 58 Nodes, 152 Edges (Full Session); Reconstructed in 1.2 ms (318,190 events/s).
 
 ### 3.2 Visual Graph Artifacts

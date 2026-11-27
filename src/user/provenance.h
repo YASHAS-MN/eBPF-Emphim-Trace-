@@ -19,10 +19,10 @@ enum prov_node_type {
 };
 
 #ifndef VFS_IDENTITY_INODE_VALID
-#define VFS_IDENTITY_INODE_VALID   (1 << 0)
-#define VFS_IDENTITY_DEV_VALID     (1 << 1)
-#define VFS_IDENTITY_MNT_VALID     (1 << 2)
-#define VFS_IDENTITY_NAME_VALID    (1 << 3)
+#define VFS_IDENTITY_INODE_VALID (1 << 0)
+#define VFS_IDENTITY_DEV_VALID (1 << 1)
+#define VFS_IDENTITY_MNT_VALID (1 << 2)
+#define VFS_IDENTITY_NAME_VALID (1 << 3)
 #define VFS_IDENTITY_SYSCALL_VALID (1 << 4)
 #endif
 
@@ -48,6 +48,8 @@ struct prov_node_process {
   uint64_t start_time_ns;
   int32_t exit_code;
   bool is_alive;
+  bool is_unresolved;   /* true if start_time_ns was unavailable */
+  bool exit_code_known; /* true if exit status was captured */
 };
 
 struct prov_node_memfd {

@@ -304,14 +304,20 @@ static struct metric_tracker test_pid_reuse(void)
     if (m1 && m1->in_edges && m1->in_edges->src == g1) m.matched_attributes++;
     if (m2 && m2->in_edges && m2->in_edges->src == g2) m.matched_attributes++;
 
-    /* Deficiency Check: Test PID reuse behavior when start_time_ns is 0 */
+    /* Verify PID reuse behavior when start_time_ns is 0 */
     struct event e3_zero = { .type = EVENT_FD_INSTALLED, .pid = 3000, .start_time_ns = 0, .object_token = 102, .fd = 5, .timestamp_ns = 3000000 };
     prov_engine_process_event(&e3_zero);
     struct prov_node *fallback = prov_find_node("proc_3000_0");
+    struct prov_node *unres = prov_find_node("proc_3000_unresolved_1");
     if (fallback) {
         m.exposed_deficiencies_count++;
         snprintf(m.exposed_deficiencies, sizeof(m.exposed_deficiencies),
-                 "PID Reuse with start_time=0 creates unindexed fallback 'proc_<pid>_0' when previous generation has exited.");
+                 "DEFICIENCY: PID Reuse with start_time=0 created unindexed fallback 'proc_<pid>_0'.");
+    }
+    if (unres && unres->proc.is_unresolved) {
+        /* Successfully represented unresolved identity explicitly */
+        m.matched_attributes++;
+        m.checked_attributes++;
     }
 
     prov_engine_destroy();
@@ -552,6 +558,160 @@ static struct metric_tracker test_missing_duplicate_reordered(void)
     return m;
 }
 
+/* =========================================================================
+ * Test 6: Scoped Remediation Regressions (Fork Dedup, Unresolved Identity, Exit Status)
+ * ========================================================================= */
+static struct metric_tracker test_remediation_regressions(void)
+{
+    struct metric_tracker m = { .test_name = "6. Scoped Remediation Regressions", .test_execution_success = true };
+    prov_engine_init();
+
+    /* --- Part 1: Duplicate fork prevention & repeated operations preservation --- */
+    /* Parent 10 forks Child 20 (3 duplicate fork events offered) */
+    struct event e_fork1 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 20, .child_pid = 20, .child_start_time_ns = 200, .timestamp_ns = 210, .name = "c20" };
+    struct event e_fork2 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 20, .child_pid = 20, .child_start_time_ns = 200, .timestamp_ns = 211, .name = "c20" };
+    struct event e_fork3 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 20, .child_pid = 20, .child_start_time_ns = 200, .timestamp_ns = 212, .name = "c20" };
+    prov_engine_process_event(&e_fork1);
+    prov_engine_process_event(&e_fork2);
+    prov_engine_process_event(&e_fork3);
+
+    /* Parent 10 forks Child 30 (legitimate separate fork) */
+    struct event e_fork_c30 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 30, .child_pid = 30, .child_start_time_ns = 300, .timestamp_ns = 310, .name = "c30" };
+    prov_engine_process_event(&e_fork_c30);
+
+    /* Child 20 creates memfd 501 and writes 3 times (legitimate repeated writes) */
+    struct event e_m501 = { .type = EVENT_MEMFD_CREATE, .pid = 20, .start_time_ns = 200, .object_token = 501, .fd = 3, .timestamp_ns = 220, .name = "memfd_repeat" };
+    struct event e_w1   = { .type = EVENT_MEMFD_WRITE,  .pid = 20, .start_time_ns = 200, .object_token = 501, .entry_ts_ns = 0,    .ret_val = 512, .timestamp_ns = 230 };
+    struct event e_w2   = { .type = EVENT_MEMFD_WRITE,  .pid = 20, .start_time_ns = 200, .object_token = 501, .entry_ts_ns = 512,  .ret_val = 512, .timestamp_ns = 240 };
+    struct event e_w3   = { .type = EVENT_MEMFD_WRITE,  .pid = 20, .start_time_ns = 200, .object_token = 501, .entry_ts_ns = 1024, .ret_val = 512, .timestamp_ns = 250 };
+    prov_engine_process_event(&e_m501);
+    prov_engine_process_event(&e_w1);
+    prov_engine_process_event(&e_w2);
+    prov_engine_process_event(&e_w3);
+
+    /* --- Part 2: Explicit Unresolved Identity (start_time_ns == 0) --- */
+    /* Process 50 active generation */
+    struct event e_p50_active = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 50, .child_pid = 50, .child_start_time_ns = 5000, .timestamp_ns = 5010, .name = "p50_gen1" };
+    prov_engine_process_event(&e_p50_active);
+
+    /* Event arrives for pid 50 with start_time_ns = 0 */
+    struct event e_p50_unres1 = { .type = EVENT_FD_INSTALLED, .pid = 50, .start_time_ns = 0, .object_token = 501, .fd = 7, .op_type = 2, .timestamp_ns = 5020 };
+    prov_engine_process_event(&e_p50_unres1);
+
+    /* Second event arrives for pid 50 with start_time_ns = 0 */
+    struct event e_p50_unres2 = { .type = EVENT_FD_INSTALLED, .pid = 50, .start_time_ns = 0, .object_token = 501, .fd = 8, .op_type = 2, .timestamp_ns = 5030 };
+    prov_engine_process_event(&e_p50_unres2);
+
+    /* --- Part 3: Unavailable Process Exit Status --- */
+    /* Process 60 never exits (alive) */
+    struct event e_p60 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 60, .child_pid = 60, .child_start_time_ns = 6000, .timestamp_ns = 6010, .name = "p60_alive" };
+    prov_engine_process_event(&e_p60);
+
+    /* Process 70 exits with reserved = 0 (thread exit, group alive) */
+    struct event e_p70 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 70, .child_pid = 70, .child_start_time_ns = 7000, .timestamp_ns = 7010, .name = "p70_grp_alive" };
+    struct event e_p70_exit = { .type = EVENT_PROCESS_EXIT, .pid = 70, .start_time_ns = 7000, .reserved = 0, .ret_val = 0, .timestamp_ns = 7020, .name = "p70_grp_alive" };
+    prov_engine_process_event(&e_p70);
+    prov_engine_process_event(&e_p70_exit);
+
+    /* Process 80 exits cleanly with reserved = 1, ret_val = 0 (known exit code 0) */
+    struct event e_p80 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 80, .child_pid = 80, .child_start_time_ns = 8000, .timestamp_ns = 8010, .name = "p80_clean" };
+    struct event e_p80_exit = { .type = EVENT_PROCESS_EXIT, .pid = 80, .start_time_ns = 8000, .reserved = 1, .ret_val = 0, .timestamp_ns = 8020, .name = "p80_clean" };
+    prov_engine_process_event(&e_p80);
+    prov_engine_process_event(&e_p80_exit);
+
+    /* Process 90 exits with error reserved = 1, ret_val = 137 (known exit code 137) */
+    struct event e_p90 = { .type = EVENT_FORK, .pid = 10, .start_time_ns = 100, .child_tgid = 90, .child_pid = 90, .child_start_time_ns = 9000, .timestamp_ns = 9010, .name = "p90_sigkill" };
+    struct event e_p90_exit = { .type = EVENT_PROCESS_EXIT, .pid = 90, .start_time_ns = 9000, .reserved = 1, .ret_val = 137, .timestamp_ns = 9020, .name = "p90_sigkill" };
+    prov_engine_process_event(&e_p90);
+    prov_engine_process_event(&e_p90_exit);
+
+    /* Verify Graph Entities */
+    struct expected_node exp_nodes[] = {
+        { .id = "proc_10_100",            .type = NODE_PROCESS },
+        { .id = "proc_20_200",            .type = NODE_PROCESS },
+        { .id = "proc_30_300",            .type = NODE_PROCESS },
+        { .id = "memfd_501",              .type = NODE_MEMFD },
+        { .id = "proc_50_5000",           .type = NODE_PROCESS },
+        { .id = "proc_50_unresolved_1",   .type = NODE_PROCESS },
+        { .id = "proc_50_unresolved_2",   .type = NODE_PROCESS },
+        { .id = "proc_60_6000",           .type = NODE_PROCESS },
+        { .id = "proc_70_7000",           .type = NODE_PROCESS },
+        { .id = "proc_80_8000",           .type = NODE_PROCESS },
+        { .id = "proc_90_9000",           .type = NODE_PROCESS }
+    };
+
+    struct expected_edge exp_edges[] = {
+        { .src_id = "proc_10_100",          .dst_id = "proc_20_200",  .type = EDGE_FORK,         .expected_count = 1 },
+        { .src_id = "proc_10_100",          .dst_id = "proc_30_300",  .type = EDGE_FORK,         .expected_count = 1 },
+        { .src_id = "proc_20_200",          .dst_id = "memfd_501",    .type = EDGE_MEMFD_CREATE, .expected_count = 1 },
+        { .src_id = "proc_20_200",          .dst_id = "memfd_501",    .type = EDGE_MEMFD_WRITE,  .expected_count = 3 },
+        { .src_id = "proc_10_100",          .dst_id = "proc_50_5000", .type = EDGE_FORK,         .expected_count = 1 },
+        { .src_id = "proc_50_unresolved_1", .dst_id = "memfd_501",    .type = EDGE_FD_INSTALLED, .expected_count = 1 },
+        { .src_id = "proc_50_unresolved_2", .dst_id = "memfd_501",    .type = EDGE_FD_INSTALLED, .expected_count = 1 },
+        { .src_id = "proc_10_100",          .dst_id = "proc_60_6000", .type = EDGE_FORK,         .expected_count = 1 },
+        { .src_id = "proc_10_100",          .dst_id = "proc_70_7000", .type = EDGE_FORK,         .expected_count = 1 },
+        { .src_id = "proc_10_100",          .dst_id = "proc_80_8000", .type = EDGE_FORK,         .expected_count = 1 },
+        { .src_id = "proc_10_100",          .dst_id = "proc_90_9000", .type = EDGE_FORK,         .expected_count = 1 }
+    };
+
+    evaluate_graph_precision_recall(exp_nodes, sizeof(exp_nodes)/sizeof(exp_nodes[0]),
+                                    exp_edges, sizeof(exp_edges)/sizeof(exp_edges[0]), &m);
+
+    /* Attribute Checks */
+    struct prov_node *p50_act = prov_find_node("proc_50_5000");
+    struct prov_node *u1 = prov_find_node("proc_50_unresolved_1");
+    struct prov_node *u2 = prov_find_node("proc_50_unresolved_2");
+    struct prov_node *p60 = prov_find_node("proc_60_6000");
+    struct prov_node *p70 = prov_find_node("proc_70_7000");
+    struct prov_node *p80 = prov_find_node("proc_80_8000");
+    struct prov_node *p90 = prov_find_node("proc_90_9000");
+
+    m.checked_attributes = 10;
+    /* 1. Unresolved nodes distinct from active node */
+    if (u1 && u1->proc.is_unresolved && u1 != p50_act) m.matched_attributes++;
+    if (u2 && u2->proc.is_unresolved && u2 != p50_act && u2 != u1) m.matched_attributes++;
+    /* 2. No bogus proc_50_0 created */
+    if (prov_find_node("proc_50_0") == NULL) m.matched_attributes++;
+    /* 3. Exit status unknown on alive process */
+    if (p60 && p60->proc.is_alive && !p60->proc.exit_code_known) m.matched_attributes++;
+    /* 4. Exit status unknown on non-leader exit */
+    if (p70 && p70->proc.is_alive && !p70->proc.exit_code_known) m.matched_attributes++;
+    /* 5. Exit status known 0 on clean exit */
+    if (p80 && !p80->proc.is_alive && p80->proc.exit_code_known && p80->proc.exit_code == 0) m.matched_attributes++;
+    /* 6. Exit status known 137 on sigkill exit */
+    if (p90 && !p90->proc.is_alive && p90->proc.exit_code_known && p90->proc.exit_code == 137) m.matched_attributes++;
+
+    /* Export verification: JSON representation of unknown vs known exit codes */
+    char json_tmp[256];
+    snprintf(json_tmp, sizeof(json_tmp), "/tmp/test_remediation_%d.json", getpid());
+    prov_engine_export_json(json_tmp);
+    FILE *fj = fopen(json_tmp, "r");
+    bool json_has_unknown_exit = false;
+    bool json_has_zero_exit = false;
+    bool json_has_unresolved_id = false;
+    if (fj) {
+        char line[512];
+        while (fgets(line, sizeof(line), fj)) {
+            if (strstr(line, "\"exit_code\": \"unknown\"")) json_has_unknown_exit = true;
+            if (strstr(line, "\"exit_code\": 0")) json_has_zero_exit = true;
+            if (strstr(line, "\"identity_status\": \"unresolved\"")) json_has_unresolved_id = true;
+        }
+        fclose(fj);
+        unlink(json_tmp);
+    }
+    if (json_has_unknown_exit) m.matched_attributes++;
+    if (json_has_zero_exit) m.matched_attributes++;
+    if (json_has_unresolved_id) m.matched_attributes++;
+
+    if (m.tp_nodes != m.expected_nodes || m.tp_edges != m.expected_edges ||
+        m.matched_attributes != m.checked_attributes) {
+        m.test_execution_success = false;
+    }
+
+    prov_engine_destroy();
+    return m;
+}
+
 int main(void)
 {
     printf("=================================================================\n");
@@ -561,7 +721,7 @@ int main(void)
     printf("Precision = TP / (TP + FP)  |  Recall = TP / (TP + FN)\n");
     printf("=================================================================\n\n");
 
-    struct metric_tracker results[5];
+    struct metric_tracker results[6];
     results[0] = test_standard_lifecycle();
     print_metric_result(&results[0]);
 
@@ -577,8 +737,11 @@ int main(void)
     results[4] = test_missing_duplicate_reordered();
     print_metric_result(&results[4]);
 
+    results[5] = test_remediation_regressions();
+    print_metric_result(&results[5]);
+
     printf("=================================================================\n");
-    printf("Summary: Correctness Evaluation Complete across 5 suites.\n");
+    printf("Summary: Correctness Evaluation Complete across 6 suites.\n");
     printf("=================================================================\n");
     return 0;
 }

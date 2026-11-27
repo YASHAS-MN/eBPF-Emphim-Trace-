@@ -29,6 +29,7 @@ static struct prov_edge *g_edges_tail = NULL;
 static size_t g_edge_count = 0;
 static uint64_t g_edge_comparison_count = 0;
 static int g_search_mode = 0; /* 0 = incoming adjacency (default), 1 = outgoing adjacency (reference) */
+static uint64_t g_unresolved_proc_seq = 0;
 
 /* FNV-1a hash function */
 static inline uint32_t hash_str(const char *str)
@@ -68,7 +69,7 @@ static void register_active_proc(uint32_t pid, struct prov_node *node)
     g_active_pid_buckets[bucket] = entry;
 }
 
-static struct prov_node *find_active_proc(uint32_t pid)
+static __attribute__((unused)) struct prov_node *find_active_proc(uint32_t pid)
 {
     if (!g_active_pid_buckets)
         return NULL;
@@ -120,6 +121,7 @@ int prov_engine_init(void)
     g_edges_tail = NULL;
     g_edge_count = 0;
     g_edge_comparison_count = 0;
+    g_unresolved_proc_seq = 0;
 
     return 0;
 }
@@ -199,26 +201,20 @@ struct prov_node *prov_upsert_process(uint32_t pid, uint64_t start_time_ns, uint
     struct prov_node *node = NULL;
 
     if (start_time_ns == 0) {
-        node = find_active_proc(pid);
+        /* When start_time_ns is unavailable, do NOT guess active process
+         * or merge into a shared proc_<pid>_0 node. Represent unresolved
+         * identity explicitly with a unique unresolved node identifier. */
+        snprintf(id, sizeof(id), "proc_%u_unresolved_%llu", pid, (unsigned long long)++g_unresolved_proc_seq);
+    } else {
+        snprintf(id, sizeof(id), "proc_%u_%llu", pid, (unsigned long long)start_time_ns);
+        node = prov_find_node(id);
         if (node) {
-            if (comm && comm[0] && node->proc.comm[0] == '\0')
+            if (comm && comm[0] && (node->proc.comm[0] == '\0' || strcmp(node->proc.comm, "<unknown>") == 0))
                 snprintf(node->proc.comm, sizeof(node->proc.comm), "%s", comm);
             if (ppid != 0 && node->proc.ppid == 0)
                 node->proc.ppid = ppid;
             return node;
         }
-        snprintf(id, sizeof(id), "proc_%u_0", pid);
-    } else {
-        snprintf(id, sizeof(id), "proc_%u_%llu", pid, (unsigned long long)start_time_ns);
-    }
-
-    node = prov_find_node(id);
-    if (node) {
-        if (comm && comm[0] && (node->proc.comm[0] == '\0' || strcmp(node->proc.comm, "<unknown>") == 0))
-            snprintf(node->proc.comm, sizeof(node->proc.comm), "%s", comm);
-        if (ppid != 0 && node->proc.ppid == 0)
-            node->proc.ppid = ppid;
-        return node;
     }
 
     node = allocate_and_insert_node(id, NODE_PROCESS);
@@ -233,9 +229,14 @@ struct prov_node *prov_upsert_process(uint32_t pid, uint64_t start_time_ns, uint
     else
         snprintf(node->proc.comm, sizeof(node->proc.comm), "<unknown>");
     node->proc.is_alive = true;
-    node->proc.exit_code = 0;
+    node->proc.exit_code = -1;
+    node->proc.exit_code_known = false;
+    node->proc.is_unresolved = (start_time_ns == 0);
 
-    register_active_proc(pid, node);
+    /* Only register in active PID table if start_time is resolved */
+    if (start_time_ns != 0) {
+        register_active_proc(pid, node);
+    }
 
     return node;
 }
@@ -382,11 +383,37 @@ void prov_engine_process_event(const struct event *e)
         struct prov_node *dst = prov_upsert_process(e->child_tgid, e->child_start_time_ns, e->pid, e->name);
 
         if (e->child_tgid != e->pid && src && dst) {
-            struct prov_edge_attr attr = {
-                .timestamp_ns = e->timestamp_ns,
-                .fd = -1,
-            };
-            prov_add_edge(src, dst, EDGE_FORK, &attr);
+            /* Check if fork edge already exists from src to dst */
+            bool has_fork_edge = false;
+            if (g_search_mode == 1) {
+                struct prov_edge *edge = src->out_edges;
+                while (edge) {
+                    g_edge_comparison_count++;
+                    if (edge->type == EDGE_FORK && edge->dst == dst) {
+                        has_fork_edge = true;
+                        break;
+                    }
+                    edge = edge->next_out;
+                }
+            } else {
+                struct prov_edge *edge = dst->in_edges;
+                while (edge) {
+                    g_edge_comparison_count++;
+                    if (edge->type == EDGE_FORK && edge->src == src) {
+                        has_fork_edge = true;
+                        break;
+                    }
+                    edge = edge->next_in;
+                }
+            }
+
+            if (!has_fork_edge) {
+                struct prov_edge_attr attr = {
+                    .timestamp_ns = e->timestamp_ns,
+                    .fd = -1,
+                };
+                prov_add_edge(src, dst, EDGE_FORK, &attr);
+            }
         }
         break;
     }
@@ -426,6 +453,7 @@ void prov_engine_process_event(const struct event *e)
         if (proc && e->reserved) {
             proc->proc.is_alive = false;
             proc->proc.exit_code = e->ret_val;
+            proc->proc.exit_code_known = true;
             unregister_active_proc(e->pid);
         }
         break;
@@ -884,15 +912,28 @@ static int render_graph_dot(FILE *f, const struct prov_graph *g)
     for (size_t i = 0; i < g->node_count; i++) {
         struct prov_node *node = g->nodes[i];
         switch (node->type) {
-        case NODE_PROCESS:
+        case NODE_PROCESS: {
             escape_string(node->proc.comm, esc_buf1, sizeof(esc_buf1));
+            char exit_str[64];
+            if (node->proc.exit_code_known)
+                snprintf(exit_str, sizeof(exit_str), "Exit: %d", node->proc.exit_code);
+            else
+                snprintf(exit_str, sizeof(exit_str), "Exit: unknown");
+
+            char start_str[64];
+            if (node->proc.is_unresolved || node->proc.start_time_ns == 0)
+                snprintf(start_str, sizeof(start_str), "Start: <unresolved>");
+            else
+                snprintf(start_str, sizeof(start_str), "Start: %llu ns", (unsigned long long)node->proc.start_time_ns);
+
             fprintf(f, "    \"%s\" [shape=box, style=\"filled,rounded\", fillcolor=\"#E0F7FA\", "
                        "color=\"#00838F\", fontcolor=\"#006064\", "
-                       "label=\"Process\\nPID: %u (PPID: %u)\\nComm: %s\\nStart: %llu ns\\n[%s]\"];\n",
+                       "label=\"Process\\nPID: %u (PPID: %u)\\nComm: %s\\n%s\\n%s\\n[%s]\"];\n",
                     node->id, node->proc.pid, node->proc.ppid, esc_buf1,
-                    (unsigned long long)node->proc.start_time_ns,
+                    start_str, exit_str,
                     node->proc.is_alive ? "ALIVE" : "DEAD");
             break;
+        }
 
         case NODE_MEMFD:
             escape_string(node->memfd.name, esc_buf1, sizeof(esc_buf1));
@@ -1028,8 +1069,17 @@ static int render_graph_json(FILE *f, const struct prov_graph *g)
             fprintf(f, "      \"pid\": %u,\n", node->proc.pid);
             fprintf(f, "      \"ppid\": %u,\n", node->proc.ppid);
             fprintf(f, "      \"comm\": \"%s\",\n", esc_buf1);
-            fprintf(f, "      \"start_time_ns\": %llu,\n", (unsigned long long)node->proc.start_time_ns);
-            fprintf(f, "      \"exit_code\": %d,\n", node->proc.exit_code);
+            if (node->proc.is_unresolved || node->proc.start_time_ns == 0) {
+                fprintf(f, "      \"start_time_ns\": null,\n");
+                fprintf(f, "      \"identity_status\": \"unresolved\",\n");
+            } else {
+                fprintf(f, "      \"start_time_ns\": %llu,\n", (unsigned long long)node->proc.start_time_ns);
+                fprintf(f, "      \"identity_status\": \"resolved\",\n");
+            }
+            if (node->proc.exit_code_known)
+                fprintf(f, "      \"exit_code\": %d,\n", node->proc.exit_code);
+            else
+                fprintf(f, "      \"exit_code\": \"unknown\",\n");
             fprintf(f, "      \"is_alive\": %s\n", node->proc.is_alive ? "true" : "false");
             break;
 
@@ -1502,6 +1552,8 @@ void prov_engine_destroy(void)
         free(g_active_pid_buckets);
         g_active_pid_buckets = NULL;
     }
+
+    g_unresolved_proc_seq = 0;
 
     /* Free node hash buckets */
     if (g_node_buckets) {
