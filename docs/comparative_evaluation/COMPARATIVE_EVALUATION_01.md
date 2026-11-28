@@ -2,7 +2,7 @@
 
 ## Scope and reproducibility
 
-One low-volume run per collector per existing benign workload (test_m2_exec and test_m2_unlinked_exec), four separate captures, same x86_64 7.0.0-44-generic host. Frozen EphimTrace implementation cba9b01; harness e5299b4. Tracee v0.24.1 official x86_64 archive verified by owner against published checksum. Selected 25 inventoried events, JSON output, parse-arguments-fds, sort-events, process tree source=events, loopback Prometheus metrics. Signature plugin builtin.so failed to load due to Go net package version mismatch; signatures not evaluated. All workload and collector exit codes zero. strace 6.8 available but not used: independent workload handshakes and exit checks supplied ground truth.
+One low-volume run per collector per existing benign workload (test_m2_exec and test_m2_unlinked_exec), four separate captures, same x86_64 7.0.0-44-generic host. Frozen EphimTrace implementation cba9b01; harness e5299b4. Tracee v0.24.1 official x86_64 archive verified by owner against published checksum. Selected 26 inventoried events, JSON output, parse-arguments-fds, sort-events, process tree source=events, loopback Prometheus metrics. Signature plugin builtin.so failed to load due to Go net package version mismatch; signatures not evaluated. All workload and collector exit codes zero. strace 6.8 available but not used: independent workload handshakes and exit checks supplied ground truth.
 
 Owner-provided workload-only archive SHA256 b730ecee86d49ed6ecb6ee0056ed1cb1f9e8832e197c6fc9dc07c254f4634418 inspected directly; contains comparison_report.json, four workload event JSON files and logs, four Tracee metrics snapshots. Full system captures and graph files not supplied; keep private. No performance or universal completeness claim.
 
@@ -32,7 +32,7 @@ EphimTrace parent 78852 child 78853: workload inode 940029 device 66309 mount ns
 | Metric | Tracee memfd | Tracee unlinked | EphimTrace memfd | EphimTrace unlinked |
 |---|---:|---:|---:|---:|
 | Full session records | 13370 | 6857 | 141 | 112 |
-| Workload filtered records | 106 | 58 | 62 | 17 |
+| Workload filtered records | 106 | 65 | 62 | 17 |
 | Invalid JSON lines | 0 | 0 | N/A | N/A |
 | Recorded submission/ring drops | 0 | 0 | 0 | 0 |
 | Tracee errors before → after | 920→5277 | 311→3181 | N/A | N/A |
