@@ -34,6 +34,8 @@ static size_t g_edge_count = 0;
 static uint64_t g_edge_comparison_count = 0;
 static int g_search_mode = 0; /* 0 = incoming adjacency (default), 1 = outgoing adjacency (reference) */
 static uint64_t g_unresolved_proc_seq = 0;
+/* Sticky ingestion error: a partial graph must never be exported as complete. */
+static int g_prov_error = 0;
 
 /* FNV-1a hash function */
 static inline uint32_t hash_str(const char *str)
@@ -65,8 +67,10 @@ static void register_active_proc(uint32_t pid, struct prov_node *node)
         entry = entry->next;
     }
     entry = calloc(1, sizeof(*entry));
-    if (!entry)
+    if (!entry) {
+        g_prov_error = -ENOMEM;
         return;
+    }
     entry->pid = pid;
     entry->node = node;
     entry->next = g_active_pid_buckets[bucket];
@@ -106,15 +110,19 @@ static void unregister_active_proc(uint32_t pid)
 
 int prov_engine_init(void)
 {
+    g_prov_error = 0;
     g_node_buckets = calloc(PROV_HASH_SIZE, sizeof(struct prov_node *));
-    if (!g_node_buckets)
-        return -ENOMEM;
+    if (!g_node_buckets) {
+        g_prov_error = -ENOMEM;
+        return g_prov_error;
+    }
 
     g_active_pid_buckets = calloc(PID_HASH_SIZE, sizeof(struct active_proc_entry *));
     if (!g_active_pid_buckets) {
         free(g_node_buckets);
         g_node_buckets = NULL;
-        return -ENOMEM;
+        g_prov_error = -ENOMEM;
+        return g_prov_error;
     }
 
     g_nodes_head = NULL;
@@ -128,6 +136,11 @@ int prov_engine_init(void)
     g_unresolved_proc_seq = 0;
 
     return 0;
+}
+
+int prov_engine_get_error(void)
+{
+    return g_prov_error;
 }
 
 void prov_engine_get_counts(size_t *node_count, size_t *edge_count)
@@ -175,9 +188,13 @@ struct prov_node *prov_find_node(const char *id)
 
 static struct prov_node *allocate_and_insert_node(const char *id, enum prov_node_type type)
 {
-    struct prov_node *node = calloc(1, sizeof(*node));
-    if (!node)
+    if (g_prov_error)
         return NULL;
+    struct prov_node *node = calloc(1, sizeof(*node));
+    if (!node) {
+        g_prov_error = -ENOMEM;
+        return NULL;
+    }
 
     node->type = type;
     snprintf(node->id, sizeof(node->id), "%s", id);
@@ -342,12 +359,14 @@ struct prov_node *prov_upsert_net(uint16_t family, const char *ip_str, uint16_t 
 
 struct prov_edge *prov_add_edge(struct prov_node *src, struct prov_node *dst, enum prov_edge_type type, const struct prov_edge_attr *attr)
 {
-    if (!src || !dst)
+    if (!src || !dst || g_prov_error)
         return NULL;
 
     struct prov_edge *edge = calloc(1, sizeof(*edge));
-    if (!edge)
+    if (!edge) {
+        g_prov_error = -ENOMEM;
         return NULL;
+    }
 
     edge->type = type;
     edge->src = src;
@@ -378,7 +397,7 @@ struct prov_edge *prov_add_edge(struct prov_node *src, struct prov_node *dst, en
 
 void prov_engine_process_event(const struct event *e)
 {
-    if (!e || e->type == EVENT_DEBUG)
+    if (g_prov_error || !e || e->type == EVENT_DEBUG)
         return;
 
     switch (e->type) {
@@ -718,6 +737,8 @@ int prov_engine_filter_subgraph(uint32_t target_pid, uint64_t target_token, stru
         return -EINVAL;
 
     memset(out_filtered, 0, sizeof(*out_filtered));
+    if (g_prov_error)
+        return g_prov_error;
 
     /* Reset filter flags on all nodes */
     struct prov_node *node = g_nodes_head;
