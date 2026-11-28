@@ -59,18 +59,22 @@ See #7 and final benchmark review comment 7219218200.
 
 Scoped #9 cycle completed. Visual examples at 83f27af; corrected benchmark harness at 1484ea9; fork deduplication and unresolved identity representation at 8f592d7; exit status unknown under actual producer contract at b6c89af. Reported corrected fixture results: six suites with exact typed node/edge matching and selected attributes. At 8f592d7 the 1M-event benchmark averaged 4.15 s and 393.43 MiB peak RSS (five repetitions); 1484ea9 averaged 3.67 s and 393.37 MiB. Final narrow exit-status correction received targeted regressions, not a full repeated performance suite. No further component optimization approved. Raw native evidence not independently inspected; historical M2.4 kernel loss counts unavailable. See #9 comment 7231709070.
 
+## End-to-End Benchmark Status
+
+Scoped #10 native campaign completed at frozen implementation b6c89af; final harness and report dcb8659. Reviewed committed aggregate JSON: 15/15 valid sessions, 110/110 selected expected entities, 170/170 selected typed directed relationships, all matrix timelines ordered, zero reported instrumented drops. Five concurrent sessions each preserved approximately 420.9k records and replayed in 2.764–2.975 s (first replay), ~114 MiB peak replay RSS. Soak preserved 507592 records / 353284096 bytes over ~1803 s (1797 s sampled span), 131.32 MiB peak sampled collector RSS without observed growth. Five bounded failure controls reported passed. Initial 64 MiB evidence-ceiling harness mistake and ground-truth parser errors corrected without production changes.
+
+Scoped recall only; full precision, multiplicity and attribute fidelity not established by this harness. Reconciler establishes structural repeatability, not bit-identical DOT/JSON; raw evidence hashes and soak markers not independently checked. Observed concurrent wall-time difference +37.75% is not isolated collector overhead. Workload and shutdown mean 5.474 s includes deliberate 2 s sleep and excludes offline replay/export. Mean shutdown 0.927 s is not disk throughput. Failure control success means expected recovery/containment, not zero loss. See #10 conclusion comment 7234502858. Correct overclaims before publication.
+
 ## Current Task
 
-#10 — End-to-end forensic system benchmark 01.
-
-Freeze implementation at b6c89af. Measure native workload ground truth through capture, persistence, reconstruction and validated graph/timeline output. Run bounded isolated and concurrent workloads, one 30-minute mixed-workload session, and disposable failure controls. Separate correctness, resource costs and time-to-output; compare expected incident relationships against raw evidence and graph at each boundary. No fixes, tuning, ABI or architecture changes before evaluation. See #10 for protocol.
+Benchmarking concluded within tested scope. Retain current architecture and freeze production checkpoint b6c89af. Next phase: release qualification planning, subject to owner approval; no new optimization or implementation authorized.
 
 ## Outstanding Release Work
 
 - #5 descriptor/registry concurrency and lifetime limitations.
 - Broader telemetry coverage, field fidelity (actual exit status unavailable and now represented as unknown), long-run operation, overload envelope, failure recovery, storage integrity and compatibility.
 - Evidence manifest/replay hardening, export alias protection and graph allocation failure handling.
-- End-to-end validation, deployment requirements and release qualification.
+- Remaining end-to-end coverage/measurement gaps, deployment requirements and release qualification.
 - Benchmark reporting corrections noted above.
 - No merge or release implied by this update.
 
@@ -80,6 +84,7 @@ Freeze implementation at b6c89af. Measure native workload ground truth through c
 - tests1.0/kernel_telemetry/runner.py (historical diagnostic lab, not production benchmarking)
 - tests1.0/test_pipeline_integration.c
 - tests1.0/test_m6_dag.c and test_m6_filtering.c
+- tests1.0/kernel_telemetry/benchmark_e2e_01/
 
 Keep raw evidence and generated artifacts private and out of Git. Preserve previous results; do not overwrite evidence.
 
