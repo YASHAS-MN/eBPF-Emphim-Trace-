@@ -156,9 +156,8 @@ echo "  [OK] Failure controls suite verified"
 echo ""
 echo "[PHASE 3/7] Measuring Paired Unmonitored Baseline Workloads (5 reps)..."
 
-run_unmonitored_benchmarks() {
-    python3 -c "
-import subprocess, time, json, os
+run_unprivileged "python3 -c '
+import subprocess, time, json
 
 def run_bench(cmd, reps=5):
     timings = []
@@ -169,20 +168,18 @@ def run_bench(cmd, reps=5):
         timings.append(t1 - t0)
     return timings
 
-memfd_times = run_bench('$MEMFD_EXEC_BIN')
-unlinked_times = run_bench('$UNLINKED_EXEC_BIN')
-bg_times = run_bench('echo \"\" | $WORKLOAD_BIN 15000 4 50 0 0x1 /tmp/bg_dummy.json')
+memfd_times = run_bench(\"$MEMFD_EXEC_BIN\")
+unlinked_times = run_bench(\"$UNLINKED_EXEC_BIN\")
+bg_times = run_bench(\"echo \\\"\\\" | $WORKLOAD_BIN 15000 4 50 0 0x1 /tmp/bg_dummy.json\")
 
 res = {
-    'memfd_exec_wall_s': memfd_times,
-    'unlinked_exec_wall_s': unlinked_times,
-    'w_sustain_bg_wall_s': bg_times
+    \"memfd_exec_wall_s\": memfd_times,
+    \"unlinked_exec_wall_s\": unlinked_times,
+    \"w_sustain_bg_wall_s\": bg_times
 }
-with open('$DATA_DIR/unmonitored_baseline.json', 'w') as f:
+with open(\"$DATA_DIR/unmonitored_baseline.json\", \"w\") as f:
     json.dump(res, f, indent=2)
-"
-}
-run_unprivileged "$(declare -f run_unmonitored_benchmarks); run_unmonitored_benchmarks"
+'"
 chown "$TARGET_USER:$TARGET_USER" "$DATA_DIR/unmonitored_baseline.json"
 echo "  [OK] Unmonitored baseline timings saved to $DATA_DIR/unmonitored_baseline.json"
 
