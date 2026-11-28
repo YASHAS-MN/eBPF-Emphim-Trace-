@@ -2053,7 +2053,10 @@ int BPF_PROG(capture_do_dup2_exit, struct files_struct *files, struct file *file
             struct file **fd_array = NULL;
             bpf_core_read(&fd_array, sizeof(fd_array), &fdt->fd);
             if (fd_array) {
-                bpf_core_read(&cur_file, sizeof(cur_file), &fd_array[p->fd]);
+                /* fd_array points into kernel memory, but its index comes from
+                 * our private BPF map value. Do not request a CO-RE relocation
+                 * for pending_dup2.fd: that type is not in kernel BTF. */
+                bpf_probe_read_kernel(&cur_file, sizeof(cur_file), &fd_array[p->fd]);
             }
         }
     }
