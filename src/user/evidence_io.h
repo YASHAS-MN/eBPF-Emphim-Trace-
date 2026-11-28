@@ -836,6 +836,11 @@ evidence_manifest_evaluate_loss(const struct evidence_session_manifest *m,
       any_type_missing = true;
     } else if (d > 0) {
       any_type_drop = true;
+      if (d > INT64_MAX - type_sum) {
+        if (out_desc) *out_desc = "INCONSISTENT (Per-event drop counter sum overflows)";
+        if (out_computed_drops) *out_computed_drops = -1;
+        return EVIDENCE_LOSS_INCONSISTENT;
+      }
       type_sum += d;
     }
   }
@@ -1099,14 +1104,36 @@ evidence_read_manifest(const char *evid_path,
       return -2; /* Alias rejected */
   }
 
-  int fd = open(manifest_path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW);
+  int fd = open(manifest_path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK);
   if (fd < 0)
     return -1;
 
+  /* Validate the actual opened object, not only the earlier path lookup. */
+  struct stat st_open;
+  if (fstat(fd, &st_open) != 0 || !S_ISREG(st_open.st_mode) ||
+      (stat(evid_path, &st_e) == 0 &&
+       st_open.st_dev == st_e.st_dev && st_open.st_ino == st_e.st_ino)) {
+    close(fd);
+    return -1;
+  }
+
+  /* Read through EOF. Reject oversize documents instead of parsing a prefix. */
   char buf[8192];
-  ssize_t n = read(fd, buf, sizeof(buf) - 1);
+  size_t n = 0;
+  while (n < sizeof(buf)) {
+    ssize_t got = read(fd, buf + n, sizeof(buf) - n);
+    if (got < 0) {
+      if (errno == EINTR)
+        continue;
+      close(fd);
+      return -1;
+    }
+    if (got == 0)
+      break;
+    n += (size_t)got;
+  }
   close(fd);
-  if (n <= 0)
+  if (n == 0 || n == sizeof(buf))
     return -1;
   buf[n] = '\0';
 
@@ -1157,29 +1184,37 @@ evidence_read_manifest(const char *evid_path,
   int lc_idx = (int)(v_lc - nodes);
 
   const struct ephim_json_val *v_ssm = ephim_json_obj_get(nodes, lc_idx, "sample_size_mismatches");
-  if (v_ssm) ephim_json_val_to_uint64(v_ssm, &out_m->sample_size_mismatches);
+  if (!v_ssm || !ephim_json_val_to_uint64(v_ssm, &out_m->sample_size_mismatches))
+    return -1;
 
   const struct ephim_json_val *v_we = ephim_json_obj_get(nodes, lc_idx, "write_errors");
-  if (v_we) ephim_json_val_to_uint64(v_we, &out_m->write_errors);
+  if (!v_we || !ephim_json_val_to_uint64(v_we, &out_m->write_errors))
+    return -1;
 
   const struct ephim_json_val *v_pe = ephim_json_obj_get(nodes, lc_idx, "poll_errors");
-  if (v_pe) ephim_json_val_to_uint64(v_pe, &out_m->poll_errors);
+  if (!v_pe || !ephim_json_val_to_uint64(v_pe, &out_m->poll_errors))
+    return -1;
 
   const struct ephim_json_val *v_de = ephim_json_obj_get(nodes, lc_idx, "drain_errors");
-  if (v_de) ephim_json_val_to_uint64(v_de, &out_m->drain_errors);
+  if (!v_de || !ephim_json_val_to_uint64(v_de, &out_m->drain_errors))
+    return -1;
 
   /* Loss accounting: checked numeric conversions */
   const struct ephim_json_val *v_map = ephim_json_obj_get(nodes, lc_idx, "reg_map_full_drop");
-  if (v_map) ephim_json_val_to_int64(v_map, &out_m->reg_map_full_drop);
+  if (v_map && (!ephim_json_val_to_int64(v_map, &out_m->reg_map_full_drop) || out_m->reg_map_full_drop < -1))
+    return -1;
 
   const struct ephim_json_val *v_tok_a = ephim_json_obj_get(nodes, lc_idx, "token_alloc_err");
-  if (v_tok_a) ephim_json_val_to_int64(v_tok_a, &out_m->token_alloc_err);
+  if (v_tok_a && (!ephim_json_val_to_int64(v_tok_a, &out_m->token_alloc_err) || out_m->token_alloc_err < -1))
+    return -1;
 
   const struct ephim_json_val *v_tok_m = ephim_json_obj_get(nodes, lc_idx, "token_mismatch");
-  if (v_tok_m) ephim_json_val_to_int64(v_tok_m, &out_m->token_mismatch);
+  if (v_tok_m && (!ephim_json_val_to_int64(v_tok_m, &out_m->token_mismatch) || out_m->token_mismatch < -1))
+    return -1;
 
   const struct ephim_json_val *v_rb_tot = ephim_json_obj_get(nodes, lc_idx, "ring_buffer_total_drops");
-  if (v_rb_tot) ephim_json_val_to_int64(v_rb_tot, &out_m->ring_buffer_total_drops);
+  if (v_rb_tot && (!ephim_json_val_to_int64(v_rb_tot, &out_m->ring_buffer_total_drops) || out_m->ring_buffer_total_drops < -1))
+    return -1;
 
   /* Parse string/number for ring_buffer_drops */
   const struct ephim_json_val *v_rb_d = ephim_json_obj_get(nodes, lc_idx, "ring_buffer_drops");
@@ -1196,7 +1231,9 @@ evidence_read_manifest(const char *evid_path,
 
   /* Parse per-type drops */
   const struct ephim_json_val *v_pt = ephim_json_obj_get(nodes, lc_idx, "ring_buffer_per_type_drops");
-  if (v_pt && v_pt->type == EPHIM_JSON_OBJECT) {
+  if (v_pt && v_pt->type != EPHIM_JSON_OBJECT)
+    return -1;
+  if (v_pt) {
     int pt_idx = (int)(v_pt - nodes);
     static const struct {
       uint32_t type;
@@ -1227,9 +1264,9 @@ evidence_read_manifest(const char *evid_path,
       const struct ephim_json_val *v_type = ephim_json_obj_get(nodes, pt_idx, type_keys[i].key);
       if (v_type) {
         int64_t val = -1;
-        if (ephim_json_val_to_int64(v_type, &val)) {
-          out_m->ring_buffer_per_type_drops[type_keys[i].type] = val;
-        }
+        if (!ephim_json_val_to_int64(v_type, &val) || val < -1)
+          return -1;
+        out_m->ring_buffer_per_type_drops[type_keys[i].type] = val;
       }
     }
   }
