@@ -11,7 +11,7 @@ Develop an eBPF-based forensic telemetry and provenance system prioritizing evid
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Current implementation checkpoint: 1115e2c (locally validated integrated Phase 1 candidate; Task 04 merge pending)
+- Current implementation checkpoint: cba9b01 (Phase 1 merged; native validation at 1115e2c)
 - Working branch: remediation/state-independence-and-loss-accountability
 - Initial production benchmark baseline: 056ec9b
 - Historical Architecture A reference: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
@@ -87,7 +87,7 @@ Owner native results at 1115e2c, x86_64 kernel 7.0.0-44-generic, BTF present, CP
 
 ## Current Task
 
-All four planned Phase 1 tasks validated within scope; awaiting owner merge of Task 04. Then proceed to Phase 2 comparative evaluation, followed by owner-operated CLI prototype demonstration and approval before GUI/productization, then external validation. No additional Phase 1 benchmark campaign.
+All four planned Phase 1 tasks validated within scope; PR #16 merged at cba9b01, Issue #15 closed. Phase 2 active: #17 bounded comparative forensic evaluation. Freeze implementation; primary empirical comparator Aqua Tracee, auxiliary syscall cross-check strace if available; documentary context Falco, Tetragon and CamFlow. First verify local tool availability and actual version. Use matched benign workloads, independent ground truth and explicit capture configuration; compare evidence and reconstruction, not unmatched throughput. After comparative evaluation, mandatory owner-operated manual CLI lifecycle demonstration; STOP before GUI/productization until explicit owner approval. External validation follows. No additional Phase 1 benchmark campaign.
 
 ## Outstanding Release Work
 
