@@ -38,6 +38,37 @@ enum evidence_mode {
 #define EVIDENCE_DEFAULT_MAX_BYTES                                             \
   (1024ULL * 1024 * 1024) /* 1 GiB storage bound */
 
+/* CLI integers must be unsigned decimal text with no trailing characters. */
+static inline bool ephim_parse_decimal(const char *text, uint64_t maximum,
+                                       uint64_t *out) {
+  if (!text || !*text || !out)
+    return false;
+  uint64_t value = 0;
+  for (const unsigned char *p = (const unsigned char *)text; *p; p++) {
+    if (*p < '0' || *p > '9')
+      return false;
+    unsigned digit = *p - '0';
+    if (value > maximum / 10 ||
+        (value == maximum / 10 && digit > maximum % 10))
+      return false;
+    value = value * 10 + digit;
+  }
+  *out = value;
+  return true;
+}
+
+/* v1 path buffers are fixed-size. The manifest and summary currently
+ * interpolate the evidence path into JSON, so reject unsafe JSON characters
+ * rather than silently emitting an invalid document. */
+static inline bool ephim_valid_evidence_path(const char *path, size_t capacity) {
+  if (!path || !*path || strlen(path) >= capacity)
+    return false;
+  for (const unsigned char *p = (const unsigned char *)path; *p; p++)
+    if (*p < 0x20 || *p == '"' || *p == '\\')
+      return false;
+  return true;
+}
+
 /* --- CRC32 Implementation (IEEE 802.3) --- */
 static inline uint32_t ephim_crc32_update(uint32_t crc, const void *buf,
                                           size_t len) {
@@ -274,7 +305,17 @@ static inline int evidence_writer_init(struct evidence_writer *w,
   w->buffer_cap = buffer_cap ? buffer_cap : EVIDENCE_DEFAULT_BUFFER_SIZE;
   w->max_bytes = max_bytes ? max_bytes : EVIDENCE_DEFAULT_MAX_BYTES;
   w->max_records = 0;
-  snprintf(w->path, sizeof(w->path), "%s", path);
+  if (!ephim_valid_evidence_path(path, sizeof(w->path))) {
+    errno = EINVAL;
+    return -1;
+  }
+  if (w->buffer_cap < sizeof(struct evidence_file_header) ||
+      w->buffer_cap < sizeof(struct evidence_record_frame) + sizeof(struct event) ||
+      w->max_bytes < sizeof(struct evidence_file_header)) {
+    errno = EINVAL;
+    return -1;
+  }
+  memcpy(w->path, path, strlen(path) + 1);
 
   /* Reject if file, symlink, or hardlink already exists */
   struct stat st;
@@ -1308,11 +1349,22 @@ static inline int evidence_reader_open(struct evidence_reader *r,
     return -1;
 
   memset(r, 0, sizeof(*r));
-  r->fd = open(path, O_RDONLY | O_CLOEXEC);
+  r->fd = -1;
+  if (!ephim_valid_evidence_path(path, sizeof(r->path))) {
+    errno = EINVAL;
+    return -1;
+  }
+  r->fd = open(path, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
   if (r->fd < 0)
     return -1;
-
-  snprintf(r->path, sizeof(r->path), "%s", path);
+  struct stat st;
+  if (fstat(r->fd, &st) != 0 || !S_ISREG(st.st_mode)) {
+    close(r->fd);
+    r->fd = -1;
+    errno = EINVAL;
+    return -1;
+  }
+  memcpy(r->path, path, strlen(path) + 1);
 
   /* Read header using safe exact reader */
   ssize_t rc = evidence_safe_read_exact(r->fd, &r->header,
