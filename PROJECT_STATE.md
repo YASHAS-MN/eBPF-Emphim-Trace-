@@ -11,7 +11,7 @@ Develop an eBPF-based forensic telemetry and provenance system prioritizing evid
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Current implementation checkpoint: ef84c41 (locally validated Task 02 candidate; descriptor baseline a61a3e7; benchmark baseline b6c89af)
+- Current implementation checkpoint: b036418 (locally validated Task 03 candidate; Task 02 integrated at e069f1b)
 - Working branch: remediation/state-independence-and-loss-accountability
 - Initial production benchmark baseline: 056ec9b
 - Historical Architecture A reference: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
@@ -75,15 +75,19 @@ Scoped replay and evidence integrity qualification passed on the isolated qualif
 
 Replay CLI now rejects in-place overwrite flags; new files are required. Default exclusive creation protects existing evidence and manifest objects against output alias truncation. Strict missing-manifest replay requires explicit legacy opt-in. Manifest parser rejects oversized documents, malformed or missing persistence counters, invalid numeric loss fields and signed counter-sum overflow. Known positive loss and standard prefix recovery remain supported. This is tested-scope integrity protection, not cryptographic authentication or proof of universal crash durability; standalone provenance library overwrite API is not covered by the replay CLI guarantee. No new native collector run or performance benchmark performed.
 
+## Release Qualification Task 03
+
+At b036418 the owner locally built the normal replay binary and dedicated linker-wrapped fault-injection executable. All 23 fault-injection cases passed (including two no-fault controls), all six provenance correctness suites, ten pipeline integration suites and 28 replay safety checks passed. Initialization allocation failures return 3; detected ingestion failures return 8 and suppress graph exports in both standard and strict modes while continuing evidence verification; tested single-export scratch allocation failures return 6. Original evidence and manifest unchanged in fault tests. This does not establish recovery from OS OOM termination or atomic publication of multiple exports. Compiler warning from evidence_writer_init path copy into 256-byte buffer observed in the test build; short generated fixture path fits, but long-path validation remains a deployment task.
+
 ## Current Task
 
-Task 02 candidate accepted for integration into the working branch; owner merge approval pending. Next: Task 03, graph allocation failure propagation and fail-closed export behavior. No new implementation before integration. Continue with comparative evaluation and owner-operated CLI prototype demonstration before GUI/productization.
+Task 03 validated; awaiting owner merge approval. Task 04 next: deployment and compatibility, including path/argument validation and integrated native collector smoke at final candidate. Continue comparative evaluation and owner-operated CLI prototype demonstration before GUI/productization.
 
 ## Outstanding Release Work
 
 - #5 descriptor/registry concurrency and lifetime limitations.
 - Broader telemetry coverage, field fidelity (actual exit status unavailable and now represented as unknown), long-run operation, overload envelope, failure recovery, storage integrity and compatibility.
-- Graph allocation failure handling and remaining end-to-end qualification.
+- Remaining end-to-end qualification, including multi-export failure/publication semantics and native collector smoke.
 - Benchmark reporting corrections noted above.
 - No merge or release implied by this update.
 
@@ -93,6 +97,7 @@ Task 02 candidate accepted for integration into the working branch; owner merge 
 - tests1.0/kernel_telemetry/runner.py (historical diagnostic lab, not production benchmarking)
 - tests1.0/test_pipeline_integration.c
 - tests1.0/test_qualification_replay.c
+- tests1.0/test_graph_allocation_failure.c
 - tests1.0/test_m6_dag.c and test_m6_filtering.c
 - tests1.0/kernel_telemetry/benchmark_e2e_01/
 

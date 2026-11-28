@@ -35,6 +35,13 @@ $(BUILD_DIR)/loader: $(SRC_LOADER) src/user/evidence_io.h src/user/provenance.h 
 $(BUILD_DIR)/replay: $(SRC_REPLAY) src/user/evidence_io.h src/user/provenance.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(SRC_REPLAY) -o $@
 
+# Fault injection is linked only into the dedicated test replay binary.
+$(BUILD_DIR)/replay_graph_fault: $(SRC_REPLAY) src/user/evidence_io.h src/user/provenance.h tests1.0/fault_injection/graph_alloc_wrap.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(SRC_REPLAY) tests1.0/fault_injection/graph_alloc_wrap.c -Wl,--wrap=calloc -o $@
+
+$(BUILD_DIR)/test_graph_allocation_failure: tests1.0/test_graph_allocation_failure.c src/user/evidence_io.h src/user/provenance.h $(BUILD_DIR)/replay_graph_fault | $(BUILD_DIR)
+	$(CC) -O2 -pthread -I src/user -I src/bpf $< -o $@
+
 $(BUILD_DIR)/%: tests1.0/%.c | $(BUILD_DIR)
 	$(CC) -O2 -pthread -I src/user -I src/bpf $< -o $@
 

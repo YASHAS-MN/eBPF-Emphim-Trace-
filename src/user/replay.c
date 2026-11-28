@@ -318,11 +318,25 @@ int main(int argc, char *argv[]) {
     struct event ev;
     struct evidence_record_frame frame;
     int read_rc = 0;
+    int reconstruction_error = 0;
+    uint64_t reconstructed_records = 0;
 
     while ((read_rc = evidence_reader_read_next(&reader, &ev, &frame)) == 1) {
-        prov_engine_process_event(&ev);
+        /* Continue verifying the input after a graph failure, but never mutate
+         * or publish the incomplete graph. Keep ingestion counts separate. */
+        if (!reconstruction_error) {
+            prov_engine_process_event(&ev);
+            reconstruction_error = prov_engine_get_error();
+            if (reconstruction_error) {
+                fprintf(stderr, "[ERROR] Graph reconstruction failed at record %llu: %s; suppressing graph exports.\n",
+                        (unsigned long long)reader.stats.records_verified,
+                        strerror(-reconstruction_error));
+            } else {
+                reconstructed_records++;
+            }
+        }
 
-        if (!cfg.quiet && cfg.progress_interval > 0 &&
+        if (!reconstruction_error && !cfg.quiet && cfg.progress_interval > 0 &&
             reader.stats.records_replayed > 0 &&
             reader.stats.records_replayed % cfg.progress_interval == 0) {
             uint64_t cur_ts = evidence_time_now_ns();
@@ -415,7 +429,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    bool replay_valid = clean_eof && no_corruption && no_incompleteness && gaps_acceptable && manifest_acceptable;
+    bool replay_valid = !reconstruction_error && clean_eof && no_corruption && no_incompleteness && gaps_acceptable && manifest_acceptable;
 
     /* Graph Element Counts */
     size_t total_nodes = 0, total_edges = 0;
@@ -427,8 +441,8 @@ int main(int argc, char *argv[]) {
     int filtered_dot_rc = 0, filtered_json_rc = 0;
     bool exports_aborted = false;
 
-    if (!replay_valid && cfg.strict) {
-        fprintf(stderr, "[WARNING] Strict replay validation failed: aborting graph exports to prevent misleading outputs.\n");
+    if (reconstruction_error || (!replay_valid && cfg.strict)) {
+        fprintf(stderr, "[WARNING] Replay validation failed: aborting graph exports to prevent misleading outputs.\n");
         exports_aborted = true;
         dot_rc = -1;
         json_rc = -1;
@@ -441,7 +455,7 @@ int main(int argc, char *argv[]) {
             if (dot_rc != 0) {
                 fprintf(stderr, "[ERROR] Failed to export DOT graph to '%s': %s%s\n",
                         cfg.dot_path, strerror(-dot_rc),
-                        (dot_rc == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
+                        (dot_rc == -EEXIST) ? " (file already exists; choose a new output path)" : "");
             }
         }
 
@@ -450,7 +464,7 @@ int main(int argc, char *argv[]) {
             if (json_rc != 0) {
                 fprintf(stderr, "[ERROR] Failed to export JSON graph to '%s': %s%s\n",
                         cfg.json_path, strerror(-json_rc),
-                        (json_rc == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
+                        (json_rc == -EEXIST) ? " (file already exists; choose a new output path)" : "");
             }
         }
 
@@ -459,7 +473,7 @@ int main(int argc, char *argv[]) {
             if (timeline_rc != 0) {
                 fprintf(stderr, "[ERROR] Failed to export timeline to '%s': %s%s\n",
                         cfg.timeline_path, strerror(-timeline_rc),
-                        (timeline_rc == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
+                        (timeline_rc == -EEXIST) ? " (file already exists; choose a new output path)" : "");
             }
         }
 
@@ -470,7 +484,7 @@ int main(int argc, char *argv[]) {
                 if (filtered_dot_rc != 0) {
                     fprintf(stderr, "[ERROR] Failed to export filtered DOT graph to '%s': %s%s\n",
                             cfg.filtered_dot_path, strerror(-filtered_dot_rc),
-                            (filtered_dot_rc == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
+                            (filtered_dot_rc == -EEXIST) ? " (file already exists; choose a new output path)" : "");
                 }
             }
             if (cfg.filtered_json_path && cfg.filtered_json_path[0]) {
@@ -478,7 +492,7 @@ int main(int argc, char *argv[]) {
                 if (filtered_json_rc != 0) {
                     fprintf(stderr, "[ERROR] Failed to export filtered JSON graph to '%s': %s%s\n",
                             cfg.filtered_json_path, strerror(-filtered_json_rc),
-                            (filtered_json_rc == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
+                            (filtered_json_rc == -EEXIST) ? " (file already exists; choose a new output path)" : "");
                 }
             }
         }
@@ -497,7 +511,7 @@ int main(int argc, char *argv[]) {
                       (ru_end.ru_stime.tv_usec - ru_start.ru_stime.tv_usec);
     long max_rss_kb = ru_end.ru_maxrss;
     double max_rss_mib = (double)max_rss_kb / 1024.0;
-    double events_per_sec = (replay_duration_s > 0) ? ((double)reader.stats.records_replayed / replay_duration_s) : 0;
+    double events_per_sec = (replay_duration_s > 0) ? ((double)reconstructed_records / replay_duration_s) : 0;
 
     /* Get File Sizes for Exports */
     struct stat st_dot = {0}, st_json = {0}, st_tl = {0};
@@ -521,7 +535,7 @@ int main(int argc, char *argv[]) {
            (reader.header.mode == EVIDENCE_MODE_ONLINE) ? "Online (M)" :
            (reader.header.mode == EVIDENCE_MODE_DEFERRED) ? "Deferred (P)" : "Unknown");
     printf("Records Verified:          %llu\n", (unsigned long long)reader.stats.records_verified);
-    printf("Records Replayed:          %llu\n", (unsigned long long)reader.stats.records_replayed);
+    printf("Records Replayed:          %llu\n", (unsigned long long)reconstructed_records);
     printf("Corrupt Records:           %llu\n", (unsigned long long)reader.stats.corrupt_records);
     printf("Sequence Gaps:             %llu\n", (unsigned long long)reader.stats.seq_gaps);
     printf("Incomplete / Short Records:%llu\n", (unsigned long long)reader.stats.incomplete_records);
@@ -579,7 +593,9 @@ int main(int argc, char *argv[]) {
             recon_status_str = "SUCCESS (Unfinalized / Storage Discrepancy)";
         }
     } else {
-        if (!clean_eof || !no_incompleteness) {
+        if (reconstruction_error) {
+            recon_status_str = "FAILED (Graph reconstruction allocation failure)";
+        } else if (!clean_eof || !no_incompleteness) {
             recon_status_str = "FAILED (Incomplete evidence / EOF truncation)";
         } else if (!no_corruption) {
             recon_status_str = "FAILED (Corrupt records / CRC32 mismatch)";
@@ -614,7 +630,8 @@ int main(int argc, char *argv[]) {
             fprintf(fj, "  \"telemetry_capture_status\": \"%s\",\n", capture_desc);
             fprintf(fj, "  \"ring_buffer_total_drops\": %lld,\n", (manifest_rc == 0) ? (long long)computed_drops : -1LL);
             fprintf(fj, "  \"records_verified\": %llu,\n", (unsigned long long)reader.stats.records_verified);
-            fprintf(fj, "  \"records_replayed\": %llu,\n", (unsigned long long)reader.stats.records_replayed);
+            fprintf(fj, "  \"records_replayed\": %llu,\n", (unsigned long long)reconstructed_records);
+            fprintf(fj, "  \"reconstruction_error\": %d,\n", reconstruction_error);
             fprintf(fj, "  \"corrupt_records\": %llu,\n", (unsigned long long)reader.stats.corrupt_records);
             fprintf(fj, "  \"seq_gaps\": %llu,\n", (unsigned long long)reader.stats.seq_gaps);
             fprintf(fj, "  \"incomplete_records\": %llu,\n", (unsigned long long)reader.stats.incomplete_records);
@@ -639,12 +656,13 @@ int main(int argc, char *argv[]) {
         } else {
             fprintf(stderr, "[ERROR] Failed to open summary JSON '%s': %s%s\n",
                     cfg.summary_json_path, strerror(-open_err),
-                    (open_err == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
+                    (open_err == -EEXIST) ? " (file already exists; choose a new output path)" : "");
             summary_rc = open_err;
         }
     }
 
     if (!overall_success || summary_rc != 0) {
+        if (reconstruction_error) return 8;
         if (!clean_eof || !no_incompleteness) return 4;
         if (!no_corruption) return 4;
         if (!gaps_acceptable) return 5;

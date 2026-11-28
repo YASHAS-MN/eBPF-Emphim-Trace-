@@ -209,6 +209,8 @@ struct event {
 /* Engine API */
 int prov_engine_init(void);
 void prov_engine_process_event(const struct event *e);
+/* Sticky reconstruction error, cleared only by initialization. */
+int prov_engine_get_error(void);
 int prov_engine_export_dot(const char *filepath);
 int prov_engine_export_json(const char *filepath);
 void prov_engine_get_counts(size_t *node_count, size_t *edge_count);
