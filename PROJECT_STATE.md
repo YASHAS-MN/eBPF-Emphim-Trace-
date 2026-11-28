@@ -11,7 +11,7 @@ Develop an eBPF-based forensic telemetry and provenance system prioritizing evid
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Current implementation checkpoint: ef84c41 (locally validated Task 02 candidate; descriptor baseline a61a3e7; benchmark baseline b6c89af)
+- Current implementation checkpoint: e069f1b (Task 02 integrated; Task 03 candidate 07c5779 pending validation)
 - Working branch: remediation/state-independence-and-loss-accountability
 - Initial production benchmark baseline: 056ec9b
 - Historical Architecture A reference: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
@@ -77,7 +77,7 @@ Replay CLI now rejects in-place overwrite flags; new files are required. Default
 
 ## Current Task
 
-Task 02 candidate accepted for integration into the working branch; owner merge approval pending. Next: Task 03, graph allocation failure propagation and fail-closed export behavior. No new implementation before integration. Continue with comparative evaluation and owner-operated CLI prototype demonstration before GUI/productization.
+Task 02 merged via PR #12 at e069f1b, Issue #11 closed. Active Issue #13: Task 03 graph allocation failure propagation and fail-closed export behavior. Isolated candidate qualification/graph-failure-handling at 07c5779: sticky ingestion allocation error, suppress all graph outputs in both replay modes after ingestion failure, continue evidence verification, report reconstruction_error and successful event-processing count, dedicated test-only linker fault injection. Native userspace compilation and executable fault tests pending. Preserve collection ABI and architecture. Continue with comparative evaluation and owner-operated CLI prototype demonstration before GUI/productization.
 
 ## Outstanding Release Work
 
