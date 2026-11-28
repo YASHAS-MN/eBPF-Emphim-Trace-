@@ -1,6 +1,6 @@
 # EphimTrace — Project State
 
-Last updated: 2026-11-27
+Last updated: 2026-11-28
 
 ## Objective
 
@@ -11,7 +11,7 @@ Develop an eBPF-based forensic telemetry and provenance system prioritizing evid
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Current implementation checkpoint: 9d5bb5176278f1dd7e75b74302daafbf1cfe96a6
+- Current implementation checkpoint: b6c89afcc89de3db63d02a729fbcd3828b5ab704
 - Working branch: remediation/state-independence-and-loss-accountability
 - Initial production benchmark baseline: 056ec9b
 - Historical Architecture A reference: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
@@ -55,16 +55,20 @@ Raw local evidence has not been independently inspected by reviewer. Source revi
 
 See #7 and final benchmark review comment 7219218200.
 
+## Provenance Benchmark Status
+
+Scoped #9 cycle completed. Visual examples at 83f27af; corrected benchmark harness at 1484ea9; fork deduplication and unresolved identity representation at 8f592d7; exit status unknown under actual producer contract at b6c89af. Reported corrected fixture results: six suites with exact typed node/edge matching and selected attributes. At 8f592d7 the 1M-event benchmark averaged 4.15 s and 393.43 MiB peak RSS (five repetitions); 1484ea9 averaged 3.67 s and 393.37 MiB. Final narrow exit-status correction received targeted regressions, not a full repeated performance suite. No further component optimization approved. Raw native evidence not independently inspected; historical M2.4 kernel loss counts unavailable. See #9 comment 7231709070.
+
 ## Current Task
 
-#9 — Benchmark provenance reconstruction correctness and scalability.
+#10 — End-to-end forensic system benchmark 01.
 
-Freeze collector semantics and current checkpoint while evaluating graph construction independently. First produce inspectable DOT/SVG/PNG, JSON and timeline examples for verified memfd and unlinked ELF sessions, with explicit evidence-to-node/edge correspondence. Then evaluate normalized graph correctness, attribute fidelity, missing/duplicate evidence behavior, deterministic replay, scalability and export performance. Existing graph tests are partial functional checks, not comprehensive benchmarks. No GUI or algorithm redesign before measuring the baseline.
+Freeze implementation at b6c89af. Measure native workload ground truth through capture, persistence, reconstruction and validated graph/timeline output. Run bounded isolated and concurrent workloads, one 30-minute mixed-workload session, and disposable failure controls. Separate correctness, resource costs and time-to-output; compare expected incident relationships against raw evidence and graph at each boundary. No fixes, tuning, ABI or architecture changes before evaluation. See #10 for protocol.
 
 ## Outstanding Release Work
 
 - #5 descriptor/registry concurrency and lifetime limitations.
-- Broader telemetry coverage, field fidelity (notably process exit status placeholder), long-run operation, overload envelope, failure recovery, storage integrity and compatibility.
+- Broader telemetry coverage, field fidelity (actual exit status unavailable and now represented as unknown), long-run operation, overload envelope, failure recovery, storage integrity and compatibility.
 - Evidence manifest/replay hardening, export alias protection and graph allocation failure handling.
 - End-to-end validation, deployment requirements and release qualification.
 - Benchmark reporting corrections noted above.
