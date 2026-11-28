@@ -1158,18 +1158,32 @@ static void test_loss_counter_parsing_and_consistency(void) {
 
         struct evidence_session_manifest m;
         int rc = evidence_read_manifest(test_evid, &m);
-        assert(rc == 0);
-        // Crucial requirement: Malformed counters MUST NEVER become zero!
-        assert(m.ring_buffer_total_drops == -1);
-        assert(m.reg_map_full_drop == -1);
-        assert(m.token_alloc_err == -1);
+        /* Malformed values are invalid metadata, not unavailable counters.
+         * Explicit -1 and missing optional kernel counters remain supported
+         * by Case 3 and Case 5; do not weaken that distinction. */
+        assert(rc < 0);
 
-        int64_t drops = 0;
-        const char *desc = NULL;
-        enum evidence_loss_status st = evidence_manifest_evaluate_loss(&m, &drops, &desc);
-        assert(st == EVIDENCE_LOSS_UNVERIFIED);
-        assert(strstr(desc, "UNVERIFIED") != NULL);
-        printf("  [PASS] Malformed counters reject non-numeric values and default to -1 (never zero).\n");
+        /* Exercise the strict executable, not just the parser. */
+        const char *bad_dot = "/tmp/test_loss_manifest_malformed.dot";
+        unlink(bad_dot);
+        pid_t child = fork();
+        assert(child >= 0);
+        if (child == 0) {
+            int devnull = open("/dev/null", O_WRONLY);
+            if (devnull >= 0) {
+                dup2(devnull, STDOUT_FILENO);
+                dup2(devnull, STDERR_FILENO);
+                close(devnull);
+            }
+            execl("./build/replay", "./build/replay", test_evid, "--strict",
+                  "--dot", bad_dot, (char *)NULL);
+            _exit(127);
+        }
+        int status = 0;
+        assert(waitpid(child, &status, 0) == child);
+        assert(WIFEXITED(status) && WEXITSTATUS(status) == 7);
+        assert(access(bad_dot, F_OK) == -1 && errno == ENOENT);
+        printf("  [PASS] Malformed counters rejected by parser and strict replay (rc=7); no graph export.\n");
     }
 
     // Case 5: Incomplete Counters (Missing event types)
