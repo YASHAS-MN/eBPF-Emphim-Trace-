@@ -38,6 +38,8 @@ tests1.0/kernel_telemetry/benchmark_01/burst_investigation/
 tests1.0/kernel_telemetry/benchmark_01/native_exports/
 tests1.0/kernel_telemetry/benchmark_e2e_01/data/
 tests1.0/kernel_telemetry/benchmark_e2e_01/exports/
+tests1.0/kernel_telemetry/qualification_descriptor/data/
+tests1.0/kernel_telemetry/qualification_descriptor/exports/
 tests1.0/kernel_telemetry/workload
 tests1.0/kernel_telemetry/osbench/
 __pycache__/
