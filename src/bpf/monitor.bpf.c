@@ -1376,14 +1376,19 @@ int BPF_PROG(capture_fd_install, unsigned int fd, struct file *file)
                     de.installed_ts_ns = bpf_ktime_get_ns();
                     de.verified_lifetime = 1;
                     de.pad = 0;
-                    bpf_map_update_elem(&memfd_desc_registry, &dk, &de, BPF_ANY);
-
-                    struct event *e = new_event(EVENT_FD_INSTALLED);
-                    if (e) {
-                        e->fd = (__s32)fd;
-                        e->object_token = obj->object_token;
-                        e->op_type = op_type;
-                        bpf_ringbuf_submit(e, 0);
+                    int res_desc = bpf_map_update_elem(&memfd_desc_registry, &dk, &de, BPF_ANY);
+                    if (res_desc == 0) {
+                        struct event *e = new_event(EVENT_FD_INSTALLED);
+                        if (e) {
+                            e->fd = (__s32)fd;
+                            e->object_token = obj->object_token;
+                            e->op_type = op_type;
+                            bpf_ringbuf_submit(e, 0);
+                        }
+                    } else {
+                        inc_counter(CNT_FD_INSTALL_ERR);
+                        if (res_desc == -7 || res_desc == -28)
+                            inc_counter(CNT_REG_MAP_FULL_DROP);
                     }
                 }
             }
@@ -1922,7 +1927,9 @@ int BPF_PROG(capture_close_fd, unsigned int fd, struct file *ret)
 
     struct descriptor_entry *de = bpf_map_lookup_elem(&memfd_desc_registry, &dk);
     if (de) {
-        if (de->verified_lifetime && de->installed_ts_ns > 0 && now >= de->installed_ts_ns) {
+        /* Only report a known duration if cached descriptor identity matches removed file and lifetime is verified */
+        if (de->object_token == token && de->file_ptr == (__u64)ret &&
+            de->verified_lifetime && de->installed_ts_ns > 0 && now >= de->installed_ts_ns) {
             duration_ns = now - de->installed_ts_ns;
         }
         bpf_map_delete_elem(&memfd_desc_registry, &dk);
@@ -2004,7 +2011,12 @@ int BPF_PROG(capture_do_dup2_entry, struct files_struct *files, struct file *fil
     }
 
     if (p.tofree_token != 0 || p.new_token != 0) {
-        bpf_map_update_elem(&pending_dup2_map, &tid, &p, BPF_ANY);
+        int res_p = bpf_map_update_elem(&pending_dup2_map, &tid, &p, BPF_ANY);
+        if (res_p != 0) {
+            inc_counter(CNT_MEMFD_MAP_UPD_ERR);
+            if (res_p == -7 || res_p == -28)
+                inc_counter(CNT_REG_MAP_FULL_DROP);
+        }
     }
 
     return 0;
@@ -2030,21 +2042,40 @@ int BPF_PROG(capture_do_dup2_exit, struct files_struct *files, struct file *file
     target_dk.fd = (__s32)p->fd;
     target_dk.pad = 0;
 
+    /* Guard against stale registry mutations: inspect the file currently in descriptor slot fd */
+    struct file *cur_file = NULL;
+    struct fdtable *fdt = NULL;
+    bpf_core_read(&fdt, sizeof(fdt), &files->fdt);
+    if (fdt) {
+        unsigned int max_fds = 0;
+        bpf_core_read(&max_fds, sizeof(max_fds), &fdt->max_fds);
+        if (p->fd < max_fds) {
+            struct file **fd_array = NULL;
+            bpf_core_read(&fd_array, sizeof(fd_array), &fdt->fd);
+            if (fd_array) {
+                bpf_core_read(&cur_file, sizeof(cur_file), &fd_array[p->fd]);
+            }
+        }
+    }
+
     /* 1. If an existing tracked memfd was replaced and closed */
     if (p->tofree_token != 0) {
-        __u64 dur_ns = 0;
-        if (p->tofree_verified_lifetime && p->tofree_installed_ts > 0 && now >= p->tofree_installed_ts) {
-            dur_ns = now - p->tofree_installed_ts;
-        }
-        bpf_map_delete_elem(&memfd_desc_registry, &target_dk);
+        struct descriptor_entry *old_de = bpf_map_lookup_elem(&memfd_desc_registry, &target_dk);
+        if (old_de && old_de->object_token == p->tofree_token) {
+            __u64 dur_ns = 0;
+            if (old_de->verified_lifetime && old_de->installed_ts_ns > 0 && now >= old_de->installed_ts_ns) {
+                dur_ns = now - old_de->installed_ts_ns;
+            }
+            bpf_map_delete_elem(&memfd_desc_registry, &target_dk);
 
-        struct event *e = new_event(EVENT_FD_CLOSED);
-        if (e) {
-            e->fd = (__s32)p->fd;
-            e->object_token = p->tofree_token;
-            e->entry_ts_ns = dur_ns;
-            e->timestamp_ns = now;
-            bpf_ringbuf_submit(e, 0);
+            struct event *e = new_event(EVENT_FD_CLOSED);
+            if (e) {
+                e->fd = (__s32)p->fd;
+                e->object_token = p->tofree_token;
+                e->entry_ts_ns = dur_ns;
+                e->timestamp_ns = now;
+                bpf_ringbuf_submit(e, 0);
+            }
         }
     }
 
@@ -2052,17 +2083,14 @@ int BPF_PROG(capture_do_dup2_exit, struct files_struct *files, struct file *file
     if (p->new_token != 0) {
         __u64 file_key = p->new_file_ptr;
         __u64 token = p->new_token;
-        bpf_map_update_elem(&memfd_file_registry, &file_key, &token, BPF_ANY);
+        int res_file = bpf_map_update_elem(&memfd_file_registry, &file_key, &token, BPF_ANY);
+        if (res_file != 0) {
+            inc_counter(CNT_REG_FILE_INSERT_ERR);
+            if (res_file == -7 || res_file == -28)
+                inc_counter(CNT_REG_MAP_FULL_DROP);
+        }
 
-        struct descriptor_entry new_de;
-        __builtin_memset(&new_de, 0, sizeof(new_de));
-        new_de.object_token = token;
-        new_de.file_ptr = file_key;
-        new_de.installed_ts_ns = now;
-        new_de.verified_lifetime = 1;
-        new_de.pad = 0;
-        bpf_map_update_elem(&memfd_desc_registry, &target_dk, &new_de, BPF_ANY);
-
+        /* Emit installation event for the completed do_dup2 operation */
         struct event *e = new_event(EVENT_FD_INSTALLED);
         if (e) {
             e->fd = (__s32)p->fd;
@@ -2071,9 +2099,32 @@ int BPF_PROG(capture_do_dup2_exit, struct files_struct *files, struct file *file
             e->timestamp_ns = now;
             bpf_ringbuf_submit(e, 0);
         }
+
+        /* Guard against stale registry mutations: only write to memfd_desc_registry
+         * if slot fd is still pointing to the file installed by this do_dup2 invocation.
+         * If the descriptor was already closed, replaced, or reused before this hook executed,
+         * skip mutating memfd_desc_registry to prevent stale state corruption.
+         */
+        if (cur_file == file) {
+            struct descriptor_entry new_de;
+            __builtin_memset(&new_de, 0, sizeof(new_de));
+            new_de.object_token = token;
+            new_de.file_ptr = file_key;
+            new_de.installed_ts_ns = now;
+            new_de.verified_lifetime = 1;
+            new_de.pad = 0;
+            int res_desc = bpf_map_update_elem(&memfd_desc_registry, &target_dk, &new_de, BPF_ANY);
+            if (res_desc != 0) {
+                inc_counter(CNT_FD_INSTALL_ERR);
+                if (res_desc == -7 || res_desc == -28)
+                    inc_counter(CNT_REG_MAP_FULL_DROP);
+            }
+        }
     } else if (p->tofree_token == 0) {
-        /* Ordinary file installed over ordinary file/empty slot: purge any stale entry */
-        bpf_map_delete_elem(&memfd_desc_registry, &target_dk);
+        /* Ordinary file installed over ordinary file/empty slot: purge any stale entry only if slot still matches */
+        if (cur_file == file) {
+            bpf_map_delete_elem(&memfd_desc_registry, &target_dk);
+        }
     }
 
     bpf_map_delete_elem(&pending_dup2_map, &tid);
