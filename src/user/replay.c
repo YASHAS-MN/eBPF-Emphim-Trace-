@@ -161,10 +161,22 @@ int main(int argc, char *argv[]) {
             if (i + 1 < argc) { cfg.timeline_path = argv[++i]; any_export_specified = true; }
             else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--filter-pid") == 0) {
-            if (i + 1 < argc) { cfg.filter_pid = (uint32_t)strtoul(argv[++i], NULL, 10); }
+            if (i + 1 < argc) {
+                uint64_t value;
+                if (!ephim_parse_decimal(argv[++i], UINT32_MAX, &value)) {
+                    fprintf(stderr, "Error: invalid PID\n");
+                    return 1;
+                }
+                cfg.filter_pid = (uint32_t)value;
+            }
             else { fprintf(stderr, "Error: %s requires a PID\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "-k") == 0 || strcmp(argv[i], "--filter-token") == 0) {
-            if (i + 1 < argc) { cfg.filter_token = (uint64_t)strtoull(argv[++i], NULL, 10); }
+            if (i + 1 < argc) {
+                if (!ephim_parse_decimal(argv[++i], UINT64_MAX, &cfg.filter_token)) {
+                    fprintf(stderr, "Error: invalid object token\n");
+                    return 1;
+                }
+            }
             else { fprintf(stderr, "Error: %s requires a token\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "--filtered-dot") == 0) {
             if (i + 1 < argc) { cfg.filtered_dot_path = argv[++i]; any_export_specified = true; }
@@ -183,7 +195,12 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "Error: replay export overwrite is disabled for evidence safety; choose a new output path.\n");
             return 1;
         } else if (strcmp(argv[i], "--progress") == 0) {
-            if (i + 1 < argc) { cfg.progress_interval = (uint64_t)strtoull(argv[++i], NULL, 10); }
+            if (i + 1 < argc) {
+                if (!ephim_parse_decimal(argv[++i], UINT64_MAX, &cfg.progress_interval)) {
+                    fprintf(stderr, "Error: invalid progress interval\n");
+                    return 1;
+                }
+            }
             else { fprintf(stderr, "Error: %s requires a number\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "--incoming") == 0) {
             cfg.search_mode = 0;
@@ -209,6 +226,11 @@ int main(int argc, char *argv[]) {
     if (!cfg.evid_path) {
         fprintf(stderr, "Error: Missing required evidence file path.\n\n");
         print_usage(argv[0]);
+        return 1;
+    }
+
+    if (!ephim_valid_evidence_path(cfg.evid_path, sizeof(((struct evidence_reader *)0)->path))) {
+        fprintf(stderr, "Error: invalid evidence path (maximum 255 bytes; no JSON-unsafe characters)\n");
         return 1;
     }
 
@@ -253,8 +275,12 @@ int main(int argc, char *argv[]) {
     };
 
     for (size_t i = 0; i < 6; i++) {
-        if (!out_paths[i] || !out_paths[i][0])
+        if (!out_paths[i])
             continue;
+        if (!out_paths[i][0] || strlen(out_paths[i]) >= PATH_MAX) {
+            fprintf(stderr, "Error: invalid export path for %s\n", out_names[i]);
+            return 1;
+        }
 
         /* Check if output path aliases input evidence file */
         if (is_same_file_or_alias(cfg.evid_path, &st_evid, true, out_paths[i])) {
