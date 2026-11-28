@@ -11,7 +11,7 @@ Develop an eBPF-based forensic telemetry and provenance system prioritizing evid
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Current implementation checkpoint: b6c89afcc89de3db63d02a729fbcd3828b5ab704
+- Current implementation checkpoint: a61a3e7 (descriptor remediation; benchmark baseline b6c89af)
 - Working branch: remediation/state-independence-and-loss-accountability
 - Initial production benchmark baseline: 056ec9b
 - Historical Architecture A reference: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
@@ -65,9 +65,13 @@ Scoped #10 native campaign completed at frozen implementation b6c89af; final har
 
 Scoped recall only; full precision, multiplicity and attribute fidelity not established by this harness. Reconciler establishes structural repeatability, not bit-identical DOT/JSON; raw evidence hashes and soak markers not independently checked. Observed concurrent wall-time difference +37.75% is not isolated collector overhead. Workload and shutdown mean 5.474 s includes deliberate 2 s sleep and excludes offline replay/export. Mean shutdown 0.927 s is not disk throughput. Failure control success means expected recovery/containment, not zero loss. See #10 conclusion comment 7234502858. Correct overclaims before publication.
 
+## Release Qualification Task 01
+
+Scoped descriptor remediation accepted at a61a3e7. Native abfe508 results (a66c342 report): 1512 frames, 666 workload events, 228 nodes/1076 edges, 27/27 hooks, zero reported losses; 5/5 expected installs, ordinary replacement false close eliminated, shared table child close attributed. Final a61a3e7 source reviewed, targeted synthetic tests and native workload-only assertions reported; actual modified collector smoke still needed at integrated release checkpoint. Raw evidence not independently inspected. #5 remains open for deferred residual races, table lifetime and unobserved cleanup limitations; not universal concurrency safety. See comment 7235437800.
+
 ## Current Task
 
-Benchmarking concluded within tested scope. Owner approved release qualification, then comparative evaluation, a hands-on CLI prototype demonstration and owner approval checkpoint before productization/GUI, then external validation. Active task #5: targeted native descriptor lifecycle correctness investigation at b6c89af. Establish observed gaps and distinguish missing coverage from false attribution before proposing narrowly scoped fixes. Keep production frozen during diagnosis; no performance campaign or GUI work.
+#undefined — Release qualification 02: evidence integrity and replay safety. Diagnose with disposable fixtures and implement narrowly scoped replay output protection and manifest validation. No changes to collection architecture or performance campaign. Owner-approved sequence remains release qualification, comparative evaluation, hands-on CLI prototype demonstration and owner approval before GUI, then external validation.
 
 ## Outstanding Release Work
 
