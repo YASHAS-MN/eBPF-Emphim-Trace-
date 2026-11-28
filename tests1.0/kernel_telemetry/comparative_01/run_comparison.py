@@ -87,15 +87,16 @@ def ready_marker():
                 capture_output=True, text=True, check=True, timeout=5)
     return int(p.stdout.strip())
 def ready_tracee(proc, events):
+    markers = set()
     deadline = time.monotonic() + 40
     while time.monotonic() < deadline:
         if proc.poll() is not None:
             raise RuntimeError(f"Tracee exited during startup: {proc.returncode}")
-        pid = ready_marker()
+        markers.add(ready_marker())
         time.sleep(0.6)
         rows, _ = read_jsonl(events)
         if any(r.get("eventName") == "sched_process_exec" and
-               r.get("hostProcessId") == pid for r in rows):
+               r.get("hostProcessId") in markers for r in rows):
             return
     raise RuntimeError("No Tracee exec readiness marker observed")
 def ready_ephim(proc, log):
