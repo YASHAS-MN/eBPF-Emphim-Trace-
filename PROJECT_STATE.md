@@ -11,7 +11,7 @@ Develop an eBPF-based forensic telemetry and provenance system prioritizing evid
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Current implementation checkpoint: 4b1706c (Release Qualification Task 02; descriptor baseline a61a3e7; benchmark baseline b6c89af)
+- Current implementation checkpoint: ef84c41 (locally validated Task 02 candidate; descriptor baseline a61a3e7; benchmark baseline b6c89af)
 - Working branch: remediation/state-independence-and-loss-accountability
 - Initial production benchmark baseline: 056ec9b
 - Historical Architecture A reference: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
@@ -71,13 +71,13 @@ Scoped descriptor remediation accepted at a61a3e7. Native abfe508 results (a66c3
 
 ## Release Qualification Task 02
 
-Completed under GitHub Issue #11. Remediated and verified:
-- Replay export safety enforced at file-open time via atomic `O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC` in `prov_open_safe_export()`, preventing accidental truncation of existing targets or following symlinks without explicit `--overwrite` / `-f`. Pre-flight alias and inode collision checks reject attempts to overwrite input evidence or manifests with exit code 1.
-- Strict session manifest validation powered by a complete RFC 8259 recursive-descent JSON parser with checked numeric conversions (rejecting negative numbers for unsigned fields, trailing tokens, and overflow) and required field checks.
-- Strict mode fail-closed semantics (`rc=7`) requiring explicit legacy opt-in (`--allow-legacy` / `--legacy`) when manifest is absent.
-- Truthful integrity and completeness classifications: clean legacy evidence reports `SUCCESS (Unverified Telemetry Completeness)`, and known positive drops are preserved as `LOSSY` even when auxiliary counters are unavailable.
-- Strict export suppression on unfinalized or corrupt evidence, while preserving clean prefix recovery in standard mode.
-- Validated via 6 qualification suites (22 checks) in `test_qualification_replay`, 5 failure controls, and 10 pipeline integration suites with 100% fidelity. Collection architecture, event ABI, and performance configurations remain frozen.
+Scoped replay and evidence integrity qualification passed on the isolated qualification/replay-final-safety branch. Baseline 9ae8e30, final production changes at 6561bc4, validation at 5e996ab and ef84c41. Owner locally compiled replay and tests. At 5e996ab all 28 replay qualification checks and five bounded failure controls passed. An outdated integration assertion expecting acceptance of malformed counters was corrected in ef84c41; all ten integration suites then passed, including executable strict rejection (rc=7) without graph export. No production changes in the final test-only commit.
+
+Replay CLI now rejects in-place overwrite flags; new files are required. Default exclusive creation protects existing evidence and manifest objects against output alias truncation. Strict missing-manifest replay requires explicit legacy opt-in. Manifest parser rejects oversized documents, malformed or missing persistence counters, invalid numeric loss fields and signed counter-sum overflow. Known positive loss and standard prefix recovery remain supported. This is tested-scope integrity protection, not cryptographic authentication or proof of universal crash durability; standalone provenance library overwrite API is not covered by the replay CLI guarantee. No new native collector run or performance benchmark performed.
+
+## Current Task
+
+Task 02 candidate accepted for integration into the working branch; owner merge approval pending. Next: Task 03, graph allocation failure propagation and fail-closed export behavior. No new implementation before integration. Continue with comparative evaluation and owner-operated CLI prototype demonstration before GUI/productization.
 
 ## Outstanding Release Work
 
@@ -110,8 +110,9 @@ Keep raw evidence and generated artifacts private and out of Git. Preserve previ
 ## Role Delegation
 
 Project owner: Architecture and acceptance decisions.
-ChatGPT: Engineering discussion and code review.
-Antigravity: Scoped implementation and local validation.
+ChatGPT: Source investigation, implementation and tests on isolated GitHub branches, review, and project tracking.
+Project owner: Local compilation, execution, and validation logs; approve integration.
+Antigravity/Zed and Codex: Reserved for difficult local debugging, complex engineering, or independent review.
 GitHub: Development history and task tracking.
 Obsidian: Technical knowledge and architectural decisions.
 
