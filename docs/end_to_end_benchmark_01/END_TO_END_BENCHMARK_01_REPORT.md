@@ -22,7 +22,7 @@ This benchmark executes the end-to-end evaluation campaign for the EphimTrace ke
 ### Key Verdicts:
 1. **Pipeline Correctness & Denominator Independence**:
    - Exact typed, directed node and edge reconciliation achieved **100.0% node recall and 100.0% edge recall** across all 15 workload sessions.
-   - Ground-truth reconciliation strictly pre-declares expected node and edge identities independently of graph extraction, ensuring missing nodes cannot deflate the expected-edge denominator.
+   - Expected ground-truth entity and edge counts are strictly pre-declared based on workload contracts. Missing ground truth invalidates evaluation rather than reducing expected denominators.
 2. **Negative Control Verification**:
    - In Test 4 of the native memfd workload, invalid ELF execution was rejected by the kernel with `-ENOEXEC`. The provenance graph correctly emitted **zero** `EDGE_MEMFD_EXEC_SUCCESS` edges, preserving process command context without falsely asserting successful execution.
 3. **Double-Replay Graph Determinism**:
@@ -30,7 +30,7 @@ This benchmark executes the end-to-end evaluation campaign for the EphimTrace ke
 4. **Loss Accountability**:
    - Outdated historical notes stating kernel loss counters were unavailable have been corrected. The native collector and session manifests explicitly record `ring_buffer_total_drops: 0`, `reg_map_full_drop: 0`, and declare `COMPLETE_LOSSLESS (0 drops recorded across all stages)` across all benchmark sessions.
 5. **Memory Stability & Soak Performance**:
-   - In the 30-minute soak test, collector memory remained completely bounded at **131.32 MiB VmRSS** (starting at 134,472 KiB, ending at 133,624 KiB, net delta -848 KiB), proving **zero memory leak** under sustained telemetry load (507,592 records, 353.28 MB written, ~282.5 records/s sustained).
+   - In the 30-minute soak test, collector memory showed **no observed RSS growth during the tested period**, remaining flat at **131.32 MiB VmRSS** (starting at 134,472 KiB, ending at 133,624 KiB, net delta -848 KiB) under sustained telemetry load (507,592 records, 353.28 MB written, ~282.5 records/s sustained).
 
 ---
 
@@ -38,9 +38,9 @@ This benchmark executes the end-to-end evaluation campaign for the EphimTrace ke
 
 | Parameter | Value |
 |---|---|
-| **Host Kernel** | `7.0.0-44-generic #44~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC` |
-| **CPU Architecture** | `x86_64` (AMD Ryzen 5 5600H with Radeon Graphics, 6 physical cores, 12 threads) |
-| **Physical Memory (RAM)** | `7.1 GiB` Total |
+| **Host Kernel** | `7.0.0-44-generic` |
+| **CPU Architecture** | `x86_64` (AMD Ryzen 5 5600H with Radeon Graphics, 12 threads) |
+| **Physical Memory (RAM)** | `7.1Gi` |
 | **Collector Ring Buffer** | `64 MiB` (`--ring-buffer-mb 64`, decoupled from storage bound) |
 | **Evidence Storage Limit** | `2048 MiB` (`-b 2147483648`) |
 | **BPF Logical Hooks Attached** | `25 / 25` |
@@ -55,30 +55,30 @@ This benchmark executes the end-to-end evaluation campaign for the EphimTrace ke
 
 Every session was executed under active monitoring by `build/loader`, serialized to disk as `.evid`, and independently replayed twice (`build/replay`) to generate normalized JSON, DOT, and timeline exports.
 
-| Session ID | Workload | Raw Events | Evidence Size | Replay Nodes | Replay Edges | Node Recall (TP/Exp) | Edge Recall (TP/Exp) | Determinism | Loss Status |
-|---|---|---|---|---|---|---|---|---|---|
-| `memfd_iso_rep_1` | `M_ISO` | 326 | 226,960 B | 86 | 191 | 100.0% (8/8) | 100.0% (14/14) | PASS | 0 drops |
-| `memfd_iso_rep_2` | `M_ISO` | 328 | 228,352 B | 92 | 192 | 100.0% (8/8) | 100.0% (14/14) | PASS | 0 drops |
-| `memfd_iso_rep_3` | `M_ISO` | 320 | 222,784 B | 87 | 187 | 100.0% (8/8) | 100.0% (14/14) | PASS | 0 drops |
-| `memfd_iso_rep_4` | `M_ISO` | 332 | 231,136 B | 90 | 196 | 100.0% (8/8) | 100.0% (14/14) | PASS | 0 drops |
-| `memfd_iso_rep_5` | `M_ISO` | 336 | 233,920 B | 92 | 205 | 100.0% (8/8) | 100.0% (14/14) | PASS | 0 drops |
-| `unlinked_iso_rep_1` | `U_ISO` | 257 | 178,752 B | 75 | 142 | 100.0% (3/3) | 100.0% (3/3) | PASS | 0 drops |
-| `unlinked_iso_rep_2` | `U_ISO` | 273 | 189,888 B | 80 | 154 | 100.0% (3/3) | 100.0% (3/3) | PASS | 0 drops |
-| `unlinked_iso_rep_3` | `U_ISO` | 266 | 185,008 B | 81 | 150 | 100.0% (3/3) | 100.0% (3/3) | PASS | 0 drops |
-| `unlinked_iso_rep_4` | `U_ISO` | 264 | 183,616 B | 77 | 147 | 100.0% (3/3) | 100.0% (3/3) | PASS | 0 drops |
-| `unlinked_iso_rep_5` | `U_ISO` | 261 | 181,528 B | 75 | 145 | 100.0% (3/3) | 100.0% (3/3) | PASS | 0 drops |
-| `concurrent_bg_rep_1` | `MU_BG` | 420,960 | 292,988,160 B | 60,237 | 240,542 | 100.0% (11/11) | 100.0% (17/17) | PASS | 0 drops |
-| `concurrent_bg_rep_2` | `MU_BG` | 420,974 | 292,997,904 B | 60,235 | 240,534 | 100.0% (11/11) | 100.0% (17/17) | PASS | 0 drops |
-| `concurrent_bg_rep_3` | `MU_BG` | 420,883 | 292,934,568 B | 60,208 | 240,487 | 100.0% (11/11) | 100.0% (17/17) | PASS | 0 drops |
-| `concurrent_bg_rep_4` | `MU_BG` | 420,864 | 292,921,344 B | 60,205 | 240,477 | 100.0% (11/11) | 100.0% (17/17) | PASS | 0 drops |
-| `concurrent_bg_rep_5` | `MU_BG` | 420,864 | 292,921,344 B | 60,205 | 240,477 | 100.0% (11/11) | 100.0% (17/17) | PASS | 0 drops |
+| Session ID | Workload | Status | Raw Events | Evidence Size | Replay Nodes | Replay Edges | Node Recall (TP/Exp) | Edge Recall (TP/Exp) | Determinism | Timeline Events | Loss Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `memfd_iso_rep_1` | `M_ISO` | VALID | 326 | 226,960 B | 86 | 191 | 100.0% (8/8) | 100.0% (14/14) | PASS | 191 (ordered) | 0 drops |
+| `memfd_iso_rep_2` | `M_ISO` | VALID | 328 | 228,352 B | 92 | 192 | 100.0% (8/8) | 100.0% (14/14) | PASS | 192 (ordered) | 0 drops |
+| `memfd_iso_rep_3` | `M_ISO` | VALID | 320 | 222,784 B | 87 | 187 | 100.0% (8/8) | 100.0% (14/14) | PASS | 187 (ordered) | 0 drops |
+| `memfd_iso_rep_4` | `M_ISO` | VALID | 332 | 231,136 B | 90 | 196 | 100.0% (8/8) | 100.0% (14/14) | PASS | 196 (ordered) | 0 drops |
+| `memfd_iso_rep_5` | `M_ISO` | VALID | 336 | 233,920 B | 92 | 205 | 100.0% (8/8) | 100.0% (14/14) | PASS | 205 (ordered) | 0 drops |
+| `unlinked_iso_rep_1` | `U_ISO` | VALID | 257 | 178,936 B | 75 | 142 | 100.0% (3/3) | 100.0% (3/3) | PASS | 142 (ordered) | 0 drops |
+| `unlinked_iso_rep_2` | `U_ISO` | VALID | 273 | 190,072 B | 80 | 154 | 100.0% (3/3) | 100.0% (3/3) | PASS | 154 (ordered) | 0 drops |
+| `unlinked_iso_rep_3` | `U_ISO` | VALID | 266 | 185,200 B | 81 | 150 | 100.0% (3/3) | 100.0% (3/3) | PASS | 150 (ordered) | 0 drops |
+| `unlinked_iso_rep_4` | `U_ISO` | VALID | 264 | 183,808 B | 77 | 147 | 100.0% (3/3) | 100.0% (3/3) | PASS | 147 (ordered) | 0 drops |
+| `unlinked_iso_rep_5` | `U_ISO` | VALID | 261 | 181,720 B | 75 | 145 | 100.0% (3/3) | 100.0% (3/3) | PASS | 145 (ordered) | 0 drops |
+| `concurrent_bg_rep_1` | `MU_BG` | VALID | 420,960 | 292,988,224 B | 60,237 | 240,542 | 100.0% (11/11) | 100.0% (17/17) | PASS | 240542 (ordered) | 0 drops |
+| `concurrent_bg_rep_2` | `MU_BG` | VALID | 420,974 | 292,997,968 B | 60,235 | 240,534 | 100.0% (11/11) | 100.0% (17/17) | PASS | 240534 (ordered) | 0 drops |
+| `concurrent_bg_rep_3` | `MU_BG` | VALID | 420,883 | 292,934,632 B | 60,208 | 240,487 | 100.0% (11/11) | 100.0% (17/17) | PASS | 240487 (ordered) | 0 drops |
+| `concurrent_bg_rep_4` | `MU_BG` | VALID | 420,864 | 292,921,408 B | 60,205 | 240,477 | 100.0% (11/11) | 100.0% (17/17) | PASS | 240477 (ordered) | 0 drops |
+| `concurrent_bg_rep_5` | `MU_BG` | VALID | 420,864 | 292,921,408 B | 60,205 | 240,477 | 100.0% (11/11) | 100.0% (17/17) | PASS | 240477 (ordered) | 0 drops |
 
 ---
 
 ## 4. Ground-Truth Reconciliation & Denominator Independence
 
 ### Ground-Truth Specifications
-To eliminate circular validation or artificially deflated denominators, expected entities and edges are pre-declared independently of whether the graph contains the corresponding nodes:
+To eliminate circular validation or artificially deflated denominators, expected entities and edges are strictly pre-declared based on the workload specification. Missing ground truth invalidates evaluation rather than reducing expected counts:
 
 ```
 [M_ISO Ground-Truth Contract]
@@ -110,12 +110,12 @@ To eliminate circular validation or artificially deflated denominators, expected
 ```
 
 ### Invariance Proof
-If a graph engine fails to reconstruct any node (e.g., Parent Process `gt_m_parent`), `entity_to_graph_node["gt_m_parent"]` is unresolved. Consequently:
-1. `node_recall` drops from $8/8$ to $7/8$.
+If a graph engine fails to reconstruct any node (e.g., Parent Process `gt_m_parent`), `entity_to_graph_node['gt_m_parent']` is unresolved. Consequently:
+1. `node_recall` drops from 8/8 to 7/8.
 2. All 11 incident expected edges (`EDGE_FD_INSTALLED`, `EDGE_MEMFD_WRITE`, `EDGE_FORK`) fail to match.
-3. The expected-edge denominator remains strictly **14**, reducing edge recall to $3/14$ ($21.4\%$) rather than shrinking the denominator to 3 ($100\%$).
+3. The expected-edge denominator remains strictly **14**, reducing edge recall to 3/14 (21.4%) rather than shrinking the denominator to 3 (100%).
 
-All 15 sessions achieved true $14/14$, $3/3$, and $17/17$ matching without missing any required node or relationship.
+All 15 sessions achieved true 14/14, 3/3, and 17/17 matching without missing any required node or relationship.
 
 ---
 
@@ -127,20 +127,22 @@ The benchmark evaluated paired unmonitored baseline workloads against active mon
 
 | Workload Scenario | Unmonitored Baseline (Mean) | Monitored Execution (Mean) | Observed Overhead | Notes |
 |---|---|---|---|---|
-| **Isolated Memfd (`M_ISO`)** | 3.24 ms (min 3.06, max 3.70) | 20.50 ms (min 19.84, max 21.43) | +17.26 ms | Includes test harness subshell invocation & instrumentation |
-| **Isolated Unlinked (`U_ISO`)** | 2.12 ms (min 1.90, max 2.39) | 19.02 ms (min 15.92, max 21.35) | +16.90 ms | Includes test harness subshell invocation & instrumentation |
-| **Concurrent Sustained (`MU_BG`)** | 1.822 s (min 1.816, max 1.833) | 2.510 s (min 2.503, max 2.517) | **+37.75%** | 60,000 tracepoints emitted under continuous execution (~24k ops/s burst) |
+| **Isolated Memfd (`M_ISO`)** | 3.24 ms | 20.50 ms | +17.26 ms | Includes harness subshell invocation & instrumentation |
+| **Isolated Unlinked (`U_ISO`)** | 2.12 ms | 19.02 ms | +16.90 ms | Includes harness subshell invocation & instrumentation |
+| **Concurrent Sustained (`MU_BG`)** | 1.822 s | 2.510 s | **+37.75%** | 60,000 tracepoints emitted under continuous execution (~24k ops/s burst) |
 
-### Pipeline Latency & Memory Footprint
+### Collector Shutdown Latency & Workload Pipeline Duration
 
-| Workload Scenario | Workload Duration (s) | Collector Drain Latency (s) | Total Pipeline Duration (s) | Peak Collector RSS (MiB) |
+> [!NOTE]
+> **Latency Definitions**:
+> - **Collector Shutdown/Finalization Latency**: Time elapsed from SIGINT signal delivery to collector process termination (`wait $loader_pid`), during which in-flight ring buffer records are drained and the evidence file is synchronized (`fsync`).
+> - **Workload & Shutdown Pipeline Duration**: Wall-clock duration encompassing workload execution, an intentional 2.0-second post-workload drain sleep (allowing asynchronous kernel tracepoints to settle before stopping), and collector shutdown/finalization. It excludes offline replay, graph construction, and export formatting.
+
+| Workload Scenario | Monitored Workload Wall (s) | Collector Shutdown/Finalization Latency (s) | Workload & Shutdown Pipeline (s) | Peak Collector RSS (MiB) |
 |---|---|---|---|---|
-| `memfd_iso` (n=5) | 0.0205 ± 0.0006 s | 0.7266 ± 0.0315 s | 2.7709 ± 0.0331 s | 131.31 MiB (134,468 KiB) |
-| `unlinked_iso` (n=5) | 0.0190 ± 0.0022 s | 0.7188 ± 0.0210 s | 2.7592 ± 0.0256 s | 131.31 MiB (134,468 KiB) |
-| `concurrent_bg` (n=5) | 2.5095 ± 0.0051 s | 0.9266 ± 0.0768 s | 5.4736 ± 0.0833 s | 131.32 MiB (134,472 KiB) |
-
-- **Drain Latency**: The 64 MiB ring buffer drained and synced completely in **< 0.93 seconds** even after a 420,000-event background burst.
-- **Collector Memory**: Remained strictly flat at **131.3 MiB** across all workloads, demonstrating predictable pre-allocated buffer sizing.
+| `memfd_iso (n=5)` | 0.0205 ± 0.0006 s | 0.7266 ± 0.0334 s | 2.7709 ± 0.0332 s | 131.31 MiB |
+| `unlinked_iso (n=5)` | 0.0190 ± 0.0023 s | 0.7188 ± 0.0210 s | 2.7592 ± 0.0253 s | 131.31 MiB |
+| `concurrent_bg (n=5)` | 2.5095 ± 0.0055 s | 0.9266 ± 0.0906 s | 5.4736 ± 0.0915 s | 131.32 MiB |
 
 ---
 
@@ -151,16 +153,16 @@ The prolonged monitoring session evaluated system stability and losslessness und
 ### Key Metrics Summary
 | Metric | Observed Value |
 |---|---|
-| **Monitoring Duration** | 1,803.3 seconds (30.06 minutes) |
+| **Monitoring Duration** | 1797 seconds (29.95 minutes) |
 | **Timeseries Samples** | 359 samples (sampled every 5s) |
 | **Telemetry Records Captured** | **507,592 records** |
 | **Evidence Written to Disk** | **353,284,096 bytes** (336.92 MiB) |
-| **Storage Growth Rate** | 195.9 KB/s (196,490 bytes/s) |
+| **Storage Growth Rate** | 191.9 KB/s (196490.4 bytes/s) |
 | **Sustained Event Throughput** | **282.5 records/s** |
 | **Initial Collector RSS** | 134,472 KiB (131.32 MiB) |
 | **Peak Collector RSS** | 134,472 KiB (131.32 MiB) |
 | **Final Collector RSS** | 133,624 KiB (130.49 MiB) |
-| **RSS Net Growth (Memory Leak)** | **-848 KiB (0 bytes leaked)** |
+| **Memory Stability** | **no observed RSS growth during the tested period** (net delta: -848 KiB) |
 | **Ring Buffer Total Drops** | **0 drops** |
 | **Reconstructed Graph Nodes** | 77,106 nodes |
 | **Reconstructed Graph Edges** | 289,122 edges |
@@ -204,6 +206,8 @@ All 5 failure controls successfully passed without data loss or memory corruptio
    - Historical notes indicated kernel ring buffer loss counters were unavailable. In this production benchmark (`b6c89af`), all manifests capture exact loss accounting directly: `ring_buffer_total_drops: 0`, `reg_map_full_drop: 0`, and verify `COMPLETE_LOSSLESS (0 drops recorded across all stages)`.
 3. **Unlinked Executable Attribution**:
    - For processes that unlink their executable binary while executing, the graph correctly resolves the backing `NODE_FS_OBJECT`, verifies `is_unlinked: true`, and links the process via `EDGE_FS_EXEC_SUCCESS` and `EDGE_UNLINK`.
+4. **Pipeline Timing Boundaries**:
+   - The measured `workload_and_shutdown_pipeline_s` includes an intentional 2.0-second post-workload buffer to allow background asynchronous BPF ring buffer events to settle before initiating collector SIGINT shutdown. It does not measure the offline replay or forensic export generation times.
 
 ---
 

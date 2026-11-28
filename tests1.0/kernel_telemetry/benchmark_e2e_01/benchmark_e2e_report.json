@@ -52,9 +52,7 @@
       "repetition": 1,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/memfd_iso_rep_1.evid",
@@ -120,28 +118,32 @@
       "raw_record_count": 326,
       "determinism_verified": true,
       "ground_truth": {
+        "parent_pid": 13627,
+        "parent_tid": 13627,
+        "child1_pid": 13628,
+        "child2_pid": 13629,
         "child3_pid": 13630,
         "test4_rejected": true
       },
       "metrics": {
         "nodes_total": 86,
         "edges_total": 191,
-        "expected_nodes_count": 0,
-        "found_nodes_count": 0,
-        "node_recall": 0.0,
-        "expected_edges_count": 0,
-        "found_edges_count": 0,
-        "edge_recall": 0.0
+        "expected_nodes_count": 8,
+        "found_nodes_count": 8,
+        "node_recall": 1.0,
+        "expected_edges_count": 14,
+        "found_edges_count": 14,
+        "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 191,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "memfd_iso_rep_1",
         "workload_type": "M_ISO",
         "repetition": 1,
         "workload_duration_s": 0.0205082,
-        "drain_latency_s": 0.774199,
-        "total_pipeline_s": 2.81777,
+        "collector_shutdown_latency_s": 0.774199,
+        "workload_and_shutdown_pipeline_s": 2.81777,
         "peak_rss_kib": 134468,
         "rss_kib": 134468,
         "vm_peak_kib": 135984,
@@ -157,9 +159,7 @@
       "repetition": 2,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/memfd_iso_rep_2.evid",
@@ -225,28 +225,32 @@
       "raw_record_count": 328,
       "determinism_verified": true,
       "ground_truth": {
+        "parent_pid": 13706,
+        "parent_tid": 13706,
+        "child1_pid": 13707,
+        "child2_pid": 13708,
         "child3_pid": 13709,
         "test4_rejected": true
       },
       "metrics": {
         "nodes_total": 92,
         "edges_total": 192,
-        "expected_nodes_count": 0,
-        "found_nodes_count": 0,
-        "node_recall": 0.0,
-        "expected_edges_count": 0,
-        "found_edges_count": 0,
-        "edge_recall": 0.0
+        "expected_nodes_count": 8,
+        "found_nodes_count": 8,
+        "node_recall": 1.0,
+        "expected_edges_count": 14,
+        "found_edges_count": 14,
+        "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 192,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "memfd_iso_rep_2",
         "workload_type": "M_ISO",
         "repetition": 2,
         "workload_duration_s": 0.0198444,
-        "drain_latency_s": 0.702065,
-        "total_pipeline_s": 2.74568,
+        "collector_shutdown_latency_s": 0.702065,
+        "workload_and_shutdown_pipeline_s": 2.74568,
         "peak_rss_kib": 134456,
         "rss_kib": 134456,
         "vm_peak_kib": 135984,
@@ -262,9 +266,7 @@
       "repetition": 3,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/memfd_iso_rep_3.evid",
@@ -330,28 +332,32 @@
       "raw_record_count": 320,
       "determinism_verified": true,
       "ground_truth": {
+        "parent_pid": 13786,
+        "parent_tid": 13786,
+        "child1_pid": 13787,
+        "child2_pid": 13788,
         "child3_pid": 13789,
         "test4_rejected": true
       },
       "metrics": {
         "nodes_total": 87,
         "edges_total": 187,
-        "expected_nodes_count": 0,
-        "found_nodes_count": 0,
-        "node_recall": 0.0,
-        "expected_edges_count": 0,
-        "found_edges_count": 0,
-        "edge_recall": 0.0
+        "expected_nodes_count": 8,
+        "found_nodes_count": 8,
+        "node_recall": 1.0,
+        "expected_edges_count": 14,
+        "found_edges_count": 14,
+        "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 187,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "memfd_iso_rep_3",
         "workload_type": "M_ISO",
         "repetition": 3,
         "workload_duration_s": 0.020702,
-        "drain_latency_s": 0.745606,
-        "total_pipeline_s": 2.7903,
+        "collector_shutdown_latency_s": 0.745606,
+        "workload_and_shutdown_pipeline_s": 2.7903,
         "peak_rss_kib": 134468,
         "rss_kib": 134468,
         "vm_peak_kib": 135984,
@@ -367,9 +373,7 @@
       "repetition": 4,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/memfd_iso_rep_4.evid",
@@ -435,28 +439,32 @@
       "raw_record_count": 332,
       "determinism_verified": true,
       "ground_truth": {
+        "parent_pid": 13863,
+        "parent_tid": 13863,
+        "child1_pid": 13864,
+        "child2_pid": 13865,
         "child3_pid": 13866,
         "test4_rejected": true
       },
       "metrics": {
         "nodes_total": 90,
         "edges_total": 196,
-        "expected_nodes_count": 0,
-        "found_nodes_count": 0,
-        "node_recall": 0.0,
-        "expected_edges_count": 0,
-        "found_edges_count": 0,
-        "edge_recall": 0.0
+        "expected_nodes_count": 8,
+        "found_nodes_count": 8,
+        "node_recall": 1.0,
+        "expected_edges_count": 14,
+        "found_edges_count": 14,
+        "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 196,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "memfd_iso_rep_4",
         "workload_type": "M_ISO",
         "repetition": 4,
         "workload_duration_s": 0.0214262,
-        "drain_latency_s": 0.718263,
-        "total_pipeline_s": 2.76369,
+        "collector_shutdown_latency_s": 0.718263,
+        "workload_and_shutdown_pipeline_s": 2.76369,
         "peak_rss_kib": 134468,
         "rss_kib": 134468,
         "vm_peak_kib": 135984,
@@ -472,9 +480,7 @@
       "repetition": 5,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/memfd_iso_rep_5.evid",
@@ -540,28 +546,32 @@
       "raw_record_count": 336,
       "determinism_verified": true,
       "ground_truth": {
+        "parent_pid": 13942,
+        "parent_tid": 13942,
+        "child1_pid": 13943,
+        "child2_pid": 13944,
         "child3_pid": 13945,
         "test4_rejected": true
       },
       "metrics": {
         "nodes_total": 92,
         "edges_total": 205,
-        "expected_nodes_count": 0,
-        "found_nodes_count": 0,
-        "node_recall": 0.0,
-        "expected_edges_count": 0,
-        "found_edges_count": 0,
-        "edge_recall": 0.0
+        "expected_nodes_count": 8,
+        "found_nodes_count": 8,
+        "node_recall": 1.0,
+        "expected_edges_count": 14,
+        "found_edges_count": 14,
+        "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 205,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "memfd_iso_rep_5",
         "workload_type": "M_ISO",
         "repetition": 5,
         "workload_duration_s": 0.0200156,
-        "drain_latency_s": 0.692634,
-        "total_pipeline_s": 2.73683,
+        "collector_shutdown_latency_s": 0.692634,
+        "workload_and_shutdown_pipeline_s": 2.73683,
         "peak_rss_kib": 134468,
         "rss_kib": 134468,
         "vm_peak_kib": 135984,
@@ -577,9 +587,7 @@
       "repetition": 1,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/unlinked_iso_rep_1.evid",
@@ -665,15 +673,15 @@
         "found_edges_count": 3,
         "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 142,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "unlinked_iso_rep_1",
         "workload_type": "U_ISO",
         "repetition": 1,
         "workload_duration_s": 0.0178698,
-        "drain_latency_s": 0.720561,
-        "total_pipeline_s": 2.76187,
+        "collector_shutdown_latency_s": 0.720561,
+        "workload_and_shutdown_pipeline_s": 2.76187,
         "peak_rss_kib": 134468,
         "rss_kib": 134468,
         "vm_peak_kib": 135984,
@@ -689,9 +697,7 @@
       "repetition": 2,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/unlinked_iso_rep_2.evid",
@@ -777,15 +783,15 @@
         "found_edges_count": 3,
         "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 154,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "unlinked_iso_rep_2",
         "workload_type": "U_ISO",
         "repetition": 2,
         "workload_duration_s": 0.0159199,
-        "drain_latency_s": 0.704806,
-        "total_pipeline_s": 2.7382,
+        "collector_shutdown_latency_s": 0.704806,
+        "workload_and_shutdown_pipeline_s": 2.7382,
         "peak_rss_kib": 134456,
         "rss_kib": 134456,
         "vm_peak_kib": 135984,
@@ -801,9 +807,7 @@
       "repetition": 3,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/unlinked_iso_rep_3.evid",
@@ -889,15 +893,15 @@
         "found_edges_count": 3,
         "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 150,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "unlinked_iso_rep_3",
         "workload_type": "U_ISO",
         "repetition": 3,
         "workload_duration_s": 0.0213463,
-        "drain_latency_s": 0.716915,
-        "total_pipeline_s": 2.76252,
+        "collector_shutdown_latency_s": 0.716915,
+        "workload_and_shutdown_pipeline_s": 2.76252,
         "peak_rss_kib": 134468,
         "rss_kib": 134468,
         "vm_peak_kib": 135984,
@@ -913,9 +917,7 @@
       "repetition": 4,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/unlinked_iso_rep_4.evid",
@@ -1001,15 +1003,15 @@
         "found_edges_count": 3,
         "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 147,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "unlinked_iso_rep_4",
         "workload_type": "U_ISO",
         "repetition": 4,
         "workload_duration_s": 0.0211717,
-        "drain_latency_s": 0.752913,
-        "total_pipeline_s": 2.79823,
+        "collector_shutdown_latency_s": 0.752913,
+        "workload_and_shutdown_pipeline_s": 2.79823,
         "peak_rss_kib": 134468,
         "rss_kib": 134468,
         "vm_peak_kib": 135984,
@@ -1025,9 +1027,7 @@
       "repetition": 5,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/unlinked_iso_rep_5.evid",
@@ -1113,15 +1113,15 @@
         "found_edges_count": 3,
         "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 145,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "unlinked_iso_rep_5",
         "workload_type": "U_ISO",
         "repetition": 5,
         "workload_duration_s": 0.0187704,
-        "drain_latency_s": 0.698994,
-        "total_pipeline_s": 2.73524,
+        "collector_shutdown_latency_s": 0.698994,
+        "workload_and_shutdown_pipeline_s": 2.73524,
         "peak_rss_kib": 134468,
         "rss_kib": 134468,
         "vm_peak_kib": 135984,
@@ -1137,9 +1137,7 @@
       "repetition": 1,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/concurrent_bg_rep_1.evid",
@@ -1205,8 +1203,10 @@
       "raw_record_count": 420960,
       "determinism_verified": true,
       "ground_truth": {
-        "parent_pid": 8491,
-        "parent_tid": 8491,
+        "parent_pid": 8477,
+        "parent_tid": 8477,
+        "child1_pid": 8481,
+        "child2_pid": 8486,
         "child3_pid": 8487,
         "test4_rejected": true,
         "u_parent_pid": 8491,
@@ -1222,22 +1222,22 @@
       "metrics": {
         "nodes_total": 60237,
         "edges_total": 240542,
-        "expected_nodes_count": 9,
-        "found_nodes_count": 9,
+        "expected_nodes_count": 11,
+        "found_nodes_count": 11,
         "node_recall": 1.0,
-        "expected_edges_count": 13,
-        "found_edges_count": 4,
-        "edge_recall": 0.3077
+        "expected_edges_count": 17,
+        "found_edges_count": 17,
+        "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 240542,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "concurrent_bg_rep_1",
         "workload_type": "MU_BG",
         "repetition": 1,
         "workload_duration_s": 2.50692,
-        "drain_latency_s": 1.04741,
-        "total_pipeline_s": 5.59054,
+        "collector_shutdown_latency_s": 1.04741,
+        "workload_and_shutdown_pipeline_s": 5.59054,
         "peak_rss_kib": 134468,
         "rss_kib": 134468,
         "vm_peak_kib": 135984,
@@ -1253,9 +1253,7 @@
       "repetition": 2,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/concurrent_bg_rep_2.evid",
@@ -1321,8 +1319,10 @@
       "raw_record_count": 420974,
       "determinism_verified": true,
       "ground_truth": {
-        "parent_pid": 8838,
-        "parent_tid": 8838,
+        "parent_pid": 8824,
+        "parent_tid": 8824,
+        "child1_pid": 8828,
+        "child2_pid": 8833,
         "child3_pid": 8834,
         "test4_rejected": true,
         "u_parent_pid": 8838,
@@ -1338,22 +1338,22 @@
       "metrics": {
         "nodes_total": 60235,
         "edges_total": 240534,
-        "expected_nodes_count": 9,
-        "found_nodes_count": 9,
+        "expected_nodes_count": 11,
+        "found_nodes_count": 11,
         "node_recall": 1.0,
-        "expected_edges_count": 13,
-        "found_edges_count": 4,
-        "edge_recall": 0.3077
+        "expected_edges_count": 17,
+        "found_edges_count": 17,
+        "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 240534,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "concurrent_bg_rep_2",
         "workload_type": "MU_BG",
         "repetition": 2,
         "workload_duration_s": 2.5165,
-        "drain_latency_s": 0.99175,
-        "total_pipeline_s": 5.54557,
+        "collector_shutdown_latency_s": 0.99175,
+        "workload_and_shutdown_pipeline_s": 5.54557,
         "peak_rss_kib": 134468,
         "rss_kib": 134468,
         "vm_peak_kib": 135984,
@@ -1369,9 +1369,7 @@
       "repetition": 3,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/concurrent_bg_rep_3.evid",
@@ -1437,8 +1435,10 @@
       "raw_record_count": 420883,
       "determinism_verified": true,
       "ground_truth": {
-        "parent_pid": 9970,
-        "parent_tid": 9970,
+        "parent_pid": 9957,
+        "parent_tid": 9957,
+        "child1_pid": 9962,
+        "child2_pid": 9965,
         "child3_pid": 9966,
         "test4_rejected": true,
         "u_parent_pid": 9970,
@@ -1454,22 +1454,22 @@
       "metrics": {
         "nodes_total": 60208,
         "edges_total": 240487,
-        "expected_nodes_count": 9,
-        "found_nodes_count": 9,
+        "expected_nodes_count": 11,
+        "found_nodes_count": 11,
         "node_recall": 1.0,
-        "expected_edges_count": 13,
-        "found_edges_count": 4,
-        "edge_recall": 0.3077
+        "expected_edges_count": 17,
+        "found_edges_count": 17,
+        "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 240487,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "concurrent_bg_rep_3",
         "workload_type": "MU_BG",
         "repetition": 3,
         "workload_duration_s": 2.51365,
-        "drain_latency_s": 0.845589,
-        "total_pipeline_s": 5.3958,
+        "collector_shutdown_latency_s": 0.845589,
+        "workload_and_shutdown_pipeline_s": 5.3958,
         "peak_rss_kib": 134472,
         "rss_kib": 134472,
         "vm_peak_kib": 135984,
@@ -1485,9 +1485,7 @@
       "repetition": 4,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/concurrent_bg_rep_4.evid",
@@ -1553,8 +1551,10 @@
       "raw_record_count": 420864,
       "determinism_verified": true,
       "ground_truth": {
-        "parent_pid": 10303,
-        "parent_tid": 10303,
+        "parent_pid": 10289,
+        "parent_tid": 10289,
+        "child1_pid": 10293,
+        "child2_pid": 10298,
         "child3_pid": 10299,
         "test4_rejected": true,
         "u_parent_pid": 10303,
@@ -1570,22 +1570,22 @@
       "metrics": {
         "nodes_total": 60205,
         "edges_total": 240477,
-        "expected_nodes_count": 9,
-        "found_nodes_count": 9,
+        "expected_nodes_count": 11,
+        "found_nodes_count": 11,
         "node_recall": 1.0,
-        "expected_edges_count": 13,
-        "found_edges_count": 4,
-        "edge_recall": 0.3077
+        "expected_edges_count": 17,
+        "found_edges_count": 17,
+        "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 240477,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "concurrent_bg_rep_4",
         "workload_type": "MU_BG",
         "repetition": 4,
         "workload_duration_s": 2.50765,
-        "drain_latency_s": 0.905316,
-        "total_pipeline_s": 5.45294,
+        "collector_shutdown_latency_s": 0.905316,
+        "workload_and_shutdown_pipeline_s": 5.45294,
         "peak_rss_kib": 134472,
         "rss_kib": 134472,
         "vm_peak_kib": 135984,
@@ -1601,9 +1601,7 @@
       "repetition": 5,
       "valid": true,
       "errors": [],
-      "deficiencies": [
-        "Forensic timeline markdown export is empty or missing entries"
-      ],
+      "deficiencies": [],
       "manifest": {
         "manifest_version": 1,
         "evidence_file": "/home/magellan/Garage/prototypes/FM/FM-persist/tests1.0/kernel_telemetry/benchmark_e2e_01/data/concurrent_bg_rep_5.evid",
@@ -1669,8 +1667,10 @@
       "raw_record_count": 420864,
       "determinism_verified": true,
       "ground_truth": {
-        "parent_pid": 10632,
-        "parent_tid": 10632,
+        "parent_pid": 10618,
+        "parent_tid": 10618,
+        "child1_pid": 10622,
+        "child2_pid": 10627,
         "child3_pid": 10628,
         "test4_rejected": true,
         "u_parent_pid": 10632,
@@ -1686,22 +1686,22 @@
       "metrics": {
         "nodes_total": 60205,
         "edges_total": 240477,
-        "expected_nodes_count": 9,
-        "found_nodes_count": 9,
+        "expected_nodes_count": 11,
+        "found_nodes_count": 11,
         "node_recall": 1.0,
-        "expected_edges_count": 13,
-        "found_edges_count": 4,
-        "edge_recall": 0.3077
+        "expected_edges_count": 17,
+        "found_edges_count": 17,
+        "edge_recall": 1.0
       },
-      "timeline_entries_count": 0,
-      "timeline_chronologically_ordered": false,
+      "timeline_entries_count": 240477,
+      "timeline_chronologically_ordered": true,
       "collector_stats": {
         "session_id": "concurrent_bg_rep_5",
         "workload_type": "MU_BG",
         "repetition": 5,
         "workload_duration_s": 2.50294,
-        "drain_latency_s": 0.843132,
-        "total_pipeline_s": 5.38311,
+        "collector_shutdown_latency_s": 0.843132,
+        "workload_and_shutdown_pipeline_s": 5.38311,
         "peak_rss_kib": 134464,
         "rss_kib": 134464,
         "vm_peak_kib": 135984,
@@ -1824,6 +1824,7 @@
       "peak_rss_kib": 134472,
       "final_rss_kib": 133624,
       "rss_delta_kib": -848,
+      "rss_growth_observation": "no observed RSS growth during the tested period",
       "initial_hwm_kib": 134472,
       "peak_hwm_kib": 134472,
       "final_hwm_kib": 134200,
@@ -1882,7 +1883,7 @@
         "p90": 0.02113652,
         "p99": 0.021397232000000002
       },
-      "drain_latency": {
+      "collector_shutdown_latency": {
         "count": 5,
         "median": 0.718263,
         "mean": 0.7265534,
@@ -1893,7 +1894,7 @@
         "p90": 0.7627617999999999,
         "p99": 0.77305528
       },
-      "total_pipeline_duration": {
+      "workload_and_shutdown_pipeline_duration": {
         "count": 5,
         "median": 2.76369,
         "mean": 2.770854,
@@ -1915,7 +1916,8 @@
         "p90": 134468.0,
         "p99": 134468.0
       },
-      "percent_overhead": 532.9614106591677
+      "percent_overhead": 532.9614106591677,
+      "pipeline_timing_note": "Workload and shutdown pipeline duration measures workload execution, an intentional 2.0-second post-workload drain sleep, and collector shutdown/finalization. It excludes offline replay and forensic export stages."
     },
     "U_ISO": {
       "unmonitored_mean_s": 0.0021164417266845703,
@@ -1941,7 +1943,7 @@
         "p90": 0.02127646,
         "p99": 0.021339315999999997
       },
-      "drain_latency": {
+      "collector_shutdown_latency": {
         "count": 5,
         "median": 0.716915,
         "mean": 0.7188378,
@@ -1952,7 +1954,7 @@
         "p90": 0.7399722,
         "p99": 0.7516189200000001
       },
-      "total_pipeline_duration": {
+      "workload_and_shutdown_pipeline_duration": {
         "count": 5,
         "median": 2.76187,
         "mean": 2.759212,
@@ -1974,7 +1976,8 @@
         "p90": 134468.0,
         "p99": 134468.0
       },
-      "percent_overhead": 798.4712293396418
+      "percent_overhead": 798.4712293396418,
+      "pipeline_timing_note": "Workload and shutdown pipeline duration measures workload execution, an intentional 2.0-second post-workload drain sleep, and collector shutdown/finalization. It excludes offline replay and forensic export stages."
     },
     "MU_BG": {
       "unmonitored_mean_s": 1.8218627452850342,
@@ -2000,7 +2003,7 @@
         "p90": 2.5153600000000003,
         "p99": 2.5163860000000002
       },
-      "drain_latency": {
+      "collector_shutdown_latency": {
         "count": 5,
         "median": 0.905316,
         "mean": 0.9266394,
@@ -2011,7 +2014,7 @@
         "p90": 1.025146,
         "p99": 1.0451836
       },
-      "total_pipeline_duration": {
+      "workload_and_shutdown_pipeline_duration": {
         "count": 5,
         "median": 5.45294,
         "mean": 5.473592,
@@ -2033,7 +2036,8 @@
         "p90": 134472.0,
         "p99": 134472.0
       },
-      "percent_overhead": 37.74539308708344
+      "percent_overhead": 37.74539308708344,
+      "pipeline_timing_note": "Workload and shutdown pipeline duration measures workload execution, an intentional 2.0-second post-workload drain sleep, and collector shutdown/finalization. It excludes offline replay and forensic export stages."
     }
   }
 }
