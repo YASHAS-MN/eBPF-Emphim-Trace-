@@ -11,7 +11,7 @@ Develop an eBPF-based forensic telemetry and provenance system prioritizing evid
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Current implementation checkpoint: 9648e11 (Task 03 integrated; Task 04 candidate 19cdd9c pending local validation)
+- Current implementation checkpoint: 1115e2c (locally validated integrated Phase 1 candidate; Task 04 merge pending)
 - Working branch: remediation/state-independence-and-loss-accountability
 - Initial production benchmark baseline: 056ec9b
 - Historical Architecture A reference: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
@@ -67,7 +67,7 @@ Scoped recall only; full precision, multiplicity and attribute fidelity not esta
 
 ## Release Qualification Task 01
 
-Scoped descriptor remediation accepted at a61a3e7. Native abfe508 results (a66c342 report): 1512 frames, 666 workload events, 228 nodes/1076 edges, 27/27 hooks, zero reported losses; 5/5 expected installs, ordinary replacement false close eliminated, shared table child close attributed. Final a61a3e7 source reviewed, targeted synthetic tests and native workload-only assertions reported; actual modified collector smoke still needed at integrated release checkpoint. Raw evidence not independently inspected. #5 remains open for deferred residual races, table lifetime and unobserved cleanup limitations; not universal concurrency safety. See comment 7235437800.
+Scoped descriptor remediation accepted at a61a3e7. Native abfe508 results (a66c342 report): 1512 frames, 666 workload events, 228 nodes/1076 edges, 27/27 hooks, zero reported losses; 5/5 expected installs, ordinary replacement false close eliminated, shared table child close attributed. Final a61a3e7 source reviewed, targeted synthetic tests and native workload-only assertions reported; integrated native smoke completed at 1115e2c after fixing a private-map CO-RE relocation failure exposed by the clean build; selected descriptor cases passed. Raw evidence not independently inspected. #5 remains open for deferred residual races, table lifetime and unobserved cleanup limitations; not universal concurrency safety. See comment 7235437800.
 
 ## Release Qualification Task 02
 
@@ -79,15 +79,21 @@ Replay CLI now rejects in-place overwrite flags; new files are required. Default
 
 At b036418 the owner locally built the normal replay binary and dedicated linker-wrapped fault-injection executable. All 23 fault-injection cases passed (including two no-fault controls), all six provenance correctness suites, ten pipeline integration suites and 28 replay safety checks passed. Initialization allocation failures return 3; detected ingestion failures return 8 and suppress graph exports in both standard and strict modes while continuing evidence verification; tested single-export scratch allocation failures return 6. Original evidence and manifest unchanged in fault tests. This does not establish recovery from OS OOM termination or atomic publication of multiple exports. Compiler warning from evidence_writer_init path copy into 256-byte buffer observed in the test build; short generated fixture path fits, but long-path validation remains a deployment task.
 
+## Release Qualification Task 04
+
+Candidate branch qualification/deployment-compatibility. At 3905dca clean compilation of BPF object, loader, replay and test binaries; 10/10 pipeline integration suites and 44/44 CLI checks passed. Checked numeric arguments, power-of-two ring sizes, evidence path length/character constraints, stale manifest rejection, regular input file checks and fail-closed ring resizing. Initial native smoke failed to load capture_do_dup2_exit because bpf_core_read generated a relocation for private map type pending_dup2.fd. At 1115e2c replaced only the indexed slot read with bpf_probe_read_kernel; native verification and attachment then succeeded.
+
+Owner native results at 1115e2c, x86_64 kernel 7.0.0-44-generic, BTF present, CPUs 0-11, GCC 13.3.0, clang 16.0.6: 27/27 logical hooks, 60/60 per-CPU attachments; 28/28 workload assertions; orderly shutdown and finalized synchronized manifest. Two strict replays each verified and replayed 708 records, 23 nodes/658 edges, no reported corruption, gaps, short records, registry/token errors or ring drops. DOT, JSON and timeline byte-identical across replays; evidence SHA256 e0e6fd61993f120e5f12891defd1162feb8d4cbca427dd2be7e15411ed4767f1 and manifest b63bc9c26bb8b7ac9d10a97b6a85e364e1dabb8ff0d7f602018dc120f52ec858 unchanged. Five workload memfd tokens uniquely resolved; expected duplication FDs 3,4,30,35,36 matched raw events and graph; one replacement close before destroy, reuse close and child 74890 CLONE_FILES close matched graph; no negative FD install/close. Local private artifacts /tmp/ephim_native_2b5920qe. Raw binary evidence not independently inspected. No claim of universal losslessness or other-kernel support.
+
 ## Current Task
 
-Task 03 merged via PR #14 at 9648e11, Issue #13 closed. Active Issue #15: Task 04 deployment and compatibility. Candidate qualification/deployment-compatibility at 19cdd9c adds checked CLI numeric parsing, power-of-two ring capacity, bounded evidence paths (255 bytes, no quotes/backslash/control bytes), stale sidecar rejection, regular-file input checks, buffer/header bounds, and fail-closed ring resizing. Disposable CLI checks and integrated native smoke pending. Smoke requires real READY, native workload exit success, clean shutdown, strict double replay, input hashes preserved, exact selected descriptor raw-to-graph relationships. Only tested host qualification; no general cross-kernel compatibility claim. Continue comparative evaluation and owner-operated CLI prototype demonstration before GUI/productization.
+All four planned Phase 1 tasks validated within scope; awaiting owner merge of Task 04. Then proceed to Phase 2 comparative evaluation, followed by owner-operated CLI prototype demonstration and approval before GUI/productization, then external validation. No additional Phase 1 benchmark campaign.
 
 ## Outstanding Release Work
 
 - #5 descriptor/registry concurrency and lifetime limitations.
 - Broader telemetry coverage, field fidelity (actual exit status unavailable and now represented as unknown), long-run operation, overload envelope, failure recovery, storage integrity and compatibility.
-- Remaining end-to-end qualification, including multi-export failure/publication semantics and native collector smoke.
+- Multi-export publication atomicity, OS OOM termination, crash durability and cryptographic authentication remain unverified; additional kernel/host compatibility and broader capture coverage remain future work.
 - Benchmark reporting corrections noted above.
 - No merge or release implied by this update.
 
@@ -98,6 +104,7 @@ Task 03 merged via PR #14 at 9648e11, Issue #13 closed. Active Issue #15: Task 0
 - tests1.0/test_pipeline_integration.c
 - tests1.0/test_qualification_replay.c
 - tests1.0/test_graph_allocation_failure.c
+- tests1.0/kernel_telemetry/qualification_deployment/
 - tests1.0/test_m6_dag.c and test_m6_filtering.c
 - tests1.0/kernel_telemetry/benchmark_e2e_01/
 
