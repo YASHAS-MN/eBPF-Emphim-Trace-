@@ -242,6 +242,23 @@ struct {
     __type(value, struct pending_memfd);
 } memfd_heap SEC(".maps");
 
+struct pending_dup2 {
+    __u64 files_ptr;
+    __u64 tofree_token;
+    __u64 tofree_installed_ts;
+    __u32 tofree_verified_lifetime;
+    __u32 fd;
+    __u64 new_file_ptr;
+    __u64 new_token;
+};
+
+struct {
+    __uint(type, BPF_MAP_TYPE_HASH);
+    __uint(max_entries, 10240);
+    __type(key, __u32);
+    __type(value, struct pending_dup2);
+} pending_dup2_map SEC(".maps");
+
 
 struct pending_syscall {
     __u32 op_type;
@@ -1860,9 +1877,13 @@ int BPF_PROG(capture_shmem_write_iter, struct kiocb *iocb, struct iov_iter *from
     return 0;
 }
 
-SEC("fentry/file_close_fd")
-int BPF_PROG(capture_close_fd, unsigned int fd)
+SEC("fexit/file_close_fd")
+int BPF_PROG(capture_close_fd, unsigned int fd, struct file *ret)
 {
+    /* If kernel did not return a valid file, no descriptor was closed (e.g. concurrent race loser or -EBADF) */
+    if (!ret)
+        return 0;
+
     struct task_struct *task = (struct task_struct *)bpf_get_current_task_btf();
     if (!task)
         return 0;
@@ -1878,33 +1899,9 @@ int BPF_PROG(capture_close_fd, unsigned int fd)
     dk.fd = (__s32)fd;
     dk.pad = 0;
 
-    struct descriptor_entry *de = bpf_map_lookup_elem(&memfd_desc_registry, &dk);
-    if (!de)
-        return 0;
-
-    /* Authoritative kernel file identity check at operation boundary */
-    struct file *actual_file = NULL;
-    struct fdtable *fdt = NULL;
-    bpf_core_read(&fdt, sizeof(fdt), &files->fdt);
-    if (fdt) {
-        unsigned int max_fds = 0;
-        bpf_core_read(&max_fds, sizeof(max_fds), &fdt->max_fds);
-        if (fd < max_fds) {
-            struct file **fd_array = NULL;
-            bpf_core_read(&fd_array, sizeof(fd_array), &fdt->fd);
-            if (fd_array) {
-                bpf_core_read(&actual_file, sizeof(actual_file), &fd_array[fd]);
-            }
-        }
-    }
-
-    if (!actual_file) {
-        bpf_map_delete_elem(&memfd_desc_registry, &dk);
-        return 0;
-    }
-
+    /* Authoritative kernel file identity check on the file actually removed from descriptor table */
     struct inode *actual_ino = NULL;
-    bpf_core_read(&actual_ino, sizeof(actual_ino), &actual_file->f_inode);
+    bpf_core_read(&actual_ino, sizeof(actual_ino), &ret->f_inode);
     if (!actual_ino) {
         bpf_map_delete_elem(&memfd_desc_registry, &dk);
         return 0;
@@ -1912,25 +1909,25 @@ int BPF_PROG(capture_close_fd, unsigned int fd)
 
     __u64 actual_ino_key = (__u64)actual_ino;
     struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &actual_ino_key);
-    if (!obj || obj->state != REG_STATE_COMMITTED || obj->object_token != de->object_token) {
-        /* Stale entry: the descriptor currently points to an ordinary file or a different inode! */
+    if (!obj || obj->state != REG_STATE_COMMITTED) {
+        /* File actually removed was an ordinary file or non-memfd! */
         /* Suppress false close attribution and purge stale registry mapping */
         bpf_map_delete_elem(&memfd_desc_registry, &dk);
         return 0;
     }
 
-    /* Atomic token claim prevents race conditions between concurrent threads/processes */
-    __u64 token = __sync_lock_test_and_set(&de->object_token, 0);
-    if (token == 0)
-        return 0;
-
+    __u64 token = obj->object_token;
     __u64 now = bpf_ktime_get_ns();
     __u64 duration_ns = 0;
-    if (de->verified_lifetime && de->installed_ts_ns > 0 && now >= de->installed_ts_ns) {
-        duration_ns = now - de->installed_ts_ns;
+
+    struct descriptor_entry *de = bpf_map_lookup_elem(&memfd_desc_registry, &dk);
+    if (de) {
+        if (de->verified_lifetime && de->installed_ts_ns > 0 && now >= de->installed_ts_ns) {
+            duration_ns = now - de->installed_ts_ns;
+        }
+        bpf_map_delete_elem(&memfd_desc_registry, &dk);
     }
 
-    bpf_map_delete_elem(&memfd_desc_registry, &dk);
     inc_counter(CNT_FD_CLOSED_MATCH);
 
     struct event *e = new_event(EVENT_FD_CLOSED);
@@ -1938,6 +1935,7 @@ int BPF_PROG(capture_close_fd, unsigned int fd)
         e->fd = (__s32)fd;
         e->object_token = token;
         e->entry_ts_ns = duration_ns;
+        e->timestamp_ns = now;
         bpf_ringbuf_submit(e, 0);
     }
 
@@ -1945,19 +1943,20 @@ int BPF_PROG(capture_close_fd, unsigned int fd)
 }
 
 SEC("fentry/do_dup2")
-int BPF_PROG(capture_do_dup2, struct files_struct *files, struct file *file, unsigned int fd, unsigned int flags)
+int BPF_PROG(capture_do_dup2_entry, struct files_struct *files, struct file *file, unsigned int fd, unsigned int flags)
 {
     if (!files)
         return 0;
 
-    __u64 now = bpf_ktime_get_ns();
-    __u64 files_key = (__u64)files;
-    struct descriptor_key target_dk;
-    target_dk.files_ptr = files_key;
-    target_dk.fd = (__s32)fd;
-    target_dk.pad = 0;
+    __u32 tid = (__u32)bpf_get_current_pid_tgid();
+    struct pending_dup2 p;
+    __builtin_memset(&p, 0, sizeof(p));
 
-    /* 1. Check if descriptor slot 'fd' currently holds an open file that is being replaced */
+    __u64 files_key = (__u64)files;
+    p.files_ptr = files_key;
+    p.fd = fd;
+
+    /* 1. Check if descriptor slot fd currently holds an open file that is being replaced */
     struct fdtable *fdt = NULL;
     bpf_core_read(&fdt, sizeof(fdt), &files->fdt);
     if (fdt) {
@@ -1970,45 +1969,27 @@ int BPF_PROG(capture_do_dup2, struct files_struct *files, struct file *file, uns
                 struct file *tofree = NULL;
                 bpf_core_read(&tofree, sizeof(tofree), &fd_array[fd]);
                 if (tofree) {
-                    /* Authoritative check: was tofree a tracked memfd? */
                     struct inode *tofree_ino = NULL;
                     bpf_core_read(&tofree_ino, sizeof(tofree_ino), &tofree->f_inode);
-                    __u64 tofree_token = 0;
                     if (tofree_ino) {
                         __u64 tofree_ino_key = (__u64)tofree_ino;
                         struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &tofree_ino_key);
                         if (obj && obj->state == REG_STATE_COMMITTED) {
-                            tofree_token = obj->object_token;
+                            p.tofree_token = obj->object_token;
+                            struct descriptor_key target_dk = { .files_ptr = files_key, .fd = (__s32)fd, .pad = 0 };
+                            struct descriptor_entry *de = bpf_map_lookup_elem(&memfd_desc_registry, &target_dk);
+                            if (de && de->object_token == obj->object_token) {
+                                p.tofree_installed_ts = de->installed_ts_ns;
+                                p.tofree_verified_lifetime = de->verified_lifetime;
+                            }
                         }
-                    }
-
-                    struct descriptor_entry *de = bpf_map_lookup_elem(&memfd_desc_registry, &target_dk);
-                    if (tofree_token != 0) {
-                        /* tofree was a tracked memfd: emit EVENT_FD_CLOSED for the replaced descriptor */
-                        __u64 dur_ns = 0;
-                        if (de && de->object_token == tofree_token) {
-                            if (de->verified_lifetime && de->installed_ts_ns > 0 && now >= de->installed_ts_ns)
-                                dur_ns = now - de->installed_ts_ns;
-                        }
-                        bpf_map_delete_elem(&memfd_desc_registry, &target_dk);
-
-                        struct event *e = new_event(EVENT_FD_CLOSED);
-                        if (e) {
-                            e->fd = (__s32)fd;
-                            e->object_token = tofree_token;
-                            e->entry_ts_ns = dur_ns;
-                            bpf_ringbuf_submit(e, 0);
-                        }
-                    } else if (de) {
-                        /* Stale entry for an ordinary or replaced descriptor: purge */
-                        bpf_map_delete_elem(&memfd_desc_registry, &target_dk);
                     }
                 }
             }
         }
     }
 
-    /* 2. Check if incoming 'file' being installed into 'fd' is a tracked memfd */
+    /* 2. Check if incoming file being installed into fd is a tracked memfd */
     if (file) {
         struct inode *new_ino = NULL;
         bpf_core_read(&new_ino, sizeof(new_ino), &file->f_inode);
@@ -2016,34 +1997,86 @@ int BPF_PROG(capture_do_dup2, struct files_struct *files, struct file *file, uns
             __u64 new_ino_key = (__u64)new_ino;
             struct memfd_object_entry *obj = bpf_map_lookup_elem(&memfd_inode_registry, &new_ino_key);
             if (obj && obj->state == REG_STATE_COMMITTED) {
-                __u64 token = obj->object_token;
-                __u64 file_key = (__u64)file;
-
-                /* Ensure file registry has mapping */
-                bpf_map_update_elem(&memfd_file_registry, &file_key, &token, BPF_ANY);
-
-                /* Install in descriptor registry */
-                struct descriptor_entry new_de;
-                __builtin_memset(&new_de, 0, sizeof(new_de));
-                new_de.object_token = token;
-                new_de.file_ptr = file_key;
-                new_de.installed_ts_ns = now;
-                new_de.verified_lifetime = 1;
-                new_de.pad = 0;
-                bpf_map_update_elem(&memfd_desc_registry, &target_dk, &new_de, BPF_ANY);
-
-                /* Emit EVENT_FD_INSTALLED with op_type DUP */
-                struct event *e = new_event(EVENT_FD_INSTALLED);
-                if (e) {
-                    e->fd = (__s32)fd;
-                    e->object_token = token;
-                    e->op_type = FD_INSTALL_OP_DUP;
-                    bpf_ringbuf_submit(e, 0);
-                }
+                p.new_token = obj->object_token;
+                p.new_file_ptr = (__u64)file;
             }
         }
     }
 
+    if (p.tofree_token != 0 || p.new_token != 0) {
+        bpf_map_update_elem(&pending_dup2_map, &tid, &p, BPF_ANY);
+    }
+
+    return 0;
+}
+
+SEC("fexit/do_dup2")
+int BPF_PROG(capture_do_dup2_exit, struct files_struct *files, struct file *file, unsigned int fd, unsigned int flags, int ret)
+{
+    __u32 tid = (__u32)bpf_get_current_pid_tgid();
+    struct pending_dup2 *p = bpf_map_lookup_elem(&pending_dup2_map, &tid);
+    if (!p)
+        return 0;
+
+    /* Handle failure paths (-EBUSY, -EBADF, etc.) without corrupting registry state */
+    if (ret < 0) {
+        bpf_map_delete_elem(&pending_dup2_map, &tid);
+        return 0;
+    }
+
+    __u64 now = bpf_ktime_get_ns();
+    struct descriptor_key target_dk;
+    target_dk.files_ptr = p->files_ptr;
+    target_dk.fd = (__s32)p->fd;
+    target_dk.pad = 0;
+
+    /* 1. If an existing tracked memfd was replaced and closed */
+    if (p->tofree_token != 0) {
+        __u64 dur_ns = 0;
+        if (p->tofree_verified_lifetime && p->tofree_installed_ts > 0 && now >= p->tofree_installed_ts) {
+            dur_ns = now - p->tofree_installed_ts;
+        }
+        bpf_map_delete_elem(&memfd_desc_registry, &target_dk);
+
+        struct event *e = new_event(EVENT_FD_CLOSED);
+        if (e) {
+            e->fd = (__s32)p->fd;
+            e->object_token = p->tofree_token;
+            e->entry_ts_ns = dur_ns;
+            e->timestamp_ns = now;
+            bpf_ringbuf_submit(e, 0);
+        }
+    }
+
+    /* 2. If a new tracked memfd was installed */
+    if (p->new_token != 0) {
+        __u64 file_key = p->new_file_ptr;
+        __u64 token = p->new_token;
+        bpf_map_update_elem(&memfd_file_registry, &file_key, &token, BPF_ANY);
+
+        struct descriptor_entry new_de;
+        __builtin_memset(&new_de, 0, sizeof(new_de));
+        new_de.object_token = token;
+        new_de.file_ptr = file_key;
+        new_de.installed_ts_ns = now;
+        new_de.verified_lifetime = 1;
+        new_de.pad = 0;
+        bpf_map_update_elem(&memfd_desc_registry, &target_dk, &new_de, BPF_ANY);
+
+        struct event *e = new_event(EVENT_FD_INSTALLED);
+        if (e) {
+            e->fd = (__s32)p->fd;
+            e->object_token = token;
+            e->op_type = FD_INSTALL_OP_DUP;
+            e->timestamp_ns = now;
+            bpf_ringbuf_submit(e, 0);
+        }
+    } else if (p->tofree_token == 0) {
+        /* Ordinary file installed over ordinary file/empty slot: purge any stale entry */
+        bpf_map_delete_elem(&memfd_desc_registry, &target_dk);
+    }
+
+    bpf_map_delete_elem(&pending_dup2_map, &tid);
     return 0;
 }
 

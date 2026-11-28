@@ -350,7 +350,9 @@ def main():
     print(f"  Graph EDGE_FD_INSTALLED edges: FDs {s1_graph_fds}")
 
     missing_s1 = [fd for fd in expected_s1_fds if fd not in captured_fds]
-    if gt["s1_dup2_fd"] in missing_s1 and gt["s1_dup3_fd"] in missing_s1:
+    if not missing_s1:
+        print("  [PASS] All expected descriptors (orig, dup, fcntl, dup2, dup3) successfully captured in telemetry and graph!")
+    elif gt["s1_dup2_fd"] in missing_s1 and gt["s1_dup3_fd"] in missing_s1:
         print("  >>> CONFIRMED DEFICIENCY (MISSING COVERAGE):")
         print(
             f"      FD {gt['s1_dup2_fd']} (dup2) and FD {gt['s1_dup3_fd']} (dup3) were COMPLETELY OMITTED from raw telemetry and graph!"
@@ -410,19 +412,23 @@ def main():
     if s2_close and t_destroy:
         t_close = s2_close["timestamp_ns"]
         delta_ns = t_close - t_destroy
-        print("  >>> CONFIRMED DEFICIENCY (STALE/FALSE CLOSE ATTRIBUTION):")
-        print(
-            f"      Kernel destroyed memfd at {t_destroy} ns (when dup2 replaced FD {gt['s2_mfd_fd']} with ordinary file)."
-        )
-        print(
-            f"      Later, close(FD {gt['s2_mfd_fd']}) was called on the ORDINARY file at {t_close} ns (+{delta_ns:,} ns after destruction)."
-        )
-        print(
-            f"      BPF capture_close_fd queried memfd_desc_registry, found the STALE entry, and emitted EVENT_FD_CLOSED with Token {s2_token}!"
-        )
-        print(
-            f"      Graph edge EDGE_FD_CLOSED was falsely attributed to memfd_{s2_token} with duration {s2_close['entry_ts_ns']:,} ns."
-        )
+        if delta_ns > 0:
+            print("  >>> CONFIRMED DEFICIENCY (STALE/FALSE CLOSE ATTRIBUTION):")
+            print(
+                f"      Kernel destroyed memfd at {t_destroy} ns (when dup2 replaced FD {gt['s2_mfd_fd']} with ordinary file)."
+            )
+            print(
+                f"      Later, close(FD {gt['s2_mfd_fd']}) was called on the ORDINARY file at {t_close} ns (+{delta_ns:,} ns after destruction)."
+            )
+            print(
+                f"      BPF capture_close_fd queried memfd_desc_registry, found the STALE entry, and emitted EVENT_FD_CLOSED with Token {s2_token}!"
+            )
+            print(
+                f"      Graph edge EDGE_FD_CLOSED was falsely attributed to memfd_{s2_token} with duration {s2_close['entry_ts_ns']:,} ns."
+            )
+        else:
+            print(f"  [PASS] Descriptor replacement verified: EVENT_FD_CLOSED emitted at replacement time ({t_close} ns <= {t_destroy} ns).")
+            print("         Ordinary file close correctly suppressed by authoritative file identity check!")
 
     # =========================================================================
     # SUITE 3: Descriptor Reuse and Failed Operations
@@ -477,7 +483,10 @@ def main():
         print(f"    - {e['src']} -> {e['dst']} [{e['type']}]")
 
     has_close_edge = any(e.get("type") == "EDGE_FD_CLOSED" for e in s4_graph_edges)
-    if len(s4_child_closes) == 0 and not has_close_edge:
+    if len(s4_child_closes) > 0 and has_close_edge:
+        print("  [PASS] Multi-process CLONE_FILES descriptor closure verified!")
+        print(f"         Child PID {clone_pid} close captured via files_ptr and attributed to child node in graph.")
+    elif len(s4_child_closes) == 0 and not has_close_edge:
         print("  >>> CONFIRMED DEFICIENCY (MULTI-PROCESS DESCRIPTOR ATTRIBUTION LOSS):")
         print(
             f"      Child PID {clone_pid} closed shared FD {gt['s4_clone_fd']}, but BPF capture_close_fd queried (tgid={clone_pid}, fd={gt['s4_clone_fd']})."

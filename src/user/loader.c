@@ -1282,7 +1282,14 @@ static const struct hook_spec required_hooks[] = {
         .type      = HOOK_TYPE_TRAMPOLINE,
     },
     {
-        .prog_name = "capture_do_dup2",
+        .prog_name = "capture_do_dup2_entry",
+        .category  = "vfs",
+        .target    = "do_dup2",
+        .group     = HOOK_GROUP_VFS,
+        .type      = HOOK_TYPE_TRAMPOLINE,
+    },
+    {
+        .prog_name = "capture_do_dup2_exit",
         .category  = "vfs",
         .target    = "do_dup2",
         .group     = HOOK_GROUP_VFS,
