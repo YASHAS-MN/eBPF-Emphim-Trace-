@@ -115,7 +115,7 @@ static void print_usage(const char *prog_name) {
     printf("  --strict                     Fail closed on gaps, corruptions, or unfinalized manifests;\n");
     printf("                               abort graph exports on validation failure\n");
     printf("  --allow-legacy, --legacy     Explicit opt-in to replay legacy evidence without manifest under --strict\n");
-    printf("  -f, --force, --overwrite    Overwrite existing export targets safely (rejects symlinks and evidence/manifest)\n");
+    printf("  Export targets must be new files. In-place overwrite is disabled.\n");
     printf("  --progress <n>               Report progress every N records (default: 50000, 0=disable)\n");
     printf("  --outgoing                   Use reference outgoing search mode (for benchmarking)\n");
     printf("  --incoming                   Use default incoming search mode (O(1) in-degree)\n");
@@ -180,7 +180,8 @@ int main(int argc, char *argv[]) {
         } else if (strcmp(argv[i], "--allow-legacy") == 0 || strcmp(argv[i], "--legacy") == 0) {
             cfg.allow_legacy = true;
         } else if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--force") == 0 || strcmp(argv[i], "--overwrite") == 0) {
-            cfg.allow_overwrite = true;
+            fprintf(stderr, "Error: replay export overwrite is disabled for evidence safety; choose a new output path.\n");
+            return 1;
         } else if (strcmp(argv[i], "--progress") == 0) {
             if (i + 1 < argc) { cfg.progress_interval = (uint64_t)strtoull(argv[++i], NULL, 10); }
             else { fprintf(stderr, "Error: %s requires a number\n", argv[i]); return 1; }
