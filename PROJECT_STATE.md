@@ -71,7 +71,7 @@ Scoped descriptor remediation accepted at a61a3e7. Native abfe508 results (a66c3
 
 ## Current Task
 
-#undefined — Release qualification 02: evidence integrity and replay safety. Diagnose with disposable fixtures and implement narrowly scoped replay output protection and manifest validation. No changes to collection architecture or performance campaign. Owner-approved sequence remains release qualification, comparative evaluation, hands-on CLI prototype demonstration and owner approval before GUI, then external validation.
+#11 — Release qualification 02: evidence integrity and replay safety. Diagnose with disposable fixtures and implement narrowly scoped replay output protection and manifest validation. Remediate manifest/evidence overwrite through export paths, missing/malformed/inconsistent manifest handling, misleading completeness classifications, and strict replay failure handling while preserving recoverable evidence. Keep collection architecture, event ABI, and performance configuration unchanged. Owner-approved sequence remains release qualification, comparative evaluation, hands-on CLI prototype demonstration and owner approval before GUI, then external validation.
 
 ## Outstanding Release Work
 

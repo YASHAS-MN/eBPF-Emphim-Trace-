@@ -9,6 +9,67 @@
 #include <sys/resource.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <limits.h>
+
+static bool is_same_file_or_alias(const char *target_path, const struct stat *st_target, bool has_st_target, const char *out_path)
+{
+    if (!target_path || !target_path[0] || !out_path || !out_path[0])
+        return false;
+
+    /* Direct path string match */
+    if (strcmp(target_path, out_path) == 0)
+        return true;
+
+    /* If target exists, check stat inode/dev match (handles symlinks & hardlinks) */
+    if (has_st_target && st_target) {
+        struct stat st_out;
+        if (stat(out_path, &st_out) == 0) {
+            if (st_out.st_dev == st_target->st_dev && st_out.st_ino == st_target->st_ino)
+                return true;
+        }
+    }
+
+    /* Check realpath if both exist */
+    char r_target[4096], r_out[4096];
+    if (realpath(target_path, r_target) && realpath(out_path, r_out)) {
+        if (strcmp(r_target, r_out) == 0)
+            return true;
+    }
+
+    /* Check canonical parent directory + basename (handles non-existent files) */
+    char dir_target[4096], dir_out[4096];
+    char base_target[4096], base_out[4096];
+
+    const char *slash_target = strrchr(target_path, '/');
+    if (slash_target) {
+        size_t dlen = (size_t)(slash_target - target_path);
+        if (dlen == 0) dlen = 1;
+        snprintf(dir_target, sizeof(dir_target), "%.*s", (int)dlen, target_path);
+        snprintf(base_target, sizeof(base_target), "%s", slash_target + 1);
+    } else {
+        snprintf(dir_target, sizeof(dir_target), ".");
+        snprintf(base_target, sizeof(base_target), "%s", target_path);
+    }
+
+    const char *slash_out = strrchr(out_path, '/');
+    if (slash_out) {
+        size_t dlen = (size_t)(slash_out - out_path);
+        if (dlen == 0) dlen = 1;
+        snprintf(dir_out, sizeof(dir_out), "%.*s", (int)dlen, out_path);
+        snprintf(base_out, sizeof(base_out), "%s", slash_out + 1);
+    } else {
+        snprintf(dir_out, sizeof(dir_out), ".");
+        snprintf(base_out, sizeof(base_out), "%s", out_path);
+    }
+
+    char r_dir_target[4096], r_dir_out[4096];
+    if (realpath(dir_target, r_dir_target) && realpath(dir_out, r_dir_out)) {
+        if (strcmp(r_dir_target, r_dir_out) == 0 && strcmp(base_target, base_out) == 0)
+            return true;
+    }
+
+    return false;
+}
 
 #include "provenance.h"
 #include "evidence_io.h"
@@ -145,7 +206,13 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    /* Output collision and alias protection against input evidence file */
+    /* Check if manifest file exists alongside evidence file */
+    char manifest_path[512];
+    snprintf(manifest_path, sizeof(manifest_path), "%s.manifest", cfg.evid_path);
+    struct stat st_manifest;
+    bool has_manifest = (stat(manifest_path, &st_manifest) == 0);
+
+    /* Output collision and alias protection against input evidence file and manifest */
     const char *out_paths[6] = {
         cfg.dot_path,
         cfg.json_path,
@@ -167,40 +234,30 @@ int main(int argc, char *argv[]) {
         if (!out_paths[i] || !out_paths[i][0])
             continue;
 
-        /* Check if output path points to evidence file (symlink, hardlink, or path alias) */
-        struct stat st_out;
-        if (stat(out_paths[i], &st_out) == 0) {
-            if (st_out.st_dev == st_evid.st_dev && st_out.st_ino == st_evid.st_ino) {
-                fprintf(stderr, "[ERROR] Output path '%s' (%s) aliases input evidence file '%s' (inode %llu)! Aborting to prevent truncation.\n",
-                        out_paths[i], out_names[i], cfg.evid_path, (unsigned long long)st_out.st_ino);
-                return 1;
-            }
+        /* Check if output path aliases input evidence file */
+        if (is_same_file_or_alias(cfg.evid_path, &st_evid, true, out_paths[i])) {
+            fprintf(stderr, "[ERROR] Output path '%s' (%s) aliases input evidence file '%s'! Aborting to prevent truncation.\n",
+                    out_paths[i], out_names[i], cfg.evid_path);
+            return 1;
         }
-        char res_in[4096], res_out[4096];
-        if (realpath(cfg.evid_path, res_in) && realpath(out_paths[i], res_out)) {
-            if (strcmp(res_in, res_out) == 0) {
-                fprintf(stderr, "[ERROR] Output path '%s' (%s) resolves to input evidence file '%s'! Aborting to prevent truncation.\n",
-                        out_paths[i], out_names[i], cfg.evid_path);
-                return 1;
-            }
+
+        /* Check if output path aliases session manifest file */
+        if (is_same_file_or_alias(manifest_path, &st_manifest, has_manifest, out_paths[i])) {
+            fprintf(stderr, "[ERROR] Output path '%s' (%s) aliases session manifest file '%s'! Aborting to prevent truncation.\n",
+                    out_paths[i], out_names[i], manifest_path);
+            return 1;
         }
 
         /* Check collisions between distinct output paths */
         for (size_t j = i + 1; j < 6; j++) {
             if (!out_paths[j] || !out_paths[j][0])
                 continue;
-            if (strcmp(out_paths[i], out_paths[j]) == 0) {
+            struct stat st_i;
+            bool has_st_i = (stat(out_paths[i], &st_i) == 0);
+            if (is_same_file_or_alias(out_paths[i], &st_i, has_st_i, out_paths[j])) {
                 fprintf(stderr, "[ERROR] Output path collision: '%s' and '%s' target the same path '%s'! Aborting.\n",
                         out_names[i], out_names[j], out_paths[i]);
                 return 1;
-            }
-            struct stat st_other;
-            if (stat(out_paths[i], &st_out) == 0 && stat(out_paths[j], &st_other) == 0) {
-                if (st_out.st_dev == st_other.st_dev && st_out.st_ino == st_other.st_ino) {
-                    fprintf(stderr, "[ERROR] Output path collision: '%s' (%s) and '%s' (%s) share the same inode! Aborting.\n",
-                            out_paths[i], out_names[i], out_paths[j], out_names[j]);
-                    return 1;
-                }
             }
         }
     }
@@ -276,6 +333,7 @@ int main(int argc, char *argv[]) {
     const char *capture_desc = "UNKNOWN (Legacy v1 evidence file without manifest)";
     const char *manifest_status = persist_desc;
     int64_t computed_drops = 0;
+    enum evidence_loss_status loss_st = EVIDENCE_LOSS_UNVERIFIED;
 
     if (manifest_rc == 0) {
         bool size_match = (st_evid.st_size == (off_t)manifest.storage_bytes);
@@ -286,17 +344,22 @@ int main(int argc, char *argv[]) {
                            manifest.poll_errors == 0 &&
                            manifest.drain_errors == 0);
 
-        if (size_match && count_match && final_clean && loss_clean) {
+        loss_st = evidence_manifest_evaluate_loss(&manifest, &computed_drops, &capture_desc);
+        telemetry_lossless = (loss_st == EVIDENCE_LOSS_LOSSLESS);
+
+        if (loss_st == EVIDENCE_LOSS_INCONSISTENT) {
+            manifest_verified = false;
+            persist_desc = "INCONSISTENT (Discrepancy in loss counters)";
+            manifest_status = "INCONSISTENT (Discrepancy in loss counters)";
+        } else if (size_match && count_match && final_clean && loss_clean) {
             manifest_verified = true;
             persist_desc = "VERIFIED (Storage & CRC clean)";
+            manifest_status = persist_desc;
         } else {
             manifest_verified = false;
             persist_desc = "DISCREPANCY (Storage corruption or size/count mismatch)";
+            manifest_status = persist_desc;
         }
-
-        enum evidence_loss_status loss_st = evidence_manifest_evaluate_loss(&manifest, &computed_drops, &capture_desc);
-        telemetry_lossless = (loss_st == EVIDENCE_LOSS_LOSSLESS);
-        manifest_status = persist_desc;
     } else if (manifest_rc < 0) {
         manifest_verified = false;
         persist_desc = "FAILED (Corrupt manifest or symlink/alias rejected)";
@@ -315,7 +378,7 @@ int main(int argc, char *argv[]) {
     bool no_corruption = (reader.stats.corrupt_records == 0);
     bool no_incompleteness = (reader.stats.incomplete_records == 0);
     bool gaps_acceptable = (!cfg.strict || reader.stats.seq_gaps == 0);
-    bool manifest_acceptable = (!cfg.strict || !manifest_present || manifest_verified);
+    bool manifest_acceptable = (!cfg.strict || (!manifest_present ? true : manifest_verified));
 
     bool replay_valid = clean_eof && no_corruption && no_incompleteness && gaps_acceptable && manifest_acceptable;
 
@@ -451,12 +514,40 @@ int main(int argc, char *argv[]) {
         }
     }
     printf("=================================================================\n");
-    printf("Reconstruction Status:     %s\n",
-           overall_success ? (telemetry_lossless ? "SUCCESS (Complete & Lossless)" : "SUCCESS (Lossy Telemetry Captured)") :
-           (!clean_eof || !no_incompleteness) ? "FAILED (Incomplete evidence / EOF truncation)" :
-           (!no_corruption) ? "FAILED (Corrupt records / CRC32 mismatch)" :
-           (!gaps_acceptable) ? "FAILED (Sequence gaps under strict mode)" :
-           (!manifest_acceptable) ? "FAILED (Session unfinalized or manifest discrepancy)" : "FAILED (Export error)");
+    const char *recon_status_str = NULL;
+    if (overall_success) {
+        if (!manifest_present) {
+            recon_status_str = "SUCCESS (Unverified Telemetry Completeness)";
+        } else if (manifest_verified) {
+            if (telemetry_lossless) {
+                recon_status_str = "SUCCESS (Complete & Lossless)";
+            } else if (computed_drops > 0 || manifest.reg_map_full_drop > 0 || manifest.token_alloc_err > 0 || manifest.token_mismatch > 0) {
+                recon_status_str = "SUCCESS (Lossy Telemetry Captured)";
+            } else {
+                recon_status_str = "SUCCESS (Telemetry Completeness Unverified)";
+            }
+        } else if (manifest_rc == 0 && loss_st == EVIDENCE_LOSS_INCONSISTENT) {
+            recon_status_str = "SUCCESS (Inconsistent Loss Manifest)";
+        } else if (manifest_rc < 0) {
+            recon_status_str = "SUCCESS (Corrupt Manifest / Unverified Completeness)";
+        } else {
+            recon_status_str = "SUCCESS (Unfinalized / Storage Discrepancy)";
+        }
+    } else {
+        if (!clean_eof || !no_incompleteness) {
+            recon_status_str = "FAILED (Incomplete evidence / EOF truncation)";
+        } else if (!no_corruption) {
+            recon_status_str = "FAILED (Corrupt records / CRC32 mismatch)";
+        } else if (!gaps_acceptable) {
+            recon_status_str = "FAILED (Sequence gaps under strict mode)";
+        } else if (!manifest_acceptable) {
+            recon_status_str = "FAILED (Session unfinalized or manifest discrepancy)";
+        } else {
+            recon_status_str = "FAILED (Export error)";
+        }
+    }
+
+    printf("Reconstruction Status:     %s\n", recon_status_str);
     printf("=================================================================\n\n");
     fflush(stdout);
 
@@ -471,7 +562,7 @@ int main(int argc, char *argv[]) {
             fprintf(fj, "  \"manifest_present\": %s,\n", manifest_present ? "true" : "false");
             fprintf(fj, "  \"manifest_verified\": %s,\n", manifest_verified ? "true" : "false");
             fprintf(fj, "  \"manifest_status\": \"%s\",\n", manifest_status);
-            fprintf(fj, "  \"persistence_verified\": %s,\n", manifest_verified ? "true" : "false");
+            fprintf(fj, "  \"persistence_verified\": %s,\n", (manifest_present && manifest_verified) ? "true" : "false");
             fprintf(fj, "  \"persistence_status\": \"%s\",\n", persist_desc);
             fprintf(fj, "  \"telemetry_loss_free\": %s,\n", telemetry_lossless ? "true" : "false");
             fprintf(fj, "  \"telemetry_capture_status\": \"%s\",\n", capture_desc);

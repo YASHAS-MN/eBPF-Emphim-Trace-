@@ -419,11 +419,11 @@ evidence_manifest_find_val(const char *buf, const char *key, const char **val_st
   if (!p)
     return false;
   p += strlen(key);
-  while (*p == ' ' || *p == '\t')
+  while (*p == ' ' || *p == '\t' || *p == '\r' || *p == '\n')
     p++;
   if (*p == ':')
     p++;
-  while (*p == ' ' || *p == '\t')
+  while (*p == ' ' || *p == '\t' || *p == '\r' || *p == '\n')
     p++;
   *val_start = p;
   return true;
@@ -781,39 +781,49 @@ evidence_read_manifest(const char *evid_path,
   if (fd < 0)
     return -1;
 
-  char buf[4096];
+  char buf[8192];
   ssize_t n = read(fd, buf, sizeof(buf) - 1);
   close(fd);
   if (n <= 0)
     return -1;
   buf[n] = '\0';
 
+  /* Check manifest_version if present */
+  uint32_t m_ver = 0;
+  if (evidence_manifest_parse_uint32(buf, "\"manifest_version\"", &m_ver)) {
+    if (m_ver != 1)
+      return -1;
+    out_m->version = m_ver;
+  } else {
+    out_m->version = 1;
+  }
+
   /* Required fields: record_count and storage_bytes */
-  if (!evidence_manifest_parse_uint64(buf, "\"record_count\":", &out_m->record_count)) {
+  if (!evidence_manifest_parse_uint64(buf, "\"record_count\"", &out_m->record_count)) {
     return -1;
   }
-  if (!evidence_manifest_parse_uint64(buf, "\"storage_bytes\":", &out_m->storage_bytes)) {
+  if (!evidence_manifest_parse_uint64(buf, "\"storage_bytes\"", &out_m->storage_bytes)) {
     return -1;
   }
 
-  evidence_manifest_parse_uint32(buf, "\"target_pid\":", &out_m->target_pid);
-  evidence_manifest_parse_bool(buf, "\"finalized\":", &out_m->finalized);
-  evidence_manifest_parse_bool(buf, "\"synchronized\":", &out_m->synchronized);
+  evidence_manifest_parse_uint32(buf, "\"target_pid\"", &out_m->target_pid);
+  evidence_manifest_parse_bool(buf, "\"finalized\"", &out_m->finalized);
+  evidence_manifest_parse_bool(buf, "\"synchronized\"", &out_m->synchronized);
 
-  evidence_manifest_parse_uint64(buf, "\"sample_size_mismatches\":", &out_m->sample_size_mismatches);
-  evidence_manifest_parse_uint64(buf, "\"write_errors\":", &out_m->write_errors);
-  evidence_manifest_parse_uint64(buf, "\"poll_errors\":", &out_m->poll_errors);
-  evidence_manifest_parse_uint64(buf, "\"drain_errors\":", &out_m->drain_errors);
+  evidence_manifest_parse_uint64(buf, "\"sample_size_mismatches\"", &out_m->sample_size_mismatches);
+  evidence_manifest_parse_uint64(buf, "\"write_errors\"", &out_m->write_errors);
+  evidence_manifest_parse_uint64(buf, "\"poll_errors\"", &out_m->poll_errors);
+  evidence_manifest_parse_uint64(buf, "\"drain_errors\"", &out_m->drain_errors);
 
   /* Loss accounting: initialized to -1 (unavailable), set only on valid numeric conversion */
-  evidence_manifest_parse_int64(buf, "\"reg_map_full_drop\":", &out_m->reg_map_full_drop);
-  evidence_manifest_parse_int64(buf, "\"token_alloc_err\":", &out_m->token_alloc_err);
-  evidence_manifest_parse_int64(buf, "\"token_mismatch\":", &out_m->token_mismatch);
-  evidence_manifest_parse_int64(buf, "\"ring_buffer_total_drops\":", &out_m->ring_buffer_total_drops);
+  evidence_manifest_parse_int64(buf, "\"reg_map_full_drop\"", &out_m->reg_map_full_drop);
+  evidence_manifest_parse_int64(buf, "\"token_alloc_err\"", &out_m->token_alloc_err);
+  evidence_manifest_parse_int64(buf, "\"token_mismatch\"", &out_m->token_mismatch);
+  evidence_manifest_parse_int64(buf, "\"ring_buffer_total_drops\"", &out_m->ring_buffer_total_drops);
 
   /* Parse string/number for ring_buffer_drops */
   const char *rb_drops_val = NULL;
-  if (evidence_manifest_find_val(buf, "\"ring_buffer_drops\":", &rb_drops_val)) {
+  if (evidence_manifest_find_val(buf, "\"ring_buffer_drops\"", &rb_drops_val)) {
     if (*rb_drops_val == '"') {
       rb_drops_val++;
       const char *end = strchr(rb_drops_val, '"');
@@ -839,26 +849,26 @@ evidence_read_manifest(const char *evid_path,
     uint32_t type;
     const char *key;
   } type_keys[] = {
-    {EVENT_EXECVE, "\"execve\":"},
-    {EVENT_MEMFD_CREATE, "\"memfd_create\":"},
-    {EVENT_UNLINK, "\"unlink\":"},
-    {EVENT_UNLINKAT, "\"unlinkat\":"},
-    {EVENT_CONNECT, "\"connect\":"},
-    {EVENT_FORK, "\"fork\":"},
-    {EVENT_PROCESS_EXEC, "\"process_exec\":"},
-    {EVENT_PROCESS_EXIT, "\"process_exit\":"},
-    {EVENT_VFS_UNLINK_COMPLETED, "\"vfs_unlink_completed\":"},
-    {EVENT_VFS_RMDIR_COMPLETED, "\"vfs_rmdir_completed\":"},
-    {EVENT_RMDIR, "\"rmdir\":"},
-    {EVENT_MEMFD_COMPLETED, "\"memfd_completed\":"},
-    {EVENT_MEMFD_DESTROYED, "\"memfd_destroyed\":"},
-    {EVENT_MEMFD_FILE_RELEASED, "\"memfd_file_released\":"},
-    {EVENT_FD_INSTALLED, "\"fd_installed\":"},
-    {EVENT_FD_CLOSED, "\"fd_closed\":"},
-    {EVENT_MEMFD_WRITE, "\"memfd_write\":"},
-    {EVENT_MEMFD_EXEC_ATTEMPT, "\"memfd_exec_attempt\":"},
-    {EVENT_MEMFD_EXEC_SUCCESS, "\"memfd_exec_success\":"},
-    {EVENT_DEBUG, "\"debug\":"},
+    {EVENT_EXECVE, "\"execve\""},
+    {EVENT_MEMFD_CREATE, "\"memfd_create\""},
+    {EVENT_UNLINK, "\"unlink\""},
+    {EVENT_UNLINKAT, "\"unlinkat\""},
+    {EVENT_CONNECT, "\"connect\""},
+    {EVENT_FORK, "\"fork\""},
+    {EVENT_PROCESS_EXEC, "\"process_exec\""},
+    {EVENT_PROCESS_EXIT, "\"process_exit\""},
+    {EVENT_VFS_UNLINK_COMPLETED, "\"vfs_unlink_completed\""},
+    {EVENT_VFS_RMDIR_COMPLETED, "\"vfs_rmdir_completed\""},
+    {EVENT_RMDIR, "\"rmdir\""},
+    {EVENT_MEMFD_COMPLETED, "\"memfd_completed\""},
+    {EVENT_MEMFD_DESTROYED, "\"memfd_destroyed\""},
+    {EVENT_MEMFD_FILE_RELEASED, "\"memfd_file_released\""},
+    {EVENT_FD_INSTALLED, "\"fd_installed\""},
+    {EVENT_FD_CLOSED, "\"fd_closed\""},
+    {EVENT_MEMFD_WRITE, "\"memfd_write\""},
+    {EVENT_MEMFD_EXEC_ATTEMPT, "\"memfd_exec_attempt\""},
+    {EVENT_MEMFD_EXEC_SUCCESS, "\"memfd_exec_success\""},
+    {EVENT_DEBUG, "\"debug\""},
   };
   for (size_t i = 0; i < sizeof(type_keys)/sizeof(type_keys[0]); i++) {
     int64_t val = -1;

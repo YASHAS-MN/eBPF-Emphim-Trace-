@@ -224,7 +224,7 @@ static void test_engine_synthetic_dag(void)
     struct prov_node *child_proc = prov_find_node("proc_2002_200000000");
     assert(child_proc != NULL);
     assert(child_proc->proc.is_alive == false);
-    assert(child_proc->proc.exit_code == 0);
+    assert(child_proc->proc.exit_code == -1 && child_proc->proc.exit_code_known == false);
     assert(strcmp(child_proc->proc.comm, "m6_exec_binary") == 0);
 
     struct prov_node *memfd_node = prov_find_node("memfd_88888");
