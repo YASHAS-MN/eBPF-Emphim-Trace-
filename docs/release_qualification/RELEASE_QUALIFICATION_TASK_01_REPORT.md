@@ -4,6 +4,7 @@
 **Date**: 2026-11-28  
 **Scope**: Release Qualification Task 01 under GitHub Issue #5 and `PROJECT_STATE.md`  
 **Base Implementation Checkpoint**: `b6c89af` (Frozen Production Implementation)  
+**Remediation Commit**: `ac761b4`  
 **Host Environment**: Linux `7.0.0-44-generic #44~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC x86_64`  
 **Worktree**: `/home/magellan/Garage/prototypes/FM/FM-persist`  
 **Branch**: `remediation/state-independence-and-loss-accountability`  
@@ -191,31 +192,68 @@ All 5 workload memfd objects were positively resolved from binary evidence:
 
 ---
 
-## 5. Minimal Proposed Corrections (Non-Architectural)
+## 5. Remediated Architecture & Implementation (Commit `ac761b4`)
 
-In accordance with project constraints, no production code was modified during this qualification diagnosis. The following targeted, minimal remediations are proposed for implementation in the next remediation cycle:
+Under GitHub Issue #5, targeted corrections were engineered, compiled, and committed at `ac761b4` to resolve all confirmed descriptor lifecycle deficiencies without modifying the graph engine architecture or synthesizing unobserved events:
 
-### Proposal 1: Hook `ksys_dup3` (or `fentry/do_dup2`)
-- **Hook**: `fentry/do_dup2(struct files_struct *files, struct file *file, unsigned int fd, unsigned int flags)`.
-- **Logic**:
-  1. If `(files_ptr, fd)` was previously registered in `memfd_desc_registry`:
-     - Delete old entry and submit `EVENT_FD_CLOSED` for the replaced descriptor.
-  2. If `file` is a tracked memfd (`memfd_file_registry` lookup):
-     - Register `(files_ptr, fd) -> token` in `memfd_desc_registry`.
-     - Submit `EVENT_FD_INSTALLED` (`op_type = FD_INSTALL_OP_DUP`).
-- **Effect**: Eliminates Missing Coverage for `dup2`/`dup3` and eliminates Incorrect Attribution upon descriptor replacement.
+### 5.1 Kernel Probe: `SEC("fentry/do_dup2")` in `src/bpf/monitor.bpf.c`
+`do_dup2(files, file, fd, flags)` is the common kernel junction for `dup2` and `dup3`:
+1. **Replacement Handling**:
+   - Inspects the existing slot `tofree = fdt->fd[fd]` prior to replacement.
+   - If `tofree` references an active tracked memfd, emits `EVENT_FD_CLOSED` with verified duration and purges the old descriptor entry from `memfd_desc_registry`.
+2. **Duplication Handling**:
+   - Inspects `file->f_inode` against `memfd_inode_registry`.
+   - If `file` is an active tracked memfd, updates `memfd_desc_registry` and emits `EVENT_FD_INSTALLED` with `op_type = FD_INSTALL_OP_DUP`.
+3. **Loader Integration**:
+   - Added `capture_do_dup2` trampoline attachment under `HOOK_GROUP_VFS` in `src/user/loader.c`.
 
-### Proposal 2: Key `memfd_desc_registry` by `(files_struct *, fd)`
-- **Change**:
+### 5.2 Authoritative Kernel File Identity at Operation Boundary
+- In `capture_close_fd(struct files_struct *files, unsigned int fd)`:
+  - Instead of relying solely on cached descriptor mappings, reads `actual_file = fdt->fd[fd]` directly from the kernel `files_struct`.
+  - Authoritatively resolves `actual_file->f_inode` against `memfd_inode_registry`.
+  - If `actual_file` is an ordinary file (or does not match the token in registry), purges any stale entry from `memfd_desc_registry` and **strictly suppresses false `EVENT_FD_CLOSED` attribution**.
+
+### 5.3 Shared Descriptor-Table Attribution via `files_ptr`
+- Re-keyed `memfd_desc_registry` from `(tgid, fd)` to:
   ```c
   struct descriptor_key {
       __u64 files_ptr;  /* (struct files_struct *)current->files */
       __s32 fd;
+      __u32 pad;
   };
   ```
-- **Logic**: In `capture_fd_install` and `capture_close_fd`, obtain `files_ptr` via `bpf_get_current_task_btf()->files`.
-- **Effect**: Seamlessly handles threads and `CLONE_FILES` child processes sharing the same descriptor table, eliminating cross-process registry mismatch.
+- Because both multi-threaded tasks and `clone(CLONE_FILES)` child processes share the exact same `task->files` pointer, descriptor operations executed by any sharing task or child process resolve cleanly against the common table.
 
-### Proposal 3: Clean up Descriptors on Group Exit in Userspace Provenance Engine
-- **Logic**: In `src/user/provenance.c`, when `EVENT_PROCESS_EXIT` marks a process as terminated (`is_alive = false`), automatically close any dangling unclosed memfd descriptors associated with that process at the process exit timestamp.
-- **Effect**: Eliminates dangling open-descriptor edges in reconstructed graphs for processes that terminate without calling `close()`.
+### 5.4 Concurrency, Pointer Reuse & Unverified Lifetime Representation
+- **Concurrency Control**: Atomic `__sync_lock_test_and_set(&de->object_token, 0)` ensures exactly one thread wins descriptor close races.
+- **SLAB Pointer Reuse Protection**: Inode registry validation prevents stale `struct file *` pointer reuse from creating spurious attributions.
+- **Unverified Durations**: In `src/user/provenance.c` and `src/user/provenance.h`, `duration_known` tracks whether lifetime was authoritatively observed. When `duration_known == 0`, JSON, DOT, and Timeline exports explicitly render `"duration_ns": "unknown"`.
+- **Exit Status Integrity**: In strict adherence to forensics integrity constraints, **zero synthetic closure events** are emitted on process exit.
+
+---
+
+## 6. Before vs. After Comparative Verification
+
+| Evaluation Suite | Pre-Remediation Behavior (`98d3e14`) | Post-Remediation Behavior (`ac761b4`) | Forensic Status |
+|:---|:---|:---|:---:|
+| **Suite 1: `dup2` / `dup3` Telemetry** | FD 35 (`dup2`) and FD 36 (`dup3`) completely absent from telemetry and graph (0 events). | `capture_do_dup2` captures both descriptors; emits `EVENT_FD_INSTALLED` (`FD_INSTALL_OP_DUP`); DAG contains all 5 FDs. | **RESOLVED** |
+| **Suite 2: Replacement with Ordinary File** | Ordinary file `close(3)` fired stale BPF lookup; emitted false `EVENT_FD_CLOSED` to `memfd_6` (+25,288 ns after destruction). | `capture_do_dup2` closes descriptor at replacement; `capture_close_fd` verifies `f_inode` and suppresses false ordinary close. Exactly 1 close at replacement. | **RESOLVED** |
+| **Suite 3: Negative Ops & Error Handling** | Negative descriptors cleanly rejected; slot recycling preserved. | Negative syscall errors rejected (`-EBADF`, `-EINVAL`); slot recycling preserved without spurious events. | **VERIFIED** |
+| **Suite 4: `CLONE_FILES` Shared Tables** | Child PID 35068 `close(3)` silently dropped due to TGID key mismatch. `memfd_9` unclosed in DAG. | Keyed by `files_ptr`; Child PID 35068 closure detected and correctly attributed to child node in DAG. | **RESOLVED** |
+| **Duration Export Representation** | Unobserved or partial lifetimes emitted synthetic or zero values. | Unverified descriptor durations explicitly rendered as `"duration_ns": "unknown"`. | **RESOLVED** |
+
+### Automated Regression Verification Results:
+- `build/test_descriptor_lifecycle_reconstruction`:
+  ```
+  [CASE 1: dup() and dup2() Graph Reconstruction]
+    [PASS] Case 1: All 3 descriptors (FD 3, FD 5, FD 20) verified in provenance DAG!
+  [CASE 2: Replacement with Ordinary File & Stale Close Elimination]
+    [PASS] Case 2: Exactly 1 closure verified at T=2001000; stale ordinary file close eliminated!
+  [CASE 3: Shared Files Table Across Processes via clone(CLONE_FILES)]
+    [PASS] Case 3: Child PID 301 closure properly attributed in provenance DAG!
+  [CASE 4: Unverified / Unknown Duration JSON & DOT Representation]
+    [PASS] Case 4: Unverified duration exported as "unknown" in JSON!
+  === All 4 Regression Cases PASSED with 100% Precision ===
+  ```
+- `build/test_provenance_correctness`: 6/6 test suites passed with 100.00% Precision and 100.00% Recall.
+- `build/test_qualification_descriptor`: 28/28 assertions passed.
