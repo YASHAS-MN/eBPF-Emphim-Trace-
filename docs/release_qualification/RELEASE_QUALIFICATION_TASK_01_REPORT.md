@@ -4,7 +4,7 @@
 **Date**: 2026-11-28  
 **Scope**: Release Qualification Task 01 under GitHub Issue #5 and `PROJECT_STATE.md`  
 **Base Implementation Checkpoint**: `b6c89af` (Frozen Production Implementation)  
-**Remediation Commit**: `ac761b4`  
+**Remediation Checkpoints**: `ac761b4` $\to$ `abfe508` (Exit-Status Validation & Authoritative Removal)  
 **Host Environment**: Linux `7.0.0-44-generic #44~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC x86_64`  
 **Worktree**: `/home/magellan/Garage/prototypes/FM/FM-persist`  
 **Branch**: `remediation/state-independence-and-loss-accountability`  
@@ -192,26 +192,27 @@ All 5 workload memfd objects were positively resolved from binary evidence:
 
 ---
 
-## 5. Remediated Architecture & Implementation (Commit `ac761b4`)
+## 5. Remediated Architecture & Implementation (Commits `ac761b4` & `abfe508`)
 
-Under GitHub Issue #5, targeted corrections were engineered, compiled, and committed at `ac761b4` to resolve all confirmed descriptor lifecycle deficiencies without modifying the graph engine architecture or synthesizing unobserved events:
+Under GitHub Issue #5, targeted corrections were engineered, compiled, and verified without modifying graph architecture or synthesizing unobserved events:
 
-### 5.1 Kernel Probe: `SEC("fentry/do_dup2")` in `src/bpf/monitor.bpf.c`
-`do_dup2(files, file, fd, flags)` is the common kernel junction for `dup2` and `dup3`:
-1. **Replacement Handling**:
-   - Inspects the existing slot `tofree = fdt->fd[fd]` prior to replacement.
-   - If `tofree` references an active tracked memfd, emits `EVENT_FD_CLOSED` with verified duration and purges the old descriptor entry from `memfd_desc_registry`.
-2. **Duplication Handling**:
-   - Inspects `file->f_inode` against `memfd_inode_registry`.
-   - If `file` is an active tracked memfd, updates `memfd_desc_registry` and emits `EVENT_FD_INSTALLED` with `op_type = FD_INSTALL_OP_DUP`.
-3. **Loader Integration**:
-   - Added `capture_do_dup2` trampoline attachment under `HOOK_GROUP_VFS` in `src/user/loader.c`.
+### 5.1 Paired `do_dup2` Probes: Success Verification & `-EBUSY` Failure Path Handling
+- **`SEC("fentry/do_dup2")` (`capture_do_dup2_entry`)**:
+  - Captures replacement and installation targets into a thread-local BPF hash map `pending_dup2_map` keyed by `tid`.
+  - **Zero Registry Mutation**: Does NOT alter `memfd_desc_registry` and does NOT submit events at function entry.
+- **`SEC("fexit/do_dup2")` (`capture_do_dup2_exit`)**:
+  - Receives `int ret` from `do_dup2()`.
+  - **Failure Path Handling**: If `ret < 0` (e.g. `-EBUSY` when descriptor is locked/closing, or `-EBADF`), purges `pending_dup2_map` and exits immediately. Registry state remains untouched and zero events are emitted.
+  - **Successful Operation**: If `ret >= 0`, emits `EVENT_FD_CLOSED` for the replaced descriptor (if memfd) and `EVENT_FD_INSTALLED` (`FD_INSTALL_OP_DUP`) for the new descriptor (if memfd).
 
-### 5.2 Authoritative Kernel File Identity at Operation Boundary
-- In `capture_close_fd(struct files_struct *files, unsigned int fd)`:
-  - Instead of relying solely on cached descriptor mappings, reads `actual_file = fdt->fd[fd]` directly from the kernel `files_struct`.
-  - Authoritatively resolves `actual_file->f_inode` against `memfd_inode_registry`.
-  - If `actual_file` is an ordinary file (or does not match the token in registry), purges any stale entry from `memfd_desc_registry` and **strictly suppresses false `EVENT_FD_CLOSED` attribution**.
+### 5.2 Authoritative Close Attribution via `SEC("fexit/file_close_fd")`
+- Probes `file_close_fd()` at function return: `int BPF_PROG(capture_close_fd, unsigned int fd, struct file *ret)`.
+- **Deduplication in Concurrency**: Under concurrent closes across threads, the kernel's `file_close_fd_locked` atomically sets `fdt->fd[fd] = NULL`. Only the winning thread receives `ret != NULL`; all losing threads receive `ret = NULL` (`-EBADF`).
+- **Identity on Removed File**:
+  - If `ret == NULL`, BPF exits immediately with 0 events.
+  - If `ret != NULL`, BPF resolves `ret->f_inode` against `memfd_inode_registry`.
+  - If `ret` was an ordinary file, purges any stale descriptor entry and strictly suppresses false `EVENT_FD_CLOSED` attribution.
+  - If `ret` was a tracked memfd, emits `EVENT_FD_CLOSED` with authoritative attribution.
 
 ### 5.3 Shared Descriptor-Table Attribution via `files_ptr`
 - Re-keyed `memfd_desc_registry` from `(tgid, fd)` to:
@@ -224,25 +225,24 @@ Under GitHub Issue #5, targeted corrections were engineered, compiled, and commi
   ```
 - Because both multi-threaded tasks and `clone(CLONE_FILES)` child processes share the exact same `task->files` pointer, descriptor operations executed by any sharing task or child process resolve cleanly against the common table.
 
-### 5.4 Concurrency, Pointer Reuse & Unverified Lifetime Representation
-- **Concurrency Control**: Atomic `__sync_lock_test_and_set(&de->object_token, 0)` ensures exactly one thread wins descriptor close races.
-- **SLAB Pointer Reuse Protection**: Inode registry validation prevents stale `struct file *` pointer reuse from creating spurious attributions.
-- **Unverified Durations**: In `src/user/provenance.c` and `src/user/provenance.h`, `duration_known` tracks whether lifetime was authoritatively observed. When `duration_known == 0`, JSON, DOT, and Timeline exports explicitly render `"duration_ns": "unknown"`.
-- **Exit Status Integrity**: In strict adherence to forensics integrity constraints, **zero synthetic closure events** are emitted on process exit.
+### 5.4 Unverified Lifetime Representation & Forensics Constraints
+- Unverified descriptor durations explicitly render `"duration_ns": "unknown"` across JSON, DOT, and timeline exports.
+- **Zero synthetic closure events** are emitted on process exit.
 
 ---
 
-## 6. Before vs. After Comparative Verification
+## 6. Verification Results & Comparative Analysis
 
-| Evaluation Suite | Pre-Remediation Behavior (`98d3e14`) | Post-Remediation Behavior (`ac761b4`) | Forensic Status |
+| Evaluation Scenario | Pre-Remediation Baseline (`98d3e14`) | Remediated Production Collector (`abfe508`) | Status |
 |:---|:---|:---|:---:|
-| **Suite 1: `dup2` / `dup3` Telemetry** | FD 35 (`dup2`) and FD 36 (`dup3`) completely absent from telemetry and graph (0 events). | `capture_do_dup2` captures both descriptors; emits `EVENT_FD_INSTALLED` (`FD_INSTALL_OP_DUP`); DAG contains all 5 FDs. | **RESOLVED** |
-| **Suite 2: Replacement with Ordinary File** | Ordinary file `close(3)` fired stale BPF lookup; emitted false `EVENT_FD_CLOSED` to `memfd_6` (+25,288 ns after destruction). | `capture_do_dup2` closes descriptor at replacement; `capture_close_fd` verifies `f_inode` and suppresses false ordinary close. Exactly 1 close at replacement. | **RESOLVED** |
-| **Suite 3: Negative Ops & Error Handling** | Negative descriptors cleanly rejected; slot recycling preserved. | Negative syscall errors rejected (`-EBADF`, `-EINVAL`); slot recycling preserved without spurious events. | **VERIFIED** |
-| **Suite 4: `CLONE_FILES` Shared Tables** | Child PID 35068 `close(3)` silently dropped due to TGID key mismatch. `memfd_9` unclosed in DAG. | Keyed by `files_ptr`; Child PID 35068 closure detected and correctly attributed to child node in DAG. | **RESOLVED** |
-| **Duration Export Representation** | Unobserved or partial lifetimes emitted synthetic or zero values. | Unverified descriptor durations explicitly rendered as `"duration_ns": "unknown"`. | **RESOLVED** |
+| **1. `dup2` / `dup3` Duplication** | FDs 35 & 36 completely absent (0 events, missing DAG edges). | Captured via `capture_do_dup2_exit`; emits `EVENT_FD_INSTALLED` (DUP); DAG contains all 5 FDs. | **RESOLVED** |
+| **2. Replacement with Ordinary File** | Ordinary close emitted false `EVENT_FD_CLOSED` to `memfd_6` (+25,288 ns after destruction). | Closed at replacement time; ordinary close suppressed via authoritative `ret->f_inode` check. | **RESOLVED** |
+| **3. `do_dup2` `-EBUSY` Path** | Fentry would mutate registry regardless of failure. | Fexit checks `ret < 0`, purges pending state, preserves registry without false events. | **RESOLVED** |
+| **4. Concurrent Close Race** | Stale cached state hazard under race. | Atomic `ret` return deduplication guarantees exactly 1 close event per descriptor. | **RESOLVED** |
+| **5. `CLONE_FILES` Shared Tables** | Child PID 35068 `close(3)` silently dropped; `memfd_9` unclosed in DAG. | Keyed by `files_ptr`; Child PID 35068 closure detected and attributed to child node. | **RESOLVED** |
+| **6. Duration Representation** | Unobserved lifetimes emitted synthetic 0 ns. | Explicitly exports `"duration_ns": "unknown"`. | **RESOLVED** |
 
-### Automated Regression Verification Results:
+### Automated Regression Verification:
 - `build/test_descriptor_lifecycle_reconstruction`:
   ```
   [CASE 1: dup() and dup2() Graph Reconstruction]
@@ -253,7 +253,17 @@ Under GitHub Issue #5, targeted corrections were engineered, compiled, and commi
     [PASS] Case 3: Child PID 301 closure properly attributed in provenance DAG!
   [CASE 4: Unverified / Unknown Duration JSON & DOT Representation]
     [PASS] Case 4: Unverified duration exported as "unknown" in JSON!
-  === All 4 Regression Cases PASSED with 100% Precision ===
+  [CASE 5: do_dup2 Failure Path (-EBUSY) Integrity]
+    [PASS] Case 5: -EBUSY path preserved registry; exact 1 install and 1 close verified!
+  [CASE 6: Concurrent file_close_fd Race Deduplication]
+    [PASS] Case 6: Concurrent close race strictly emits exactly 1 closure edge!
+  === All 6 Regression Cases PASSED with 100% Precision ===
   ```
 - `build/test_provenance_correctness`: 6/6 test suites passed with 100.00% Precision and 100.00% Recall.
 - `build/test_qualification_descriptor`: 28/28 assertions passed.
+
+### Production Hook Inventory & Loss Accountability:
+- **Logical Hooks Attached**: 27/27 (100% attached, 0 errors)
+- **Per-CPU Events Attached**: 60/60 across online CPUs
+- **Ring Buffer Drops**: 0 drops recorded (`CNT_RING_BUF_DROPS = 0`)
+- **Kernel Token Mismatches / Errors**: 0
