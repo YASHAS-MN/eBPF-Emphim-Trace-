@@ -91,7 +91,7 @@ Four separate low-volume sessions at e5299b4, unchanged production sources from 
 
 ## Current Task
 
-Phase 2 bounded evaluation documented; awaiting owner merge. Next mandatory owner-operated manual CLI end-to-end lifecycle demonstration. Stop before GUI/productization until explicit owner approval. No additional comparative capture or performance campaign required for this milestone.
+Phase 2 bounded evaluation merged via PR #18 at 80d4cf0, Issue #17 closed. Active #19: mandatory owner-operated manual CLI end-to-end lifecycle demonstration. Production frozen; owner manually collects, preserves, replays, filters and inspects evidence and outputs. Stop before GUI/productization until explicit owner approval. No additional comparative capture or performance campaign required for this milestone.
 
 ## Outstanding Release Work
 
