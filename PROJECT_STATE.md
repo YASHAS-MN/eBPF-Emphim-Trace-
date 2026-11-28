@@ -11,7 +11,7 @@ Develop an eBPF-based forensic telemetry and provenance system prioritizing evid
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Current implementation checkpoint: b036418 (locally validated Task 03 candidate; Task 02 integrated at e069f1b)
+- Current implementation checkpoint: 9648e11 (Task 03 integrated; Task 04 candidate 19cdd9c pending local validation)
 - Working branch: remediation/state-independence-and-loss-accountability
 - Initial production benchmark baseline: 056ec9b
 - Historical Architecture A reference: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
@@ -81,7 +81,7 @@ At b036418 the owner locally built the normal replay binary and dedicated linker
 
 ## Current Task
 
-Task 03 validated; awaiting owner merge approval. Task 04 next: deployment and compatibility, including path/argument validation and integrated native collector smoke at final candidate. Continue comparative evaluation and owner-operated CLI prototype demonstration before GUI/productization.
+Task 03 merged via PR #14 at 9648e11, Issue #13 closed. Active Issue #15: Task 04 deployment and compatibility. Candidate qualification/deployment-compatibility at 19cdd9c adds checked CLI numeric parsing, power-of-two ring capacity, bounded evidence paths (255 bytes, no quotes/backslash/control bytes), stale sidecar rejection, regular-file input checks, buffer/header bounds, and fail-closed ring resizing. Disposable CLI checks and integrated native smoke pending. Smoke requires real READY, native workload exit success, clean shutdown, strict double replay, input hashes preserved, exact selected descriptor raw-to-graph relationships. Only tested host qualification; no general cross-kernel compatibility claim. Continue comparative evaluation and owner-operated CLI prototype demonstration before GUI/productization.
 
 ## Outstanding Release Work
 
