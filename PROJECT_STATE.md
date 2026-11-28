@@ -67,7 +67,7 @@ Scoped recall only; full precision, multiplicity and attribute fidelity not esta
 
 ## Current Task
 
-Benchmarking concluded within tested scope. Retain current architecture and freeze production checkpoint b6c89af. Next phase: release qualification planning, subject to owner approval; no new optimization or implementation authorized.
+Benchmarking concluded within tested scope. Owner approved release qualification, then comparative evaluation, a hands-on CLI prototype demonstration and owner approval checkpoint before productization/GUI, then external validation. Active task #5: targeted native descriptor lifecycle correctness investigation at b6c89af. Establish observed gaps and distinguish missing coverage from false attribution before proposing narrowly scoped fixes. Keep production frozen during diagnosis; no performance campaign or GUI work.
 
 ## Outstanding Release Work
 
