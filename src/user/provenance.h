@@ -214,6 +214,11 @@ int prov_engine_export_json(const char *filepath);
 void prov_engine_get_counts(size_t *node_count, size_t *edge_count);
 void prov_engine_destroy(void);
 
+/* Export Safety & Exclusive Creation Policy */
+void prov_engine_set_export_overwrite(bool allow);
+bool prov_engine_get_export_overwrite(void);
+FILE *prov_open_safe_export(const char *filepath, bool allow_overwrite, int *out_err);
+
 /* Milestone 6 Phase 2: Filtering & Timeline API */
 int prov_engine_filter_subgraph(uint32_t target_pid, uint64_t target_token,
                                 struct prov_graph *out_filtered);

@@ -5,6 +5,10 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <sys/sysmacros.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "provenance.h"
 
@@ -1209,6 +1213,56 @@ static int render_graph_json(FILE *f, const struct prov_graph *g)
     return 0;
 }
 
+static bool g_prov_export_overwrite = false;
+
+void prov_engine_set_export_overwrite(bool allow)
+{
+    g_prov_export_overwrite = allow;
+}
+
+bool prov_engine_get_export_overwrite(void)
+{
+    return g_prov_export_overwrite;
+}
+
+FILE *prov_open_safe_export(const char *filepath, bool allow_overwrite, int *out_err)
+{
+    if (!filepath || !filepath[0]) {
+        if (out_err) *out_err = -EINVAL;
+        return NULL;
+    }
+
+    /* Refuse symlinks under all circumstances */
+    struct stat st_l;
+    if (lstat(filepath, &st_l) == 0 && S_ISLNK(st_l.st_mode)) {
+        if (out_err) *out_err = -ELOOP;
+        return NULL;
+    }
+
+    int flags = O_WRONLY | O_CREAT | O_CLOEXEC | O_NOFOLLOW;
+    if (allow_overwrite) {
+        flags |= O_TRUNC;
+    } else {
+        flags |= O_EXCL;
+    }
+
+    int fd = open(filepath, flags, 0644);
+    if (fd < 0) {
+        if (out_err) *out_err = -errno;
+        return NULL;
+    }
+
+    FILE *f = fdopen(fd, "w");
+    if (!f) {
+        if (out_err) *out_err = -errno;
+        close(fd);
+        return NULL;
+    }
+
+    if (out_err) *out_err = 0;
+    return f;
+}
+
 int prov_engine_export_dot(const char *filepath)
 {
     if (!filepath)
@@ -1219,10 +1273,11 @@ int prov_engine_export_dot(const char *filepath)
     if (rc != 0)
         return rc;
 
-    FILE *f = fopen(filepath, "w");
+    int open_err = 0;
+    FILE *f = prov_open_safe_export(filepath, g_prov_export_overwrite, &open_err);
     if (!f) {
         prov_graph_free(&full_graph);
-        return -errno;
+        return open_err;
     }
 
     render_graph_dot(f, &full_graph);
@@ -1241,10 +1296,11 @@ int prov_engine_export_json(const char *filepath)
     if (rc != 0)
         return rc;
 
-    FILE *f = fopen(filepath, "w");
+    int open_err = 0;
+    FILE *f = prov_open_safe_export(filepath, g_prov_export_overwrite, &open_err);
     if (!f) {
         prov_graph_free(&full_graph);
-        return -errno;
+        return open_err;
     }
 
     render_graph_json(f, &full_graph);
@@ -1263,10 +1319,11 @@ int prov_engine_export_filtered_dot(const char *filepath, uint32_t target_pid, u
     if (rc != 0)
         return rc;
 
-    FILE *f = fopen(filepath, "w");
+    int open_err = 0;
+    FILE *f = prov_open_safe_export(filepath, g_prov_export_overwrite, &open_err);
     if (!f) {
         prov_graph_free(&filtered);
-        return -errno;
+        return open_err;
     }
 
     render_graph_dot(f, &filtered);
@@ -1285,10 +1342,11 @@ int prov_engine_export_filtered_json(const char *filepath, uint32_t target_pid, 
     if (rc != 0)
         return rc;
 
-    FILE *f = fopen(filepath, "w");
+    int open_err = 0;
+    FILE *f = prov_open_safe_export(filepath, g_prov_export_overwrite, &open_err);
     if (!f) {
         prov_graph_free(&filtered);
-        return -errno;
+        return open_err;
     }
 
     render_graph_json(f, &filtered);
@@ -1323,10 +1381,11 @@ int prov_engine_export_timeline(const char *filepath, uint32_t target_pid, uint6
         qsort(filtered.edges, filtered.edge_count, sizeof(struct prov_edge *), compare_edge_timestamps);
     }
 
-    FILE *f = fopen(filepath, "w");
+    int open_err = 0;
+    FILE *f = prov_open_safe_export(filepath, g_prov_export_overwrite, &open_err);
     if (!f) {
         prov_graph_free(&filtered);
-        return -errno;
+        return open_err;
     }
 
     fprintf(f, "# EphimTrace Forensic Timeline Report\n\n");

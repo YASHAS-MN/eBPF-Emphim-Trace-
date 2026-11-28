@@ -86,6 +86,8 @@ struct replay_config {
     uint64_t filter_token;
     uint64_t progress_interval;
     bool strict;
+    bool allow_legacy;
+    bool allow_overwrite;
     bool verbose;
     bool quiet;
     int search_mode;
@@ -112,6 +114,8 @@ static void print_usage(const char *prog_name) {
     printf("  --summary-json <filepath>    Path to write machine-readable reconstruction summary\n");
     printf("  --strict                     Fail closed on gaps, corruptions, or unfinalized manifests;\n");
     printf("                               abort graph exports on validation failure\n");
+    printf("  --allow-legacy, --legacy     Explicit opt-in to replay legacy evidence without manifest under --strict\n");
+    printf("  -f, --force, --overwrite    Overwrite existing export targets safely (rejects symlinks and evidence/manifest)\n");
     printf("  --progress <n>               Report progress every N records (default: 50000, 0=disable)\n");
     printf("  --outgoing                   Use reference outgoing search mode (for benchmarking)\n");
     printf("  --incoming                   Use default incoming search mode (O(1) in-degree)\n");
@@ -123,16 +127,18 @@ static void print_usage(const char *prog_name) {
 int main(int argc, char *argv[]) {
     struct replay_config cfg = {
         .evid_path = NULL,
-        .dot_path = "ephimtrace_dag.dot",
-        .json_path = "ephimtrace_dag.json",
-        .timeline_path = "ephimtrace_timeline.md",
-        .filtered_dot_path = "ephimtrace_filtered.dot",
-        .filtered_json_path = "ephimtrace_filtered.json",
+        .dot_path = NULL,
+        .json_path = NULL,
+        .timeline_path = NULL,
+        .filtered_dot_path = NULL,
+        .filtered_json_path = NULL,
         .summary_json_path = NULL,
         .filter_pid = 0,
         .filter_token = 0,
         .progress_interval = 50000,
         .strict = false,
+        .allow_legacy = false,
+        .allow_overwrite = false,
         .verbose = false,
         .quiet = false,
         .search_mode = 0, /* Incoming adjacency default */
@@ -143,15 +149,16 @@ int main(int argc, char *argv[]) {
         cfg.search_mode = 1;
     }
 
+    bool any_export_specified = false;
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-d") == 0 || strcmp(argv[i], "--dot") == 0) {
-            if (i + 1 < argc) { cfg.dot_path = argv[++i]; }
+            if (i + 1 < argc) { cfg.dot_path = argv[++i]; any_export_specified = true; }
             else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "-j") == 0 || strcmp(argv[i], "--json") == 0) {
-            if (i + 1 < argc) { cfg.json_path = argv[++i]; }
+            if (i + 1 < argc) { cfg.json_path = argv[++i]; any_export_specified = true; }
             else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--timeline") == 0) {
-            if (i + 1 < argc) { cfg.timeline_path = argv[++i]; }
+            if (i + 1 < argc) { cfg.timeline_path = argv[++i]; any_export_specified = true; }
             else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--filter-pid") == 0) {
             if (i + 1 < argc) { cfg.filter_pid = (uint32_t)strtoul(argv[++i], NULL, 10); }
@@ -160,16 +167,20 @@ int main(int argc, char *argv[]) {
             if (i + 1 < argc) { cfg.filter_token = (uint64_t)strtoull(argv[++i], NULL, 10); }
             else { fprintf(stderr, "Error: %s requires a token\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "--filtered-dot") == 0) {
-            if (i + 1 < argc) { cfg.filtered_dot_path = argv[++i]; }
+            if (i + 1 < argc) { cfg.filtered_dot_path = argv[++i]; any_export_specified = true; }
             else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "--filtered-json") == 0) {
-            if (i + 1 < argc) { cfg.filtered_json_path = argv[++i]; }
+            if (i + 1 < argc) { cfg.filtered_json_path = argv[++i]; any_export_specified = true; }
             else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "--summary-json") == 0) {
-            if (i + 1 < argc) { cfg.summary_json_path = argv[++i]; }
+            if (i + 1 < argc) { cfg.summary_json_path = argv[++i]; any_export_specified = true; }
             else { fprintf(stderr, "Error: %s requires a filepath\n", argv[i]); return 1; }
         } else if (strcmp(argv[i], "--strict") == 0) {
             cfg.strict = true;
+        } else if (strcmp(argv[i], "--allow-legacy") == 0 || strcmp(argv[i], "--legacy") == 0) {
+            cfg.allow_legacy = true;
+        } else if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--force") == 0 || strcmp(argv[i], "--overwrite") == 0) {
+            cfg.allow_overwrite = true;
         } else if (strcmp(argv[i], "--progress") == 0) {
             if (i + 1 < argc) { cfg.progress_interval = (uint64_t)strtoull(argv[++i], NULL, 10); }
             else { fprintf(stderr, "Error: %s requires a number\n", argv[i]); return 1; }
@@ -199,6 +210,16 @@ int main(int argc, char *argv[]) {
         print_usage(argv[0]);
         return 1;
     }
+
+    /* If no specific export targets were provided, enable default full DAG and timeline exports */
+    if (!any_export_specified) {
+        cfg.dot_path = "ephimtrace_dag.dot";
+        cfg.json_path = "ephimtrace_dag.json";
+        cfg.timeline_path = "ephimtrace_timeline.md";
+    }
+
+    /* Configure export overwrite policy in provenance engine */
+    prov_engine_set_export_overwrite(cfg.allow_overwrite);
 
     struct stat st_evid;
     if (stat(cfg.evid_path, &st_evid) != 0) {
@@ -378,7 +399,20 @@ int main(int argc, char *argv[]) {
     bool no_corruption = (reader.stats.corrupt_records == 0);
     bool no_incompleteness = (reader.stats.incomplete_records == 0);
     bool gaps_acceptable = (!cfg.strict || reader.stats.seq_gaps == 0);
-    bool manifest_acceptable = (!cfg.strict || (!manifest_present ? true : manifest_verified));
+    bool manifest_acceptable = false;
+    if (!cfg.strict) {
+        manifest_acceptable = true;
+    } else {
+        if (manifest_present) {
+            manifest_acceptable = manifest_verified;
+        } else {
+            /* Require explicit legacy opt-in when manifest is absent under strict mode */
+            manifest_acceptable = cfg.allow_legacy;
+            if (!manifest_acceptable) {
+                fprintf(stderr, "[ERROR] Strict replay rejected legacy evidence without manifest (use --allow-legacy to replay under --strict).\n");
+            }
+        }
+    }
 
     bool replay_valid = clean_eof && no_corruption && no_incompleteness && gaps_acceptable && manifest_acceptable;
 
@@ -404,21 +438,27 @@ int main(int argc, char *argv[]) {
         if (cfg.dot_path && cfg.dot_path[0]) {
             dot_rc = prov_engine_export_dot(cfg.dot_path);
             if (dot_rc != 0) {
-                fprintf(stderr, "[ERROR] Failed to export DOT graph to '%s': %d\n", cfg.dot_path, dot_rc);
+                fprintf(stderr, "[ERROR] Failed to export DOT graph to '%s': %s%s\n",
+                        cfg.dot_path, strerror(-dot_rc),
+                        (dot_rc == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
             }
         }
 
         if (cfg.json_path && cfg.json_path[0]) {
             json_rc = prov_engine_export_json(cfg.json_path);
             if (json_rc != 0) {
-                fprintf(stderr, "[ERROR] Failed to export JSON graph to '%s': %d\n", cfg.json_path, json_rc);
+                fprintf(stderr, "[ERROR] Failed to export JSON graph to '%s': %s%s\n",
+                        cfg.json_path, strerror(-json_rc),
+                        (json_rc == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
             }
         }
 
         if (cfg.timeline_path && cfg.timeline_path[0]) {
             timeline_rc = prov_engine_export_timeline(cfg.timeline_path, cfg.filter_pid, cfg.filter_token);
             if (timeline_rc != 0) {
-                fprintf(stderr, "[ERROR] Failed to export timeline to '%s': %d\n", cfg.timeline_path, timeline_rc);
+                fprintf(stderr, "[ERROR] Failed to export timeline to '%s': %s%s\n",
+                        cfg.timeline_path, strerror(-timeline_rc),
+                        (timeline_rc == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
             }
         }
 
@@ -427,13 +467,17 @@ int main(int argc, char *argv[]) {
             if (cfg.filtered_dot_path && cfg.filtered_dot_path[0]) {
                 filtered_dot_rc = prov_engine_export_filtered_dot(cfg.filtered_dot_path, cfg.filter_pid, cfg.filter_token);
                 if (filtered_dot_rc != 0) {
-                    fprintf(stderr, "[ERROR] Failed to export filtered DOT graph to '%s': %d\n", cfg.filtered_dot_path, filtered_dot_rc);
+                    fprintf(stderr, "[ERROR] Failed to export filtered DOT graph to '%s': %s%s\n",
+                            cfg.filtered_dot_path, strerror(-filtered_dot_rc),
+                            (filtered_dot_rc == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
                 }
             }
             if (cfg.filtered_json_path && cfg.filtered_json_path[0]) {
                 filtered_json_rc = prov_engine_export_filtered_json(cfg.filtered_json_path, cfg.filter_pid, cfg.filter_token);
                 if (filtered_json_rc != 0) {
-                    fprintf(stderr, "[ERROR] Failed to export filtered JSON graph to '%s': %d\n", cfg.filtered_json_path, filtered_json_rc);
+                    fprintf(stderr, "[ERROR] Failed to export filtered JSON graph to '%s': %s%s\n",
+                            cfg.filtered_json_path, strerror(-filtered_json_rc),
+                            (filtered_json_rc == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
                 }
             }
         }
@@ -551,10 +595,11 @@ int main(int argc, char *argv[]) {
     printf("=================================================================\n\n");
     fflush(stdout);
 
-    /* Optional JSON summary file output with checked ferror/fflush/fclose */
+    /* Optional JSON summary file output with checked ferror/fflush/fclose and safe exclusive creation */
     int summary_rc = 0;
     if (cfg.summary_json_path && cfg.summary_json_path[0]) {
-        FILE *fj = fopen(cfg.summary_json_path, "w");
+        int open_err = 0;
+        FILE *fj = prov_open_safe_export(cfg.summary_json_path, cfg.allow_overwrite, &open_err);
         if (fj) {
             fprintf(fj, "{\n");
             fprintf(fj, "  \"status\": \"%s\",\n", overall_success ? "OK" : "ERROR");
@@ -591,8 +636,10 @@ int main(int argc, char *argv[]) {
                 summary_rc = -EIO;
             }
         } else {
-            fprintf(stderr, "[ERROR] Failed to open summary JSON '%s': %s\n", cfg.summary_json_path, strerror(errno));
-            summary_rc = -errno;
+            fprintf(stderr, "[ERROR] Failed to open summary JSON '%s': %s%s\n",
+                    cfg.summary_json_path, strerror(-open_err),
+                    (open_err == -EEXIST) ? " (file already exists; use --overwrite to replace)" : "");
+            summary_rc = open_err;
         }
     }
 

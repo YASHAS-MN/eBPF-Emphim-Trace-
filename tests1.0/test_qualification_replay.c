@@ -214,6 +214,61 @@ int main(void)
         all_passed = false;
     }
 
+    /* 1.7 File-open time rejection of existing target without truncation */
+    const char *exist_dot = TEST_DIR "/pre_existing.dot";
+    unlink(exist_dot);
+    FILE *fe = fopen(exist_dot, "w");
+    fprintf(fe, "PRE_EXISTING_DO_NOT_TRUNCATE_CONTENT_12345");
+    fclose(fe);
+    char exist_hash_before[65], exist_hash_after[65];
+    compute_sha256(exist_dot, exist_hash_before);
+
+    snprintf(args, sizeof(args), "--dot \"%s\"", exist_dot);
+    int rc1_exist = run_replay_cmd(evid1, args, out, sizeof(out));
+    compute_sha256(exist_dot, exist_hash_after);
+    bool exist_hash_intact = (strcmp(exist_hash_before, exist_hash_after) == 0);
+
+    if (rc1_exist == 6 && exist_hash_intact) {
+        printf("  [PASS] 1.7: Existing export rejected at file-open time without truncation (rc=6), hash unchanged.\n");
+    } else {
+        printf("  [FAIL] 1.7: rc=%d, hash_intact=%d\n", rc1_exist, exist_hash_intact);
+        all_passed = false;
+    }
+
+    /* 1.8 Safe overwrite when --overwrite is explicitly requested */
+    snprintf(args, sizeof(args), "--overwrite --dot \"%s\"", exist_dot);
+    int rc1_ovw = run_replay_cmd(evid1, args, out, sizeof(out));
+    bool dot_valid = false;
+    FILE *fr = fopen(exist_dot, "r");
+    if (fr) {
+        char rbuf[128];
+        if (fgets(rbuf, sizeof(rbuf), fr) && strstr(rbuf, "digraph")) {
+            dot_valid = true;
+        }
+        fclose(fr);
+    }
+    if (rc1_ovw == 0 && dot_valid) {
+        printf("  [PASS] 1.8: Safe export overwrite allowed when --overwrite requested (rc=0), valid DOT generated.\n");
+    } else {
+        printf("  [FAIL] 1.8: rc=%d, dot_valid=%d\n", rc1_ovw, dot_valid);
+        all_passed = false;
+    }
+
+    /* 1.9 Rejection of symlinked target even with --overwrite */
+    const char *sym_ovw = TEST_DIR "/symlink_overwrite.dot";
+    unlink(sym_ovw);
+    assert(symlink(evid1_m, sym_ovw) == 0);
+    snprintf(args, sizeof(args), "--overwrite --dot \"%s\"", sym_ovw);
+    int rc1_sym_ovw = run_replay_cmd(evid1, args, out, sizeof(out));
+    compute_sha256(evid1_m, cur_m_hash);
+    unlink(sym_ovw);
+    if ((rc1_sym_ovw == 1 || rc1_sym_ovw == 6) && strcmp(hash_m_orig, cur_m_hash) == 0) {
+        printf("  [PASS] 1.9: Symlinked target rejected at open-time even with --overwrite, manifest hash unchanged.\n");
+    } else {
+        printf("  [FAIL] 1.9: rc=%d\n", rc1_sym_ovw);
+        all_passed = false;
+    }
+
     /* --- SUITE 2: Inconsistent Manifest Handling --- */
     printf("\n[SUITE 2: Inconsistent Manifest Handling]\n");
     const char *evid2 = TEST_DIR "/case2_inconsistent.evid";
@@ -278,6 +333,34 @@ int main(void)
         all_passed = false;
     }
 
+    /* 3.2 Strict replay rejects legacy evidence without manifest when no opt-in is given */
+    const char *dot3_strict = TEST_DIR "/case3_strict.dot";
+    unlink(dot3_strict);
+    snprintf(args, sizeof(args), "--strict --dot \"%s\"", dot3_strict);
+    int rc3_strict = run_replay_cmd(evid3, args, out, sizeof(out));
+    bool dot3_exists = (access(dot3_strict, F_OK) == 0);
+
+    if (rc3_strict == 7 && !dot3_exists) {
+        printf("  [PASS] 3.2: Strict replay rejected legacy evidence without manifest (rc=7), exports suppressed.\n");
+    } else {
+        printf("  [FAIL] 3.2: rc=%d, dot3_exists=%d\n", rc3_strict, dot3_exists);
+        all_passed = false;
+    }
+
+    /* 3.3 Strict replay succeeds on legacy evidence with explicit --allow-legacy opt-in */
+    unlink(dot3_strict);
+    snprintf(args, sizeof(args), "--strict --allow-legacy --dot \"%s\"", dot3_strict);
+    int rc3_optin = run_replay_cmd(evid3, args, out, sizeof(out));
+    dot3_exists = (access(dot3_strict, F_OK) == 0);
+    bool status_unverified = (strstr(out, "Unverified Telemetry Completeness") != NULL);
+
+    if (rc3_optin == 0 && dot3_exists && status_unverified) {
+        printf("  [PASS] 3.3: Strict replay with --allow-legacy succeeded (rc=0), exported graph, reported UNVERIFIED.\n");
+    } else {
+        printf("  [FAIL] 3.3: rc=%d, dot3_exists=%d, status_unverified=%d\n", rc3_optin, dot3_exists, status_unverified);
+        all_passed = false;
+    }
+
     /* --- SUITE 4: Malformed Manifest Handling --- */
     printf("\n[SUITE 4: Malformed Manifest Handling]\n");
     const char *evid4 = TEST_DIR "/case4_malformed.evid";
@@ -298,6 +381,66 @@ int main(void)
         printf("  [PASS] 4.1: Strict replay rejected incompatible manifest version with code 7 and suppressed exports.\n");
     } else {
         printf("  [FAIL] 4.1: rc=%d, dot4_exists=%d\n", rc4_strict, dot4_exists);
+        all_passed = false;
+    }
+
+    /* 4.2 Malformed syntax: unclosed curly brace */
+    unlink(evid4_m);
+    fm = fopen(evid4_m, "w");
+    fprintf(fm, "{\"manifest_version\": 1, \"record_count\": 10"); /* Missing closing brace */
+    fclose(fm);
+    unlink(dot4);
+    int rc4_syn = run_replay_cmd(evid4, "--strict --dot " TEST_DIR "/case4.dot", out, sizeof(out));
+    dot4_exists = (access(dot4, F_OK) == 0);
+    if (rc4_syn == 7 && !dot4_exists) {
+        printf("  [PASS] 4.2: Strict replay rejected unclosed JSON syntax with code 7 and suppressed exports.\n");
+    } else {
+        printf("  [FAIL] 4.2: rc=%d, dot4_exists=%d\n", rc4_syn, dot4_exists);
+        all_passed = false;
+    }
+
+    /* 4.3 Trailing non-whitespace garbage after root JSON object */
+    unlink(evid4_m);
+    fm = fopen(evid4_m, "w");
+    fprintf(fm, "{\"manifest_version\": 1, \"record_count\": 10, \"storage_bytes\": 100, \"finalized\": true, \"synchronized\": true, \"loss_counters\": {}} EXTRA_GARBAGE");
+    fclose(fm);
+    unlink(dot4);
+    int rc4_junk = run_replay_cmd(evid4, "--strict --dot " TEST_DIR "/case4.dot", out, sizeof(out));
+    dot4_exists = (access(dot4, F_OK) == 0);
+    if (rc4_junk == 7 && !dot4_exists) {
+        printf("  [PASS] 4.3: Strict replay rejected trailing garbage after root JSON with code 7.\n");
+    } else {
+        printf("  [FAIL] 4.3: rc=%d, dot4_exists=%d\n", rc4_junk, dot4_exists);
+        all_passed = false;
+    }
+
+    /* 4.4 Missing required field (missing finalized & synchronized) */
+    unlink(evid4_m);
+    fm = fopen(evid4_m, "w");
+    fprintf(fm, "{\"manifest_version\": 1, \"record_count\": 10, \"storage_bytes\": 100, \"loss_counters\": {}}");
+    fclose(fm);
+    unlink(dot4);
+    int rc4_req = run_replay_cmd(evid4, "--strict --dot " TEST_DIR "/case4.dot", out, sizeof(out));
+    dot4_exists = (access(dot4, F_OK) == 0);
+    if (rc4_req == 7 && !dot4_exists) {
+        printf("  [PASS] 4.4: Strict replay rejected missing required fields (finalized/synchronized) with code 7.\n");
+    } else {
+        printf("  [FAIL] 4.4: rc=%d, dot4_exists=%d\n", rc4_req, dot4_exists);
+        all_passed = false;
+    }
+
+    /* 4.5 Checked numeric conversion failure: negative unsigned record_count */
+    unlink(evid4_m);
+    fm = fopen(evid4_m, "w");
+    fprintf(fm, "{\"manifest_version\": 1, \"record_count\": -10, \"storage_bytes\": 100, \"finalized\": true, \"synchronized\": true, \"loss_counters\": {}}");
+    fclose(fm);
+    unlink(dot4);
+    int rc4_num = run_replay_cmd(evid4, "--strict --dot " TEST_DIR "/case4.dot", out, sizeof(out));
+    dot4_exists = (access(dot4, F_OK) == 0);
+    if (rc4_num == 7 && !dot4_exists) {
+        printf("  [PASS] 4.5: Strict replay rejected negative value for unsigned record_count with code 7.\n");
+    } else {
+        printf("  [FAIL] 4.5: rc=%d, dot4_exists=%d\n", rc4_num, dot4_exists);
         all_passed = false;
     }
 
@@ -331,6 +474,92 @@ int main(void)
     } else {
         printf("  [FAIL] 5.1: std_rc=%d, strict_rc=%d, std_exp=%d, strict_supp=%d, hash_match=%d\n",
                rc5_std, rc5_strict, std_exported, strict_suppressed, hash5_match);
+        all_passed = false;
+    }
+
+    /* --- SUITE 6: Known Positive Loss Preservation with Unavailable Counters --- */
+    printf("\n[SUITE 6: Known Positive Loss Preservation with Unavailable Counters]\n");
+    const char *evid6 = TEST_DIR "/case6_loss_preservation.evid";
+    struct evidence_session_manifest m6;
+    generate_clean_evidence(evid6, 10, &m6);
+    char evid6_m[512];
+    snprintf(evid6_m, sizeof(evid6_m), "%s.manifest", evid6);
+
+    /* 6.1 Total ring buffer drops > 0, but other kernel counters unavailable (-1) */
+    unlink(evid6_m);
+    FILE *f6 = fopen(evid6_m, "w");
+    fprintf(f6,
+        "{\n"
+        "  \"manifest_version\": 1,\n"
+        "  \"evidence_file\": \"%s\",\n"
+        "  \"record_count\": 10,\n"
+        "  \"storage_bytes\": %llu,\n"
+        "  \"finalized\": true,\n"
+        "  \"synchronized\": true,\n"
+        "  \"loss_counters\": {\n"
+        "    \"reg_map_full_drop\": -1,\n"
+        "    \"token_alloc_err\": -1,\n"
+        "    \"token_mismatch\": -1,\n"
+        "    \"sample_size_mismatches\": 0,\n"
+        "    \"write_errors\": 0,\n"
+        "    \"poll_errors\": 0,\n"
+        "    \"drain_errors\": 0,\n"
+        "    \"ring_buffer_total_drops\": 12,\n"
+        "    \"ring_buffer_per_type_drops\": {}\n"
+        "  }\n"
+        "}\n", evid6, (unsigned long long)m6.storage_bytes);
+    fclose(f6);
+
+    const char *sum6_1 = TEST_DIR "/case6_1_sum.json";
+    unlink(sum6_1);
+    snprintf(args, sizeof(args), "--summary-json \"%s\"", sum6_1);
+    int rc6_1 = run_replay_cmd(evid6, args, out, sizeof(out));
+    bool reported_lossy_6_1 = (strstr(out, "Lossy Telemetry Captured") != NULL);
+
+    if (rc6_1 == 0 && reported_lossy_6_1) {
+        printf("  [PASS] 6.1: Positive total drops (12) preserved as LOSSY even when registry counters are unavailable (-1).\n");
+    } else {
+        printf("  [FAIL] 6.1: rc=%d, reported_lossy=%d\n", rc6_1, reported_lossy_6_1);
+        all_passed = false;
+    }
+
+    /* 6.2 Total drops unavailable (-1), but per-type drop > 0 (execve=5) */
+    unlink(evid6_m);
+    f6 = fopen(evid6_m, "w");
+    fprintf(f6,
+        "{\n"
+        "  \"manifest_version\": 1,\n"
+        "  \"evidence_file\": \"%s\",\n"
+        "  \"record_count\": 10,\n"
+        "  \"storage_bytes\": %llu,\n"
+        "  \"finalized\": true,\n"
+        "  \"synchronized\": true,\n"
+        "  \"loss_counters\": {\n"
+        "    \"reg_map_full_drop\": 0,\n"
+        "    \"token_alloc_err\": 0,\n"
+        "    \"token_mismatch\": 0,\n"
+        "    \"sample_size_mismatches\": 0,\n"
+        "    \"write_errors\": 0,\n"
+        "    \"poll_errors\": 0,\n"
+        "    \"drain_errors\": 0,\n"
+        "    \"ring_buffer_total_drops\": -1,\n"
+        "    \"ring_buffer_per_type_drops\": {\n"
+        "      \"execve\": 5\n"
+        "    }\n"
+        "  }\n"
+        "}\n", evid6, (unsigned long long)m6.storage_bytes);
+    fclose(f6);
+
+    const char *sum6_2 = TEST_DIR "/case6_2_sum.json";
+    unlink(sum6_2);
+    snprintf(args, sizeof(args), "--summary-json \"%s\"", sum6_2);
+    int rc6_2 = run_replay_cmd(evid6, args, out, sizeof(out));
+    bool reported_lossy_6_2 = (strstr(out, "Lossy Telemetry Captured") != NULL);
+
+    if (rc6_2 == 0 && reported_lossy_6_2) {
+        printf("  [PASS] 6.2: Per-type positive drop (execve=5) preserved as LOSSY when total counter is unavailable (-1).\n");
+    } else {
+        printf("  [FAIL] 6.2: rc=%d, reported_lossy=%d\n", rc6_2, reported_lossy_6_2);
         all_passed = false;
     }
 

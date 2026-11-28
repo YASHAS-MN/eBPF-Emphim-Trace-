@@ -411,85 +411,399 @@ enum evidence_loss_status {
   EVIDENCE_LOSS_INCONSISTENT = 3
 };
 
-static inline bool
-evidence_manifest_find_val(const char *buf, const char *key, const char **val_start) {
-  if (!buf || !key || !val_start)
-    return false;
-  const char *p = strstr(buf, key);
-  if (!p)
-    return false;
-  p += strlen(key);
-  while (*p == ' ' || *p == '\t' || *p == '\r' || *p == '\n')
-    p++;
-  if (*p == ':')
-    p++;
-  while (*p == ' ' || *p == '\t' || *p == '\r' || *p == '\n')
-    p++;
-  *val_start = p;
-  return true;
-}
+/* --- RFC 8259 Recursive Descent JSON Parser & Validator --- */
 
-static inline bool
-evidence_manifest_parse_int64(const char *buf, const char *key, int64_t *out_val) {
-  const char *p = NULL;
-  if (!evidence_manifest_find_val(buf, key, &p))
-    return false;
-  char *end = NULL;
-  errno = 0;
-  long long v = strtoll(p, &end, 10);
-  if (end == p || errno != 0) {
-    return false;
+enum ephim_json_type {
+  EPHIM_JSON_INVALID = 0,
+  EPHIM_JSON_OBJECT,
+  EPHIM_JSON_ARRAY,
+  EPHIM_JSON_STRING,
+  EPHIM_JSON_NUMBER,
+  EPHIM_JSON_BOOL,
+  EPHIM_JSON_NULL
+};
+
+struct ephim_json_val {
+  enum ephim_json_type type;
+  const char *start;
+  size_t len;
+  bool bool_val;
+  int first_child;
+  int next_sibling;
+  const char *key;
+  size_t key_len;
+};
+
+static inline void ephim_json_skip_ws(const char **p, const char *end) {
+  while (*p < end && (**p == ' ' || **p == '\t' || **p == '\r' || **p == '\n')) {
+    (*p)++;
   }
-  if (out_val)
-    *out_val = (int64_t)v;
-  return true;
 }
 
-static inline bool
-evidence_manifest_parse_uint64(const char *buf, const char *key, uint64_t *out_val) {
-  const char *p = NULL;
-  if (!evidence_manifest_find_val(buf, key, &p))
+static inline bool ephim_json_parse_string(const char **p, const char *end,
+                                           const char **out_str, size_t *out_len) {
+  if (*p >= end || **p != '"')
     return false;
-  if (*p == '-')
-    return false;
-  char *end = NULL;
-  errno = 0;
-  unsigned long long v = strtoull(p, &end, 10);
-  if (end == p || errno != 0) {
-    return false;
-  }
-  if (out_val)
-    *out_val = (uint64_t)v;
-  return true;
-}
-
-static inline bool
-evidence_manifest_parse_uint32(const char *buf, const char *key, uint32_t *out_val) {
-  uint64_t v = 0;
-  if (!evidence_manifest_parse_uint64(buf, key, &v))
-    return false;
-  if (v > UINT32_MAX)
-    return false;
-  if (out_val)
-    *out_val = (uint32_t)v;
-  return true;
-}
-
-static inline bool
-evidence_manifest_parse_bool(const char *buf, const char *key, bool *out_val) {
-  const char *p = NULL;
-  if (!evidence_manifest_find_val(buf, key, &p))
-    return false;
-  if (strncmp(p, "true", 4) == 0) {
-    if (out_val)
-      *out_val = true;
-    return true;
-  } else if (strncmp(p, "false", 5) == 0) {
-    if (out_val)
-      *out_val = false;
-    return true;
+  (*p)++; /* skip opening quote */
+  const char *s = *p;
+  while (*p < end) {
+    char c = **p;
+    if (c == '"') {
+      *out_str = s;
+      *out_len = (size_t)(*p - s);
+      (*p)++; /* skip closing quote */
+      return true;
+    }
+    if ((unsigned char)c < 0x20) {
+      return false; /* Unescaped control characters illegal */
+    }
+    if (c == '\\') {
+      (*p)++;
+      if (*p >= end) return false;
+      char esc = **p;
+      if (esc == '"' || esc == '\\' || esc == '/' || esc == 'b' ||
+          esc == 'f' || esc == 'n' || esc == 'r' || esc == 't') {
+        (*p)++;
+      } else if (esc == 'u') {
+        (*p)++;
+        for (int i = 0; i < 4; i++) {
+          if (*p >= end) return false;
+          char h = **p;
+          if (!((h >= '0' && h <= '9') || (h >= 'a' && h <= 'f') || (h >= 'A' && h <= 'F')))
+            return false;
+          (*p)++;
+        }
+      } else {
+        return false;
+      }
+    } else {
+      (*p)++;
+    }
   }
   return false;
+}
+
+static inline bool ephim_json_parse_number(const char **p, const char *end,
+                                           const char **out_num, size_t *out_len) {
+  const char *start = *p;
+  if (*p < end && **p == '-') {
+    (*p)++;
+  }
+  if (*p >= end) return false;
+  if (**p == '0') {
+    (*p)++;
+    if (*p < end && (**p >= '0' && **p <= '9'))
+      return false; /* Leading zero not allowed in JSON */
+  } else if (**p >= '1' && **p <= '9') {
+    while (*p < end && (**p >= '0' && **p <= '9'))
+      (*p)++;
+  } else {
+    return false;
+  }
+  if (*p < end && **p == '.') {
+    (*p)++;
+    if (*p >= end || !(**p >= '0' && **p <= '9'))
+      return false;
+    while (*p < end && (**p >= '0' && **p <= '9'))
+      (*p)++;
+  }
+  if (*p < end && (**p == 'e' || **p == 'E')) {
+    (*p)++;
+    if (*p < end && (**p == '+' || **p == '-'))
+      (*p)++;
+    if (*p >= end || !(**p >= '0' && **p <= '9'))
+      return false;
+    while (*p < end && (**p >= '0' && **p <= '9'))
+      (*p)++;
+  }
+  *out_num = start;
+  *out_len = (size_t)(*p - start);
+  return true;
+}
+
+static inline int ephim_json_parse_val(const char **p, const char *end,
+                                       struct ephim_json_val *nodes, int *node_count, int max_nodes);
+
+static inline int ephim_json_parse_object(const char **p, const char *end,
+                                         struct ephim_json_val *nodes, int *node_count, int max_nodes) {
+  if (*p >= end || **p != '{') return -1;
+  if (*node_count >= max_nodes) return -1;
+
+  int obj_idx = (*node_count)++;
+  nodes[obj_idx].type = EPHIM_JSON_OBJECT;
+  nodes[obj_idx].start = *p;
+  nodes[obj_idx].first_child = -1;
+  nodes[obj_idx].next_sibling = -1;
+
+  (*p)++; /* skip '{' */
+  ephim_json_skip_ws(p, end);
+  if (*p < end && **p == '}') {
+    (*p)++;
+    return obj_idx;
+  }
+
+  int prev_child = -1;
+  while (*p < end) {
+    ephim_json_skip_ws(p, end);
+    const char *key = NULL;
+    size_t key_len = 0;
+    if (!ephim_json_parse_string(p, end, &key, &key_len))
+      return -1;
+
+    ephim_json_skip_ws(p, end);
+    if (*p >= end || **p != ':')
+      return -1;
+    (*p)++; /* skip ':' */
+    ephim_json_skip_ws(p, end);
+
+    int val_idx = ephim_json_parse_val(p, end, nodes, node_count, max_nodes);
+    if (val_idx < 0)
+      return -1;
+
+    nodes[val_idx].key = key;
+    nodes[val_idx].key_len = key_len;
+
+    if (prev_child < 0) {
+      nodes[obj_idx].first_child = val_idx;
+    } else {
+      nodes[prev_child].next_sibling = val_idx;
+    }
+    prev_child = val_idx;
+
+    ephim_json_skip_ws(p, end);
+    if (*p < end && **p == ',') {
+      (*p)++;
+      ephim_json_skip_ws(p, end);
+      if (*p < end && **p == '}')
+        return -1; /* Trailing comma illegal */
+    } else if (*p < end && **p == '}') {
+      (*p)++;
+      return obj_idx;
+    } else {
+      return -1;
+    }
+  }
+  return -1;
+}
+
+static inline int ephim_json_parse_array(const char **p, const char *end,
+                                        struct ephim_json_val *nodes, int *node_count, int max_nodes) {
+  if (*p >= end || **p != '[') return -1;
+  if (*node_count >= max_nodes) return -1;
+
+  int arr_idx = (*node_count)++;
+  nodes[arr_idx].type = EPHIM_JSON_ARRAY;
+  nodes[arr_idx].start = *p;
+  nodes[arr_idx].first_child = -1;
+  nodes[arr_idx].next_sibling = -1;
+
+  (*p)++;
+  ephim_json_skip_ws(p, end);
+  if (*p < end && **p == ']') {
+    (*p)++;
+    return arr_idx;
+  }
+
+  int prev_child = -1;
+  while (*p < end) {
+    int val_idx = ephim_json_parse_val(p, end, nodes, node_count, max_nodes);
+    if (val_idx < 0)
+      return -1;
+
+    if (prev_child < 0) {
+      nodes[arr_idx].first_child = val_idx;
+    } else {
+      nodes[prev_child].next_sibling = val_idx;
+    }
+    prev_child = val_idx;
+
+    ephim_json_skip_ws(p, end);
+    if (*p < end && **p == ',') {
+      (*p)++;
+      ephim_json_skip_ws(p, end);
+      if (*p < end && **p == ']')
+        return -1; /* Trailing comma illegal */
+    } else if (*p < end && **p == ']') {
+      (*p)++;
+      return arr_idx;
+    } else {
+      return -1;
+    }
+  }
+  return -1;
+}
+
+static inline int ephim_json_parse_val(const char **p, const char *end,
+                                       struct ephim_json_val *nodes, int *node_count, int max_nodes) {
+  ephim_json_skip_ws(p, end);
+  if (*p >= end) return -1;
+  if (*node_count >= max_nodes) return -1;
+
+  char c = **p;
+  if (c == '{') {
+    return ephim_json_parse_object(p, end, nodes, node_count, max_nodes);
+  }
+  if (c == '[') {
+    return ephim_json_parse_array(p, end, nodes, node_count, max_nodes);
+  }
+  if (c == '"') {
+    const char *s = NULL;
+    size_t len = 0;
+    if (!ephim_json_parse_string(p, end, &s, &len))
+      return -1;
+    int idx = (*node_count)++;
+    nodes[idx].type = EPHIM_JSON_STRING;
+    nodes[idx].start = s;
+    nodes[idx].len = len;
+    nodes[idx].first_child = -1;
+    nodes[idx].next_sibling = -1;
+    return idx;
+  }
+  if (c == 't') {
+    if (end - *p >= 4 && strncmp(*p, "true", 4) == 0) {
+      *p += 4;
+      int idx = (*node_count)++;
+      nodes[idx].type = EPHIM_JSON_BOOL;
+      nodes[idx].bool_val = true;
+      nodes[idx].first_child = -1;
+      nodes[idx].next_sibling = -1;
+      return idx;
+    }
+    return -1;
+  }
+  if (c == 'f') {
+    if (end - *p >= 5 && strncmp(*p, "false", 5) == 0) {
+      *p += 5;
+      int idx = (*node_count)++;
+      nodes[idx].type = EPHIM_JSON_BOOL;
+      nodes[idx].bool_val = false;
+      nodes[idx].first_child = -1;
+      nodes[idx].next_sibling = -1;
+      return idx;
+    }
+    return -1;
+  }
+  if (c == 'n') {
+    if (end - *p >= 4 && strncmp(*p, "null", 4) == 0) {
+      *p += 4;
+      int idx = (*node_count)++;
+      nodes[idx].type = EPHIM_JSON_NULL;
+      nodes[idx].first_child = -1;
+      nodes[idx].next_sibling = -1;
+      return idx;
+    }
+    return -1;
+  }
+  if (c == '-' || (c >= '0' && c <= '9')) {
+    const char *num = NULL;
+    size_t len = 0;
+    if (!ephim_json_parse_number(p, end, &num, &len))
+      return -1;
+    int idx = (*node_count)++;
+    nodes[idx].type = EPHIM_JSON_NUMBER;
+    nodes[idx].start = num;
+    nodes[idx].len = len;
+    nodes[idx].first_child = -1;
+    nodes[idx].next_sibling = -1;
+    return idx;
+  }
+  return -1;
+}
+
+static inline int ephim_json_parse_doc(const char *buf, size_t len,
+                                       struct ephim_json_val *nodes, int max_nodes) {
+  if (!buf || len == 0) return -1;
+  const char *p = buf;
+  const char *end = buf + len;
+  ephim_json_skip_ws(&p, end);
+  if (p >= end || *p != '{') return -1;
+
+  int node_count = 0;
+  int root = ephim_json_parse_object(&p, end, nodes, &node_count, max_nodes);
+  if (root < 0) return -1;
+
+  ephim_json_skip_ws(&p, end);
+  if (p != end) return -1; /* Trailing garbage */
+  return root;
+}
+
+static inline const struct ephim_json_val *ephim_json_obj_get(const struct ephim_json_val *nodes,
+                                                              int obj_idx, const char *key) {
+  if (obj_idx < 0 || nodes[obj_idx].type != EPHIM_JSON_OBJECT)
+    return NULL;
+  size_t klen = strlen(key);
+  int curr = nodes[obj_idx].first_child;
+  while (curr >= 0) {
+    if (nodes[curr].key && nodes[curr].key_len == klen &&
+        strncmp(nodes[curr].key, key, klen) == 0) {
+      return &nodes[curr];
+    }
+    curr = nodes[curr].next_sibling;
+  }
+  return NULL;
+}
+
+/* Checked numeric and boolean conversions */
+static inline bool ephim_json_val_to_uint64(const struct ephim_json_val *v, uint64_t *out_val) {
+  if (!v || v->type != EPHIM_JSON_NUMBER || !v->start || v->len == 0)
+    return false;
+  if (v->start[0] == '-')
+    return false;
+  char buf[64];
+  if (v->len >= sizeof(buf))
+    return false;
+  memcpy(buf, v->start, v->len);
+  buf[v->len] = '\0';
+  char *end = NULL;
+  errno = 0;
+  unsigned long long val = strtoull(buf, &end, 10);
+  if (end != buf + v->len || errno != 0)
+    return false;
+  if (out_val) *out_val = (uint64_t)val;
+  return true;
+}
+
+static inline bool ephim_json_val_to_uint32(const struct ephim_json_val *v, uint32_t *out_val) {
+  uint64_t val64 = 0;
+  if (!ephim_json_val_to_uint64(v, &val64))
+    return false;
+  if (val64 > UINT32_MAX)
+    return false;
+  if (out_val) *out_val = (uint32_t)val64;
+  return true;
+}
+
+static inline bool ephim_json_val_to_int64(const struct ephim_json_val *v, int64_t *out_val) {
+  if (!v || v->type != EPHIM_JSON_NUMBER || !v->start || v->len == 0)
+    return false;
+  char buf[64];
+  if (v->len >= sizeof(buf))
+    return false;
+  memcpy(buf, v->start, v->len);
+  buf[v->len] = '\0';
+  char *end = NULL;
+  errno = 0;
+  long long val = strtoll(buf, &end, 10);
+  if (end != buf + v->len || errno != 0)
+    return false;
+  if (out_val) *out_val = (int64_t)val;
+  return true;
+}
+
+static inline bool ephim_json_val_to_bool(const struct ephim_json_val *v, bool *out_val) {
+  if (!v || v->type != EPHIM_JSON_BOOL)
+    return false;
+  if (out_val) *out_val = v->bool_val;
+  return true;
+}
+
+static inline bool ephim_json_val_to_str(const struct ephim_json_val *v, char *out_buf, size_t max_len) {
+  if (!v || v->type != EPHIM_JSON_STRING || !v->start)
+    return false;
+  size_t copy_len = v->len < max_len - 1 ? v->len : max_len - 1;
+  memcpy(out_buf, v->start, copy_len);
+  out_buf[copy_len] = '\0';
+  return true;
 }
 
 static inline enum evidence_loss_status
@@ -502,26 +816,6 @@ evidence_manifest_evaluate_loss(const struct evidence_session_manifest *m,
     return EVIDENCE_LOSS_UNVERIFIED;
   }
 
-  /* 1. Storage persistence sanity */
-  if (!m->finalized || !m->synchronized ||
-      m->sample_size_mismatches != 0 ||
-      m->write_errors != 0 ||
-      m->poll_errors != 0 ||
-      m->drain_errors != 0) {
-    if (out_desc) *out_desc = "UNVERIFIED (Storage persistence errors or unfinalized)";
-    if (out_computed_drops) *out_computed_drops = -1;
-    return EVIDENCE_LOSS_UNVERIFIED;
-  }
-
-  /* 2. Check kernel counters availability */
-  if (m->reg_map_full_drop < 0 || m->token_alloc_err < 0 || m->token_mismatch < 0 ||
-      m->ring_buffer_total_drops < 0) {
-    if (out_desc) *out_desc = "UNVERIFIED (Kernel loss counters missing or unavailable in manifest)";
-    if (out_computed_drops) *out_computed_drops = -1;
-    return EVIDENCE_LOSS_UNVERIFIED;
-  }
-
-  /* 3. Check all defined event type counters */
   static const uint32_t defined_types[] = {
     EVENT_EXECVE, EVENT_MEMFD_CREATE, EVENT_UNLINK, EVENT_UNLINKAT,
     EVENT_CONNECT, EVENT_FORK, EVENT_PROCESS_EXEC, EVENT_PROCESS_EXIT,
@@ -532,16 +826,16 @@ evidence_manifest_evaluate_loss(const struct evidence_session_manifest *m,
   };
 
   int64_t type_sum = 0;
-  bool any_missing = false;
-  bool any_drop = false;
+  bool any_type_missing = false;
+  bool any_type_drop = false;
 
   for (size_t i = 0; i < sizeof(defined_types)/sizeof(defined_types[0]); i++) {
     uint32_t t = defined_types[i];
     int64_t d = m->ring_buffer_per_type_drops[t];
     if (d < 0) {
-      any_missing = true;
+      any_type_missing = true;
     } else if (d > 0) {
-      any_drop = true;
+      any_type_drop = true;
       type_sum += d;
     }
   }
@@ -550,26 +844,54 @@ evidence_manifest_evaluate_loss(const struct evidence_session_manifest *m,
                    m->ring_buffer_total_drops : type_sum;
   if (out_computed_drops) *out_computed_drops = total;
 
-  /* If any defined event counter is missing/unavailable, cannot verify lossless */
-  if (any_missing) {
-    if (out_desc) *out_desc = "UNVERIFIED (Per-event drop counters incomplete in manifest)";
-    return EVIDENCE_LOSS_UNVERIFIED;
+  /* 1. Consistency check:
+   * Total drops must equal sum of per-type drops when both are available.
+   * If sum of per-type drops exceeds total drops, manifest is inconsistent.
+   */
+  if (m->ring_buffer_total_drops >= 0 && type_sum > m->ring_buffer_total_drops) {
+    if (out_desc) *out_desc = "INCONSISTENT (Sum of per-event drops exceeds total ring buffer drops)";
+    return EVIDENCE_LOSS_INCONSISTENT;
   }
-
-  /* 4. Check consistency: total drops must equal sum of per-type drops */
-  if (m->ring_buffer_total_drops != type_sum) {
+  if (m->ring_buffer_total_drops >= 0 && !any_type_missing && m->ring_buffer_total_drops != type_sum) {
     if (out_desc) *out_desc = "INCONSISTENT (Discrepancy between total and per-type loss counters)";
     return EVIDENCE_LOSS_INCONSISTENT;
   }
 
-  /* 5. Lossy if any drop counter is positive */
-  if (m->ring_buffer_total_drops > 0 || any_drop ||
-      m->reg_map_full_drop > 0 || m->token_alloc_err > 0 || m->token_mismatch > 0) {
+  /* 2. Preserve known positive loss indications even when other counters are unavailable! */
+  bool any_positive_loss = (m->ring_buffer_total_drops > 0 || any_type_drop ||
+                            m->reg_map_full_drop > 0 || m->token_alloc_err > 0 ||
+                            m->token_mismatch > 0);
+  if (any_positive_loss) {
     if (out_desc) *out_desc = "LOSSY (Drops recorded in kernel ring buffer or registry)";
     return EVIDENCE_LOSS_LOSSY;
   }
 
-  /* 6. Complete and lossless */
+  /* 3. Storage persistence sanity */
+  if (!m->finalized || !m->synchronized ||
+      m->sample_size_mismatches != 0 ||
+      m->write_errors != 0 ||
+      m->poll_errors != 0 ||
+      m->drain_errors != 0) {
+    if (out_desc) *out_desc = "UNVERIFIED (Storage persistence errors or unfinalized)";
+    if (out_computed_drops) *out_computed_drops = -1;
+    return EVIDENCE_LOSS_UNVERIFIED;
+  }
+
+  /* 4. Kernel counters availability: if any counter is missing/unavailable, lossless cannot be verified */
+  if (any_type_missing) {
+    if (out_desc) *out_desc = "UNVERIFIED (Per-event drop counters incomplete in manifest)";
+    if (out_computed_drops) *out_computed_drops = -1;
+    return EVIDENCE_LOSS_UNVERIFIED;
+  }
+
+  if (m->reg_map_full_drop < 0 || m->token_alloc_err < 0 || m->token_mismatch < 0 ||
+      m->ring_buffer_total_drops < 0) {
+    if (out_desc) *out_desc = "UNVERIFIED (Kernel loss counters missing or unavailable in manifest)";
+    if (out_computed_drops) *out_computed_drops = -1;
+    return EVIDENCE_LOSS_UNVERIFIED;
+  }
+
+  /* 5. Complete and lossless: all verified counters are zero */
   if (out_desc) *out_desc = "COMPLETE_LOSSLESS (0 drops recorded across all stages)";
   return EVIDENCE_LOSS_LOSSLESS;
 }
@@ -788,94 +1110,130 @@ evidence_read_manifest(const char *evid_path,
     return -1;
   buf[n] = '\0';
 
-  /* Check manifest_version if present */
-  uint32_t m_ver = 0;
-  if (evidence_manifest_parse_uint32(buf, "\"manifest_version\"", &m_ver)) {
-    if (m_ver != 1)
-      return -1;
-    out_m->version = m_ver;
-  } else {
-    out_m->version = 1;
-  }
+  /* Complete JSON parsing and RFC 8259 syntax validation */
+  struct ephim_json_val nodes[256];
+  int root = ephim_json_parse_doc(buf, (size_t)n, nodes, 256);
+  if (root < 0)
+    return -1; /* Malformed JSON */
 
-  /* Required fields: record_count and storage_bytes */
-  if (!evidence_manifest_parse_uint64(buf, "\"record_count\"", &out_m->record_count)) {
+  /* 1. Required field: manifest_version == 1 */
+  const struct ephim_json_val *v_ver = ephim_json_obj_get(nodes, root, "manifest_version");
+  if (!v_ver || !ephim_json_val_to_uint32(v_ver, &out_m->version) || out_m->version != 1)
+    return -1; /* Incompatible or missing manifest version */
+
+  /* 2. Required fields: record_count and storage_bytes */
+  const struct ephim_json_val *v_rec = ephim_json_obj_get(nodes, root, "record_count");
+  if (!v_rec || !ephim_json_val_to_uint64(v_rec, &out_m->record_count))
     return -1;
-  }
-  if (!evidence_manifest_parse_uint64(buf, "\"storage_bytes\"", &out_m->storage_bytes)) {
+
+  const struct ephim_json_val *v_stor = ephim_json_obj_get(nodes, root, "storage_bytes");
+  if (!v_stor || !ephim_json_val_to_uint64(v_stor, &out_m->storage_bytes))
     return -1;
-  }
 
-  evidence_manifest_parse_uint32(buf, "\"target_pid\"", &out_m->target_pid);
-  evidence_manifest_parse_bool(buf, "\"finalized\"", &out_m->finalized);
-  evidence_manifest_parse_bool(buf, "\"synchronized\"", &out_m->synchronized);
+  /* 3. Required fields: finalized and synchronized */
+  const struct ephim_json_val *v_fin = ephim_json_obj_get(nodes, root, "finalized");
+  if (!v_fin || !ephim_json_val_to_bool(v_fin, &out_m->finalized))
+    return -1;
 
-  evidence_manifest_parse_uint64(buf, "\"sample_size_mismatches\"", &out_m->sample_size_mismatches);
-  evidence_manifest_parse_uint64(buf, "\"write_errors\"", &out_m->write_errors);
-  evidence_manifest_parse_uint64(buf, "\"poll_errors\"", &out_m->poll_errors);
-  evidence_manifest_parse_uint64(buf, "\"drain_errors\"", &out_m->drain_errors);
+  const struct ephim_json_val *v_syn = ephim_json_obj_get(nodes, root, "synchronized");
+  if (!v_syn || !ephim_json_val_to_bool(v_syn, &out_m->synchronized))
+    return -1;
 
-  /* Loss accounting: initialized to -1 (unavailable), set only on valid numeric conversion */
-  evidence_manifest_parse_int64(buf, "\"reg_map_full_drop\"", &out_m->reg_map_full_drop);
-  evidence_manifest_parse_int64(buf, "\"token_alloc_err\"", &out_m->token_alloc_err);
-  evidence_manifest_parse_int64(buf, "\"token_mismatch\"", &out_m->token_mismatch);
-  evidence_manifest_parse_int64(buf, "\"ring_buffer_total_drops\"", &out_m->ring_buffer_total_drops);
+  /* Top-level optional fields */
+  const struct ephim_json_val *v_pid = ephim_json_obj_get(nodes, root, "target_pid");
+  if (v_pid) ephim_json_val_to_uint32(v_pid, &out_m->target_pid);
+
+  const struct ephim_json_val *v_t0 = ephim_json_obj_get(nodes, root, "session_start_ns");
+  if (v_t0) ephim_json_val_to_uint64(v_t0, &out_m->session_start_ns);
+
+  const struct ephim_json_val *v_t1 = ephim_json_obj_get(nodes, root, "session_end_ns");
+  if (v_t1) ephim_json_val_to_uint64(v_t1, &out_m->session_end_ns);
+
+  /* 4. Required sub-object: loss_counters */
+  const struct ephim_json_val *v_lc = ephim_json_obj_get(nodes, root, "loss_counters");
+  if (!v_lc || v_lc->type != EPHIM_JSON_OBJECT)
+    return -1;
+
+  int lc_idx = (int)(v_lc - nodes);
+
+  const struct ephim_json_val *v_ssm = ephim_json_obj_get(nodes, lc_idx, "sample_size_mismatches");
+  if (v_ssm) ephim_json_val_to_uint64(v_ssm, &out_m->sample_size_mismatches);
+
+  const struct ephim_json_val *v_we = ephim_json_obj_get(nodes, lc_idx, "write_errors");
+  if (v_we) ephim_json_val_to_uint64(v_we, &out_m->write_errors);
+
+  const struct ephim_json_val *v_pe = ephim_json_obj_get(nodes, lc_idx, "poll_errors");
+  if (v_pe) ephim_json_val_to_uint64(v_pe, &out_m->poll_errors);
+
+  const struct ephim_json_val *v_de = ephim_json_obj_get(nodes, lc_idx, "drain_errors");
+  if (v_de) ephim_json_val_to_uint64(v_de, &out_m->drain_errors);
+
+  /* Loss accounting: checked numeric conversions */
+  const struct ephim_json_val *v_map = ephim_json_obj_get(nodes, lc_idx, "reg_map_full_drop");
+  if (v_map) ephim_json_val_to_int64(v_map, &out_m->reg_map_full_drop);
+
+  const struct ephim_json_val *v_tok_a = ephim_json_obj_get(nodes, lc_idx, "token_alloc_err");
+  if (v_tok_a) ephim_json_val_to_int64(v_tok_a, &out_m->token_alloc_err);
+
+  const struct ephim_json_val *v_tok_m = ephim_json_obj_get(nodes, lc_idx, "token_mismatch");
+  if (v_tok_m) ephim_json_val_to_int64(v_tok_m, &out_m->token_mismatch);
+
+  const struct ephim_json_val *v_rb_tot = ephim_json_obj_get(nodes, lc_idx, "ring_buffer_total_drops");
+  if (v_rb_tot) ephim_json_val_to_int64(v_rb_tot, &out_m->ring_buffer_total_drops);
 
   /* Parse string/number for ring_buffer_drops */
-  const char *rb_drops_val = NULL;
-  if (evidence_manifest_find_val(buf, "\"ring_buffer_drops\"", &rb_drops_val)) {
-    if (*rb_drops_val == '"') {
-      rb_drops_val++;
-      const char *end = strchr(rb_drops_val, '"');
-      if (end) {
-        size_t slen = (size_t)(end - rb_drops_val);
-        if (slen >= sizeof(out_m->ring_buffer_drops))
-          slen = sizeof(out_m->ring_buffer_drops) - 1;
-        memcpy(out_m->ring_buffer_drops, rb_drops_val, slen);
-        out_m->ring_buffer_drops[slen] = '\0';
-      }
-    } else {
-      char *end = NULL;
-      errno = 0;
-      long long v = strtoll(rb_drops_val, &end, 10);
-      if (end != rb_drops_val && errno == 0) {
-        snprintf(out_m->ring_buffer_drops, sizeof(out_m->ring_buffer_drops), "%lld", v);
+  const struct ephim_json_val *v_rb_d = ephim_json_obj_get(nodes, lc_idx, "ring_buffer_drops");
+  if (v_rb_d) {
+    if (v_rb_d->type == EPHIM_JSON_STRING) {
+      ephim_json_val_to_str(v_rb_d, out_m->ring_buffer_drops, sizeof(out_m->ring_buffer_drops));
+    } else if (v_rb_d->type == EPHIM_JSON_NUMBER) {
+      int64_t vnum = 0;
+      if (ephim_json_val_to_int64(v_rb_d, &vnum)) {
+        snprintf(out_m->ring_buffer_drops, sizeof(out_m->ring_buffer_drops), "%lld", (long long)vnum);
       }
     }
   }
 
-  /* Parse all defined per-type drops: only valid numeric conversions overwrite -1 */
-  static const struct {
-    uint32_t type;
-    const char *key;
-  } type_keys[] = {
-    {EVENT_EXECVE, "\"execve\""},
-    {EVENT_MEMFD_CREATE, "\"memfd_create\""},
-    {EVENT_UNLINK, "\"unlink\""},
-    {EVENT_UNLINKAT, "\"unlinkat\""},
-    {EVENT_CONNECT, "\"connect\""},
-    {EVENT_FORK, "\"fork\""},
-    {EVENT_PROCESS_EXEC, "\"process_exec\""},
-    {EVENT_PROCESS_EXIT, "\"process_exit\""},
-    {EVENT_VFS_UNLINK_COMPLETED, "\"vfs_unlink_completed\""},
-    {EVENT_VFS_RMDIR_COMPLETED, "\"vfs_rmdir_completed\""},
-    {EVENT_RMDIR, "\"rmdir\""},
-    {EVENT_MEMFD_COMPLETED, "\"memfd_completed\""},
-    {EVENT_MEMFD_DESTROYED, "\"memfd_destroyed\""},
-    {EVENT_MEMFD_FILE_RELEASED, "\"memfd_file_released\""},
-    {EVENT_FD_INSTALLED, "\"fd_installed\""},
-    {EVENT_FD_CLOSED, "\"fd_closed\""},
-    {EVENT_MEMFD_WRITE, "\"memfd_write\""},
-    {EVENT_MEMFD_EXEC_ATTEMPT, "\"memfd_exec_attempt\""},
-    {EVENT_MEMFD_EXEC_SUCCESS, "\"memfd_exec_success\""},
-    {EVENT_DEBUG, "\"debug\""},
-  };
-  for (size_t i = 0; i < sizeof(type_keys)/sizeof(type_keys[0]); i++) {
-    int64_t val = -1;
-    if (evidence_manifest_parse_int64(buf, type_keys[i].key, &val)) {
-      out_m->ring_buffer_per_type_drops[type_keys[i].type] = val;
+  /* Parse per-type drops */
+  const struct ephim_json_val *v_pt = ephim_json_obj_get(nodes, lc_idx, "ring_buffer_per_type_drops");
+  if (v_pt && v_pt->type == EPHIM_JSON_OBJECT) {
+    int pt_idx = (int)(v_pt - nodes);
+    static const struct {
+      uint32_t type;
+      const char *key;
+    } type_keys[] = {
+      {EVENT_EXECVE, "execve"},
+      {EVENT_MEMFD_CREATE, "memfd_create"},
+      {EVENT_UNLINK, "unlink"},
+      {EVENT_UNLINKAT, "unlinkat"},
+      {EVENT_CONNECT, "connect"},
+      {EVENT_FORK, "fork"},
+      {EVENT_PROCESS_EXEC, "process_exec"},
+      {EVENT_PROCESS_EXIT, "process_exit"},
+      {EVENT_VFS_UNLINK_COMPLETED, "vfs_unlink_completed"},
+      {EVENT_VFS_RMDIR_COMPLETED, "vfs_rmdir_completed"},
+      {EVENT_RMDIR, "rmdir"},
+      {EVENT_MEMFD_COMPLETED, "memfd_completed"},
+      {EVENT_MEMFD_DESTROYED, "memfd_destroyed"},
+      {EVENT_MEMFD_FILE_RELEASED, "memfd_file_released"},
+      {EVENT_FD_INSTALLED, "fd_installed"},
+      {EVENT_FD_CLOSED, "fd_closed"},
+      {EVENT_MEMFD_WRITE, "memfd_write"},
+      {EVENT_MEMFD_EXEC_ATTEMPT, "memfd_exec_attempt"},
+      {EVENT_MEMFD_EXEC_SUCCESS, "memfd_exec_success"},
+      {EVENT_DEBUG, "debug"},
+    };
+    for (size_t i = 0; i < sizeof(type_keys)/sizeof(type_keys[0]); i++) {
+      const struct ephim_json_val *v_type = ephim_json_obj_get(nodes, pt_idx, type_keys[i].key);
+      if (v_type) {
+        int64_t val = -1;
+        if (ephim_json_val_to_int64(v_type, &val)) {
+          out_m->ring_buffer_per_type_drops[type_keys[i].type] = val;
+        }
+      }
     }
   }
+
   return 0; /* Successfully read and parsed */
 }
 

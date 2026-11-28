@@ -416,8 +416,10 @@ static void test_legacy_file_compatibility(void) {
     int rc = evidence_read_manifest(TEST_LEGACY_EVID, &m);
     assert(rc == 1); // 1 = manifest absent (legacy v1 file)
 
-    // Replay legacy file with ./build/replay --strict
-    // It must succeed, verifying all 6 records with UNKNOWN finalization status
+    // Replay legacy file with ./build/replay --strict (WITHOUT --allow-legacy)
+    // Under strict mode, absence of manifest must fail closed with exit code 7
+    unlink(TEST_DOT_FILE);
+    unlink(TEST_SUMMARY_JSON);
     int pid = fork();
     assert(pid >= 0);
     if (pid == 0) {
@@ -429,11 +431,30 @@ static void test_legacy_file_compatibility(void) {
               "--dot", TEST_DOT_FILE, "--summary-json", TEST_SUMMARY_JSON, NULL);
         _exit(127);
     }
-
     int status = 0;
     waitpid(pid, &status, 0);
     assert(WIFEXITED(status));
-    assert(WEXITSTATUS(status) == 0); // Legacy v1 succeeds cleanly
+    assert(WEXITSTATUS(status) == 7); // Fails closed under strict mode without opt-in
+
+    // Replay legacy file with ./build/replay --strict --allow-legacy (explicit opt-in)
+    // Must succeed, verifying all 6 records with truthful UNKNOWN status
+    unlink(TEST_DOT_FILE);
+    unlink(TEST_SUMMARY_JSON);
+    pid = fork();
+    assert(pid >= 0);
+    if (pid == 0) {
+        int devnull = open("/dev/null", O_WRONLY);
+        dup2(devnull, STDOUT_FILENO);
+        dup2(devnull, STDERR_FILENO);
+        close(devnull);
+        execl("./build/replay", "./build/replay", TEST_LEGACY_EVID, "--strict", "--allow-legacy",
+              "--dot", TEST_DOT_FILE, "--summary-json", TEST_SUMMARY_JSON, NULL);
+        _exit(127);
+    }
+    status = 0;
+    waitpid(pid, &status, 0);
+    assert(WIFEXITED(status));
+    assert(WEXITSTATUS(status) == 0); // Explicit opt-in succeeds
 
     // Verify summary JSON records manifest_present = false and UNKNOWN status
     FILE *fj = fopen(TEST_SUMMARY_JSON, "r");
@@ -898,7 +919,10 @@ static void test_unlinked_executable_provenance(void) {
     assert(fs_devA->fs.is_unlinked == true);
     assert(fs_devB->fs.is_unlinked == false);
 
-    // Test Export Capabilities with EDGE_FS_EXEC_SUCCESS
+    // Test Export Capabilities with EDGE_FS_EXEC_SUCCESS (exclusive safe export)
+    unlink(TEST_DOT_FILE);
+    unlink(TEST_JSON_FILE);
+    unlink(TEST_TIMELINE_FILE);
     assert(prov_engine_export_dot(TEST_DOT_FILE) == 0);
     assert(prov_engine_export_json(TEST_JSON_FILE) == 0);
     assert(prov_engine_export_timeline(TEST_TIMELINE_FILE, 0, 0) == 0);
@@ -1120,7 +1144,7 @@ static void test_loss_counter_parsing_and_consistency(void) {
             "  \"synchronized\": true,\n"
             "  \"loss_counters\": {\n"
             "    \"reg_map_full_drop\": \"corrupt_string\",\n"
-            "    \"token_alloc_err\": ::::bad_syntax,\n"
+            "    \"token_alloc_err\": \"bad_syntax\",\n"
             "    \"token_mismatch\": null,\n"
             "    \"sample_size_mismatches\": 0,\n"
             "    \"write_errors\": 0,\n"
@@ -1307,6 +1331,7 @@ static void test_loss_counter_parsing_and_consistency(void) {
         close(mfd);
 
         // Replay Case 1 (8 drops) using ./build/replay --strict
+        unlink(TEST_SUMMARY_JSON);
         int pid = fork();
         assert(pid >= 0);
         if (pid == 0) {

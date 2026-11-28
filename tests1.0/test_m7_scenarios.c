@@ -426,7 +426,10 @@ static int generate_and_export_forensic_dag(uint32_t parent_pid, uint32_t child_
     assert(nc >= 4);
     assert(ec >= 5);
 
-    /* Export artifacts */
+    /* Export artifacts (ensure fresh targets for exclusive open) */
+    unlink("ephimtrace_dag.dot");
+    unlink("ephimtrace_dag.json");
+    unlink("ephimtrace_timeline.md");
     int dot_rc = prov_engine_export_dot("ephimtrace_dag.dot");
     int json_rc = prov_engine_export_json("ephimtrace_dag.json");
     int tl_rc = prov_engine_export_timeline("ephimtrace_timeline.md", 0, 0);

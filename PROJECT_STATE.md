@@ -11,7 +11,7 @@ Develop an eBPF-based forensic telemetry and provenance system prioritizing evid
 - Codebase: https://github.com/YASHAS-MN/eBPF-Emphim-Trace-
 - Knowledge base: https://github.com/YASHAS-MN/Obsidian
 - Project board: https://github.com/users/YASHAS-MN/projects/1
-- Current implementation checkpoint: a61a3e7 (descriptor remediation; benchmark baseline b6c89af)
+- Current implementation checkpoint: 4b1706c (Release Qualification Task 02; descriptor baseline a61a3e7; benchmark baseline b6c89af)
 - Working branch: remediation/state-independence-and-loss-accountability
 - Initial production benchmark baseline: 056ec9b
 - Historical Architecture A reference: 49ece70dc72a14799aac6a94c6b62d65c2a78bfd
@@ -69,16 +69,21 @@ Scoped recall only; full precision, multiplicity and attribute fidelity not esta
 
 Scoped descriptor remediation accepted at a61a3e7. Native abfe508 results (a66c342 report): 1512 frames, 666 workload events, 228 nodes/1076 edges, 27/27 hooks, zero reported losses; 5/5 expected installs, ordinary replacement false close eliminated, shared table child close attributed. Final a61a3e7 source reviewed, targeted synthetic tests and native workload-only assertions reported; actual modified collector smoke still needed at integrated release checkpoint. Raw evidence not independently inspected. #5 remains open for deferred residual races, table lifetime and unobserved cleanup limitations; not universal concurrency safety. See comment 7235437800.
 
-## Current Task
+## Release Qualification Task 02
 
-#11 — Release qualification 02: evidence integrity and replay safety. Diagnose with disposable fixtures and implement narrowly scoped replay output protection and manifest validation. Remediate manifest/evidence overwrite through export paths, missing/malformed/inconsistent manifest handling, misleading completeness classifications, and strict replay failure handling while preserving recoverable evidence. Keep collection architecture, event ABI, and performance configuration unchanged. Owner-approved sequence remains release qualification, comparative evaluation, hands-on CLI prototype demonstration and owner approval before GUI, then external validation.
+Completed under GitHub Issue #11. Remediated and verified:
+- Replay export safety enforced at file-open time via atomic `O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC` in `prov_open_safe_export()`, preventing accidental truncation of existing targets or following symlinks without explicit `--overwrite` / `-f`. Pre-flight alias and inode collision checks reject attempts to overwrite input evidence or manifests with exit code 1.
+- Strict session manifest validation powered by a complete RFC 8259 recursive-descent JSON parser with checked numeric conversions (rejecting negative numbers for unsigned fields, trailing tokens, and overflow) and required field checks.
+- Strict mode fail-closed semantics (`rc=7`) requiring explicit legacy opt-in (`--allow-legacy` / `--legacy`) when manifest is absent.
+- Truthful integrity and completeness classifications: clean legacy evidence reports `SUCCESS (Unverified Telemetry Completeness)`, and known positive drops are preserved as `LOSSY` even when auxiliary counters are unavailable.
+- Strict export suppression on unfinalized or corrupt evidence, while preserving clean prefix recovery in standard mode.
+- Validated via 6 qualification suites (22 checks) in `test_qualification_replay`, 5 failure controls, and 10 pipeline integration suites with 100% fidelity. Collection architecture, event ABI, and performance configurations remain frozen.
 
 ## Outstanding Release Work
 
 - #5 descriptor/registry concurrency and lifetime limitations.
 - Broader telemetry coverage, field fidelity (actual exit status unavailable and now represented as unknown), long-run operation, overload envelope, failure recovery, storage integrity and compatibility.
-- Evidence manifest/replay hardening, export alias protection and graph allocation failure handling.
-- Remaining end-to-end coverage/measurement gaps, deployment requirements and release qualification.
+- Graph allocation failure handling and remaining end-to-end qualification.
 - Benchmark reporting corrections noted above.
 - No merge or release implied by this update.
 
@@ -87,6 +92,7 @@ Scoped descriptor remediation accepted at a61a3e7. Native abfe508 results (a66c3
 - tests1.0/kernel_telemetry/benchmark_01/
 - tests1.0/kernel_telemetry/runner.py (historical diagnostic lab, not production benchmarking)
 - tests1.0/test_pipeline_integration.c
+- tests1.0/test_qualification_replay.c
 - tests1.0/test_m6_dag.c and test_m6_filtering.c
 - tests1.0/kernel_telemetry/benchmark_e2e_01/
 

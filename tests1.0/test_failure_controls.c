@@ -146,7 +146,9 @@ static bool test_control_1_orderly_finalization(void)
         return false;
     }
 
-    /* Replay in strict mode */
+    /* Replay in strict mode (re-create fresh outputs exclusively) */
+    unlink(dot_path);
+    unlink(json_path);
     int rc_strict = run_replay(evid_path, true, dot_path, json_path);
     if (rc_strict != 0) {
         printf("    [FAIL] Strict replay failed with rc=%d\n", rc_strict);
