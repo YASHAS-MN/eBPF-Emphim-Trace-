@@ -1617,13 +1617,25 @@ static int print_session_manifest(int cnt_fd, int drop_fd, int close_rc, int pol
     return persist_ok ? 0 : 1;
 }
 
+static bool parse_ring_capacity(const char *text, uint32_t *out)
+{
+    uint64_t value;
+    if (!ephim_parse_decimal(text, 1024, &value) || value == 0 ||
+        (value & (value - 1)) != 0)
+        return false;
+    *out = (uint32_t)value;
+    return true;
+}
+
 int main(int argc, char **argv)
 {
     if (getenv("EPHIM_QUIET") && atoi(getenv("EPHIM_QUIET"))) {
         quiet_mode = 1;
     }
-    if (getenv("EPHIM_RING_BUFFER_MB")) {
-        g_ring_buffer_mb = (uint32_t)strtoul(getenv("EPHIM_RING_BUFFER_MB"), NULL, 10);
+    if (getenv("EPHIM_RING_BUFFER_MB") &&
+        !parse_ring_capacity(getenv("EPHIM_RING_BUFFER_MB"), &g_ring_buffer_mb)) {
+        fprintf(stderr, "Error: EPHIM_RING_BUFFER_MB must be a power of two from 1 to 1024 MiB\n");
+        return 1;
     }
     if (getenv("EPHIM_LOW_MEMORY") && atoi(getenv("EPHIM_LOW_MEMORY"))) {
         g_ring_buffer_mb = EPHIM_LOW_MEM_RING_BUFFER_MB;
@@ -1636,21 +1648,35 @@ int main(int argc, char **argv)
             quiet_mode = 1;
         } else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0) {
             if (i + 1 < argc) {
-                snprintf(g_evidence_path, sizeof(g_evidence_path), "%s", argv[++i]);
+                const char *path = argv[++i];
+                if (!ephim_valid_evidence_path(path, sizeof(g_evidence_path))) {
+                    fprintf(stderr, "Error: evidence path must fit in 255 bytes and contain no JSON-unsafe characters\n");
+                    return 1;
+                }
+                memcpy(g_evidence_path, path, strlen(path) + 1);
             } else {
                 fprintf(stderr, "Error: %s requires an evidence file path\n", argv[i]);
                 return 1;
             }
         } else if (strcmp(argv[i], "-b") == 0 || strcmp(argv[i], "--max-bytes") == 0) {
             if (i + 1 < argc) {
-                g_max_bytes = (uint64_t)strtoull(argv[++i], NULL, 10);
+                if (!ephim_parse_decimal(argv[++i], INT64_MAX, &g_max_bytes) ||
+                    g_max_bytes < sizeof(struct evidence_file_header)) {
+                    fprintf(stderr, "Error: --max-bytes requires an unsigned decimal value large enough for the evidence header\n");
+                    return 1;
+                }
             } else {
                 fprintf(stderr, "Error: %s requires byte count\n", argv[i]);
                 return 1;
             }
         } else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--filter-pid") == 0) {
             if (i + 1 < argc) {
-                filter_pid = (uint32_t)strtoul(argv[++i], NULL, 10);
+                uint64_t value;
+                if (!ephim_parse_decimal(argv[++i], UINT32_MAX, &value)) {
+                    fprintf(stderr, "Error: invalid PID\n");
+                    return 1;
+                }
+                filter_pid = (uint32_t)value;
                 g_target_pid = filter_pid;
             } else {
                 fprintf(stderr, "Error: %s requires a PID argument\n", argv[i]);
@@ -1658,7 +1684,10 @@ int main(int argc, char **argv)
             }
         } else if (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--filter-token") == 0) {
             if (i + 1 < argc) {
-                filter_token = (uint64_t)strtoull(argv[++i], NULL, 10);
+                if (!ephim_parse_decimal(argv[++i], UINT64_MAX, &filter_token)) {
+                    fprintf(stderr, "Error: invalid object token\n");
+                    return 1;
+                }
             } else {
                 fprintf(stderr, "Error: %s requires a token argument\n", argv[i]);
                 return 1;
@@ -1674,12 +1703,10 @@ int main(int argc, char **argv)
             g_ring_buffer_mb = EPHIM_LOW_MEM_RING_BUFFER_MB;
         } else if (strcmp(argv[i], "--ring-buffer-mb") == 0) {
             if (i + 1 < argc) {
-                unsigned long v = strtoul(argv[++i], NULL, 10);
-                if (v == 0 || v > 1024) {
-                    fprintf(stderr, "Error: --ring-buffer-mb must be between 1 and 1024 MiB\n");
+                if (!parse_ring_capacity(argv[++i], &g_ring_buffer_mb)) {
+                    fprintf(stderr, "Error: --ring-buffer-mb must be a power of two from 1 to 1024 MiB\n");
                     return 1;
                 }
-                g_ring_buffer_mb = (uint32_t)v;
             } else {
                 fprintf(stderr, "Error: --ring-buffer-mb requires an integer argument\n");
                 return 1;
@@ -1699,7 +1726,7 @@ int main(int argc, char **argv)
             printf("                              (default: 1073741824 = 1 GiB)\n");
             printf("  -v, --verbose               Enable debug logging and kernel tracepoint diagnostics\n");
             printf("  -q, --quiet                 Suppress runtime event messages (default in capture mode)\n");
-            printf("  --ring-buffer-mb <mb>       Ring buffer capacity in MiB (candidate default: 64)\n");
+            printf("  --ring-buffer-mb <mb>       Ring buffer capacity in MiB, power of two 1-1024 (default: 64)\n");
             printf("  -l, --low-memory            Use 4 MiB low-memory ring buffer option\n");
             printf("  -h, --help                  Show this help message\n\n");
             printf("Reconstruction:\n");
@@ -1711,6 +1738,15 @@ int main(int argc, char **argv)
             fprintf(stderr, "Usage: %s [-o <file.evid>] [-p <pid>] [-b <bytes>] [-v|--verbose] [-q|--quiet] [-h|--help]\n", argv[0]);
             return 1;
         }
+    }
+
+    /* A stale manifest must not be paired with a newly created session. */
+    char sidecar[512];
+    snprintf(sidecar, sizeof(sidecar), "%s.manifest", g_evidence_path);
+    struct stat st_sidecar;
+    if (lstat(sidecar, &st_sidecar) == 0 || errno != ENOENT) {
+        fprintf(stderr, "Error: manifest path already exists or cannot be checked: %s\n", sidecar);
+        return 1;
     }
 
     libbpf_set_print(libbpf_print_fn);
@@ -1790,13 +1826,16 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if (g_ring_buffer_mb > 0) {
+    {
         struct bpf_map *events_map = bpf_object__find_map_by_name(obj, "events");
-        if (events_map) {
-            int set_rc = bpf_map__set_max_entries(events_map, g_ring_buffer_mb * 1024 * 1024);
-            if (set_rc != 0) {
-                log_error("Failed to set ring buffer capacity to %u MiB: %d", g_ring_buffer_mb, set_rc);
-            }
+        if (!events_map) {
+            log_error("Required events ring buffer map is missing");
+            goto cleanup;
+        }
+        int set_rc = bpf_map__set_max_entries(events_map, g_ring_buffer_mb * 1024U * 1024U);
+        if (set_rc != 0) {
+            log_error("Failed to set ring buffer capacity to %u MiB: %d", g_ring_buffer_mb, set_rc);
+            goto cleanup;
         }
     }
 
