@@ -560,6 +560,7 @@ void prov_engine_process_event(const struct event *e)
                 .fd = e->fd,
             };
             attr.fd_closed.duration_ns = e->entry_ts_ns;
+            attr.fd_closed.duration_known = (e->entry_ts_ns > 0) ? 1 : 0;
             prov_add_edge(proc, memfd, EDGE_FD_CLOSED, &attr);
         }
         break;
@@ -989,12 +990,19 @@ static int render_graph_dot(FILE *f, const struct prov_graph *g)
                         edge->src->id, edge->dst->id, edge->attr.fd, esc_buf1, (unsigned long long)edge->attr.timestamp_ns);
                 break;
 
-            case EDGE_FD_CLOSED:
-                fprintf(f, "    \"%s\" -> \"%s\" [label=\"close_fd(fd=%d, dur=%llu ns)\\n@%llu ns\", color=\"#757575\", fontcolor=\"#616161\"];\n",
+            case EDGE_FD_CLOSED: {
+                char dur_str[64];
+                if (edge->attr.fd_closed.duration_known && edge->attr.fd_closed.duration_ns > 0) {
+                    snprintf(dur_str, sizeof(dur_str), "dur=%llu ns", (unsigned long long)edge->attr.fd_closed.duration_ns);
+                } else {
+                    snprintf(dur_str, sizeof(dur_str), "dur=unknown");
+                }
+                fprintf(f, "    \"%s\" -> \"%s\" [label=\"close_fd(fd=%d, %s)\\n@%llu ns\", color=\"#757575\", fontcolor=\"#616161\"];\n",
                         edge->src->id, edge->dst->id, edge->attr.fd,
-                        (unsigned long long)edge->attr.fd_closed.duration_ns,
+                        dur_str,
                         (unsigned long long)edge->attr.timestamp_ns);
                 break;
+            }
 
             case EDGE_MEMFD_WRITE:
                 fprintf(f, "    \"%s\" -> \"%s\" [label=\"write(off=%lld, bytes=%llu)\\n@%llu ns\", color=\"#D84315\", fontcolor=\"#D84315\"];\n",
@@ -1147,7 +1155,11 @@ static int render_graph_json(FILE *f, const struct prov_graph *g)
             case EDGE_FD_CLOSED:
                 fprintf(f, "      \"type\": \"EDGE_FD_CLOSED\",\n");
                 fprintf(f, "      \"fd\": %d,\n", edge->attr.fd);
-                fprintf(f, "      \"duration_ns\": %llu\n", (unsigned long long)edge->attr.fd_closed.duration_ns);
+                if (edge->attr.fd_closed.duration_known && edge->attr.fd_closed.duration_ns > 0) {
+                    fprintf(f, "      \"duration_ns\": %llu\n", (unsigned long long)edge->attr.fd_closed.duration_ns);
+                } else {
+                    fprintf(f, "      \"duration_ns\": \"unknown\"\n");
+                }
                 break;
 
             case EDGE_MEMFD_WRITE:
@@ -1358,13 +1370,20 @@ int prov_engine_export_timeline(const char *filepath, uint32_t target_pid, uint6
                     (unsigned long long)edge->dst->memfd.object_token, edge->attr.fd);
             break;
 
-        case EDGE_FD_CLOSED:
+        case EDGE_FD_CLOSED: {
             escape_string(edge->dst->memfd.name, esc_buf1, sizeof(esc_buf1));
-            fprintf(f, "- `[%llu ns]` `[FD_CLOSED]` Process %u (%s) -> close_fd() -> Memfd '%s' (Token: %llu, FD: %d, Duration: %llu ns)\n",
+            char dur_str[64];
+            if (edge->attr.fd_closed.duration_known && edge->attr.fd_closed.duration_ns > 0) {
+                snprintf(dur_str, sizeof(dur_str), "%llu ns", (unsigned long long)edge->attr.fd_closed.duration_ns);
+            } else {
+                snprintf(dur_str, sizeof(dur_str), "unknown");
+            }
+            fprintf(f, "- `[%llu ns]` `[FD_CLOSED]` Process %u (%s) -> close_fd() -> Memfd '%s' (Token: %llu, FD: %d, Duration: %s)\n",
                     (unsigned long long)ts, src_pid, src_comm, esc_buf1,
                     (unsigned long long)edge->dst->memfd.object_token, edge->attr.fd,
-                    (unsigned long long)edge->attr.fd_closed.duration_ns);
+                    dur_str);
             break;
+        }
 
         case EDGE_MEMFD_WRITE:
             escape_string(edge->dst->memfd.name, esc_buf1, sizeof(esc_buf1));
@@ -1450,13 +1469,20 @@ int prov_engine_export_timeline(const char *filepath, uint32_t target_pid, uint6
                     (unsigned long long)edge->dst->memfd.object_token, esc_buf1, esc_buf2, edge->attr.fd);
             break;
 
-        case EDGE_FD_CLOSED:
+        case EDGE_FD_CLOSED: {
             escape_string(edge->dst->memfd.name, esc_buf1, sizeof(esc_buf1));
-            fprintf(f, "| %llu | FD_CLOSED | Process %u (%s) | close_fd() | Memfd %llu | Name: %s, FD: %d, Duration: %llu ns |\n",
+            char dur_str[64];
+            if (edge->attr.fd_closed.duration_known && edge->attr.fd_closed.duration_ns > 0) {
+                snprintf(dur_str, sizeof(dur_str), "%llu ns", (unsigned long long)edge->attr.fd_closed.duration_ns);
+            } else {
+                snprintf(dur_str, sizeof(dur_str), "unknown");
+            }
+            fprintf(f, "| %llu | FD_CLOSED | Process %u (%s) | close_fd() | Memfd %llu | Name: %s, FD: %d, Duration: %s |\n",
                     (unsigned long long)ts, src_pid, src_comm,
                     (unsigned long long)edge->dst->memfd.object_token, esc_buf1, edge->attr.fd,
-                    (unsigned long long)edge->attr.fd_closed.duration_ns);
+                    dur_str);
             break;
+        }
 
         case EDGE_MEMFD_WRITE:
             escape_string(edge->dst->memfd.name, esc_buf1, sizeof(esc_buf1));

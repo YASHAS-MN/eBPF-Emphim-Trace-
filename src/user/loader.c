@@ -1282,6 +1282,13 @@ static const struct hook_spec required_hooks[] = {
         .type      = HOOK_TYPE_TRAMPOLINE,
     },
     {
+        .prog_name = "capture_do_dup2",
+        .category  = "vfs",
+        .target    = "do_dup2",
+        .group     = HOOK_GROUP_VFS,
+        .type      = HOOK_TYPE_TRAMPOLINE,
+    },
+    {
         .prog_name = "capture_bprm_check",
         .category  = "security",
         .target    = "security_bprm_check",

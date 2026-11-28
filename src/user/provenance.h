@@ -86,6 +86,7 @@ struct prov_edge_attr {
     } fd_installed;
     struct {
       uint64_t duration_ns;
+      uint8_t duration_known;
     } fd_closed;
     struct {
       int64_t offset;
