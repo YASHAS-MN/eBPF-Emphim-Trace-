@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # EphimTrace — Release Qualification Task 01: Descriptor Lifecycle Runner
-# Executes test_qualification_descriptor under production eBPF collector (b6c89af)
+# Executes test_qualification_descriptor under production eBPF collector (abfe508)
 # Captures persistent evidence and executes double replay for reconciliation
 #
 
@@ -40,7 +40,7 @@ echo "Target User:          $TARGET_USER (UID: $TARGET_UID, GID: $TARGET_GID)"
 echo "Repository Root:      $PERSIST_DIR"
 echo "Data Directory:       $DATA_DIR"
 echo "Exports Directory:    $EXPORTS_DIR"
-echo "Production Loader:    $LOADER_BIN (Frozen at b6c89af)"
+echo "Production Loader:    $LOADER_BIN (Remediated at abfe508)"
 echo "Test Binary:          $TEST_BIN"
 echo "==============================================================================="
 

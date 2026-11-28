@@ -2,2071 +2,2165 @@
 
 - **Target PID Filter**: 0
 - **Target Token Filter**: 0
-- **Correlated Nodes**: 210
-- **Chronological Events**: 1029
+- **Correlated Nodes**: 228
+- **Chronological Events**: 1076
 
 ## Chronological Event Log
 
-- `[6406575446269 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34987
-- `[6406575446420 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34989
-- `[6406575446760 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34990
-- `[6406575446891 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34988
-- `[6406575902028 ns]` `[FS_EXEC_SUCCESS]` Process 34989 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406575902118 ns]` `[FS_EXEC_SUCCESS]` Process 34990 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406575989673 ns]` `[FS_EXEC_SUCCESS]` Process 34988 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406576089992 ns]` `[FS_EXEC_SUCCESS]` Process 34987 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406676054375 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34991
-- `[6406676054515 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34992
-- `[6406676054686 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34993
-- `[6406676055497 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34994
-- `[6406676429341 ns]` `[FS_EXEC_SUCCESS]` Process 34992 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406676437747 ns]` `[FS_EXEC_SUCCESS]` Process 34991 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406676448617 ns]` `[FS_EXEC_SUCCESS]` Process 34993 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406676513810 ns]` `[FS_EXEC_SUCCESS]` Process 34994 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406785561589 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34995
-- `[6406785562390 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34996
-- `[6406785562611 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34997
-- `[6406785564224 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34998
-- `[6406786245787 ns]` `[FS_EXEC_SUCCESS]` Process 34995 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406786250436 ns]` `[FS_EXEC_SUCCESS]` Process 34998 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406786257990 ns]` `[FS_EXEC_SUCCESS]` Process 34996 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406786270804 ns]` `[FS_EXEC_SUCCESS]` Process 34997 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406888398190 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 34999
-- `[6406888399072 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35000
-- `[6406888404783 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35001
-- `[6406888405855 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35002
-- `[6406888805287 ns]` `[FS_EXEC_SUCCESS]` Process 35001 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406888813042 ns]` `[FS_EXEC_SUCCESS]` Process 34999 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406888837017 ns]` `[FS_EXEC_SUCCESS]` Process 35002 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406889182307 ns]` `[FS_EXEC_SUCCESS]` Process 35000 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406991578870 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35003
-- `[6406991583319 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35004
-- `[6406991589991 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35006
-- `[6406991591053 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35005
-- `[6406991977461 ns]` `[FS_EXEC_SUCCESS]` Process 35004 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406991981999 ns]` `[FS_EXEC_SUCCESS]` Process 35003 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406992014300 ns]` `[FS_EXEC_SUCCESS]` Process 35005 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6406992608770 ns]` `[FS_EXEC_SUCCESS]` Process 35006 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407003305223 ns]` `[FORK]` Process 3110 (<unknown>) -> fork() -> Child Process 35007
-- `[6407004706893 ns]` `[FS_EXEC_SUCCESS]` Process 35007 (/bin/sh) -> exec_success() -> FS Object '/bin/sh' (Inode: 2490662, Dev: 66309)
-- `[6407005207065 ns]` `[FORK]` Process 35007 (/bin/sh) -> fork() -> Child Process 35008
-- `[6407005433221 ns]` `[FS_EXEC_SUCCESS]` Process 35008 (/usr/bin/whoami) -> exec_success() -> FS Object '/usr/bin/whoami' (Inode: 2515452, Dev: 66309)
-- `[6407005948631 ns]` `[CONNECT]` Process 35008 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
-- `[6407005979820 ns]` `[CONNECT]` Process 35008 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
-- `[6407035615830 ns]` `[CONNECT]` Process 422 (<unknown>) -> connect() -> Net '<unsupported>:0' (FD: 17, Result: 0)
-- `[6407047267012 ns]` `[FORK]` Process 422 (<unknown>) -> fork() -> Child Process 35009
-- `[6407049833445 ns]` `[UNLINK]` Process 422 (<unknown>) -> unlink() -> FS Object '/run/udev/queue' (Status: SUCCESS)
-- `[6407094506082 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35010
-- `[6407094506393 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35011
-- `[6407094512985 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35012
-- `[6407094519257 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35013
-- `[6407094907909 ns]` `[FS_EXEC_SUCCESS]` Process 35011 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407094913299 ns]` `[FS_EXEC_SUCCESS]` Process 35013 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407094929039 ns]` `[FS_EXEC_SUCCESS]` Process 35010 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407094930431 ns]` `[FS_EXEC_SUCCESS]` Process 35012 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407107482830 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 1, FD: 95)
-- `[6407107485345 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 1, FD: 95)
-- `[6407107517375 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 1, FD: 95, Duration: 34635 ns)
-- `[6407107535169 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 1, FD: 6)
-- `[6407107551119 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 1, FD: 6, Duration: 16842 ns)
-- `[6407109021668 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 2, FD: 95)
-- `[6407109023121 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 2, FD: 95)
-- `[6407109045322 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 2, FD: 95, Duration: 23805 ns)
-- `[6407109052837 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 2, FD: 6)
-- `[6407109062124 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 2, FD: 6, Duration: 9749 ns)
-- `[6407197452320 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35015
-- `[6407197452801 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35014
-- `[6407197453021 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35016
-- `[6407197456057 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35017
-- `[6407197853987 ns]` `[FS_EXEC_SUCCESS]` Process 35017 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407197867492 ns]` `[FS_EXEC_SUCCESS]` Process 35015 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407197869987 ns]` `[FS_EXEC_SUCCESS]` Process 35014 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407197912787 ns]` `[FS_EXEC_SUCCESS]` Process 35016 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407300107169 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35018
-- `[6407300111988 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35019
-- `[6407300115926 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35021
-- `[6407300116026 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35020
-- `[6407300510569 ns]` `[FS_EXEC_SUCCESS]` Process 35018 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407300510759 ns]` `[FS_EXEC_SUCCESS]` Process 35021 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407300614514 ns]` `[FS_EXEC_SUCCESS]` Process 35020 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407302087488 ns]` `[FS_EXEC_SUCCESS]` Process 35019 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407402690714 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35022
-- `[6407402691375 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35023
-- `[6407402691575 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35025
-- `[6407402692718 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35024
-- `[6407403239728 ns]` `[FS_EXEC_SUCCESS]` Process 35022 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407403240118 ns]` `[FS_EXEC_SUCCESS]` Process 35025 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407403261739 ns]` `[FS_EXEC_SUCCESS]` Process 35024 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407403420378 ns]` `[FS_EXEC_SUCCESS]` Process 35023 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407505295438 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35026
-- `[6407505298414 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35027
-- `[6407505299506 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35029
-- `[6407505299767 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35028
-- `[6407505731740 ns]` `[FS_EXEC_SUCCESS]` Process 35028 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407505733213 ns]` `[FS_EXEC_SUCCESS]` Process 35027 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407505762939 ns]` `[FS_EXEC_SUCCESS]` Process 35029 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407507202860 ns]` `[FS_EXEC_SUCCESS]` Process 35026 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407608193536 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35031
-- `[6407608193856 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35030
-- `[6407608194427 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35033
-- `[6407608194447 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35032
-- `[6407608593128 ns]` `[FS_EXEC_SUCCESS]` Process 35030 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407608593489 ns]` `[FS_EXEC_SUCCESS]` Process 35033 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407608604199 ns]` `[FS_EXEC_SUCCESS]` Process 35031 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407608682967 ns]` `[FS_EXEC_SUCCESS]` Process 35032 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407619658667 ns]` `[UNLINK]` Process 4853 (<unknown>) -> unlink() -> FS Object '/home/magellan/.gemini/antigravity-acp/conversations/82fa6f81-d632-4b02-b8f6-fc1fc52934c4.db-shm' (Status: SUCCESS)
-- `[6407619891325 ns]` `[UNLINK]` Process 4853 (<unknown>) -> unlink() -> FS Object '/home/magellan/.gemini/antigravity-acp/conversations/82fa6f81-d632-4b02-b8f6-fc1fc52934c4.db-wal' (Status: SUCCESS)
-- `[6407711020639 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35034
-- `[6407711021150 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35035
-- `[6407711025027 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35036
-- `[6407711025668 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35037
-- `[6407711415693 ns]` `[FS_EXEC_SUCCESS]` Process 35034 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407711441231 ns]` `[FS_EXEC_SUCCESS]` Process 35036 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407711530369 ns]` `[FS_EXEC_SUCCESS]` Process 35035 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407713089725 ns]` `[FS_EXEC_SUCCESS]` Process 35037 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407814055393 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35040
-- `[6407814055624 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35039
-- `[6407814055844 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35038
-- `[6407814060042 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35041
-- `[6407814492517 ns]` `[FS_EXEC_SUCCESS]` Process 35041 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407814506543 ns]` `[FS_EXEC_SUCCESS]` Process 35040 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407814519738 ns]` `[FS_EXEC_SUCCESS]` Process 35038 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407814545446 ns]` `[FS_EXEC_SUCCESS]` Process 35039 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407923801627 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35043
-- `[6407923801858 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35044
-- `[6407923802168 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35042
-- `[6407923805003 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35045
-- `[6407924240243 ns]` `[FS_EXEC_SUCCESS]` Process 35042 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407924274027 ns]` `[FS_EXEC_SUCCESS]` Process 35043 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407924304494 ns]` `[FS_EXEC_SUCCESS]` Process 35044 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6407924396036 ns]` `[FS_EXEC_SUCCESS]` Process 35045 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408002653320 ns]` `[FORK]` Process 3110 (<unknown>) -> fork() -> Child Process 35046
-- `[6408003961904 ns]` `[FS_EXEC_SUCCESS]` Process 35046 (/bin/sh) -> exec_success() -> FS Object '/bin/sh' (Inode: 2490662, Dev: 66309)
-- `[6408004532719 ns]` `[FORK]` Process 35046 (/bin/sh) -> fork() -> Child Process 35047
-- `[6408004835710 ns]` `[FS_EXEC_SUCCESS]` Process 35047 (/usr/bin/whoami) -> exec_success() -> FS Object '/usr/bin/whoami' (Inode: 2515452, Dev: 66309)
-- `[6408005448534 ns]` `[CONNECT]` Process 35047 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
-- `[6408005480474 ns]` `[CONNECT]` Process 35047 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
-- `[6408026266418 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35048
-- `[6408026267199 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35049
-- `[6408026272329 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35050
-- `[6408026275605 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35051
-- `[6408026554420 ns]` `[FS_EXEC_SUCCESS]` Process 35049 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408026590358 ns]` `[FS_EXEC_SUCCESS]` Process 35051 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408026608622 ns]` `[FS_EXEC_SUCCESS]` Process 35050 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408028157108 ns]` `[FS_EXEC_SUCCESS]` Process 35048 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408051902185 ns]` `[UNLINK]` Process 422 (<unknown>) -> unlink() -> FS Object '/run/udev/queue' (Status: SUCCESS)
-- `[6408107446726 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 3, FD: 95)
-- `[6408107449561 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 3, FD: 95)
-- `[6408107483285 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 3, FD: 95, Duration: 37030 ns)
-- `[6408107493945 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 3, FD: 6)
-- `[6408107508021 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 3, FD: 6, Duration: 14768 ns)
-- `[6408110418041 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 4, FD: 95)
-- `[6408110419805 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 4, FD: 95)
-- `[6408110443279 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 4, FD: 95, Duration: 25148 ns)
-- `[6408110455021 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 4, FD: 6)
-- `[6408110468637 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 4, FD: 6, Duration: 13887 ns)
-- `[6408129152802 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35053
-- `[6408129153163 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35052
-- `[6408129161348 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35054
-- `[6408129165256 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35055
-- `[6408129561191 ns]` `[FS_EXEC_SUCCESS]` Process 35053 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408129659356 ns]` `[FS_EXEC_SUCCESS]` Process 35054 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408130207999 ns]` `[FS_EXEC_SUCCESS]` Process 35055 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408131103917 ns]` `[FS_EXEC_SUCCESS]` Process 35052 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408232157570 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35057
-- `[6408232157941 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35056
-- `[6408232158852 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35058
-- `[6408232165224 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35059
-- `[6408232550309 ns]` `[FS_EXEC_SUCCESS]` Process 35059 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408232597819 ns]` `[FS_EXEC_SUCCESS]` Process 35058 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408232631973 ns]` `[FS_EXEC_SUCCESS]` Process 35056 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408233084405 ns]` `[FS_EXEC_SUCCESS]` Process 35057 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408315640855 ns]` `[FORK]` Process 34973 (<unknown>) -> fork() -> Child Process 35060
-- `[6408316689901 ns]` `[FS_EXEC_SUCCESS]` Process 35060 (/usr/bin/date) -> exec_success() -> FS Object '/usr/bin/date' (Inode: 2515363, Dev: 66309)
-- `[6408317855696 ns]` `[FORK]` Process 34973 (<unknown>) -> fork() -> Child Process 35061
-- `[6408318389051 ns]` `[FS_EXEC_SUCCESS]` Process 35061 (/usr/bin/sudo) -> exec_success() -> FS Object '/usr/bin/sudo' (Inode: 2491684, Dev: 66309)
-- `[6408320237031 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
-- `[6408320266125 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
-- `[6408321776239 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 6, Result: 0)
-- `[6408321800184 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 6, Result: 0)
-- `[6408322028645 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '127.0.0.53:53' (FD: 6, Result: 0)
-- `[6408322489963 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '192.168.1.118:0' (FD: 6, Result: 0)
-- `[6408322531341 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net 'fe80::291d:5450:d8da:bbf9:0' (FD: 6, Result: 0)
-- `[6408322612334 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 6, Result: 0)
-- `[6408322634556 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 6, Result: 0)
-- `[6408323140007 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 7, Result: 0)
-- `[6408326631172 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 6, Result: 0)
-- `[6408327297988 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 14, Result: 0)
-- `[6408328103765 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 15, Result: 0)
-- `[6408328540267 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 15, Result: 0)
-- `[6408328946903 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 15, Result: 0)
-- `[6408329365702 ns]` `[CONNECT]` Process 35061 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 15, Result: 0)
-- `[6408330402855 ns]` `[FORK]` Process 35061 (/usr/bin/sudo) -> fork() -> Child Process 35062
-- `[6408330971726 ns]` `[FORK]` Process 35062 (sudo) -> fork() -> Child Process 35063
-- `[6408331662286 ns]` `[FS_EXEC_SUCCESS]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> exec_success() -> FS Object '/usr/bin/bash' (Inode: 2490472, Dev: 66309)
-- `[6408332764392 ns]` `[FS_EXEC_SUCCESS]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> exec_success() -> FS Object '/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor' (Inode: 1357724, Dev: 66309)
-- `[6408333061702 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(CREATION) -> Memfd 'qual_mfd_dup' (Token: 5, FD: 3)
-- `[6408333063465 ns]` `[MEMFD_CREATE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> memfd_create() -> Memfd 'qual_mfd_dup' (Token: 5, FD: 3)
-- `[6408333067793 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_dup' (Token: 5, FD: 4)
-- `[6408333069577 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_dup' (Token: 5, FD: 30)
-- `[6408333077932 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_dup' (Token: 5, FD: 3, Duration: 16792 ns)
-- `[6408333079736 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_dup' (Token: 5, FD: 4, Duration: 12052 ns)
-- `[6408333081399 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_dup' (Token: 5, FD: 30, Duration: 11912 ns)
-- `[6408333098701 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(CREATION) -> Memfd 'qual_mfd_replace' (Token: 6, FD: 3)
-- `[6408333099783 ns]` `[MEMFD_CREATE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> memfd_create() -> Memfd 'qual_mfd_replace' (Token: 6, FD: 3)
-- `[6408333205573 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_replace' (Token: 6, FD: 3, Duration: 106891 ns)
-- `[6408333246460 ns]` `[UNLINK]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> unlink() -> FS Object '/tmp/ephim_qual_ordinary_nrsLdk' (Status: SUCCESS)
-- `[6408333300431 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(CREATION) -> Memfd 'qual_mfd_reuse' (Token: 7, FD: 3)
-- `[6408333302135 ns]` `[MEMFD_CREATE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> memfd_create() -> Memfd 'qual_mfd_reuse' (Token: 7, FD: 3)
-- `[6408333303978 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_reuse' (Token: 7, FD: 3, Duration: 3576 ns)
-- `[6408333364252 ns]` `[UNLINK]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> unlink() -> FS Object '/tmp/ephim_qual_reuse_huJqWa' (Status: SUCCESS)
-- `[6408333382295 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(CREATION) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 3)
-- `[6408333383818 ns]` `[MEMFD_CREATE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> memfd_create() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 3)
-- `[6408333443651 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333448039 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 0, Bytes: 1)
-- `[6408333454511 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 11321 ns)
-- `[6408333456245 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333457487 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 1, Bytes: 1)
-- `[6408333459080 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2936 ns)
-- `[6408333460463 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333461555 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 2, Bytes: 1)
-- `[6408333463058 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2555 ns)
-- `[6408333464430 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333465472 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 3, Bytes: 1)
-- `[6408333466845 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2464 ns)
-- `[6408333468107 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333469119 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 4, Bytes: 1)
-- `[6408333470482 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2424 ns)
-- `[6408333471824 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333472836 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 5, Bytes: 1)
-- `[6408333474189 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2414 ns)
-- `[6408333475471 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333476473 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 6, Bytes: 1)
-- `[6408333477815 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2424 ns)
-- `[6408333479649 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333481072 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 7, Bytes: 1)
-- `[6408333482975 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3407 ns)
-- `[6408333484829 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333486201 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 8, Bytes: 1)
-- `[6408333488145 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3426 ns)
-- `[6408333489898 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333491381 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 9, Bytes: 1)
-- `[6408333493194 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3326 ns)
-- `[6408333495028 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333496310 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 10, Bytes: 1)
-- `[6408333497993 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3046 ns)
-- `[6408333499747 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333501290 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 11, Bytes: 1)
-- `[6408333503374 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3617 ns)
-- `[6408333505417 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333506519 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 12, Bytes: 1)
-- `[6408333508203 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3126 ns)
-- `[6408333509475 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333510527 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 13, Bytes: 1)
-- `[6408333511880 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2454 ns)
-- `[6408333513152 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333514164 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 14, Bytes: 1)
-- `[6408333515516 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2414 ns)
-- `[6408333516779 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333517791 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 15, Bytes: 1)
-- `[6408333519163 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2435 ns)
-- `[6408333520436 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333521448 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 16, Bytes: 1)
-- `[6408333522810 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2435 ns)
-- `[6408333524083 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333525245 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 17, Bytes: 1)
-- `[6408333526116 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333526647 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2595 ns)
-- `[6408333527980 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333528821 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 18, Bytes: 1)
-- `[6408333529072 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 18, Bytes: 1)
-- `[6408333530515 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2545 ns)
-- `[6408333531827 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333532859 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 19, Bytes: 1)
-- `[6408333533270 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 7715 ns)
-- `[6408333534282 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2454 ns)
-- `[6408333535614 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333536065 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333536877 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 20, Bytes: 1)
-- `[6408333538189 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 20, Bytes: 1)
-- `[6408333538640 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3036 ns)
-- `[6408333540033 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333541054 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 21, Bytes: 1)
-- `[6408333541205 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5280 ns)
-- `[6408333542487 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2495 ns)
-- `[6408333543870 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333544371 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333545493 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 22, Bytes: 1)
-- `[6408333545884 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 22, Bytes: 1)
-- `[6408333546926 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3106 ns)
-- `[6408333548218 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333548559 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4689 ns)
-- `[6408333549360 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 23, Bytes: 1)
-- `[6408333550813 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2635 ns)
-- `[6408333551133 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333552246 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333553338 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 24, Bytes: 1)
-- `[6408333553448 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 24, Bytes: 1)
-- `[6408333554800 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2605 ns)
-- `[6408333556153 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5260 ns)
-- `[6408333556403 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333557505 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 25, Bytes: 1)
-- `[6408333558708 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333558988 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2625 ns)
-- `[6408333560511 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333560691 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 26, Bytes: 1)
-- `[6408333562164 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 26, Bytes: 1)
-- `[6408333562284 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333563968 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3506 ns)
-- `[6408333564098 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5430 ns)
-- `[6408333564188 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 27, Bytes: 1)
-- `[6408333565420 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333566743 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333566803 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 28, Bytes: 1)
-- `[6408333566883 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 5881 ns)
-- `[6408333568356 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2985 ns)
-- `[6408333568767 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333568907 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 29, Bytes: 1)
-- `[6408333570149 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333570370 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 29, Bytes: 1)
-- `[6408333571452 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 30, Bytes: 1)
-- `[6408333571662 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 5160 ns)
-- `[6408333572123 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3406 ns)
-- `[6408333572904 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2825 ns)
-- `[6408333573646 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333574167 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333574427 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333574918 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 31, Bytes: 1)
-- `[6408333575559 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 31, Bytes: 1)
-- `[6408333576121 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 31, Bytes: 1)
-- `[6408333576381 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2816 ns)
-- `[6408333577092 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2725 ns)
-- `[6408333578094 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333578505 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333579136 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 5140 ns)
-- `[6408333579216 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 32, Bytes: 1)
-- `[6408333579617 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 32, Bytes: 1)
-- `[6408333580799 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2765 ns)
-- `[6408333581320 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2876 ns)
-- `[6408333581551 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333582172 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333582723 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333583294 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 33, Bytes: 1)
-- `[6408333583565 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 33, Bytes: 1)
-- `[6408333583895 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 33, Bytes: 1)
-- `[6408333584847 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2716 ns)
-- `[6408333586079 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3397 ns)
-- `[6408333586220 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 4769 ns)
-- `[6408333586480 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333587532 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333587622 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 34, Bytes: 1)
-- `[6408333588724 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 35, Bytes: 1)
-- `[6408333588945 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333589075 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2705 ns)
-- `[6408333590177 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2706 ns)
-- `[6408333590548 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333590908 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 36, Bytes: 1)
-- `[6408333591550 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333591670 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 36, Bytes: 1)
-- `[6408333592642 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 37, Bytes: 1)
-- `[6408333593403 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2856 ns)
-- `[6408333593513 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 4638 ns)
-- `[6408333594154 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2645 ns)
-- `[6408333594786 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333595527 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333595928 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333596088 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 38, Bytes: 1)
-- `[6408333596709 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 38, Bytes: 1)
-- `[6408333597641 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2886 ns)
-- `[6408333598002 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 39, Bytes: 1)
-- `[6408333598172 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2685 ns)
-- `[6408333599044 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333599525 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333600286 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 40, Bytes: 1)
-- `[6408333600677 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 4829 ns)
-- `[6408333600787 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 40, Bytes: 1)
-- `[6408333601769 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2795 ns)
-- `[6408333602230 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2765 ns)
-- `[6408333603121 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333603262 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333604183 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333604294 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 41, Bytes: 1)
-- `[6408333605195 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 41, Bytes: 1)
-- `[6408333605326 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 41, Bytes: 1)
-- `[6408333605746 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2605 ns)
-- `[6408333607139 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333607780 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3667 ns)
-- `[6408333608131 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4989 ns)
-- `[6408333608391 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 42, Bytes: 1)
-- `[6408333609173 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333609874 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2746 ns)
-- `[6408333610285 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 43, Bytes: 1)
-- `[6408333610836 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333611477 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333611838 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2735 ns)
-- `[6408333612629 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 44, Bytes: 1)
-- `[6408333612870 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 44, Bytes: 1)
-- `[6408333613240 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333614092 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2645 ns)
-- `[6408333614443 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 45, Bytes: 1)
-- `[6408333615465 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333615675 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5039 ns)
-- `[6408333616016 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2825 ns)
-- `[6408333616637 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 46, Bytes: 1)
-- `[6408333617488 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333618160 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2715 ns)
-- `[6408333618550 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333618611 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 47, Bytes: 1)
-- `[6408333619512 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333620073 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2635 ns)
-- `[6408333620584 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 48, Bytes: 1)
-- `[6408333620775 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 48, Bytes: 1)
-- `[6408333621546 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333622307 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2855 ns)
-- `[6408333622899 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 49, Bytes: 1)
-- `[6408333623650 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333623770 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 5280 ns)
-- `[6408333624411 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2895 ns)
-- `[6408333624822 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 50, Bytes: 1)
-- `[6408333625784 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333626255 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333626365 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2634 ns)
-- `[6408333627457 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 51, Bytes: 1)
-- `[6408333627828 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333628329 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 51, Bytes: 1)
-- `[6408333628910 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3155 ns)
-- `[6408333629030 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 52, Bytes: 1)
-- `[6408333630252 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333630783 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2956 ns)
-- `[6408333631184 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 4689 ns)
-- `[6408333631745 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 53, Bytes: 1)
-- `[6408333632326 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333633188 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2976 ns)
-- `[6408333633448 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 54, Bytes: 1)
-- `[6408333633689 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333634901 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2605 ns)
-- `[6408333634911 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333635683 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 55, Bytes: 1)
-- `[6408333636244 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333636404 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 55, Bytes: 1)
-- `[6408333637446 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 55, Bytes: 1)
-- `[6408333638658 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 5019 ns)
-- `[6408333638979 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4218 ns)
-- `[6408333639420 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3176 ns)
-- `[6408333640923 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333641123 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333641153 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333642065 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 56, Bytes: 1)
-- `[6408333642796 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 56, Bytes: 1)
-- `[6408333643417 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 57, Bytes: 1)
-- `[6408333643517 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2595 ns)
-- `[6408333644509 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3447 ns)
-- `[6408333644870 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333645932 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4989 ns)
-- `[6408333646172 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333646323 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 58, Bytes: 1)
-- `[6408333647495 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 58, Bytes: 1)
-- `[6408333648166 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3306 ns)
-- `[6408333648427 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333649479 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3366 ns)
-- `[6408333649579 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333650541 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 59, Bytes: 1)
-- `[6408333650761 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 59, Bytes: 1)
-- `[6408333651292 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333652785 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3226 ns)
-- `[6408333652945 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 60, Bytes: 1)
-- `[6408333654167 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5881 ns)
-- `[6408333654258 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333654799 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3697 ns)
-- `[6408333655360 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 61, Bytes: 1)
-- `[6408333656652 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333656742 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333656923 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2805 ns)
-- `[6408333658265 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 62, Bytes: 1)
-- `[6408333658365 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333658766 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 62, Bytes: 1)
-- `[6408333659638 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 63, Bytes: 1)
-- `[6408333660269 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3697 ns)
-- `[6408333661391 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3086 ns)
-- `[6408333661772 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4960 ns)
-- `[6408333662132 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333662824 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333663565 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 64, Bytes: 1)
-- `[6408333664066 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 64, Bytes: 1)
-- `[6408333664347 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333665459 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3396 ns)
-- `[6408333665749 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3006 ns)
-- `[6408333666561 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 65, Bytes: 1)
-- `[6408333667102 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333667322 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333668404 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 66, Bytes: 1)
-- `[6408333668825 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 66, Bytes: 1)
-- `[6408333669236 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 5260 ns)
-- `[6408333669907 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2585 ns)
-- `[6408333671300 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333671430 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4328 ns)
-- `[6408333671971 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
-- `[6408333672602 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 67, Bytes: 1)
-- `[6408333673985 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 68, Bytes: 1)
-- `[6408333674135 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2856 ns)
-- `[6408333675738 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333676970 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 5200 ns)
-- `[6408333677101 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 69, Bytes: 1)
-- `[6408333678734 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3065 ns)
-- `[6408333679565 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333680106 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333681218 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 70, Bytes: 1)
-- `[6408333681669 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 70, Bytes: 1)
-- `[6408333682731 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2675 ns)
-- `[6408333684334 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333685196 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 5671 ns)
-- `[6408333685557 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 71, Bytes: 1)
-- `[6408333687630 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333687941 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3637 ns)
-- `[6408333689314 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333689765 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 72, Bytes: 1)
-- `[6408333690406 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 72, Bytes: 1)
-- `[6408333692359 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3116 ns)
-- `[6408333692580 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 4999 ns)
-- `[6408333693812 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333694894 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 73, Bytes: 1)
-- `[6408333695064 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333696357 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2574 ns)
-- `[6408333696888 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 74, Bytes: 1)
-- `[6408333698040 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333699393 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 75, Bytes: 1)
-- `[6408333700074 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 5029 ns)
-- `[6408333701076 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3075 ns)
-- `[6408333702458 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333702739 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333703851 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 76, Bytes: 1)
-- `[6408333704703 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 76, Bytes: 1)
-- `[6408333705524 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2826 ns)
-- `[6408333706847 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333707207 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4929 ns)
-- `[6408333708179 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 77, Bytes: 1)
-- `[6408333709592 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2806 ns)
-- `[6408333709682 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333711375 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333711896 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 78, Bytes: 1)
-- `[6408333712457 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 78, Bytes: 1)
-- `[6408333714311 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3045 ns)
-- `[6408333714541 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4910 ns)
-- `[6408333716114 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333717066 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333717216 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 79, Bytes: 1)
-- `[6408333718970 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2905 ns)
-- `[6408333719070 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 80, Bytes: 1)
-- `[6408333720332 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333721625 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 81, Bytes: 1)
-- `[6408333721775 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 4699 ns)
-- `[6408333723107 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2825 ns)
-- `[6408333724440 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333724931 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333725973 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 82, Bytes: 1)
-- `[6408333727185 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 82, Bytes: 1)
-- `[6408333727696 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3277 ns)
-- `[6408333729069 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333729730 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5079 ns)
-- `[6408333730531 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 83, Bytes: 1)
-- `[6408333732044 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333732084 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3016 ns)
-- `[6408333733898 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333734449 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 84, Bytes: 1)
-- `[6408333735150 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 84, Bytes: 1)
-- `[6408333737064 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3246 ns)
-- `[6408333737284 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5390 ns)
-- `[6408333738647 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333739749 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333740009 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 85, Bytes: 1)
-- `[6408333742003 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 85, Bytes: 1)
-- `[6408333742103 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3487 ns)
-- `[6408333743606 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333744818 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 86, Bytes: 1)
-- `[6408333744978 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 5150 ns)
-- `[6408333746431 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2866 ns)
-- `[6408333747373 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333747894 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333749056 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 87, Bytes: 1)
-- `[6408333749597 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 87, Bytes: 1)
-- `[6408333750649 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2796 ns)
-- `[6408333752112 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333752643 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 5390 ns)
-- `[6408333753665 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 88, Bytes: 1)
-- `[6408333755368 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333755428 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3207 ns)
-- `[6408333756941 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333758063 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 89, Bytes: 1)
-- `[6408333758544 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 89, Bytes: 1)
-- `[6408333760628 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3727 ns)
-- `[6408333760748 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 5591 ns)
-- `[6408333762041 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333763303 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 90, Bytes: 1)
-- `[6408333763483 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333764806 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2815 ns)
-- `[6408333765708 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 91, Bytes: 1)
-- `[6408333766399 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333767661 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 91, Bytes: 1)
-- `[6408333768723 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 5340 ns)
-- `[6408333769394 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3046 ns)
-- `[6408333770867 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333771408 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333772059 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 92, Bytes: 1)
-- `[6408333773743 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2905 ns)
-- `[6408333773893 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 93, Bytes: 1)
-- `[6408333775165 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333775877 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 4629 ns)
-- `[6408333776448 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 94, Bytes: 1)
-- `[6408333777790 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333778101 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2865 ns)
-- `[6408333779343 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 95, Bytes: 1)
-- `[6408333779694 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333781006 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 96, Bytes: 1)
-- `[6408333781237 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3516 ns)
-- `[6408333782559 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2946 ns)
-- `[6408333783140 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
-- `[6408333784773 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 97, Bytes: 1)
-- `[6408333786727 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3687 ns)
-- `[6408333788651 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333790124 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 98, Bytes: 1)
-- `[6408333792167 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3557 ns)
-- `[6408333794181 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333795564 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 99, Bytes: 1)
-- `[6408333797467 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3376 ns)
-- `[6408333799271 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333800874 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 100, Bytes: 1)
-- `[6408333802757 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3557 ns)
-- `[6408333804531 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333805903 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 101, Bytes: 1)
-- `[6408333807887 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3437 ns)
-- `[6408333809861 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333811784 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 102, Bytes: 1)
-- `[6408333814570 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4809 ns)
-- `[6408333817174 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333819168 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 103, Bytes: 1)
-- `[6408333821873 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4799 ns)
-- `[6408333824809 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333826973 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 104, Bytes: 1)
-- `[6408333829838 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5170 ns)
-- `[6408333832443 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333834427 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 105, Bytes: 1)
-- `[6408333837092 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4759 ns)
-- `[6408333839366 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333841190 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 106, Bytes: 1)
-- `[6408333843744 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4478 ns)
-- `[6408333846089 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333847732 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 107, Bytes: 1)
-- `[6408333850447 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4448 ns)
-- `[6408333852862 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333854695 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 108, Bytes: 1)
-- `[6408333857110 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4418 ns)
-- `[6408333859494 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333861859 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 109, Bytes: 1)
-- `[6408333864293 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4910 ns)
-- `[6408333866798 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333868942 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 110, Bytes: 1)
-- `[6408333871587 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4859 ns)
-- `[6408333873951 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333876115 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 111, Bytes: 1)
-- `[6408333878650 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4859 ns)
-- `[6408333881245 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408333883269 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 112, Bytes: 1)
-- `[6408333886064 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4910 ns)
-- `[6408335254621 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335256876 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 113, Bytes: 1)
-- `[6408335260192 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 6432 ns)
-- `[6408335261895 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335263508 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 114, Bytes: 1)
-- `[6408335266434 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4528 ns)
-- `[6408335268287 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335269750 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 115, Bytes: 1)
-- `[6408335271593 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3386 ns)
-- `[6408335273327 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335274659 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 116, Bytes: 1)
-- `[6408335276382 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3116 ns)
-- `[6408335278096 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335279438 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 117, Bytes: 1)
-- `[6408335281011 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3016 ns)
-- `[6408335282584 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335283866 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 118, Bytes: 1)
-- `[6408335285660 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3166 ns)
-- `[6408335287413 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335288726 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 119, Bytes: 1)
-- `[6408335290679 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3346 ns)
-- `[6408335292242 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335293475 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 120, Bytes: 1)
-- `[6408335295398 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3236 ns)
-- `[6408335297713 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335299125 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 121, Bytes: 1)
-- `[6408335300778 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3126 ns)
-- `[6408335302241 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335303524 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 122, Bytes: 1)
-- `[6408335305597 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3386 ns)
-- `[6408335307120 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335308343 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 123, Bytes: 1)
-- `[6408335309946 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2885 ns)
-- `[6408335311418 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335312551 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 124, Bytes: 1)
-- `[6408335314144 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2775 ns)
-- `[6408335315757 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335317099 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 125, Bytes: 1)
-- `[6408335318812 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3126 ns)
-- `[6408335320395 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335321537 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 126, Bytes: 1)
-- `[6408335323040 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2775 ns)
-- `[6408335324733 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335326016 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 127, Bytes: 1)
-- `[6408335327529 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2865 ns)
-- `[6408335328981 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335330194 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 128, Bytes: 1)
-- `[6408335331697 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2765 ns)
-- `[6408335333340 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335334682 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 129, Bytes: 1)
-- `[6408335336285 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3036 ns)
-- `[6408335337788 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335339101 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 130, Bytes: 1)
-- `[6408335340694 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2955 ns)
-- `[6408335342397 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335344441 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 131, Bytes: 1)
-- `[6408335346024 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3707 ns)
-- `[6408335347426 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335348578 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 132, Bytes: 1)
-- `[6408335350181 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2825 ns)
-- `[6408335351824 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335353127 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 133, Bytes: 1)
-- `[6408335355010 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3316 ns)
-- `[6408335356664 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335358086 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 134, Bytes: 1)
-- `[6408335360090 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3497 ns)
-- `[6408335361873 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335363236 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 135, Bytes: 1)
-- `[6408335364909 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3116 ns)
-- `[6408335366422 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335367714 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 136, Bytes: 1)
-- `[6408335369378 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2995 ns)
-- `[6408335371181 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335372403 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 137, Bytes: 1)
-- `[6408335374317 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3257 ns)
-- `[6408335375860 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335377373 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 138, Bytes: 1)
-- `[6408335379507 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3737 ns)
-- `[6408335381220 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335382673 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 139, Bytes: 1)
-- `[6408335384827 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3687 ns)
-- `[6408335386339 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335387953 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 140, Bytes: 1)
-- `[6408335389535 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3266 ns)
-- `[6408335391649 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335393092 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 141, Bytes: 1)
-- `[6408335394815 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3236 ns)
-- `[6408335396569 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335397911 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 142, Bytes: 1)
-- `[6408335399685 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3196 ns)
-- `[6408335401388 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335402831 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 143, Bytes: 1)
-- `[6408335404564 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3276 ns)
-- `[6408335406197 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335407579 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 144, Bytes: 1)
-- `[6408335409263 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3176 ns)
-- `[6408335410936 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335412258 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 145, Bytes: 1)
-- `[6408335414162 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3337 ns)
-- `[6408335415795 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335417117 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 146, Bytes: 1)
-- `[6408335418730 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3046 ns)
-- `[6408335420454 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335421826 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 147, Bytes: 1)
-- `[6408335423560 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3156 ns)
-- `[6408335425042 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335426435 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 148, Bytes: 1)
-- `[6408335428058 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3066 ns)
-- `[6408335430362 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335431725 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 149, Bytes: 1)
-- `[6408335433829 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3497 ns)
-- `[6408335435452 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335436794 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 150, Bytes: 1)
-- `[6408335438398 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3015 ns)
-- `[6408335440021 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335441263 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 151, Bytes: 1)
-- `[6408335442966 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2986 ns)
-- `[6408335444539 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335445992 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 152, Bytes: 1)
-- `[6408335447535 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3015 ns)
-- `[6408335448957 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335450270 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 153, Bytes: 1)
-- `[6408335451873 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2965 ns)
-- `[6408335453336 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335454478 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 154, Bytes: 1)
-- `[6408335456031 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2755 ns)
-- `[6408335457493 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335458916 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 155, Bytes: 1)
-- `[6408335460569 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3086 ns)
-- `[6408335462082 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335463304 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 156, Bytes: 1)
-- `[6408335464897 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2885 ns)
-- `[6408335466450 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335467703 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 157, Bytes: 1)
-- `[6408335469266 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2925 ns)
-- `[6408335470738 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335471871 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 158, Bytes: 1)
-- `[6408335473413 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2735 ns)
-- `[6408335474936 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335476790 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 159, Bytes: 1)
-- `[6408335478293 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3456 ns)
-- `[6408335479826 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335481038 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 160, Bytes: 1)
-- `[6408335482601 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2865 ns)
-- `[6408335484064 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335485476 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 161, Bytes: 1)
-- `[6408335487460 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3427 ns)
-- `[6408335489153 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
-- `[6408335490576 ns]` `[MEMFD_WRITE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 162, Bytes: 1)
-- `[6408335492099 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3015 ns)
-- `[6408335526654 ns]` `[FD_CLOSED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 3, Duration: 2143967 ns)
-- `[6408335569044 ns]` `[FD_INSTALLED]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(CREATION) -> Memfd 'qual_mfd_clone' (Token: 9, FD: 3)
-- `[6408335571348 ns]` `[MEMFD_CREATE]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> memfd_create() -> Memfd 'qual_mfd_clone' (Token: 9, FD: 3)
-- `[6408335756316 ns]` `[FORK]` Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fork() -> Child Process 35068
-- `[6408335861504 ns]` `[MEMFD_WRITE]` Process 35068 (test_qualificat) -> write() -> Memfd 'qual_mfd_clone' (Token: 9, Offset: 0, Bytes: 25)
-- `[6408338438187 ns]` `[FORK]` Process 34973 (<unknown>) -> fork() -> Child Process 35069
-- `[6408339188670 ns]` `[FS_EXEC_SUCCESS]` Process 35069 (/usr/bin/date) -> exec_success() -> FS Object '/usr/bin/date' (Inode: 2515363, Dev: 66309)
-- `[6408340226725 ns]` `[FORK]` Process 34973 (<unknown>) -> fork() -> Child Process 35070
-- `[6408340706538 ns]` `[FS_EXEC_SUCCESS]` Process 35070 (/usr/bin/sleep) -> exec_success() -> FS Object '/usr/bin/sleep' (Inode: 2515421, Dev: 66309)
-- `[6408345096886 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35073
-- `[6408345097818 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35071
-- `[6408345098048 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35072
-- `[6408345098239 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35074
-- `[6408345809859 ns]` `[FS_EXEC_SUCCESS]` Process 35072 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408345810079 ns]` `[FS_EXEC_SUCCESS]` Process 35074 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408345810320 ns]` `[FS_EXEC_SUCCESS]` Process 35071 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408345835307 ns]` `[FS_EXEC_SUCCESS]` Process 35073 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408436688581 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35075
-- `[6408436688851 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35077
-- `[6408436689222 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35076
-- `[6408436696966 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35078
-- `[6408437141423 ns]` `[FS_EXEC_SUCCESS]` Process 35076 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408437142906 ns]` `[FS_EXEC_SUCCESS]` Process 35077 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408437146433 ns]` `[FS_EXEC_SUCCESS]` Process 35078 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408437149719 ns]` `[FS_EXEC_SUCCESS]` Process 35075 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408543167811 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35079
-- `[6408543168462 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35082
-- `[6408543168963 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35081
-- `[6408543169394 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35080
-- `[6408543889650 ns]` `[FS_EXEC_SUCCESS]` Process 35082 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408543906071 ns]` `[FS_EXEC_SUCCESS]` Process 35081 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408543908105 ns]` `[FS_EXEC_SUCCESS]` Process 35080 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408543914056 ns]` `[FS_EXEC_SUCCESS]` Process 35079 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408648179889 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35084
-- `[6408648180550 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35083
-- `[6408648180770 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35086
-- `[6408648181181 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35085
-- `[6408648798504 ns]` `[FS_EXEC_SUCCESS]` Process 35083 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408648800177 ns]` `[FS_EXEC_SUCCESS]` Process 35084 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408648825675 ns]` `[FS_EXEC_SUCCESS]` Process 35086 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408648829101 ns]` `[FS_EXEC_SUCCESS]` Process 35085 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408751788533 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35088
-- `[6408751788824 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35087
-- `[6408751789175 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35089
-- `[6408751789355 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35090
-- `[6408752266834 ns]` `[FS_EXEC_SUCCESS]` Process 35090 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408752268136 ns]` `[FS_EXEC_SUCCESS]` Process 35088 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408752273236 ns]` `[FS_EXEC_SUCCESS]` Process 35087 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408752297652 ns]` `[FS_EXEC_SUCCESS]` Process 35089 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408854209521 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35091
-- `[6408854209932 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35092
-- `[6408854210293 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35093
-- `[6408854211886 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35094
-- `[6408854680979 ns]` `[FS_EXEC_SUCCESS]` Process 35093 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408854711657 ns]` `[FS_EXEC_SUCCESS]` Process 35091 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408854720754 ns]` `[FS_EXEC_SUCCESS]` Process 35092 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408854722588 ns]` `[FS_EXEC_SUCCESS]` Process 35094 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408957463749 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35096
-- `[6408957464340 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35095
-- `[6408957467376 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35097
-- `[6408957468588 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35098
-- `[6408957910680 ns]` `[FS_EXEC_SUCCESS]` Process 35095 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408957921110 ns]` `[FS_EXEC_SUCCESS]` Process 35096 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408957927953 ns]` `[FS_EXEC_SUCCESS]` Process 35097 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6408957929726 ns]` `[FS_EXEC_SUCCESS]` Process 35098 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409001765457 ns]` `[FORK]` Process 3110 (<unknown>) -> fork() -> Child Process 35099
-- `[6409003121410 ns]` `[FS_EXEC_SUCCESS]` Process 35099 (/bin/sh) -> exec_success() -> FS Object '/bin/sh' (Inode: 2490662, Dev: 66309)
-- `[6409003746468 ns]` `[FORK]` Process 35099 (/bin/sh) -> fork() -> Child Process 35100
-- `[6409003965680 ns]` `[FS_EXEC_SUCCESS]` Process 35100 (/usr/bin/whoami) -> exec_success() -> FS Object '/usr/bin/whoami' (Inode: 2515452, Dev: 66309)
-- `[6409004500518 ns]` `[CONNECT]` Process 35100 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
-- `[6409004532348 ns]` `[CONNECT]` Process 35100 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
-- `[6409060159985 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35101
-- `[6409060160837 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35102
-- `[6409060165686 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35103
-- `[6409060168161 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35104
-- `[6409060566000 ns]` `[FS_EXEC_SUCCESS]` Process 35103 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409060647704 ns]` `[FS_EXEC_SUCCESS]` Process 35104 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409061216204 ns]` `[FS_EXEC_SUCCESS]` Process 35101 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409062085512 ns]` `[FS_EXEC_SUCCESS]` Process 35102 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409075244112 ns]` `[UNLINK]` Process 422 (<unknown>) -> unlink() -> FS Object '/run/udev/queue' (Status: SUCCESS)
-- `[6409105042888 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 10, FD: 95)
-- `[6409105047467 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 10, FD: 95)
-- `[6409105093623 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 10, FD: 95, Duration: 52900 ns)
-- `[6409105109553 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 10, FD: 6)
-- `[6409105132196 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 10, FD: 6, Duration: 23865 ns)
-- `[6409107179642 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 11, FD: 95)
-- `[6409107180764 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 11, FD: 95)
-- `[6409107195341 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 11, FD: 95, Duration: 15720 ns)
-- `[6409107203166 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 11, FD: 6)
-- `[6409107211933 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 11, FD: 6, Duration: 8977 ns)
-- `[6409163169901 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35106
-- `[6409163170412 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35105
-- `[6409163171494 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35107
-- `[6409163171755 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35108
-- `[6409163560667 ns]` `[FS_EXEC_SUCCESS]` Process 35107 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409163563533 ns]` `[FS_EXEC_SUCCESS]` Process 35106 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409163579803 ns]` `[FS_EXEC_SUCCESS]` Process 35105 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409163642101 ns]` `[FS_EXEC_SUCCESS]` Process 35108 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409265057855 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35111
-- `[6409265058146 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35110
-- `[6409265058296 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35109
-- `[6409265058556 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35112
-- `[6409265416791 ns]` `[FS_EXEC_SUCCESS]` Process 35110 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409265419897 ns]` `[FS_EXEC_SUCCESS]` Process 35111 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409265423864 ns]` `[FS_EXEC_SUCCESS]` Process 35112 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409265429976 ns]` `[FS_EXEC_SUCCESS]` Process 35109 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409367586245 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35113
-- `[6409367586606 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35114
-- `[6409367589271 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35115
-- `[6409367594861 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35116
-- `[6409367978594 ns]` `[FS_EXEC_SUCCESS]` Process 35115 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409367985206 ns]` `[FS_EXEC_SUCCESS]` Process 35113 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409368149946 ns]` `[FS_EXEC_SUCCESS]` Process 35114 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409370224453 ns]` `[FS_EXEC_SUCCESS]` Process 35116 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409471020080 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35117
-- `[6409471020581 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35118
-- `[6409471029277 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35119
-- `[6409471041470 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35120
-- `[6409471407710 ns]` `[FS_EXEC_SUCCESS]` Process 35118 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409471421897 ns]` `[FS_EXEC_SUCCESS]` Process 35120 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409471426285 ns]` `[FS_EXEC_SUCCESS]` Process 35117 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409471438187 ns]` `[FS_EXEC_SUCCESS]` Process 35119 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409574321415 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35121
-- `[6409574321886 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35122
-- `[6409574322106 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35123
-- `[6409574337195 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35124
-- `[6409574693035 ns]` `[FS_EXEC_SUCCESS]` Process 35121 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409574706230 ns]` `[FS_EXEC_SUCCESS]` Process 35124 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409574736988 ns]` `[FS_EXEC_SUCCESS]` Process 35123 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409574787493 ns]` `[FS_EXEC_SUCCESS]` Process 35122 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409677570683 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35125
-- `[6409677571103 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35126
-- `[6409677571334 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35127
-- `[6409677577596 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35128
-- `[6409677977168 ns]` `[FS_EXEC_SUCCESS]` Process 35125 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409677977248 ns]` `[FS_EXEC_SUCCESS]` Process 35127 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409678230485 ns]` `[FS_EXEC_SUCCESS]` Process 35126 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409679158483 ns]` `[FS_EXEC_SUCCESS]` Process 35128 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409780095315 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35131
-- `[6409780095696 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35130
-- `[6409780095907 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35129
-- `[6409780114852 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35132
-- `[6409780491622 ns]` `[FS_EXEC_SUCCESS]` Process 35130 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409780492914 ns]` `[FS_EXEC_SUCCESS]` Process 35132 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409780505919 ns]` `[FS_EXEC_SUCCESS]` Process 35131 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409780659177 ns]` `[FS_EXEC_SUCCESS]` Process 35129 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409895458936 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35134
-- `[6409895459427 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35133
-- `[6409895460189 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35136
-- `[6409895460369 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35135
-- `[6409896164615 ns]` `[FS_EXEC_SUCCESS]` Process 35134 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409896164685 ns]` `[FS_EXEC_SUCCESS]` Process 35133 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409896174454 ns]` `[FS_EXEC_SUCCESS]` Process 35135 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409896184463 ns]` `[FS_EXEC_SUCCESS]` Process 35136 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409999466271 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35138
-- `[6409999466742 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35137
-- `[6409999466992 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35139
-- `[6409999468144 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35140
-- `[6409999845164 ns]` `[FS_EXEC_SUCCESS]` Process 35138 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409999856596 ns]` `[FS_EXEC_SUCCESS]` Process 35137 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6409999885611 ns]` `[FS_EXEC_SUCCESS]` Process 35139 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410000236391 ns]` `[FS_EXEC_SUCCESS]` Process 35140 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410002292954 ns]` `[FORK]` Process 3110 (<unknown>) -> fork() -> Child Process 35141
-- `[6410003585719 ns]` `[FS_EXEC_SUCCESS]` Process 35141 (/bin/sh) -> exec_success() -> FS Object '/bin/sh' (Inode: 2490662, Dev: 66309)
-- `[6410004127829 ns]` `[FORK]` Process 35141 (/bin/sh) -> fork() -> Child Process 35142
-- `[6410004422224 ns]` `[FS_EXEC_SUCCESS]` Process 35142 (/usr/bin/whoami) -> exec_success() -> FS Object '/usr/bin/whoami' (Inode: 2515452, Dev: 66309)
-- `[6410004998068 ns]` `[CONNECT]` Process 35142 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
-- `[6410005043905 ns]` `[CONNECT]` Process 35142 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
-- `[6410106453808 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 12, FD: 95)
-- `[6410106457745 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 12, FD: 95)
-- `[6410106494394 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 12, FD: 95, Duration: 41618 ns)
-- `[6410106508531 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 12, FD: 6)
-- `[6410106524842 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 12, FD: 6, Duration: 17133 ns)
-- `[6410110281115 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35144
-- `[6410110283410 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35143
-- `[6410110286435 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35145
-- `[6410110287036 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35146
-- `[6410111157185 ns]` `[FS_EXEC_SUCCESS]` Process 35144 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410111157856 ns]` `[FS_EXEC_SUCCESS]` Process 35143 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410111241213 ns]` `[FS_EXEC_SUCCESS]` Process 35145 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410111557459 ns]` `[FS_EXEC_SUCCESS]` Process 35146 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410114898210 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 13, FD: 95)
-- `[6410114902979 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 13, FD: 95)
-- `[6410114930210 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 13, FD: 95, Duration: 32862 ns)
-- `[6410114942453 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 13, FD: 6)
-- `[6410114955788 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 13, FD: 6, Duration: 14407 ns)
-- `[6410127996907 ns]` `[FORK]` Process 422 (<unknown>) -> fork() -> Child Process 35147
-- `[6410131373356 ns]` `[UNLINK]` Process 422 (<unknown>) -> unlink() -> FS Object '/run/udev/queue' (Status: SUCCESS)
-- `[6410221600910 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35150
-- `[6410221601281 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35148
-- `[6410221601742 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35151
-- `[6410221601882 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35149
-- `[6410222332989 ns]` `[FS_EXEC_SUCCESS]` Process 35150 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410222333159 ns]` `[FS_EXEC_SUCCESS]` Process 35151 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410222335113 ns]` `[FS_EXEC_SUCCESS]` Process 35149 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410222351524 ns]` `[FS_EXEC_SUCCESS]` Process 35148 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410325056836 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35152
-- `[6410325056976 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35154
-- `[6410325057528 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35153
-- `[6410325059792 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35155
-- `[6410325438435 ns]` `[FS_EXEC_SUCCESS]` Process 35153 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410325442262 ns]` `[FS_EXEC_SUCCESS]` Process 35155 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410325451189 ns]` `[FS_EXEC_SUCCESS]` Process 35152 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410325456910 ns]` `[FS_EXEC_SUCCESS]` Process 35154 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410341901327 ns]` `[FORK]` Process 34973 (<unknown>) -> fork() -> Child Process 35156
-- `[6410342719518 ns]` `[FS_EXEC_SUCCESS]` Process 35156 (/usr/bin/date) -> exec_success() -> FS Object '/usr/bin/date' (Inode: 2515363, Dev: 66309)
-- `[6410427799850 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35157
-- `[6410427800280 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35159
-- `[6410427800501 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35158
-- `[6410427816100 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 35160
-- `[6410428208329 ns]` `[FS_EXEC_SUCCESS]` Process 35159 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410428217456 ns]` `[FS_EXEC_SUCCESS]` Process 35157 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410428242503 ns]` `[FS_EXEC_SUCCESS]` Process 35158 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
-- `[6410428564259 ns]` `[FS_EXEC_SUCCESS]` Process 35160 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866033053283 ns]` `[FORK]` Process 2 (<unknown>) -> fork() -> Child Process 43797
+- `[8866071034688 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43798
+- `[8866071034708 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43802
+- `[8866071035289 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43801
+- `[8866071035460 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43799
+- `[8866071036111 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43800
+- `[8866071040459 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43803
+- `[8866071045138 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43804
+- `[8866071048243 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43806
+- `[8866071048404 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43805
+- `[8866071384994 ns]` `[FS_EXEC_SUCCESS]` Process 43804 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866071409630 ns]` `[FS_EXEC_SUCCESS]` Process 43799 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866071423135 ns]` `[FS_EXEC_SUCCESS]` Process 43798 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866071432032 ns]` `[FS_EXEC_SUCCESS]` Process 43806 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866071513925 ns]` `[FS_EXEC_SUCCESS]` Process 43803 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866071521710 ns]` `[FS_EXEC_SUCCESS]` Process 43801 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866071562336 ns]` `[FS_EXEC_SUCCESS]` Process 43800 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866071919936 ns]` `[FS_EXEC_SUCCESS]` Process 43805 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866073472883 ns]` `[FS_EXEC_SUCCESS]` Process 43802 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866082947052 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43807
+- `[8866082947423 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43808
+- `[8866082947683 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43809
+- `[8866083331492 ns]` `[FS_EXEC_SUCCESS]` Process 43809 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866083333987 ns]` `[FS_EXEC_SUCCESS]` Process 43808 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866083334077 ns]` `[FS_EXEC_SUCCESS]` Process 43807 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866085374708 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43810
+- `[8866085447214 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43811
+- `[8866085459727 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43812
+- `[8866085463043 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43813
+- `[8866085464135 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43814
+- `[8866085468343 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43815
+- `[8866085475607 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43816
+- `[8866085492538 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43817
+- `[8866085509250 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43818
+- `[8866085555156 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43819
+- `[8866085629154 ns]` `[FS_EXEC_SUCCESS]` Process 43810 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866085688275 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43820
+- `[8866085738349 ns]` `[FS_EXEC_SUCCESS]` Process 43815 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866085740763 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43821
+- `[8866085797028 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43822
+- `[8866085802018 ns]` `[FS_EXEC_SUCCESS]` Process 43811 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866085803451 ns]` `[FS_EXEC_SUCCESS]` Process 43818 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866085838787 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43823
+- `[8866085866669 ns]` `[FS_EXEC_SUCCESS]` Process 43813 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866085871037 ns]` `[FS_EXEC_SUCCESS]` Process 43814 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866085905141 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43824
+- `[8866085967177 ns]` `[FS_EXEC_SUCCESS]` Process 43820 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866085982626 ns]` `[FS_EXEC_SUCCESS]` Process 43817 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866086029203 ns]` `[FS_EXEC_SUCCESS]` Process 43816 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866086049932 ns]` `[FS_EXEC_SUCCESS]` Process 43822 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866086073316 ns]` `[FS_EXEC_SUCCESS]` Process 43823 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866086113050 ns]` `[FS_EXEC_SUCCESS]` Process 43824 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866086178713 ns]` `[FS_EXEC_SUCCESS]` Process 43812 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866088211439 ns]` `[FS_EXEC_SUCCESS]` Process 43821 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866089192025 ns]` `[FS_EXEC_SUCCESS]` Process 43819 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866090246279 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43825
+- `[8866090438509 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43826
+- `[8866090441314 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43827
+- `[8866090442096 ns]` `[FS_EXEC_SUCCESS]` Process 43825 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866090626992 ns]` `[FS_EXEC_SUCCESS]` Process 43826 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866090637772 ns]` `[FS_EXEC_SUCCESS]` Process 43827 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866092035660 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43828
+- `[8866092186632 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43829
+- `[8866092188706 ns]` `[FS_EXEC_SUCCESS]` Process 43828 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866092337324 ns]` `[FS_EXEC_SUCCESS]` Process 43829 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866095036188 ns]` `[FORK]` Process 2 (<unknown>) -> fork() -> Child Process 43830
+- `[8866107074127 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 1, FD: 95)
+- `[8866107078395 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 1, FD: 95)
+- `[8866107117228 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 1, FD: 95, Duration: 44183 ns)
+- `[8866107128469 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 1, FD: 6)
+- `[8866107143667 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 1, FD: 6, Duration: 16290 ns)
+- `[8866109626265 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 2, FD: 95)
+- `[8866109629151 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 2, FD: 95)
+- `[8866109650300 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 2, FD: 95, Duration: 24666 ns)
+- `[8866109661972 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 2, FD: 6)
+- `[8866109673364 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 2, FD: 6, Duration: 13496 ns)
+- `[8866259390999 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43832
+- `[8866259391630 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43831
+- `[8866259392041 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43834
+- `[8866259392231 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43833
+- `[8866260180888 ns]` `[FS_EXEC_SUCCESS]` Process 43832 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866260192500 ns]` `[FS_EXEC_SUCCESS]` Process 43831 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866260202499 ns]` `[FS_EXEC_SUCCESS]` Process 43834 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866260211275 ns]` `[FS_EXEC_SUCCESS]` Process 43833 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866362704038 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43835
+- `[8866362704549 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43836
+- `[8866362704780 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43837
+- `[8866362707144 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43838
+- `[8866363102244 ns]` `[FS_EXEC_SUCCESS]` Process 43836 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866363106722 ns]` `[FS_EXEC_SUCCESS]` Process 43838 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866363110870 ns]` `[FS_EXEC_SUCCESS]` Process 43835 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866363150955 ns]` `[FS_EXEC_SUCCESS]` Process 43837 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866465502294 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43839
+- `[8866465502545 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43840
+- `[8866465510610 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43842
+- `[8866465510790 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43841
+- `[8866465942809 ns]` `[FS_EXEC_SUCCESS]` Process 43841 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866465954641 ns]` `[FS_EXEC_SUCCESS]` Process 43840 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866467217295 ns]` `[FS_EXEC_SUCCESS]` Process 43842 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866467414344 ns]` `[FS_EXEC_SUCCESS]` Process 43839 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866569168905 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43844
+- `[8866569169346 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43843
+- `[8866569169607 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43845
+- `[8866569183683 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43846
+- `[8866569555589 ns]` `[FS_EXEC_SUCCESS]` Process 43843 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866569564386 ns]` `[FS_EXEC_SUCCESS]` Process 43846 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866569630460 ns]` `[FS_EXEC_SUCCESS]` Process 43845 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866570103956 ns]` `[FS_EXEC_SUCCESS]` Process 43844 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866671956451 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43848
+- `[8866671956872 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43847
+- `[8866671964616 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43849
+- `[8866671965848 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43850
+- `[8866672348184 ns]` `[FS_EXEC_SUCCESS]` Process 43847 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866672367420 ns]` `[FS_EXEC_SUCCESS]` Process 43850 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866672373632 ns]` `[FS_EXEC_SUCCESS]` Process 43848 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866672376998 ns]` `[FS_EXEC_SUCCESS]` Process 43849 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866775298364 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43851
+- `[8866775301841 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43852
+- `[8866775305397 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43853
+- `[8866775306169 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43854
+- `[8866775681972 ns]` `[FS_EXEC_SUCCESS]` Process 43851 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866775697822 ns]` `[FS_EXEC_SUCCESS]` Process 43854 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866775700757 ns]` `[FS_EXEC_SUCCESS]` Process 43852 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866775713602 ns]` `[FS_EXEC_SUCCESS]` Process 43853 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866890948673 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43855
+- `[8866890949084 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43856
+- `[8866890949956 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43858
+- `[8866890950447 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43857
+- `[8866891678420 ns]` `[FS_EXEC_SUCCESS]` Process 43857 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866891678780 ns]` `[FS_EXEC_SUCCESS]` Process 43856 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866891691124 ns]` `[FS_EXEC_SUCCESS]` Process 43858 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866891710860 ns]` `[FS_EXEC_SUCCESS]` Process 43855 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866994011324 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43859
+- `[8866994011905 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43860
+- `[8866994012356 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43861
+- `[8866994029849 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43862
+- `[8866994396405 ns]` `[FS_EXEC_SUCCESS]` Process 43859 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866994417344 ns]` `[FS_EXEC_SUCCESS]` Process 43862 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866994428676 ns]` `[FS_EXEC_SUCCESS]` Process 43861 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8866996203669 ns]` `[FS_EXEC_SUCCESS]` Process 43860 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867001609501 ns]` `[FORK]` Process 3110 (<unknown>) -> fork() -> Child Process 43863
+- `[8867002951944 ns]` `[FS_EXEC_SUCCESS]` Process 43863 (/bin/sh) -> exec_success() -> FS Object '/bin/sh' (Inode: 2490662, Dev: 66309)
+- `[8867003443735 ns]` `[FORK]` Process 43863 (/bin/sh) -> fork() -> Child Process 43864
+- `[8867003654560 ns]` `[FS_EXEC_SUCCESS]` Process 43864 (/usr/bin/whoami) -> exec_success() -> FS Object '/usr/bin/whoami' (Inode: 2515452, Dev: 66309)
+- `[8867004286373 ns]` `[CONNECT]` Process 43864 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
+- `[8867004322641 ns]` `[CONNECT]` Process 43864 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
+- `[8867097611773 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43866
+- `[8867097612003 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43865
+- `[8867097618816 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43868
+- `[8867097619417 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43867
+- `[8867097998848 ns]` `[FS_EXEC_SUCCESS]` Process 43865 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867098019977 ns]` `[FS_EXEC_SUCCESS]` Process 43866 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867098023414 ns]` `[FS_EXEC_SUCCESS]` Process 43867 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867098026199 ns]` `[FS_EXEC_SUCCESS]` Process 43868 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867105983287 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 3, FD: 95)
+- `[8867105985972 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 3, FD: 95)
+- `[8867106027119 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 3, FD: 95, Duration: 44813 ns)
+- `[8867106039042 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 3, FD: 6)
+- `[8867106055032 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 3, FD: 6, Duration: 17122 ns)
+- `[8867109471829 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 4, FD: 95)
+- `[8867109473412 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 4, FD: 95)
+- `[8867109495383 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 4, FD: 95, Duration: 24125 ns)
+- `[8867109511183 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 4, FD: 6)
+- `[8867109529487 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 4, FD: 6, Duration: 19767 ns)
+- `[8867201017736 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43869
+- `[8867201018197 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43870
+- `[8867201023387 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43871
+- `[8867201023668 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43872
+- `[8867201469793 ns]` `[FS_EXEC_SUCCESS]` Process 43869 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867201471716 ns]` `[FS_EXEC_SUCCESS]` Process 43870 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867201495541 ns]` `[FS_EXEC_SUCCESS]` Process 43871 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867201496162 ns]` `[FS_EXEC_SUCCESS]` Process 43872 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867304153085 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43874
+- `[8867304153215 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43873
+- `[8867304162022 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43875
+- `[8867304165178 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43876
+- `[8867304538998 ns]` `[FS_EXEC_SUCCESS]` Process 43874 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867304571599 ns]` `[FS_EXEC_SUCCESS]` Process 43876 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867304590504 ns]` `[FS_EXEC_SUCCESS]` Process 43875 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867304603689 ns]` `[FS_EXEC_SUCCESS]` Process 43873 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867407713579 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43877
+- `[8867407714019 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43878
+- `[8867407714220 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43879
+- `[8867407719971 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43880
+- `[8867408099551 ns]` `[FS_EXEC_SUCCESS]` Process 43877 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867408131281 ns]` `[FS_EXEC_SUCCESS]` Process 43880 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867408135298 ns]` `[FS_EXEC_SUCCESS]` Process 43878 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867408658037 ns]` `[FS_EXEC_SUCCESS]` Process 43879 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867510980452 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43882
+- `[8867510980853 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43881
+- `[8867510981154 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43883
+- `[8867510996973 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43884
+- `[8867511374600 ns]` `[FS_EXEC_SUCCESS]` Process 43882 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867511383727 ns]` `[FS_EXEC_SUCCESS]` Process 43881 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867511459219 ns]` `[FS_EXEC_SUCCESS]` Process 43883 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867512011663 ns]` `[FS_EXEC_SUCCESS]` Process 43884 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867626723597 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43888
+- `[8867626725020 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43886
+- `[8867626725210 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43885
+- `[8867626725621 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43887
+- `[8867627410774 ns]` `[FS_EXEC_SUCCESS]` Process 43887 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867627495262 ns]` `[FS_EXEC_SUCCESS]` Process 43888 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867627500893 ns]` `[FS_EXEC_SUCCESS]` Process 43886 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867627791036 ns]` `[FS_EXEC_SUCCESS]` Process 43885 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867729940898 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43889
+- `[8867729944535 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43890
+- `[8867729947631 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43891
+- `[8867729947821 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43892
+- `[8867730381093 ns]` `[FS_EXEC_SUCCESS]` Process 43892 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867730394989 ns]` `[FS_EXEC_SUCCESS]` Process 43891 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867730403164 ns]` `[FS_EXEC_SUCCESS]` Process 43890 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867730954176 ns]` `[FS_EXEC_SUCCESS]` Process 43889 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867832644377 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43893
+- `[8867832644808 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43894
+- `[8867832652443 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43895
+- `[8867832660337 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43896
+- `[8867833038465 ns]` `[FS_EXEC_SUCCESS]` Process 43894 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867833047963 ns]` `[FS_EXEC_SUCCESS]` Process 43893 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867833050167 ns]` `[FS_EXEC_SUCCESS]` Process 43896 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867833054165 ns]` `[FS_EXEC_SUCCESS]` Process 43895 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867860948654 ns]` `[FORK]` Process 43781 (<unknown>) -> fork() -> Child Process 43897
+- `[8867861652261 ns]` `[FS_EXEC_SUCCESS]` Process 43897 (/usr/bin/date) -> exec_success() -> FS Object '/usr/bin/date' (Inode: 2515363, Dev: 66309)
+- `[8867862631765 ns]` `[FORK]` Process 43781 (<unknown>) -> fork() -> Child Process 43898
+- `[8867863200530 ns]` `[FS_EXEC_SUCCESS]` Process 43898 (/usr/bin/sudo) -> exec_success() -> FS Object '/usr/bin/sudo' (Inode: 2491684, Dev: 66309)
+- `[8867865024946 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
+- `[8867865079678 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
+- `[8867866982351 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 6, Result: 0)
+- `[8867867016565 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 6, Result: 0)
+- `[8867867267084 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '127.0.0.53:53' (FD: 6, Result: 0)
+- `[8867867816713 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '192.168.1.118:0' (FD: 6, Result: 0)
+- `[8867867854003 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net 'fe80::291d:5450:d8da:bbf9:0' (FD: 6, Result: 0)
+- `[8867867943290 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 6, Result: 0)
+- `[8867867965702 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 6, Result: 0)
+- `[8867868414272 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 7, Result: 0)
+- `[8867870771556 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 6, Result: 0)
+- `[8867871253158 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 14, Result: 0)
+- `[8867871773101 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 15, Result: 0)
+- `[8867872059427 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 15, Result: 0)
+- `[8867872313934 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 15, Result: 0)
+- `[8867872568801 ns]` `[CONNECT]` Process 43898 (/usr/bin/sudo) -> connect() -> Net '<unsupported>:0' (FD: 15, Result: 0)
+- `[8867873340967 ns]` `[FORK]` Process 43898 (/usr/bin/sudo) -> fork() -> Child Process 43899
+- `[8867873782033 ns]` `[FORK]` Process 43899 (sudo) -> fork() -> Child Process 43900
+- `[8867874274134 ns]` `[FS_EXEC_SUCCESS]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> exec_success() -> FS Object '/usr/bin/bash' (Inode: 2490472, Dev: 66309)
+- `[8867875145515 ns]` `[FS_EXEC_SUCCESS]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> exec_success() -> FS Object '/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor' (Inode: 1356593, Dev: 66309)
+- `[8867877845240 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(CREATION) -> Memfd 'qual_mfd_dup' (Token: 5, FD: 3)
+- `[8867877847715 ns]` `[MEMFD_CREATE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> memfd_create() -> Memfd 'qual_mfd_dup' (Token: 5, FD: 3)
+- `[8867877853476 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_dup' (Token: 5, FD: 4)
+- `[8867877856471 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_dup' (Token: 5, FD: 30)
+- `[8867877860158 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_dup' (Token: 5, FD: 35)
+- `[8867877866721 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_dup' (Token: 5, FD: 36)
+- `[8867877876860 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_dup' (Token: 5, FD: 3, Duration: 32441 ns)
+- `[8867877879164 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_dup' (Token: 5, FD: 4, Duration: 26189 ns)
+- `[8867877881128 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_dup' (Token: 5, FD: 30, Duration: 25148 ns)
+- `[8867877882941 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_dup' (Token: 5, FD: 35, Duration: 22783 ns)
+- `[8867877884734 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_dup' (Token: 5, FD: 36, Duration: 18013 ns)
+- `[8867877903329 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(CREATION) -> Memfd 'qual_mfd_replace' (Token: 6, FD: 3)
+- `[8867877904832 ns]` `[MEMFD_CREATE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> memfd_create() -> Memfd 'qual_mfd_replace' (Token: 6, FD: 3)
+- `[8867877984080 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_replace' (Token: 6, FD: 3, Duration: 81172 ns)
+- `[8867878071294 ns]` `[UNLINK]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> unlink() -> FS Object '/tmp/ephim_qual_ordinary_isdO18' (Status: SUCCESS)
+- `[8867878123061 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(CREATION) -> Memfd 'qual_mfd_reuse' (Token: 7, FD: 3)
+- `[8867878124654 ns]` `[MEMFD_CREATE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> memfd_create() -> Memfd 'qual_mfd_reuse' (Token: 7, FD: 3)
+- `[8867878126587 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_reuse' (Token: 7, FD: 3, Duration: 3917 ns)
+- `[8867878194855 ns]` `[UNLINK]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> unlink() -> FS Object '/tmp/ephim_qual_reuse_fAW9Cd' (Status: SUCCESS)
+- `[8867878216045 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(CREATION) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 3)
+- `[8867878217367 ns]` `[MEMFD_CREATE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> memfd_create() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 3)
+- `[8867878294992 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878297918 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 0, Bytes: 1)
+- `[8867878305512 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 11742 ns)
+- `[8867878308959 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878310842 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 1, Bytes: 1)
+- `[8867878313337 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4819 ns)
+- `[8867878316022 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878317795 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 2, Bytes: 1)
+- `[8867878320089 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4478 ns)
+- `[8867878322624 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878324337 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 3, Bytes: 1)
+- `[8867878326542 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4278 ns)
+- `[8867878329116 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878331020 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 4, Bytes: 1)
+- `[8867878333815 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5049 ns)
+- `[8867878336931 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878339055 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 5, Bytes: 1)
+- `[8867878341820 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5330 ns)
+- `[8867878345056 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878346329 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878347260 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 6, Bytes: 1)
+- `[8867878349194 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 6, Bytes: 1)
+- `[8867878349675 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 5080 ns)
+- `[8867878351588 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878352069 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 7093 ns)
+- `[8867878353081 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 7, Bytes: 1)
+- `[8867878354634 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878354734 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3406 ns)
+- `[8867878356097 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 8, Bytes: 1)
+- `[8867878356638 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878357830 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3587 ns)
+- `[8867878357960 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 9, Bytes: 1)
+- `[8867878359523 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3166 ns)
+- `[8867878359804 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878361166 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 10, Bytes: 1)
+- `[8867878361968 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878362829 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3366 ns)
+- `[8867878363350 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 11, Bytes: 1)
+- `[8867878364743 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878364933 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3256 ns)
+- `[8867878366015 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 12, Bytes: 1)
+- `[8867878366857 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878367679 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3236 ns)
+- `[8867878368149 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 13, Bytes: 1)
+- `[8867878369562 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878369752 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3216 ns)
+- `[8867878370344 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878370834 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 14, Bytes: 1)
+- `[8867878371616 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878372347 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 15, Bytes: 1)
+- `[8867878372407 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3145 ns)
+- `[8867878373049 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 15, Bytes: 1)
+- `[8867878374301 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878375253 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 5591 ns)
+- `[8867878375483 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 4148 ns)
+- `[8867878375633 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 16, Bytes: 1)
+- `[8867878377577 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3587 ns)
+- `[8867878377757 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878378098 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878379090 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 17, Bytes: 1)
+- `[8867878379591 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878379861 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 17, Bytes: 1)
+- `[8867878380763 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3326 ns)
+- `[8867878381024 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 18, Bytes: 1)
+- `[8867878381705 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 4008 ns)
+- `[8867878382667 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3487 ns)
+- `[8867878383168 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878383889 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878384530 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878384680 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 19, Bytes: 1)
+- `[8867878385292 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 19, Bytes: 1)
+- `[8867878385863 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 19, Bytes: 1)
+- `[8867878386323 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3686 ns)
+- `[8867878386915 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3377 ns)
+- `[8867878387486 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3246 ns)
+- `[8867878388257 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878388838 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878389359 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878389640 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 20, Bytes: 1)
+- `[8867878390221 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 20, Bytes: 1)
+- `[8867878390752 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 20, Bytes: 1)
+- `[8867878391263 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3347 ns)
+- `[8867878392024 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3466 ns)
+- `[8867878392946 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3877 ns)
+- `[8867878393236 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878393928 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878394619 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 21, Bytes: 1)
+- `[8867878394970 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878395220 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 21, Bytes: 1)
+- `[8867878396192 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3246 ns)
+- `[8867878396452 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 22, Bytes: 1)
+- `[8867878396693 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878396873 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3256 ns)
+- `[8867878398126 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3447 ns)
+- `[8867878398286 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878398506 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 23, Bytes: 1)
+- `[8867878399298 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878399658 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 23, Bytes: 1)
+- `[8867878400700 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 23, Bytes: 1)
+- `[8867878400811 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878401352 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 5421 ns)
+- `[8867878401732 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3737 ns)
+- `[8867878402153 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 24, Bytes: 1)
+- `[8867878402293 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3727 ns)
+- `[8867878403446 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878403676 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878403846 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3356 ns)
+- `[8867878404287 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878404618 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 25, Bytes: 1)
+- `[8867878405018 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 25, Bytes: 1)
+- `[8867878405680 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 25, Bytes: 1)
+- `[8867878405820 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878406030 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2875 ns)
+- `[8867878406672 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3277 ns)
+- `[8867878407142 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 26, Bytes: 1)
+- `[8867878407253 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3317 ns)
+- `[8867878408184 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878408655 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878408776 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3237 ns)
+- `[8867878409146 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878409347 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 27, Bytes: 1)
+- `[8867878410028 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 27, Bytes: 1)
+- `[8867878410519 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 28, Bytes: 1)
+- `[8867878410669 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2725 ns)
+- `[8867878410699 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878411691 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3336 ns)
+- `[8867878412162 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 29, Bytes: 1)
+- `[8867878412272 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878412392 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3516 ns)
+- `[8867878413414 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 30, Bytes: 1)
+- `[8867878413725 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878413865 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3456 ns)
+- `[8867878414506 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878414777 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2765 ns)
+- `[8867878415157 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 31, Bytes: 1)
+- `[8867878415899 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878415959 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 31, Bytes: 1)
+- `[8867878416370 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878416791 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3377 ns)
+- `[8867878417332 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 32, Bytes: 1)
+- `[8867878417512 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 32, Bytes: 1)
+- `[8867878417592 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3476 ns)
+- `[8867878418724 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878418945 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3407 ns)
+- `[8867878419255 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3196 ns)
+- `[8867878419646 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878420057 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 33, Bytes: 1)
+- `[8867878420848 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878420988 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878421229 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 33, Bytes: 1)
+- `[8867878421720 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3266 ns)
+- `[8867878421980 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 34, Bytes: 1)
+- `[8867878422662 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 34, Bytes: 1)
+- `[8867878422872 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3587 ns)
+- `[8867878423814 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3206 ns)
+- `[8867878424204 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878424635 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 4067 ns)
+- `[8867878424906 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878425437 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878425557 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 35, Bytes: 1)
+- `[8867878426358 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 35, Bytes: 1)
+- `[8867878426519 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 35, Bytes: 1)
+- `[8867878426719 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878427160 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3256 ns)
+- `[8867878427971 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3426 ns)
+- `[8867878428052 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 36, Bytes: 1)
+- `[8867878428252 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3086 ns)
+- `[8867878429094 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878429665 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3327 ns)
+- `[8867878429955 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878430296 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878430496 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 37, Bytes: 1)
+- `[8867878431358 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 37, Bytes: 1)
+- `[8867878431498 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 37, Bytes: 1)
+- `[8867878431959 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878432179 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3416 ns)
+- `[8867878433021 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3386 ns)
+- `[8867878433331 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3626 ns)
+- `[8867878433452 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 38, Bytes: 1)
+- `[8867878434123 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878434995 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878435095 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3487 ns)
+- `[8867878435105 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878435576 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 39, Bytes: 1)
+- `[8867878436127 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 39, Bytes: 1)
+- `[8867878436407 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 39, Bytes: 1)
+- `[8867878437119 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878437179 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3407 ns)
+- `[8867878437439 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2735 ns)
+- `[8867878438171 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3497 ns)
+- `[8867878438431 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 40, Bytes: 1)
+- `[8867878439142 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878439243 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878440034 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3226 ns)
+- `[8867878440355 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878440615 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 41, Bytes: 1)
+- `[8867878440805 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 41, Bytes: 1)
+- `[8867878441717 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 41, Bytes: 1)
+- `[8867878442018 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3156 ns)
+- `[8867878442128 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878442719 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3927 ns)
+- `[8867878443360 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3326 ns)
+- `[8867878443541 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 42, Bytes: 1)
+- `[8867878443611 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878444733 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878444823 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 43, Bytes: 1)
+- `[8867878445144 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3337 ns)
+- `[8867878445354 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878446115 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 44, Bytes: 1)
+- `[8867878446196 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2846 ns)
+- `[8867878447017 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 44, Bytes: 1)
+- `[8867878447468 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878447728 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878447819 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3447 ns)
+- `[8867878448640 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3597 ns)
+- `[8867878448861 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 45, Bytes: 1)
+- `[8867878448951 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 45, Bytes: 1)
+- `[8867878449802 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878450213 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 2715 ns)
+- `[8867878450944 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3787 ns)
+- `[8867878450975 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878451135 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 46, Bytes: 1)
+- `[8867878451896 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878452337 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 46, Bytes: 1)
+- `[8867878452778 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3326 ns)
+- `[8867878452888 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878453088 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 47, Bytes: 1)
+- `[8867878453980 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3336 ns)
+- `[8867878454211 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 47, Bytes: 1)
+- `[8867878455032 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3436 ns)
+- `[8867878455483 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878455894 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3306 ns)
+- `[8867878456084 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878456655 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878456825 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 48, Bytes: 1)
+- `[8867878457407 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 48, Bytes: 1)
+- `[8867878457697 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 48, Bytes: 1)
+- `[8867878457857 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878458479 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3447 ns)
+- `[8867878459000 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3237 ns)
+- `[8867878459170 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 49, Bytes: 1)
+- `[8867878459260 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2875 ns)
+- `[8867878460442 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878460763 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3246 ns)
+- `[8867878460993 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878461234 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878461865 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 50, Bytes: 1)
+- `[8867878462115 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 50, Bytes: 1)
+- `[8867878462546 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 50, Bytes: 1)
+- `[8867878462737 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878463498 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3366 ns)
+- `[8867878463809 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3086 ns)
+- `[8867878464209 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 51, Bytes: 1)
+- `[8867878464540 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3687 ns)
+- `[8867878465492 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878465562 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878465832 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3426 ns)
+- `[8867878466544 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878466714 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 52, Bytes: 1)
+- `[8867878466904 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 52, Bytes: 1)
+- `[8867878467736 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878467896 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 52, Bytes: 1)
+- `[8867878468107 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2916 ns)
+- `[8867878468828 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3677 ns)
+- `[8867878469018 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 53, Bytes: 1)
+- `[8867878469529 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3306 ns)
+- `[8867878469730 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878470621 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3206 ns)
+- `[8867878470902 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878470992 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 54, Bytes: 1)
+- `[8867878471663 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878472224 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 55, Bytes: 1)
+- `[8867878472314 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2835 ns)
+- `[8867878472876 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878472946 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 55, Bytes: 1)
+- `[8867878473857 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3336 ns)
+- `[8867878473887 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878474228 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 56, Bytes: 1)
+- `[8867878474529 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3216 ns)
+- `[8867878475020 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 56, Bytes: 1)
+- `[8867878475801 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878475911 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3336 ns)
+- `[8867878476322 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 2705 ns)
+- `[8867878476462 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878477174 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 57, Bytes: 1)
+- `[8867878477795 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878477965 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 57, Bytes: 1)
+- `[8867878478145 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878478767 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3267 ns)
+- `[8867878479137 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 58, Bytes: 1)
+- `[8867878479268 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 58, Bytes: 1)
+- `[8867878479598 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3416 ns)
+- `[8867878480650 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878480810 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3296 ns)
+- `[8867878481121 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3426 ns)
+- `[8867878481592 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878482013 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 59, Bytes: 1)
+- `[8867878482694 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878482994 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878483125 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 59, Bytes: 1)
+- `[8867878483596 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3267 ns)
+- `[8867878483826 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 60, Bytes: 1)
+- `[8867878484377 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 60, Bytes: 1)
+- `[8867878484738 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3497 ns)
+- `[8867878485159 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2706 ns)
+- `[8867878485559 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878485950 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3286 ns)
+- `[8867878486611 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878486691 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878486832 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 61, Bytes: 1)
+- `[8867878487914 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878487984 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 61, Bytes: 1)
+- `[8867878488174 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 61, Bytes: 1)
+- `[8867878488415 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3166 ns)
+- `[8867878489216 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 62, Bytes: 1)
+- `[8867878489396 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2955 ns)
+- `[8867878490148 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3807 ns)
+- `[8867878490358 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878490879 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3316 ns)
+- `[8867878490969 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878491791 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 63, Bytes: 1)
+- `[8867878492092 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 63, Bytes: 1)
+- `[8867878492172 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878492873 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878493404 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3356 ns)
+- `[8867878493524 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 64, Bytes: 1)
+- `[8867878493674 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2975 ns)
+- `[8867878494246 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 64, Bytes: 1)
+- `[8867878495127 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3306 ns)
+- `[8867878495398 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878495518 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878495839 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3327 ns)
+- `[8867878496500 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 65, Bytes: 1)
+- `[8867878496850 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 65, Bytes: 1)
+- `[8867878497261 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878497722 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878497942 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2835 ns)
+- `[8867878498674 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3597 ns)
+- `[8867878498734 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 66, Bytes: 1)
+- `[8867878499035 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 66, Bytes: 1)
+- `[8867878499535 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878500397 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3426 ns)
+- `[8867878500577 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878500688 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 67, Bytes: 1)
+- `[8867878500968 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3526 ns)
+- `[8867878501950 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 68, Bytes: 1)
+- `[8867878502060 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2815 ns)
+- `[8867878502511 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878503222 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878503633 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3376 ns)
+- `[8867878503663 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878503823 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 69, Bytes: 1)
+- `[8867878504555 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 69, Bytes: 1)
+- `[8867878504815 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 69, Bytes: 1)
+- `[8867878505457 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3257 ns)
+- `[8867878505637 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878506158 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3256 ns)
+- `[8867878506428 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3035 ns)
+- `[8867878506969 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 70, Bytes: 1)
+- `[8867878507460 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878507931 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878508152 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878508542 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3216 ns)
+- `[8867878508983 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 71, Bytes: 1)
+- `[8867878509184 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 71, Bytes: 1)
+- `[8867878509574 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 71, Bytes: 1)
+- `[8867878510566 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878510736 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3646 ns)
+- `[8867878511067 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3376 ns)
+- `[8867878511788 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3957 ns)
+- `[8867878511879 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 72, Bytes: 1)
+- `[8867878512680 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878512800 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878513512 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3246 ns)
+- `[8867878513792 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878514083 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 73, Bytes: 1)
+- `[8867878514373 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 73, Bytes: 1)
+- `[8867878515175 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 73, Bytes: 1)
+- `[8867878515586 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3116 ns)
+- `[8867878515676 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878516307 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3948 ns)
+- `[8867878516748 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3276 ns)
+- `[8867878517148 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 74, Bytes: 1)
+- `[8867878517489 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878518261 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878518551 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 75, Bytes: 1)
+- `[8867878518761 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878518761 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3396 ns)
+- `[8867878519643 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 75, Bytes: 1)
+- `[8867878519904 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2715 ns)
+- `[8867878520184 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 76, Bytes: 1)
+- `[8867878520735 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878521366 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3386 ns)
+- `[8867878521577 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878521957 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3506 ns)
+- `[8867878522048 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 77, Bytes: 1)
+- `[8867878522699 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 77, Bytes: 1)
+- `[8867878523340 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878523691 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3266 ns)
+- `[8867878523921 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878524021 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2675 ns)
+- `[8867878524693 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 78, Bytes: 1)
+- `[8867878525334 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 78, Bytes: 1)
+- `[8867878525714 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878525945 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878526306 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3257 ns)
+- `[8867878526867 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 79, Bytes: 1)
+- `[8867878526927 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3316 ns)
+- `[8867878527287 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 79, Bytes: 1)
+- `[8867878528259 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2785 ns)
+- `[8867878528319 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878528880 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878528941 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3297 ns)
+- `[8867878529782 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 80, Bytes: 1)
+- `[8867878529902 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878530283 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 80, Bytes: 1)
+- `[8867878530874 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878531044 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 81, Bytes: 1)
+- `[8867878531375 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3366 ns)
+- `[8867878531876 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3306 ns)
+- `[8867878532237 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 82, Bytes: 1)
+- `[8867878532417 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2785 ns)
+- `[8867878533409 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878533780 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878533850 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3266 ns)
+- `[8867878534010 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878534771 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 83, Bytes: 1)
+- `[8867878535112 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 83, Bytes: 1)
+- `[8867878535182 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 83, Bytes: 1)
+- `[8867878535793 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878536415 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3297 ns)
+- `[8867878536675 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2946 ns)
+- `[8867878537166 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 84, Bytes: 1)
+- `[8867878537416 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3957 ns)
+- `[8867878538378 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878538548 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878538749 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3276 ns)
+- `[8867878539430 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878539891 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 85, Bytes: 1)
+- `[8867878539991 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 85, Bytes: 1)
+- `[8867878541103 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 86, Bytes: 1)
+- `[8867878541274 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3166 ns)
+- `[8867878541314 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878541985 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3897 ns)
+- `[8867878542666 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 87, Bytes: 1)
+- `[8867878542706 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3606 ns)
+- `[8867878542887 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878543899 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878544079 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 88, Bytes: 1)
+- `[8867878544309 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3316 ns)
+- `[8867878544850 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878545251 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 89, Bytes: 1)
+- `[8867878545371 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2745 ns)
+- `[8867878546173 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 89, Bytes: 1)
+- `[8867878546303 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878546844 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3256 ns)
+- `[8867878546914 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878547605 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 90, Bytes: 1)
+- `[8867878547836 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3296 ns)
+- `[8867878548006 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 90, Bytes: 1)
+- `[8867878549259 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878549479 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3597 ns)
+- `[8867878549679 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3035 ns)
+- `[8867878549840 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878550681 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 91, Bytes: 1)
+- `[8867878551222 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 91, Bytes: 1)
+- `[8867878551383 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878551513 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878552254 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3346 ns)
+- `[8867878552525 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 92, Bytes: 1)
+- `[8867878552875 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3356 ns)
+- `[8867878552925 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 92, Bytes: 1)
+- `[8867878553907 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2925 ns)
+- `[8867878554328 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878554589 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3477 ns)
+- `[8867878554779 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878555500 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878555671 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 93, Bytes: 1)
+- `[8867878556392 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 93, Bytes: 1)
+- `[8867878556632 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 93, Bytes: 1)
+- `[8867878556883 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878557324 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3307 ns)
+- `[8867878558065 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3587 ns)
+- `[8867878558235 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 94, Bytes: 1)
+- `[8867878558366 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3136 ns)
+- `[8867878559357 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878559848 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3336 ns)
+- `[8867878559999 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878560179 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878560690 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 95, Bytes: 1)
+- `[8867878561311 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 95, Bytes: 1)
+- `[8867878561652 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 95, Bytes: 1)
+- `[8867878562083 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878562303 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3266 ns)
+- `[8867878562664 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 2916 ns)
+- `[8867878563425 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3707 ns)
+- `[8867878563515 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 96, Bytes: 1)
+- `[8867878564197 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878564557 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878565108 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3386 ns)
+- `[8867878565419 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878565779 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 97, Bytes: 1)
+- `[8867878565900 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 97, Bytes: 1)
+- `[8867878566751 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 97, Bytes: 1)
+- `[8867878567192 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7)
+- `[8867878567403 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3517 ns)
+- `[8867878567653 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3366 ns)
+- `[8867878568394 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3306 ns)
+- `[8867878568565 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 98, Bytes: 1)
+- `[8867878569316 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878569527 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878570168 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 7, Duration: 3256 ns)
+- `[8867878570408 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878570709 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 99, Bytes: 1)
+- `[8867878571109 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 99, Bytes: 1)
+- `[8867878571891 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 99, Bytes: 1)
+- `[8867878572262 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3226 ns)
+- `[8867878572963 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3767 ns)
+- `[8867878573524 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3436 ns)
+- `[8867878573965 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878574927 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878575057 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 100, Bytes: 1)
+- `[8867878575448 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878576299 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 101, Bytes: 1)
+- `[8867878576409 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2825 ns)
+- `[8867878576790 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 101, Bytes: 1)
+- `[8867878577962 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878577972 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3386 ns)
+- `[8867878578443 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3296 ns)
+- `[8867878579104 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 102, Bytes: 1)
+- `[8867878580297 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878580387 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2665 ns)
+- `[8867878580447 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878581689 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 103, Bytes: 1)
+- `[8867878581820 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 103, Bytes: 1)
+- `[8867878582010 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878583032 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 104, Bytes: 1)
+- `[8867878583292 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3306 ns)
+- `[8867878583843 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3727 ns)
+- `[8867878584314 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 2595 ns)
+- `[8867878585236 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878585797 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878585897 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878586689 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 105, Bytes: 1)
+- `[8867878587069 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 105, Bytes: 1)
+- `[8867878587149 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 105, Bytes: 1)
+- `[8867878588342 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3417 ns)
+- `[8867878588632 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3005 ns)
+- `[8867878589374 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3898 ns)
+- `[8867878590325 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878590406 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878591317 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878591558 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 106, Bytes: 1)
+- `[8867878591808 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 106, Bytes: 1)
+- `[8867878592640 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 107, Bytes: 1)
+- `[8867878592860 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2775 ns)
+- `[8867878593582 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3577 ns)
+- `[8867878594243 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3236 ns)
+- `[8867878594433 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878595545 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878596307 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 108, Bytes: 1)
+- `[8867878596587 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878596868 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 108, Bytes: 1)
+- `[8867878597950 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 109, Bytes: 1)
+- `[8867878598300 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4137 ns)
+- `[8867878598721 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3486 ns)
+- `[8867878599653 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3376 ns)
+- `[8867878600464 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878600585 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878601556 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6)
+- `[8867878601997 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 110, Bytes: 1)
+- `[8867878602097 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 110, Bytes: 1)
+- `[8867878603390 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 110, Bytes: 1)
+- `[8867878603721 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3447 ns)
+- `[8867878604632 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 4488 ns)
+- `[8867878604983 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 6, Duration: 3737 ns)
+- `[8867878605604 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878606937 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878607077 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 111, Bytes: 1)
+- `[8867878608710 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 112, Bytes: 1)
+- `[8867878608800 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3517 ns)
+- `[8867878610353 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3797 ns)
+- `[8867878610744 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878611976 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878612036 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 113, Bytes: 1)
+- `[8867878613058 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 113, Bytes: 1)
+- `[8867878613589 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3156 ns)
+- `[8867878614360 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 2655 ns)
+- `[8867878615473 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878615913 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5)
+- `[8867878616855 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 114, Bytes: 1)
+- `[8867878616965 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 114, Bytes: 1)
+- `[8867878618488 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3346 ns)
+- `[8867878618779 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 5, Duration: 3126 ns)
+- `[8867878620392 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878621664 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 115, Bytes: 1)
+- `[8867878623237 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3136 ns)
+- `[8867878625071 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(DUP) -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4)
+- `[8867878626583 ns]` `[MEMFD_WRITE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> write() -> Memfd 'qual_mfd_threads' (Token: 8, Offset: 116, Bytes: 1)
+- `[8867878628196 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 4, Duration: 3406 ns)
+- `[8867878649156 ns]` `[FD_CLOSED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> close_fd() -> Memfd 'qual_mfd_threads' (Token: 8, FD: 3, Duration: 433522 ns)
+- `[8867878662781 ns]` `[FD_INSTALLED]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fd_install(CREATION) -> Memfd 'qual_mfd_clone' (Token: 9, FD: 3)
+- `[8867878663763 ns]` `[MEMFD_CREATE]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> memfd_create() -> Memfd 'qual_mfd_clone' (Token: 9, FD: 3)
+- `[8867878738884 ns]` `[FORK]` Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) -> fork() -> Child Process 43905
+- `[8867878805268 ns]` `[MEMFD_WRITE]` Process 43905 (test_qualificat) -> write() -> Memfd 'qual_mfd_clone' (Token: 9, Offset: 0, Bytes: 25)
+- `[8867878810387 ns]` `[FD_CLOSED]` Process 43905 (test_qualificat) -> close_fd() -> Memfd 'qual_mfd_clone' (Token: 9, FD: 3, Duration: 147826 ns)
+- `[8867880366722 ns]` `[FORK]` Process 43781 (<unknown>) -> fork() -> Child Process 43906
+- `[8867880814009 ns]` `[FS_EXEC_SUCCESS]` Process 43906 (/usr/bin/date) -> exec_success() -> FS Object '/usr/bin/date' (Inode: 2515363, Dev: 66309)
+- `[8867881490305 ns]` `[FORK]` Process 43781 (<unknown>) -> fork() -> Child Process 43907
+- `[8867881717100 ns]` `[FS_EXEC_SUCCESS]` Process 43907 (/usr/bin/sleep) -> exec_success() -> FS Object '/usr/bin/sleep' (Inode: 2515421, Dev: 66309)
+- `[8867936000038 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43908
+- `[8867936008203 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43910
+- `[8867936008333 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43909
+- `[8867936012581 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43911
+- `[8867936367536 ns]` `[FS_EXEC_SUCCESS]` Process 43911 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867936378897 ns]` `[FS_EXEC_SUCCESS]` Process 43910 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867936382043 ns]` `[FS_EXEC_SUCCESS]` Process 43908 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8867936952321 ns]` `[FS_EXEC_SUCCESS]` Process 43909 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868002671963 ns]` `[FORK]` Process 3110 (<unknown>) -> fork() -> Child Process 43912
+- `[8868003983989 ns]` `[FS_EXEC_SUCCESS]` Process 43912 (/bin/sh) -> exec_success() -> FS Object '/bin/sh' (Inode: 2490662, Dev: 66309)
+- `[8868004535422 ns]` `[FORK]` Process 43912 (/bin/sh) -> fork() -> Child Process 43913
+- `[8868004803734 ns]` `[FS_EXEC_SUCCESS]` Process 43913 (/usr/bin/whoami) -> exec_success() -> FS Object '/usr/bin/whoami' (Inode: 2515452, Dev: 66309)
+- `[8868005444324 ns]` `[CONNECT]` Process 43913 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
+- `[8868005481774 ns]` `[CONNECT]` Process 43913 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
+- `[8868038878165 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43914
+- `[8868038879768 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43915
+- `[8868038881300 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43916
+- `[8868038892211 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43917
+- `[8868039202442 ns]` `[FS_EXEC_SUCCESS]` Process 43915 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868039208263 ns]` `[FS_EXEC_SUCCESS]` Process 43917 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868039271180 ns]` `[FS_EXEC_SUCCESS]` Process 43916 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868039320643 ns]` `[FS_EXEC_SUCCESS]` Process 43914 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868108065089 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 10, FD: 95)
+- `[8868108067674 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 10, FD: 95)
+- `[8868108245186 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 10, FD: 95, Duration: 181630 ns)
+- `[8868108319225 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 10, FD: 6)
+- `[8868108354882 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 10, FD: 6, Duration: 39354 ns)
+- `[8868111461048 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 11, FD: 95)
+- `[8868111462631 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 11, FD: 95)
+- `[8868111487036 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 11, FD: 95, Duration: 26619 ns)
+- `[8868111547810 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 11, FD: 6)
+- `[8868111582665 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 11, FD: 6, Duration: 35857 ns)
+- `[8868141565555 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43918
+- `[8868141565715 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43919
+- `[8868141575383 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43920
+- `[8868141578589 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43921
+- `[8868141988136 ns]` `[FS_EXEC_SUCCESS]` Process 43920 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868142011750 ns]` `[FS_EXEC_SUCCESS]` Process 43921 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868142023853 ns]` `[FS_EXEC_SUCCESS]` Process 43919 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868142032749 ns]` `[FS_EXEC_SUCCESS]` Process 43918 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868244770314 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43922
+- `[8868244770794 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43925
+- `[8868244771005 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43923
+- `[8868244771175 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43924
+- `[8868245149423 ns]` `[FS_EXEC_SUCCESS]` Process 43925 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868245164702 ns]` `[FS_EXEC_SUCCESS]` Process 43922 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868245255472 ns]` `[FS_EXEC_SUCCESS]` Process 43923 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868245275910 ns]` `[FS_EXEC_SUCCESS]` Process 43924 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868348123951 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43926
+- `[8868348133599 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43927
+- `[8868348134912 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43928
+- `[8868348135142 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43929
+- `[8868348498032 ns]` `[FS_EXEC_SUCCESS]` Process 43926 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868348516706 ns]` `[FS_EXEC_SUCCESS]` Process 43927 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868348555369 ns]` `[FS_EXEC_SUCCESS]` Process 43929 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868348570958 ns]` `[FS_EXEC_SUCCESS]` Process 43928 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868451350661 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43930
+- `[8868451351122 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43932
+- `[8868451351342 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43931
+- `[8868451351743 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43933
+- `[8868451738658 ns]` `[FS_EXEC_SUCCESS]` Process 43931 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868451743577 ns]` `[FS_EXEC_SUCCESS]` Process 43930 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868451745751 ns]` `[FS_EXEC_SUCCESS]` Process 43933 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868451793851 ns]` `[FS_EXEC_SUCCESS]` Process 43932 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868553988298 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43934
+- `[8868553988829 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43935
+- `[8868553989060 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43936
+- `[8868553995652 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43937
+- `[8868554393357 ns]` `[FS_EXEC_SUCCESS]` Process 43936 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868554407102 ns]` `[FS_EXEC_SUCCESS]` Process 43937 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868554575167 ns]` `[FS_EXEC_SUCCESS]` Process 43935 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868556229374 ns]` `[FS_EXEC_SUCCESS]` Process 43934 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868657297262 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43938
+- `[8868657297713 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43939
+- `[8868657298093 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43940
+- `[8868657314875 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43941
+- `[8868657676532 ns]` `[FS_EXEC_SUCCESS]` Process 43941 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868657681922 ns]` `[FS_EXEC_SUCCESS]` Process 43938 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868657718931 ns]` `[FS_EXEC_SUCCESS]` Process 43939 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868657723019 ns]` `[FS_EXEC_SUCCESS]` Process 43940 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868760808905 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43942
+- `[8868760809436 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43943
+- `[8868760826027 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43944
+- `[8868760827580 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43945
+- `[8868761212931 ns]` `[FS_EXEC_SUCCESS]` Process 43945 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868761221748 ns]` `[FS_EXEC_SUCCESS]` Process 43944 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868761239581 ns]` `[FS_EXEC_SUCCESS]` Process 43942 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868761613932 ns]` `[FS_EXEC_SUCCESS]` Process 43943 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868876874525 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43946
+- `[8868876875086 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43947
+- `[8868877039574 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43948
+- `[8868877054532 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43949
+- `[8868877690994 ns]` `[FS_EXEC_SUCCESS]` Process 43946 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868877692526 ns]` `[FS_EXEC_SUCCESS]` Process 43948 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868877702435 ns]` `[FS_EXEC_SUCCESS]` Process 43947 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868877713856 ns]` `[FS_EXEC_SUCCESS]` Process 43949 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868980229464 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43950
+- `[8868980229775 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43951
+- `[8868980244402 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43952
+- `[8868980244653 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43953
+- `[8868980609396 ns]` `[FS_EXEC_SUCCESS]` Process 43950 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868980613774 ns]` `[FS_EXEC_SUCCESS]` Process 43952 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868980623512 ns]` `[FS_EXEC_SUCCESS]` Process 43951 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8868980839997 ns]` `[FS_EXEC_SUCCESS]` Process 43953 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869002307754 ns]` `[FORK]` Process 3110 (<unknown>) -> fork() -> Child Process 43954
+- `[8869003462195 ns]` `[FS_EXEC_SUCCESS]` Process 43954 (/bin/sh) -> exec_success() -> FS Object '/bin/sh' (Inode: 2490662, Dev: 66309)
+- `[8869003889856 ns]` `[FORK]` Process 43954 (/bin/sh) -> fork() -> Child Process 43955
+- `[8869004076786 ns]` `[FS_EXEC_SUCCESS]` Process 43955 (/usr/bin/whoami) -> exec_success() -> FS Object '/usr/bin/whoami' (Inode: 2515452, Dev: 66309)
+- `[8869004455505 ns]` `[CONNECT]` Process 43955 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
+- `[8869004486764 ns]` `[CONNECT]` Process 43955 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
+- `[8869083867947 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43956
+- `[8869083868448 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43957
+- `[8869083868698 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43958
+- `[8869083873598 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43959
+- `[8869084285319 ns]` `[FS_EXEC_SUCCESS]` Process 43958 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869084304605 ns]` `[FS_EXEC_SUCCESS]` Process 43959 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869084362152 ns]` `[FS_EXEC_SUCCESS]` Process 43957 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869086091380 ns]` `[FS_EXEC_SUCCESS]` Process 43956 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869105635474 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 12, FD: 95)
+- `[8869105637588 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 12, FD: 95)
+- `[8869105663928 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 12, FD: 95, Duration: 29325 ns)
+- `[8869105670019 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 12, FD: 6)
+- `[8869105679106 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 12, FD: 6, Duration: 10029 ns)
+- `[8869108139864 ns]` `[FD_INSTALLED]` Process 1351 (<unknown>) -> fd_install(CREATION) -> Memfd 'xorg' (Token: 13, FD: 95)
+- `[8869108141677 ns]` `[MEMFD_CREATE]` Process 1351 (<unknown>) -> memfd_create() -> Memfd 'xorg' (Token: 13, FD: 95)
+- `[8869108156845 ns]` `[FD_CLOSED]` Process 1351 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 13, FD: 95, Duration: 17352 ns)
+- `[8869108165161 ns]` `[FD_INSTALLED]` Process 3110 (<unknown>) -> fd_install(DUP) -> Memfd 'xorg' (Token: 13, FD: 6)
+- `[8869108173757 ns]` `[FD_CLOSED]` Process 3110 (<unknown>) -> close_fd() -> Memfd 'xorg' (Token: 13, FD: 6, Duration: 9107 ns)
+- `[8869186529430 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43963
+- `[8869186529790 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43961
+- `[8869186530171 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43962
+- `[8869186530321 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43960
+- `[8869186909652 ns]` `[FS_EXEC_SUCCESS]` Process 43963 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869186911395 ns]` `[FS_EXEC_SUCCESS]` Process 43961 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869186951891 ns]` `[FS_EXEC_SUCCESS]` Process 43962 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869186966328 ns]` `[FS_EXEC_SUCCESS]` Process 43960 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869289640865 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43964
+- `[8869289641135 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43965
+- `[8869289654300 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43967
+- `[8869289654570 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43966
+- `[8869290034101 ns]` `[FS_EXEC_SUCCESS]` Process 43965 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869290043849 ns]` `[FS_EXEC_SUCCESS]` Process 43967 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869290046074 ns]` `[FS_EXEC_SUCCESS]` Process 43964 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869290050342 ns]` `[FS_EXEC_SUCCESS]` Process 43966 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869392844222 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43969
+- `[8869392844723 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43968
+- `[8869392844944 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43970
+- `[8869392848300 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43971
+- `[8869393242879 ns]` `[FS_EXEC_SUCCESS]` Process 43969 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869393259590 ns]` `[FS_EXEC_SUCCESS]` Process 43968 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869393268717 ns]` `[FS_EXEC_SUCCESS]` Process 43970 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869393323339 ns]` `[FS_EXEC_SUCCESS]` Process 43971 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869496647423 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43972
+- `[8869496653374 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43973
+- `[8869496659205 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43974
+- `[8869496661810 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43975
+- `[8869497040128 ns]` `[FS_EXEC_SUCCESS]` Process 43972 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869497047141 ns]` `[FS_EXEC_SUCCESS]` Process 43975 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869497051339 ns]` `[FS_EXEC_SUCCESS]` Process 43974 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869497087276 ns]` `[FS_EXEC_SUCCESS]` Process 43973 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869613040796 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43976
+- `[8869613040947 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43979
+- `[8869613041388 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43977
+- `[8869613393146 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43978
+- `[8869613885678 ns]` `[FS_EXEC_SUCCESS]` Process 43979 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869613885789 ns]` `[FS_EXEC_SUCCESS]` Process 43976 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869613887482 ns]` `[FS_EXEC_SUCCESS]` Process 43978 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869613906157 ns]` `[FS_EXEC_SUCCESS]` Process 43977 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869716847674 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43980
+- `[8869716848075 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43981
+- `[8869716848296 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43983
+- `[8869716848466 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43982
+- `[8869717267771 ns]` `[FS_EXEC_SUCCESS]` Process 43980 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869717315490 ns]` `[FS_EXEC_SUCCESS]` Process 43981 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869717322263 ns]` `[FS_EXEC_SUCCESS]` Process 43983 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869719163110 ns]` `[FS_EXEC_SUCCESS]` Process 43982 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869819875894 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43984
+- `[8869819876385 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43986
+- `[8869819876505 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43985
+- `[8869819883929 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43987
+- `[8869820268880 ns]` `[FS_EXEC_SUCCESS]` Process 43987 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869820296000 ns]` `[FS_EXEC_SUCCESS]` Process 43985 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869820311870 ns]` `[FS_EXEC_SUCCESS]` Process 43986 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869820349491 ns]` `[FS_EXEC_SUCCESS]` Process 43984 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869882873620 ns]` `[FORK]` Process 43781 (<unknown>) -> fork() -> Child Process 43988
+- `[8869883832496 ns]` `[FS_EXEC_SUCCESS]` Process 43988 (/usr/bin/date) -> exec_success() -> FS Object '/usr/bin/date' (Inode: 2515363, Dev: 66309)
+- `[8869909558926 ns]` `[FORK]` Process 2 (<unknown>) -> fork() -> Child Process 43989
+- `[8869922658022 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43990
+- `[8869922660006 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43991
+- `[8869922669304 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43992
+- `[8869922678882 ns]` `[FORK]` Process 3132 (<unknown>) -> fork() -> Child Process 43993
+- `[8869923039076 ns]` `[FS_EXEC_SUCCESS]` Process 43992 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869923040018 ns]` `[FS_EXEC_SUCCESS]` Process 43993 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869923049415 ns]` `[FS_EXEC_SUCCESS]` Process 43990 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8869923069132 ns]` `[FS_EXEC_SUCCESS]` Process 43991 (/usr/bin/git) -> exec_success() -> FS Object '/usr/bin/git' (Inode: 2490759, Dev: 66309)
+- `[8870002955001 ns]` `[FORK]` Process 3110 (<unknown>) -> fork() -> Child Process 43994
+- `[8870004399305 ns]` `[FS_EXEC_SUCCESS]` Process 43994 (/bin/sh) -> exec_success() -> FS Object '/bin/sh' (Inode: 2490662, Dev: 66309)
+- `[8870004936751 ns]` `[FORK]` Process 43994 (/bin/sh) -> fork() -> Child Process 43995
+- `[8870005193221 ns]` `[FS_EXEC_SUCCESS]` Process 43995 (/usr/bin/whoami) -> exec_success() -> FS Object '/usr/bin/whoami' (Inode: 2515452, Dev: 66309)
+- `[8870005790700 ns]` `[CONNECT]` Process 43995 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
+- `[8870005822921 ns]` `[CONNECT]` Process 43995 (/usr/bin/whoami) -> connect() -> Net '<unsupported>:0' (FD: 3, Result: 0)
 
 ## Structured Event Table
 
 | Timestamp (ns) | Event Type | Source Entity | Action | Target Entity | Details |
 |---|---|---|---|---|---|
-| 6406575446269 | FORK | Process 3132 (<unknown>) | fork() | Process 34987 | Child PID: 34987 |
-| 6406575446420 | FORK | Process 3132 (<unknown>) | fork() | Process 34989 | Child PID: 34989 |
-| 6406575446760 | FORK | Process 3132 (<unknown>) | fork() | Process 34990 | Child PID: 34990 |
-| 6406575446891 | FORK | Process 3132 (<unknown>) | fork() | Process 34988 | Child PID: 34988 |
-| 6406575902028 | FS_EXEC_SUCCESS | Process 34989 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406575902118 | FS_EXEC_SUCCESS | Process 34990 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406575989673 | FS_EXEC_SUCCESS | Process 34988 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406576089992 | FS_EXEC_SUCCESS | Process 34987 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406676054375 | FORK | Process 3132 (<unknown>) | fork() | Process 34991 | Child PID: 34991 |
-| 6406676054515 | FORK | Process 3132 (<unknown>) | fork() | Process 34992 | Child PID: 34992 |
-| 6406676054686 | FORK | Process 3132 (<unknown>) | fork() | Process 34993 | Child PID: 34993 |
-| 6406676055497 | FORK | Process 3132 (<unknown>) | fork() | Process 34994 | Child PID: 34994 |
-| 6406676429341 | FS_EXEC_SUCCESS | Process 34992 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406676437747 | FS_EXEC_SUCCESS | Process 34991 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406676448617 | FS_EXEC_SUCCESS | Process 34993 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406676513810 | FS_EXEC_SUCCESS | Process 34994 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406785561589 | FORK | Process 3132 (<unknown>) | fork() | Process 34995 | Child PID: 34995 |
-| 6406785562390 | FORK | Process 3132 (<unknown>) | fork() | Process 34996 | Child PID: 34996 |
-| 6406785562611 | FORK | Process 3132 (<unknown>) | fork() | Process 34997 | Child PID: 34997 |
-| 6406785564224 | FORK | Process 3132 (<unknown>) | fork() | Process 34998 | Child PID: 34998 |
-| 6406786245787 | FS_EXEC_SUCCESS | Process 34995 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406786250436 | FS_EXEC_SUCCESS | Process 34998 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406786257990 | FS_EXEC_SUCCESS | Process 34996 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406786270804 | FS_EXEC_SUCCESS | Process 34997 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406888398190 | FORK | Process 3132 (<unknown>) | fork() | Process 34999 | Child PID: 34999 |
-| 6406888399072 | FORK | Process 3132 (<unknown>) | fork() | Process 35000 | Child PID: 35000 |
-| 6406888404783 | FORK | Process 3132 (<unknown>) | fork() | Process 35001 | Child PID: 35001 |
-| 6406888405855 | FORK | Process 3132 (<unknown>) | fork() | Process 35002 | Child PID: 35002 |
-| 6406888805287 | FS_EXEC_SUCCESS | Process 35001 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406888813042 | FS_EXEC_SUCCESS | Process 34999 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406888837017 | FS_EXEC_SUCCESS | Process 35002 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406889182307 | FS_EXEC_SUCCESS | Process 35000 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406991578870 | FORK | Process 3132 (<unknown>) | fork() | Process 35003 | Child PID: 35003 |
-| 6406991583319 | FORK | Process 3132 (<unknown>) | fork() | Process 35004 | Child PID: 35004 |
-| 6406991589991 | FORK | Process 3132 (<unknown>) | fork() | Process 35006 | Child PID: 35006 |
-| 6406991591053 | FORK | Process 3132 (<unknown>) | fork() | Process 35005 | Child PID: 35005 |
-| 6406991977461 | FS_EXEC_SUCCESS | Process 35004 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406991981999 | FS_EXEC_SUCCESS | Process 35003 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406992014300 | FS_EXEC_SUCCESS | Process 35005 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6406992608770 | FS_EXEC_SUCCESS | Process 35006 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407003305223 | FORK | Process 3110 (<unknown>) | fork() | Process 35007 | Child PID: 35007 |
-| 6407004706893 | FS_EXEC_SUCCESS | Process 35007 (/bin/sh) | exec_success() | FS Object 2490662 | Path: /bin/sh, Inode: 2490662 |
-| 6407005207065 | FORK | Process 35007 (/bin/sh) | fork() | Process 35008 | Child PID: 35008 |
-| 6407005433221 | FS_EXEC_SUCCESS | Process 35008 (/usr/bin/whoami) | exec_success() | FS Object 2515452 | Path: /usr/bin/whoami, Inode: 2515452 |
-| 6407005948631 | CONNECT | Process 35008 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
-| 6407005979820 | CONNECT | Process 35008 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
-| 6407035615830 | CONNECT | Process 422 (<unknown>) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 17, Result: 0 |
-| 6407047267012 | FORK | Process 422 (<unknown>) | fork() | Process 35009 | Child PID: 35009 |
-| 6407049833445 | UNLINK | Process 422 (<unknown>) | unlink() | FS Object 5294 | Path: /run/udev/queue, Status: SUCCESS |
-| 6407094506082 | FORK | Process 3132 (<unknown>) | fork() | Process 35010 | Child PID: 35010 |
-| 6407094506393 | FORK | Process 3132 (<unknown>) | fork() | Process 35011 | Child PID: 35011 |
-| 6407094512985 | FORK | Process 3132 (<unknown>) | fork() | Process 35012 | Child PID: 35012 |
-| 6407094519257 | FORK | Process 3132 (<unknown>) | fork() | Process 35013 | Child PID: 35013 |
-| 6407094907909 | FS_EXEC_SUCCESS | Process 35011 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407094913299 | FS_EXEC_SUCCESS | Process 35013 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407094929039 | FS_EXEC_SUCCESS | Process 35010 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407094930431 | FS_EXEC_SUCCESS | Process 35012 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407107482830 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 1 | Type: CREATION, Name: xorg, FD: 95 |
-| 6407107485345 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 1 | Name: xorg, FD: 95 |
-| 6407107517375 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 1 | Name: xorg, FD: 95, Duration: 34635 ns |
-| 6407107535169 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 1 | Type: DUP, Name: xorg, FD: 6 |
-| 6407107551119 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 1 | Name: xorg, FD: 6, Duration: 16842 ns |
-| 6407109021668 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 2 | Type: CREATION, Name: xorg, FD: 95 |
-| 6407109023121 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 2 | Name: xorg, FD: 95 |
-| 6407109045322 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 2 | Name: xorg, FD: 95, Duration: 23805 ns |
-| 6407109052837 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 2 | Type: DUP, Name: xorg, FD: 6 |
-| 6407109062124 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 2 | Name: xorg, FD: 6, Duration: 9749 ns |
-| 6407197452320 | FORK | Process 3132 (<unknown>) | fork() | Process 35015 | Child PID: 35015 |
-| 6407197452801 | FORK | Process 3132 (<unknown>) | fork() | Process 35014 | Child PID: 35014 |
-| 6407197453021 | FORK | Process 3132 (<unknown>) | fork() | Process 35016 | Child PID: 35016 |
-| 6407197456057 | FORK | Process 3132 (<unknown>) | fork() | Process 35017 | Child PID: 35017 |
-| 6407197853987 | FS_EXEC_SUCCESS | Process 35017 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407197867492 | FS_EXEC_SUCCESS | Process 35015 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407197869987 | FS_EXEC_SUCCESS | Process 35014 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407197912787 | FS_EXEC_SUCCESS | Process 35016 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407300107169 | FORK | Process 3132 (<unknown>) | fork() | Process 35018 | Child PID: 35018 |
-| 6407300111988 | FORK | Process 3132 (<unknown>) | fork() | Process 35019 | Child PID: 35019 |
-| 6407300115926 | FORK | Process 3132 (<unknown>) | fork() | Process 35021 | Child PID: 35021 |
-| 6407300116026 | FORK | Process 3132 (<unknown>) | fork() | Process 35020 | Child PID: 35020 |
-| 6407300510569 | FS_EXEC_SUCCESS | Process 35018 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407300510759 | FS_EXEC_SUCCESS | Process 35021 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407300614514 | FS_EXEC_SUCCESS | Process 35020 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407302087488 | FS_EXEC_SUCCESS | Process 35019 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407402690714 | FORK | Process 3132 (<unknown>) | fork() | Process 35022 | Child PID: 35022 |
-| 6407402691375 | FORK | Process 3132 (<unknown>) | fork() | Process 35023 | Child PID: 35023 |
-| 6407402691575 | FORK | Process 3132 (<unknown>) | fork() | Process 35025 | Child PID: 35025 |
-| 6407402692718 | FORK | Process 3132 (<unknown>) | fork() | Process 35024 | Child PID: 35024 |
-| 6407403239728 | FS_EXEC_SUCCESS | Process 35022 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407403240118 | FS_EXEC_SUCCESS | Process 35025 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407403261739 | FS_EXEC_SUCCESS | Process 35024 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407403420378 | FS_EXEC_SUCCESS | Process 35023 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407505295438 | FORK | Process 3132 (<unknown>) | fork() | Process 35026 | Child PID: 35026 |
-| 6407505298414 | FORK | Process 3132 (<unknown>) | fork() | Process 35027 | Child PID: 35027 |
-| 6407505299506 | FORK | Process 3132 (<unknown>) | fork() | Process 35029 | Child PID: 35029 |
-| 6407505299767 | FORK | Process 3132 (<unknown>) | fork() | Process 35028 | Child PID: 35028 |
-| 6407505731740 | FS_EXEC_SUCCESS | Process 35028 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407505733213 | FS_EXEC_SUCCESS | Process 35027 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407505762939 | FS_EXEC_SUCCESS | Process 35029 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407507202860 | FS_EXEC_SUCCESS | Process 35026 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407608193536 | FORK | Process 3132 (<unknown>) | fork() | Process 35031 | Child PID: 35031 |
-| 6407608193856 | FORK | Process 3132 (<unknown>) | fork() | Process 35030 | Child PID: 35030 |
-| 6407608194427 | FORK | Process 3132 (<unknown>) | fork() | Process 35033 | Child PID: 35033 |
-| 6407608194447 | FORK | Process 3132 (<unknown>) | fork() | Process 35032 | Child PID: 35032 |
-| 6407608593128 | FS_EXEC_SUCCESS | Process 35030 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407608593489 | FS_EXEC_SUCCESS | Process 35033 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407608604199 | FS_EXEC_SUCCESS | Process 35031 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407608682967 | FS_EXEC_SUCCESS | Process 35032 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407619658667 | UNLINK | Process 4853 (<unknown>) | unlink() | FS Object 1099846 | Path: /home/magellan/.gemini/antigravity-acp/conversations/82fa6f81-d632-4b02-b8f6-fc1fc52934c4.db-shm, Status: SUCCESS |
-| 6407619891325 | UNLINK | Process 4853 (<unknown>) | unlink() | FS Object 1099839 | Path: /home/magellan/.gemini/antigravity-acp/conversations/82fa6f81-d632-4b02-b8f6-fc1fc52934c4.db-wal, Status: SUCCESS |
-| 6407711020639 | FORK | Process 3132 (<unknown>) | fork() | Process 35034 | Child PID: 35034 |
-| 6407711021150 | FORK | Process 3132 (<unknown>) | fork() | Process 35035 | Child PID: 35035 |
-| 6407711025027 | FORK | Process 3132 (<unknown>) | fork() | Process 35036 | Child PID: 35036 |
-| 6407711025668 | FORK | Process 3132 (<unknown>) | fork() | Process 35037 | Child PID: 35037 |
-| 6407711415693 | FS_EXEC_SUCCESS | Process 35034 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407711441231 | FS_EXEC_SUCCESS | Process 35036 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407711530369 | FS_EXEC_SUCCESS | Process 35035 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407713089725 | FS_EXEC_SUCCESS | Process 35037 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407814055393 | FORK | Process 3132 (<unknown>) | fork() | Process 35040 | Child PID: 35040 |
-| 6407814055624 | FORK | Process 3132 (<unknown>) | fork() | Process 35039 | Child PID: 35039 |
-| 6407814055844 | FORK | Process 3132 (<unknown>) | fork() | Process 35038 | Child PID: 35038 |
-| 6407814060042 | FORK | Process 3132 (<unknown>) | fork() | Process 35041 | Child PID: 35041 |
-| 6407814492517 | FS_EXEC_SUCCESS | Process 35041 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407814506543 | FS_EXEC_SUCCESS | Process 35040 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407814519738 | FS_EXEC_SUCCESS | Process 35038 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407814545446 | FS_EXEC_SUCCESS | Process 35039 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407923801627 | FORK | Process 3132 (<unknown>) | fork() | Process 35043 | Child PID: 35043 |
-| 6407923801858 | FORK | Process 3132 (<unknown>) | fork() | Process 35044 | Child PID: 35044 |
-| 6407923802168 | FORK | Process 3132 (<unknown>) | fork() | Process 35042 | Child PID: 35042 |
-| 6407923805003 | FORK | Process 3132 (<unknown>) | fork() | Process 35045 | Child PID: 35045 |
-| 6407924240243 | FS_EXEC_SUCCESS | Process 35042 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407924274027 | FS_EXEC_SUCCESS | Process 35043 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407924304494 | FS_EXEC_SUCCESS | Process 35044 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6407924396036 | FS_EXEC_SUCCESS | Process 35045 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408002653320 | FORK | Process 3110 (<unknown>) | fork() | Process 35046 | Child PID: 35046 |
-| 6408003961904 | FS_EXEC_SUCCESS | Process 35046 (/bin/sh) | exec_success() | FS Object 2490662 | Path: /bin/sh, Inode: 2490662 |
-| 6408004532719 | FORK | Process 35046 (/bin/sh) | fork() | Process 35047 | Child PID: 35047 |
-| 6408004835710 | FS_EXEC_SUCCESS | Process 35047 (/usr/bin/whoami) | exec_success() | FS Object 2515452 | Path: /usr/bin/whoami, Inode: 2515452 |
-| 6408005448534 | CONNECT | Process 35047 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
-| 6408005480474 | CONNECT | Process 35047 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
-| 6408026266418 | FORK | Process 3132 (<unknown>) | fork() | Process 35048 | Child PID: 35048 |
-| 6408026267199 | FORK | Process 3132 (<unknown>) | fork() | Process 35049 | Child PID: 35049 |
-| 6408026272329 | FORK | Process 3132 (<unknown>) | fork() | Process 35050 | Child PID: 35050 |
-| 6408026275605 | FORK | Process 3132 (<unknown>) | fork() | Process 35051 | Child PID: 35051 |
-| 6408026554420 | FS_EXEC_SUCCESS | Process 35049 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408026590358 | FS_EXEC_SUCCESS | Process 35051 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408026608622 | FS_EXEC_SUCCESS | Process 35050 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408028157108 | FS_EXEC_SUCCESS | Process 35048 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408051902185 | UNLINK | Process 422 (<unknown>) | unlink() | FS Object 5295 | Path: /run/udev/queue, Status: SUCCESS |
-| 6408107446726 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 3 | Type: CREATION, Name: xorg, FD: 95 |
-| 6408107449561 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 3 | Name: xorg, FD: 95 |
-| 6408107483285 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 3 | Name: xorg, FD: 95, Duration: 37030 ns |
-| 6408107493945 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 3 | Type: DUP, Name: xorg, FD: 6 |
-| 6408107508021 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 3 | Name: xorg, FD: 6, Duration: 14768 ns |
-| 6408110418041 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 4 | Type: CREATION, Name: xorg, FD: 95 |
-| 6408110419805 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 4 | Name: xorg, FD: 95 |
-| 6408110443279 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 4 | Name: xorg, FD: 95, Duration: 25148 ns |
-| 6408110455021 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 4 | Type: DUP, Name: xorg, FD: 6 |
-| 6408110468637 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 4 | Name: xorg, FD: 6, Duration: 13887 ns |
-| 6408129152802 | FORK | Process 3132 (<unknown>) | fork() | Process 35053 | Child PID: 35053 |
-| 6408129153163 | FORK | Process 3132 (<unknown>) | fork() | Process 35052 | Child PID: 35052 |
-| 6408129161348 | FORK | Process 3132 (<unknown>) | fork() | Process 35054 | Child PID: 35054 |
-| 6408129165256 | FORK | Process 3132 (<unknown>) | fork() | Process 35055 | Child PID: 35055 |
-| 6408129561191 | FS_EXEC_SUCCESS | Process 35053 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408129659356 | FS_EXEC_SUCCESS | Process 35054 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408130207999 | FS_EXEC_SUCCESS | Process 35055 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408131103917 | FS_EXEC_SUCCESS | Process 35052 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408232157570 | FORK | Process 3132 (<unknown>) | fork() | Process 35057 | Child PID: 35057 |
-| 6408232157941 | FORK | Process 3132 (<unknown>) | fork() | Process 35056 | Child PID: 35056 |
-| 6408232158852 | FORK | Process 3132 (<unknown>) | fork() | Process 35058 | Child PID: 35058 |
-| 6408232165224 | FORK | Process 3132 (<unknown>) | fork() | Process 35059 | Child PID: 35059 |
-| 6408232550309 | FS_EXEC_SUCCESS | Process 35059 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408232597819 | FS_EXEC_SUCCESS | Process 35058 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408232631973 | FS_EXEC_SUCCESS | Process 35056 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408233084405 | FS_EXEC_SUCCESS | Process 35057 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408315640855 | FORK | Process 34973 (<unknown>) | fork() | Process 35060 | Child PID: 35060 |
-| 6408316689901 | FS_EXEC_SUCCESS | Process 35060 (/usr/bin/date) | exec_success() | FS Object 2515363 | Path: /usr/bin/date, Inode: 2515363 |
-| 6408317855696 | FORK | Process 34973 (<unknown>) | fork() | Process 35061 | Child PID: 35061 |
-| 6408318389051 | FS_EXEC_SUCCESS | Process 35061 (/usr/bin/sudo) | exec_success() | FS Object 2491684 | Path: /usr/bin/sudo, Inode: 2491684 |
-| 6408320237031 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
-| 6408320266125 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
-| 6408321776239 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 6, Result: 0 |
-| 6408321800184 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 6, Result: 0 |
-| 6408322028645 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: 127.0.0.53:53, FD: 6, Result: 0 |
-| 6408322489963 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: 192.168.1.118:0, FD: 6, Result: 0 |
-| 6408322531341 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: fe80::291d:5450:d8da:bbf9:0, FD: 6, Result: 0 |
-| 6408322612334 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 6, Result: 0 |
-| 6408322634556 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 6, Result: 0 |
-| 6408323140007 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 7, Result: 0 |
-| 6408326631172 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 6, Result: 0 |
-| 6408327297988 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 14, Result: 0 |
-| 6408328103765 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 15, Result: 0 |
-| 6408328540267 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 15, Result: 0 |
-| 6408328946903 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 15, Result: 0 |
-| 6408329365702 | CONNECT | Process 35061 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 15, Result: 0 |
-| 6408330402855 | FORK | Process 35061 (/usr/bin/sudo) | fork() | Process 35062 | Child PID: 35062 |
-| 6408330971726 | FORK | Process 35062 (sudo) | fork() | Process 35063 | Child PID: 35063 |
-| 6408331662286 | FS_EXEC_SUCCESS | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | exec_success() | FS Object 2490472 | Path: /usr/bin/bash, Inode: 2490472 |
-| 6408332764392 | FS_EXEC_SUCCESS | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | exec_success() | FS Object 1357724 | Path: /home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor, Inode: 1357724 |
-| 6408333061702 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 5 | Type: CREATION, Name: qual_mfd_dup, FD: 3 |
-| 6408333063465 | MEMFD_CREATE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | memfd_create() | Memfd 5 | Name: qual_mfd_dup, FD: 3 |
-| 6408333067793 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 5 | Type: DUP, Name: qual_mfd_dup, FD: 4 |
-| 6408333069577 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 5 | Type: DUP, Name: qual_mfd_dup, FD: 30 |
-| 6408333077932 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 5 | Name: qual_mfd_dup, FD: 3, Duration: 16792 ns |
-| 6408333079736 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 5 | Name: qual_mfd_dup, FD: 4, Duration: 12052 ns |
-| 6408333081399 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 5 | Name: qual_mfd_dup, FD: 30, Duration: 11912 ns |
-| 6408333098701 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 6 | Type: CREATION, Name: qual_mfd_replace, FD: 3 |
-| 6408333099783 | MEMFD_CREATE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | memfd_create() | Memfd 6 | Name: qual_mfd_replace, FD: 3 |
-| 6408333205573 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 6 | Name: qual_mfd_replace, FD: 3, Duration: 106891 ns |
-| 6408333246460 | UNLINK | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | unlink() | FS Object 918319 | Path: /tmp/ephim_qual_ordinary_nrsLdk, Status: SUCCESS |
-| 6408333300431 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 7 | Type: CREATION, Name: qual_mfd_reuse, FD: 3 |
-| 6408333302135 | MEMFD_CREATE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | memfd_create() | Memfd 7 | Name: qual_mfd_reuse, FD: 3 |
-| 6408333303978 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 7 | Name: qual_mfd_reuse, FD: 3, Duration: 3576 ns |
-| 6408333364252 | UNLINK | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | unlink() | FS Object 918319 | Path: /tmp/ephim_qual_reuse_huJqWa, Status: SUCCESS |
-| 6408333382295 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: CREATION, Name: qual_mfd_threads, FD: 3 |
-| 6408333383818 | MEMFD_CREATE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | memfd_create() | Memfd 8 | Name: qual_mfd_threads, FD: 3 |
-| 6408333443651 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333448039 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 0, Bytes: 1 |
-| 6408333454511 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 11321 ns |
-| 6408333456245 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333457487 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 1, Bytes: 1 |
-| 6408333459080 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2936 ns |
-| 6408333460463 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333461555 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 2, Bytes: 1 |
-| 6408333463058 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2555 ns |
-| 6408333464430 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333465472 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 3, Bytes: 1 |
-| 6408333466845 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2464 ns |
-| 6408333468107 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333469119 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 4, Bytes: 1 |
-| 6408333470482 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2424 ns |
-| 6408333471824 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333472836 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 5, Bytes: 1 |
-| 6408333474189 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2414 ns |
-| 6408333475471 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333476473 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 6, Bytes: 1 |
-| 6408333477815 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2424 ns |
-| 6408333479649 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333481072 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 7, Bytes: 1 |
-| 6408333482975 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3407 ns |
-| 6408333484829 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333486201 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 8, Bytes: 1 |
-| 6408333488145 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3426 ns |
-| 6408333489898 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333491381 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 9, Bytes: 1 |
-| 6408333493194 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3326 ns |
-| 6408333495028 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333496310 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 10, Bytes: 1 |
-| 6408333497993 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3046 ns |
-| 6408333499747 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333501290 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 11, Bytes: 1 |
-| 6408333503374 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3617 ns |
-| 6408333505417 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333506519 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 12, Bytes: 1 |
-| 6408333508203 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3126 ns |
-| 6408333509475 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333510527 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 13, Bytes: 1 |
-| 6408333511880 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2454 ns |
-| 6408333513152 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333514164 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 14, Bytes: 1 |
-| 6408333515516 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2414 ns |
-| 6408333516779 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333517791 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 15, Bytes: 1 |
-| 6408333519163 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2435 ns |
-| 6408333520436 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333521448 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 16, Bytes: 1 |
-| 6408333522810 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2435 ns |
-| 6408333524083 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333525245 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 17, Bytes: 1 |
-| 6408333526116 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333526647 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2595 ns |
-| 6408333527980 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333528821 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 18, Bytes: 1 |
-| 6408333529072 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 18, Bytes: 1 |
-| 6408333530515 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2545 ns |
-| 6408333531827 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333532859 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 19, Bytes: 1 |
-| 6408333533270 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 7715 ns |
-| 6408333534282 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2454 ns |
-| 6408333535614 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333536065 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333536877 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 20, Bytes: 1 |
-| 6408333538189 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 20, Bytes: 1 |
-| 6408333538640 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3036 ns |
-| 6408333540033 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333541054 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 21, Bytes: 1 |
-| 6408333541205 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5280 ns |
-| 6408333542487 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2495 ns |
-| 6408333543870 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333544371 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333545493 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 22, Bytes: 1 |
-| 6408333545884 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 22, Bytes: 1 |
-| 6408333546926 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3106 ns |
-| 6408333548218 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333548559 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4689 ns |
-| 6408333549360 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 23, Bytes: 1 |
-| 6408333550813 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2635 ns |
-| 6408333551133 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333552246 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333553338 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 24, Bytes: 1 |
-| 6408333553448 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 24, Bytes: 1 |
-| 6408333554800 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2605 ns |
-| 6408333556153 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5260 ns |
-| 6408333556403 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333557505 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 25, Bytes: 1 |
-| 6408333558708 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333558988 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2625 ns |
-| 6408333560511 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333560691 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 26, Bytes: 1 |
-| 6408333562164 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 26, Bytes: 1 |
-| 6408333562284 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333563968 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3506 ns |
-| 6408333564098 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5430 ns |
-| 6408333564188 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 27, Bytes: 1 |
-| 6408333565420 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333566743 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333566803 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 28, Bytes: 1 |
-| 6408333566883 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 5881 ns |
-| 6408333568356 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2985 ns |
-| 6408333568767 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333568907 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 29, Bytes: 1 |
-| 6408333570149 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333570370 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 29, Bytes: 1 |
-| 6408333571452 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 30, Bytes: 1 |
-| 6408333571662 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 5160 ns |
-| 6408333572123 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3406 ns |
-| 6408333572904 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2825 ns |
-| 6408333573646 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333574167 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333574427 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333574918 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 31, Bytes: 1 |
-| 6408333575559 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 31, Bytes: 1 |
-| 6408333576121 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 31, Bytes: 1 |
-| 6408333576381 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2816 ns |
-| 6408333577092 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2725 ns |
-| 6408333578094 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333578505 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333579136 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 5140 ns |
-| 6408333579216 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 32, Bytes: 1 |
-| 6408333579617 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 32, Bytes: 1 |
-| 6408333580799 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2765 ns |
-| 6408333581320 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2876 ns |
-| 6408333581551 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333582172 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333582723 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333583294 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 33, Bytes: 1 |
-| 6408333583565 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 33, Bytes: 1 |
-| 6408333583895 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 33, Bytes: 1 |
-| 6408333584847 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2716 ns |
-| 6408333586079 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3397 ns |
-| 6408333586220 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 4769 ns |
-| 6408333586480 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333587532 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333587622 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 34, Bytes: 1 |
-| 6408333588724 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 35, Bytes: 1 |
-| 6408333588945 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333589075 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2705 ns |
-| 6408333590177 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2706 ns |
-| 6408333590548 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333590908 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 36, Bytes: 1 |
-| 6408333591550 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333591670 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 36, Bytes: 1 |
-| 6408333592642 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 37, Bytes: 1 |
-| 6408333593403 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2856 ns |
-| 6408333593513 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 4638 ns |
-| 6408333594154 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2645 ns |
-| 6408333594786 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333595527 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333595928 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333596088 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 38, Bytes: 1 |
-| 6408333596709 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 38, Bytes: 1 |
-| 6408333597641 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2886 ns |
-| 6408333598002 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 39, Bytes: 1 |
-| 6408333598172 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2685 ns |
-| 6408333599044 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333599525 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333600286 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 40, Bytes: 1 |
-| 6408333600677 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 4829 ns |
-| 6408333600787 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 40, Bytes: 1 |
-| 6408333601769 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2795 ns |
-| 6408333602230 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2765 ns |
-| 6408333603121 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333603262 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333604183 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333604294 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 41, Bytes: 1 |
-| 6408333605195 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 41, Bytes: 1 |
-| 6408333605326 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 41, Bytes: 1 |
-| 6408333605746 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2605 ns |
-| 6408333607139 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333607780 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3667 ns |
-| 6408333608131 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4989 ns |
-| 6408333608391 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 42, Bytes: 1 |
-| 6408333609173 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333609874 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2746 ns |
-| 6408333610285 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 43, Bytes: 1 |
-| 6408333610836 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333611477 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333611838 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2735 ns |
-| 6408333612629 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 44, Bytes: 1 |
-| 6408333612870 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 44, Bytes: 1 |
-| 6408333613240 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333614092 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2645 ns |
-| 6408333614443 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 45, Bytes: 1 |
-| 6408333615465 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333615675 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5039 ns |
-| 6408333616016 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2825 ns |
-| 6408333616637 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 46, Bytes: 1 |
-| 6408333617488 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333618160 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2715 ns |
-| 6408333618550 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333618611 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 47, Bytes: 1 |
-| 6408333619512 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333620073 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2635 ns |
-| 6408333620584 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 48, Bytes: 1 |
-| 6408333620775 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 48, Bytes: 1 |
-| 6408333621546 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333622307 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2855 ns |
-| 6408333622899 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 49, Bytes: 1 |
-| 6408333623650 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333623770 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 5280 ns |
-| 6408333624411 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2895 ns |
-| 6408333624822 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 50, Bytes: 1 |
-| 6408333625784 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333626255 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333626365 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2634 ns |
-| 6408333627457 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 51, Bytes: 1 |
-| 6408333627828 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333628329 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 51, Bytes: 1 |
-| 6408333628910 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3155 ns |
-| 6408333629030 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 52, Bytes: 1 |
-| 6408333630252 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333630783 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2956 ns |
-| 6408333631184 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 4689 ns |
-| 6408333631745 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 53, Bytes: 1 |
-| 6408333632326 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333633188 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2976 ns |
-| 6408333633448 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 54, Bytes: 1 |
-| 6408333633689 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333634901 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2605 ns |
-| 6408333634911 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333635683 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 55, Bytes: 1 |
-| 6408333636244 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333636404 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 55, Bytes: 1 |
-| 6408333637446 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 55, Bytes: 1 |
-| 6408333638658 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 5019 ns |
-| 6408333638979 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4218 ns |
-| 6408333639420 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3176 ns |
-| 6408333640923 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333641123 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333641153 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333642065 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 56, Bytes: 1 |
-| 6408333642796 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 56, Bytes: 1 |
-| 6408333643417 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 57, Bytes: 1 |
-| 6408333643517 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2595 ns |
-| 6408333644509 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3447 ns |
-| 6408333644870 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333645932 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4989 ns |
-| 6408333646172 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333646323 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 58, Bytes: 1 |
-| 6408333647495 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 58, Bytes: 1 |
-| 6408333648166 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3306 ns |
-| 6408333648427 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333649479 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3366 ns |
-| 6408333649579 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333650541 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 59, Bytes: 1 |
-| 6408333650761 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 59, Bytes: 1 |
-| 6408333651292 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333652785 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3226 ns |
-| 6408333652945 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 60, Bytes: 1 |
-| 6408333654167 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5881 ns |
-| 6408333654258 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333654799 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3697 ns |
-| 6408333655360 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 61, Bytes: 1 |
-| 6408333656652 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333656742 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333656923 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2805 ns |
-| 6408333658265 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 62, Bytes: 1 |
-| 6408333658365 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333658766 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 62, Bytes: 1 |
-| 6408333659638 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 63, Bytes: 1 |
-| 6408333660269 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3697 ns |
-| 6408333661391 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3086 ns |
-| 6408333661772 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4960 ns |
-| 6408333662132 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333662824 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333663565 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 64, Bytes: 1 |
-| 6408333664066 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 64, Bytes: 1 |
-| 6408333664347 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333665459 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3396 ns |
-| 6408333665749 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3006 ns |
-| 6408333666561 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 65, Bytes: 1 |
-| 6408333667102 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333667322 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333668404 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 66, Bytes: 1 |
-| 6408333668825 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 66, Bytes: 1 |
-| 6408333669236 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 5260 ns |
-| 6408333669907 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2585 ns |
-| 6408333671300 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333671430 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4328 ns |
-| 6408333671971 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
-| 6408333672602 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 67, Bytes: 1 |
-| 6408333673985 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 68, Bytes: 1 |
-| 6408333674135 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2856 ns |
-| 6408333675738 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333676970 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 5200 ns |
-| 6408333677101 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 69, Bytes: 1 |
-| 6408333678734 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3065 ns |
-| 6408333679565 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333680106 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333681218 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 70, Bytes: 1 |
-| 6408333681669 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 70, Bytes: 1 |
-| 6408333682731 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2675 ns |
-| 6408333684334 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333685196 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 5671 ns |
-| 6408333685557 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 71, Bytes: 1 |
-| 6408333687630 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333687941 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3637 ns |
-| 6408333689314 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333689765 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 72, Bytes: 1 |
-| 6408333690406 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 72, Bytes: 1 |
-| 6408333692359 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3116 ns |
-| 6408333692580 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 4999 ns |
-| 6408333693812 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333694894 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 73, Bytes: 1 |
-| 6408333695064 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333696357 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2574 ns |
-| 6408333696888 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 74, Bytes: 1 |
-| 6408333698040 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333699393 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 75, Bytes: 1 |
-| 6408333700074 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 5029 ns |
-| 6408333701076 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3075 ns |
-| 6408333702458 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333702739 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333703851 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 76, Bytes: 1 |
-| 6408333704703 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 76, Bytes: 1 |
-| 6408333705524 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2826 ns |
-| 6408333706847 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333707207 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4929 ns |
-| 6408333708179 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 77, Bytes: 1 |
-| 6408333709592 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2806 ns |
-| 6408333709682 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333711375 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333711896 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 78, Bytes: 1 |
-| 6408333712457 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 78, Bytes: 1 |
-| 6408333714311 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3045 ns |
-| 6408333714541 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4910 ns |
-| 6408333716114 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333717066 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333717216 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 79, Bytes: 1 |
-| 6408333718970 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2905 ns |
-| 6408333719070 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 80, Bytes: 1 |
-| 6408333720332 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333721625 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 81, Bytes: 1 |
-| 6408333721775 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 4699 ns |
-| 6408333723107 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2825 ns |
-| 6408333724440 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333724931 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333725973 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 82, Bytes: 1 |
-| 6408333727185 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 82, Bytes: 1 |
-| 6408333727696 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3277 ns |
-| 6408333729069 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333729730 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5079 ns |
-| 6408333730531 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 83, Bytes: 1 |
-| 6408333732044 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333732084 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3016 ns |
-| 6408333733898 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333734449 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 84, Bytes: 1 |
-| 6408333735150 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 84, Bytes: 1 |
-| 6408333737064 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3246 ns |
-| 6408333737284 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5390 ns |
-| 6408333738647 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333739749 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333740009 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 85, Bytes: 1 |
-| 6408333742003 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 85, Bytes: 1 |
-| 6408333742103 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3487 ns |
-| 6408333743606 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333744818 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 86, Bytes: 1 |
-| 6408333744978 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 5150 ns |
-| 6408333746431 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2866 ns |
-| 6408333747373 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333747894 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333749056 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 87, Bytes: 1 |
-| 6408333749597 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 87, Bytes: 1 |
-| 6408333750649 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2796 ns |
-| 6408333752112 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333752643 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 5390 ns |
-| 6408333753665 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 88, Bytes: 1 |
-| 6408333755368 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333755428 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3207 ns |
-| 6408333756941 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333758063 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 89, Bytes: 1 |
-| 6408333758544 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 89, Bytes: 1 |
-| 6408333760628 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3727 ns |
-| 6408333760748 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 5591 ns |
-| 6408333762041 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333763303 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 90, Bytes: 1 |
-| 6408333763483 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333764806 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2815 ns |
-| 6408333765708 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 91, Bytes: 1 |
-| 6408333766399 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333767661 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 91, Bytes: 1 |
-| 6408333768723 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 5340 ns |
-| 6408333769394 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3046 ns |
-| 6408333770867 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333771408 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333772059 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 92, Bytes: 1 |
-| 6408333773743 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2905 ns |
-| 6408333773893 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 93, Bytes: 1 |
-| 6408333775165 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333775877 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 4629 ns |
-| 6408333776448 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 94, Bytes: 1 |
-| 6408333777790 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333778101 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2865 ns |
-| 6408333779343 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 95, Bytes: 1 |
-| 6408333779694 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333781006 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 96, Bytes: 1 |
-| 6408333781237 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3516 ns |
-| 6408333782559 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2946 ns |
-| 6408333783140 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
-| 6408333784773 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 97, Bytes: 1 |
-| 6408333786727 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3687 ns |
-| 6408333788651 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333790124 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 98, Bytes: 1 |
-| 6408333792167 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3557 ns |
-| 6408333794181 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333795564 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 99, Bytes: 1 |
-| 6408333797467 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3376 ns |
-| 6408333799271 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333800874 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 100, Bytes: 1 |
-| 6408333802757 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3557 ns |
-| 6408333804531 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333805903 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 101, Bytes: 1 |
-| 6408333807887 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3437 ns |
-| 6408333809861 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333811784 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 102, Bytes: 1 |
-| 6408333814570 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4809 ns |
-| 6408333817174 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333819168 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 103, Bytes: 1 |
-| 6408333821873 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4799 ns |
-| 6408333824809 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333826973 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 104, Bytes: 1 |
-| 6408333829838 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5170 ns |
-| 6408333832443 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333834427 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 105, Bytes: 1 |
-| 6408333837092 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4759 ns |
-| 6408333839366 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333841190 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 106, Bytes: 1 |
-| 6408333843744 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4478 ns |
-| 6408333846089 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333847732 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 107, Bytes: 1 |
-| 6408333850447 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4448 ns |
-| 6408333852862 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333854695 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 108, Bytes: 1 |
-| 6408333857110 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4418 ns |
-| 6408333859494 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333861859 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 109, Bytes: 1 |
-| 6408333864293 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4910 ns |
-| 6408333866798 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333868942 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 110, Bytes: 1 |
-| 6408333871587 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4859 ns |
-| 6408333873951 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333876115 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 111, Bytes: 1 |
-| 6408333878650 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4859 ns |
-| 6408333881245 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408333883269 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 112, Bytes: 1 |
-| 6408333886064 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4910 ns |
-| 6408335254621 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335256876 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 113, Bytes: 1 |
-| 6408335260192 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 6432 ns |
-| 6408335261895 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335263508 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 114, Bytes: 1 |
-| 6408335266434 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4528 ns |
-| 6408335268287 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335269750 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 115, Bytes: 1 |
-| 6408335271593 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3386 ns |
-| 6408335273327 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335274659 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 116, Bytes: 1 |
-| 6408335276382 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3116 ns |
-| 6408335278096 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335279438 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 117, Bytes: 1 |
-| 6408335281011 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3016 ns |
-| 6408335282584 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335283866 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 118, Bytes: 1 |
-| 6408335285660 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3166 ns |
-| 6408335287413 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335288726 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 119, Bytes: 1 |
-| 6408335290679 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3346 ns |
-| 6408335292242 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335293475 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 120, Bytes: 1 |
-| 6408335295398 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3236 ns |
-| 6408335297713 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335299125 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 121, Bytes: 1 |
-| 6408335300778 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3126 ns |
-| 6408335302241 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335303524 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 122, Bytes: 1 |
-| 6408335305597 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3386 ns |
-| 6408335307120 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335308343 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 123, Bytes: 1 |
-| 6408335309946 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2885 ns |
-| 6408335311418 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335312551 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 124, Bytes: 1 |
-| 6408335314144 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2775 ns |
-| 6408335315757 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335317099 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 125, Bytes: 1 |
-| 6408335318812 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3126 ns |
-| 6408335320395 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335321537 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 126, Bytes: 1 |
-| 6408335323040 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2775 ns |
-| 6408335324733 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335326016 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 127, Bytes: 1 |
-| 6408335327529 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2865 ns |
-| 6408335328981 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335330194 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 128, Bytes: 1 |
-| 6408335331697 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2765 ns |
-| 6408335333340 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335334682 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 129, Bytes: 1 |
-| 6408335336285 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3036 ns |
-| 6408335337788 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335339101 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 130, Bytes: 1 |
-| 6408335340694 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2955 ns |
-| 6408335342397 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335344441 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 131, Bytes: 1 |
-| 6408335346024 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3707 ns |
-| 6408335347426 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335348578 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 132, Bytes: 1 |
-| 6408335350181 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2825 ns |
-| 6408335351824 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335353127 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 133, Bytes: 1 |
-| 6408335355010 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3316 ns |
-| 6408335356664 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335358086 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 134, Bytes: 1 |
-| 6408335360090 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3497 ns |
-| 6408335361873 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335363236 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 135, Bytes: 1 |
-| 6408335364909 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3116 ns |
-| 6408335366422 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335367714 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 136, Bytes: 1 |
-| 6408335369378 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2995 ns |
-| 6408335371181 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335372403 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 137, Bytes: 1 |
-| 6408335374317 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3257 ns |
-| 6408335375860 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335377373 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 138, Bytes: 1 |
-| 6408335379507 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3737 ns |
-| 6408335381220 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335382673 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 139, Bytes: 1 |
-| 6408335384827 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3687 ns |
-| 6408335386339 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335387953 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 140, Bytes: 1 |
-| 6408335389535 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3266 ns |
-| 6408335391649 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335393092 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 141, Bytes: 1 |
-| 6408335394815 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3236 ns |
-| 6408335396569 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335397911 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 142, Bytes: 1 |
-| 6408335399685 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3196 ns |
-| 6408335401388 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335402831 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 143, Bytes: 1 |
-| 6408335404564 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3276 ns |
-| 6408335406197 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335407579 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 144, Bytes: 1 |
-| 6408335409263 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3176 ns |
-| 6408335410936 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335412258 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 145, Bytes: 1 |
-| 6408335414162 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3337 ns |
-| 6408335415795 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335417117 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 146, Bytes: 1 |
-| 6408335418730 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3046 ns |
-| 6408335420454 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335421826 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 147, Bytes: 1 |
-| 6408335423560 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3156 ns |
-| 6408335425042 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335426435 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 148, Bytes: 1 |
-| 6408335428058 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3066 ns |
-| 6408335430362 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335431725 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 149, Bytes: 1 |
-| 6408335433829 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3497 ns |
-| 6408335435452 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335436794 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 150, Bytes: 1 |
-| 6408335438398 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3015 ns |
-| 6408335440021 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335441263 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 151, Bytes: 1 |
-| 6408335442966 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2986 ns |
-| 6408335444539 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335445992 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 152, Bytes: 1 |
-| 6408335447535 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3015 ns |
-| 6408335448957 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335450270 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 153, Bytes: 1 |
-| 6408335451873 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2965 ns |
-| 6408335453336 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335454478 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 154, Bytes: 1 |
-| 6408335456031 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2755 ns |
-| 6408335457493 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335458916 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 155, Bytes: 1 |
-| 6408335460569 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3086 ns |
-| 6408335462082 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335463304 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 156, Bytes: 1 |
-| 6408335464897 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2885 ns |
-| 6408335466450 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335467703 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 157, Bytes: 1 |
-| 6408335469266 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2925 ns |
-| 6408335470738 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335471871 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 158, Bytes: 1 |
-| 6408335473413 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2735 ns |
-| 6408335474936 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335476790 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 159, Bytes: 1 |
-| 6408335478293 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3456 ns |
-| 6408335479826 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335481038 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 160, Bytes: 1 |
-| 6408335482601 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2865 ns |
-| 6408335484064 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335485476 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 161, Bytes: 1 |
-| 6408335487460 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3427 ns |
-| 6408335489153 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
-| 6408335490576 | MEMFD_WRITE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 162, Bytes: 1 |
-| 6408335492099 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3015 ns |
-| 6408335526654 | FD_CLOSED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 3, Duration: 2143967 ns |
-| 6408335569044 | FD_INSTALLED | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 9 | Type: CREATION, Name: qual_mfd_clone, FD: 3 |
-| 6408335571348 | MEMFD_CREATE | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | memfd_create() | Memfd 9 | Name: qual_mfd_clone, FD: 3 |
-| 6408335756316 | FORK | Process 35063 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fork() | Process 35068 | Child PID: 35068 |
-| 6408335861504 | MEMFD_WRITE | Process 35068 (test_qualificat) | write() | Memfd 9 | Name: qual_mfd_clone, Offset: 0, Bytes: 25 |
-| 6408338438187 | FORK | Process 34973 (<unknown>) | fork() | Process 35069 | Child PID: 35069 |
-| 6408339188670 | FS_EXEC_SUCCESS | Process 35069 (/usr/bin/date) | exec_success() | FS Object 2515363 | Path: /usr/bin/date, Inode: 2515363 |
-| 6408340226725 | FORK | Process 34973 (<unknown>) | fork() | Process 35070 | Child PID: 35070 |
-| 6408340706538 | FS_EXEC_SUCCESS | Process 35070 (/usr/bin/sleep) | exec_success() | FS Object 2515421 | Path: /usr/bin/sleep, Inode: 2515421 |
-| 6408345096886 | FORK | Process 3132 (<unknown>) | fork() | Process 35073 | Child PID: 35073 |
-| 6408345097818 | FORK | Process 3132 (<unknown>) | fork() | Process 35071 | Child PID: 35071 |
-| 6408345098048 | FORK | Process 3132 (<unknown>) | fork() | Process 35072 | Child PID: 35072 |
-| 6408345098239 | FORK | Process 3132 (<unknown>) | fork() | Process 35074 | Child PID: 35074 |
-| 6408345809859 | FS_EXEC_SUCCESS | Process 35072 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408345810079 | FS_EXEC_SUCCESS | Process 35074 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408345810320 | FS_EXEC_SUCCESS | Process 35071 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408345835307 | FS_EXEC_SUCCESS | Process 35073 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408436688581 | FORK | Process 3132 (<unknown>) | fork() | Process 35075 | Child PID: 35075 |
-| 6408436688851 | FORK | Process 3132 (<unknown>) | fork() | Process 35077 | Child PID: 35077 |
-| 6408436689222 | FORK | Process 3132 (<unknown>) | fork() | Process 35076 | Child PID: 35076 |
-| 6408436696966 | FORK | Process 3132 (<unknown>) | fork() | Process 35078 | Child PID: 35078 |
-| 6408437141423 | FS_EXEC_SUCCESS | Process 35076 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408437142906 | FS_EXEC_SUCCESS | Process 35077 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408437146433 | FS_EXEC_SUCCESS | Process 35078 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408437149719 | FS_EXEC_SUCCESS | Process 35075 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408543167811 | FORK | Process 3132 (<unknown>) | fork() | Process 35079 | Child PID: 35079 |
-| 6408543168462 | FORK | Process 3132 (<unknown>) | fork() | Process 35082 | Child PID: 35082 |
-| 6408543168963 | FORK | Process 3132 (<unknown>) | fork() | Process 35081 | Child PID: 35081 |
-| 6408543169394 | FORK | Process 3132 (<unknown>) | fork() | Process 35080 | Child PID: 35080 |
-| 6408543889650 | FS_EXEC_SUCCESS | Process 35082 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408543906071 | FS_EXEC_SUCCESS | Process 35081 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408543908105 | FS_EXEC_SUCCESS | Process 35080 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408543914056 | FS_EXEC_SUCCESS | Process 35079 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408648179889 | FORK | Process 3132 (<unknown>) | fork() | Process 35084 | Child PID: 35084 |
-| 6408648180550 | FORK | Process 3132 (<unknown>) | fork() | Process 35083 | Child PID: 35083 |
-| 6408648180770 | FORK | Process 3132 (<unknown>) | fork() | Process 35086 | Child PID: 35086 |
-| 6408648181181 | FORK | Process 3132 (<unknown>) | fork() | Process 35085 | Child PID: 35085 |
-| 6408648798504 | FS_EXEC_SUCCESS | Process 35083 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408648800177 | FS_EXEC_SUCCESS | Process 35084 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408648825675 | FS_EXEC_SUCCESS | Process 35086 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408648829101 | FS_EXEC_SUCCESS | Process 35085 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408751788533 | FORK | Process 3132 (<unknown>) | fork() | Process 35088 | Child PID: 35088 |
-| 6408751788824 | FORK | Process 3132 (<unknown>) | fork() | Process 35087 | Child PID: 35087 |
-| 6408751789175 | FORK | Process 3132 (<unknown>) | fork() | Process 35089 | Child PID: 35089 |
-| 6408751789355 | FORK | Process 3132 (<unknown>) | fork() | Process 35090 | Child PID: 35090 |
-| 6408752266834 | FS_EXEC_SUCCESS | Process 35090 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408752268136 | FS_EXEC_SUCCESS | Process 35088 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408752273236 | FS_EXEC_SUCCESS | Process 35087 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408752297652 | FS_EXEC_SUCCESS | Process 35089 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408854209521 | FORK | Process 3132 (<unknown>) | fork() | Process 35091 | Child PID: 35091 |
-| 6408854209932 | FORK | Process 3132 (<unknown>) | fork() | Process 35092 | Child PID: 35092 |
-| 6408854210293 | FORK | Process 3132 (<unknown>) | fork() | Process 35093 | Child PID: 35093 |
-| 6408854211886 | FORK | Process 3132 (<unknown>) | fork() | Process 35094 | Child PID: 35094 |
-| 6408854680979 | FS_EXEC_SUCCESS | Process 35093 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408854711657 | FS_EXEC_SUCCESS | Process 35091 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408854720754 | FS_EXEC_SUCCESS | Process 35092 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408854722588 | FS_EXEC_SUCCESS | Process 35094 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408957463749 | FORK | Process 3132 (<unknown>) | fork() | Process 35096 | Child PID: 35096 |
-| 6408957464340 | FORK | Process 3132 (<unknown>) | fork() | Process 35095 | Child PID: 35095 |
-| 6408957467376 | FORK | Process 3132 (<unknown>) | fork() | Process 35097 | Child PID: 35097 |
-| 6408957468588 | FORK | Process 3132 (<unknown>) | fork() | Process 35098 | Child PID: 35098 |
-| 6408957910680 | FS_EXEC_SUCCESS | Process 35095 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408957921110 | FS_EXEC_SUCCESS | Process 35096 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408957927953 | FS_EXEC_SUCCESS | Process 35097 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6408957929726 | FS_EXEC_SUCCESS | Process 35098 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409001765457 | FORK | Process 3110 (<unknown>) | fork() | Process 35099 | Child PID: 35099 |
-| 6409003121410 | FS_EXEC_SUCCESS | Process 35099 (/bin/sh) | exec_success() | FS Object 2490662 | Path: /bin/sh, Inode: 2490662 |
-| 6409003746468 | FORK | Process 35099 (/bin/sh) | fork() | Process 35100 | Child PID: 35100 |
-| 6409003965680 | FS_EXEC_SUCCESS | Process 35100 (/usr/bin/whoami) | exec_success() | FS Object 2515452 | Path: /usr/bin/whoami, Inode: 2515452 |
-| 6409004500518 | CONNECT | Process 35100 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
-| 6409004532348 | CONNECT | Process 35100 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
-| 6409060159985 | FORK | Process 3132 (<unknown>) | fork() | Process 35101 | Child PID: 35101 |
-| 6409060160837 | FORK | Process 3132 (<unknown>) | fork() | Process 35102 | Child PID: 35102 |
-| 6409060165686 | FORK | Process 3132 (<unknown>) | fork() | Process 35103 | Child PID: 35103 |
-| 6409060168161 | FORK | Process 3132 (<unknown>) | fork() | Process 35104 | Child PID: 35104 |
-| 6409060566000 | FS_EXEC_SUCCESS | Process 35103 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409060647704 | FS_EXEC_SUCCESS | Process 35104 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409061216204 | FS_EXEC_SUCCESS | Process 35101 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409062085512 | FS_EXEC_SUCCESS | Process 35102 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409075244112 | UNLINK | Process 422 (<unknown>) | unlink() | FS Object 5296 | Path: /run/udev/queue, Status: SUCCESS |
-| 6409105042888 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 10 | Type: CREATION, Name: xorg, FD: 95 |
-| 6409105047467 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 10 | Name: xorg, FD: 95 |
-| 6409105093623 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 10 | Name: xorg, FD: 95, Duration: 52900 ns |
-| 6409105109553 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 10 | Type: DUP, Name: xorg, FD: 6 |
-| 6409105132196 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 10 | Name: xorg, FD: 6, Duration: 23865 ns |
-| 6409107179642 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 11 | Type: CREATION, Name: xorg, FD: 95 |
-| 6409107180764 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 11 | Name: xorg, FD: 95 |
-| 6409107195341 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 11 | Name: xorg, FD: 95, Duration: 15720 ns |
-| 6409107203166 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 11 | Type: DUP, Name: xorg, FD: 6 |
-| 6409107211933 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 11 | Name: xorg, FD: 6, Duration: 8977 ns |
-| 6409163169901 | FORK | Process 3132 (<unknown>) | fork() | Process 35106 | Child PID: 35106 |
-| 6409163170412 | FORK | Process 3132 (<unknown>) | fork() | Process 35105 | Child PID: 35105 |
-| 6409163171494 | FORK | Process 3132 (<unknown>) | fork() | Process 35107 | Child PID: 35107 |
-| 6409163171755 | FORK | Process 3132 (<unknown>) | fork() | Process 35108 | Child PID: 35108 |
-| 6409163560667 | FS_EXEC_SUCCESS | Process 35107 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409163563533 | FS_EXEC_SUCCESS | Process 35106 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409163579803 | FS_EXEC_SUCCESS | Process 35105 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409163642101 | FS_EXEC_SUCCESS | Process 35108 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409265057855 | FORK | Process 3132 (<unknown>) | fork() | Process 35111 | Child PID: 35111 |
-| 6409265058146 | FORK | Process 3132 (<unknown>) | fork() | Process 35110 | Child PID: 35110 |
-| 6409265058296 | FORK | Process 3132 (<unknown>) | fork() | Process 35109 | Child PID: 35109 |
-| 6409265058556 | FORK | Process 3132 (<unknown>) | fork() | Process 35112 | Child PID: 35112 |
-| 6409265416791 | FS_EXEC_SUCCESS | Process 35110 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409265419897 | FS_EXEC_SUCCESS | Process 35111 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409265423864 | FS_EXEC_SUCCESS | Process 35112 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409265429976 | FS_EXEC_SUCCESS | Process 35109 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409367586245 | FORK | Process 3132 (<unknown>) | fork() | Process 35113 | Child PID: 35113 |
-| 6409367586606 | FORK | Process 3132 (<unknown>) | fork() | Process 35114 | Child PID: 35114 |
-| 6409367589271 | FORK | Process 3132 (<unknown>) | fork() | Process 35115 | Child PID: 35115 |
-| 6409367594861 | FORK | Process 3132 (<unknown>) | fork() | Process 35116 | Child PID: 35116 |
-| 6409367978594 | FS_EXEC_SUCCESS | Process 35115 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409367985206 | FS_EXEC_SUCCESS | Process 35113 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409368149946 | FS_EXEC_SUCCESS | Process 35114 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409370224453 | FS_EXEC_SUCCESS | Process 35116 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409471020080 | FORK | Process 3132 (<unknown>) | fork() | Process 35117 | Child PID: 35117 |
-| 6409471020581 | FORK | Process 3132 (<unknown>) | fork() | Process 35118 | Child PID: 35118 |
-| 6409471029277 | FORK | Process 3132 (<unknown>) | fork() | Process 35119 | Child PID: 35119 |
-| 6409471041470 | FORK | Process 3132 (<unknown>) | fork() | Process 35120 | Child PID: 35120 |
-| 6409471407710 | FS_EXEC_SUCCESS | Process 35118 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409471421897 | FS_EXEC_SUCCESS | Process 35120 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409471426285 | FS_EXEC_SUCCESS | Process 35117 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409471438187 | FS_EXEC_SUCCESS | Process 35119 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409574321415 | FORK | Process 3132 (<unknown>) | fork() | Process 35121 | Child PID: 35121 |
-| 6409574321886 | FORK | Process 3132 (<unknown>) | fork() | Process 35122 | Child PID: 35122 |
-| 6409574322106 | FORK | Process 3132 (<unknown>) | fork() | Process 35123 | Child PID: 35123 |
-| 6409574337195 | FORK | Process 3132 (<unknown>) | fork() | Process 35124 | Child PID: 35124 |
-| 6409574693035 | FS_EXEC_SUCCESS | Process 35121 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409574706230 | FS_EXEC_SUCCESS | Process 35124 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409574736988 | FS_EXEC_SUCCESS | Process 35123 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409574787493 | FS_EXEC_SUCCESS | Process 35122 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409677570683 | FORK | Process 3132 (<unknown>) | fork() | Process 35125 | Child PID: 35125 |
-| 6409677571103 | FORK | Process 3132 (<unknown>) | fork() | Process 35126 | Child PID: 35126 |
-| 6409677571334 | FORK | Process 3132 (<unknown>) | fork() | Process 35127 | Child PID: 35127 |
-| 6409677577596 | FORK | Process 3132 (<unknown>) | fork() | Process 35128 | Child PID: 35128 |
-| 6409677977168 | FS_EXEC_SUCCESS | Process 35125 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409677977248 | FS_EXEC_SUCCESS | Process 35127 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409678230485 | FS_EXEC_SUCCESS | Process 35126 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409679158483 | FS_EXEC_SUCCESS | Process 35128 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409780095315 | FORK | Process 3132 (<unknown>) | fork() | Process 35131 | Child PID: 35131 |
-| 6409780095696 | FORK | Process 3132 (<unknown>) | fork() | Process 35130 | Child PID: 35130 |
-| 6409780095907 | FORK | Process 3132 (<unknown>) | fork() | Process 35129 | Child PID: 35129 |
-| 6409780114852 | FORK | Process 3132 (<unknown>) | fork() | Process 35132 | Child PID: 35132 |
-| 6409780491622 | FS_EXEC_SUCCESS | Process 35130 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409780492914 | FS_EXEC_SUCCESS | Process 35132 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409780505919 | FS_EXEC_SUCCESS | Process 35131 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409780659177 | FS_EXEC_SUCCESS | Process 35129 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409895458936 | FORK | Process 3132 (<unknown>) | fork() | Process 35134 | Child PID: 35134 |
-| 6409895459427 | FORK | Process 3132 (<unknown>) | fork() | Process 35133 | Child PID: 35133 |
-| 6409895460189 | FORK | Process 3132 (<unknown>) | fork() | Process 35136 | Child PID: 35136 |
-| 6409895460369 | FORK | Process 3132 (<unknown>) | fork() | Process 35135 | Child PID: 35135 |
-| 6409896164615 | FS_EXEC_SUCCESS | Process 35134 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409896164685 | FS_EXEC_SUCCESS | Process 35133 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409896174454 | FS_EXEC_SUCCESS | Process 35135 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409896184463 | FS_EXEC_SUCCESS | Process 35136 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409999466271 | FORK | Process 3132 (<unknown>) | fork() | Process 35138 | Child PID: 35138 |
-| 6409999466742 | FORK | Process 3132 (<unknown>) | fork() | Process 35137 | Child PID: 35137 |
-| 6409999466992 | FORK | Process 3132 (<unknown>) | fork() | Process 35139 | Child PID: 35139 |
-| 6409999468144 | FORK | Process 3132 (<unknown>) | fork() | Process 35140 | Child PID: 35140 |
-| 6409999845164 | FS_EXEC_SUCCESS | Process 35138 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409999856596 | FS_EXEC_SUCCESS | Process 35137 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6409999885611 | FS_EXEC_SUCCESS | Process 35139 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410000236391 | FS_EXEC_SUCCESS | Process 35140 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410002292954 | FORK | Process 3110 (<unknown>) | fork() | Process 35141 | Child PID: 35141 |
-| 6410003585719 | FS_EXEC_SUCCESS | Process 35141 (/bin/sh) | exec_success() | FS Object 2490662 | Path: /bin/sh, Inode: 2490662 |
-| 6410004127829 | FORK | Process 35141 (/bin/sh) | fork() | Process 35142 | Child PID: 35142 |
-| 6410004422224 | FS_EXEC_SUCCESS | Process 35142 (/usr/bin/whoami) | exec_success() | FS Object 2515452 | Path: /usr/bin/whoami, Inode: 2515452 |
-| 6410004998068 | CONNECT | Process 35142 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
-| 6410005043905 | CONNECT | Process 35142 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
-| 6410106453808 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 12 | Type: CREATION, Name: xorg, FD: 95 |
-| 6410106457745 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 12 | Name: xorg, FD: 95 |
-| 6410106494394 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 12 | Name: xorg, FD: 95, Duration: 41618 ns |
-| 6410106508531 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 12 | Type: DUP, Name: xorg, FD: 6 |
-| 6410106524842 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 12 | Name: xorg, FD: 6, Duration: 17133 ns |
-| 6410110281115 | FORK | Process 3132 (<unknown>) | fork() | Process 35144 | Child PID: 35144 |
-| 6410110283410 | FORK | Process 3132 (<unknown>) | fork() | Process 35143 | Child PID: 35143 |
-| 6410110286435 | FORK | Process 3132 (<unknown>) | fork() | Process 35145 | Child PID: 35145 |
-| 6410110287036 | FORK | Process 3132 (<unknown>) | fork() | Process 35146 | Child PID: 35146 |
-| 6410111157185 | FS_EXEC_SUCCESS | Process 35144 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410111157856 | FS_EXEC_SUCCESS | Process 35143 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410111241213 | FS_EXEC_SUCCESS | Process 35145 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410111557459 | FS_EXEC_SUCCESS | Process 35146 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410114898210 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 13 | Type: CREATION, Name: xorg, FD: 95 |
-| 6410114902979 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 13 | Name: xorg, FD: 95 |
-| 6410114930210 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 13 | Name: xorg, FD: 95, Duration: 32862 ns |
-| 6410114942453 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 13 | Type: DUP, Name: xorg, FD: 6 |
-| 6410114955788 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 13 | Name: xorg, FD: 6, Duration: 14407 ns |
-| 6410127996907 | FORK | Process 422 (<unknown>) | fork() | Process 35147 | Child PID: 35147 |
-| 6410131373356 | UNLINK | Process 422 (<unknown>) | unlink() | FS Object 5297 | Path: /run/udev/queue, Status: SUCCESS |
-| 6410221600910 | FORK | Process 3132 (<unknown>) | fork() | Process 35150 | Child PID: 35150 |
-| 6410221601281 | FORK | Process 3132 (<unknown>) | fork() | Process 35148 | Child PID: 35148 |
-| 6410221601742 | FORK | Process 3132 (<unknown>) | fork() | Process 35151 | Child PID: 35151 |
-| 6410221601882 | FORK | Process 3132 (<unknown>) | fork() | Process 35149 | Child PID: 35149 |
-| 6410222332989 | FS_EXEC_SUCCESS | Process 35150 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410222333159 | FS_EXEC_SUCCESS | Process 35151 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410222335113 | FS_EXEC_SUCCESS | Process 35149 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410222351524 | FS_EXEC_SUCCESS | Process 35148 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410325056836 | FORK | Process 3132 (<unknown>) | fork() | Process 35152 | Child PID: 35152 |
-| 6410325056976 | FORK | Process 3132 (<unknown>) | fork() | Process 35154 | Child PID: 35154 |
-| 6410325057528 | FORK | Process 3132 (<unknown>) | fork() | Process 35153 | Child PID: 35153 |
-| 6410325059792 | FORK | Process 3132 (<unknown>) | fork() | Process 35155 | Child PID: 35155 |
-| 6410325438435 | FS_EXEC_SUCCESS | Process 35153 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410325442262 | FS_EXEC_SUCCESS | Process 35155 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410325451189 | FS_EXEC_SUCCESS | Process 35152 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410325456910 | FS_EXEC_SUCCESS | Process 35154 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410341901327 | FORK | Process 34973 (<unknown>) | fork() | Process 35156 | Child PID: 35156 |
-| 6410342719518 | FS_EXEC_SUCCESS | Process 35156 (/usr/bin/date) | exec_success() | FS Object 2515363 | Path: /usr/bin/date, Inode: 2515363 |
-| 6410427799850 | FORK | Process 3132 (<unknown>) | fork() | Process 35157 | Child PID: 35157 |
-| 6410427800280 | FORK | Process 3132 (<unknown>) | fork() | Process 35159 | Child PID: 35159 |
-| 6410427800501 | FORK | Process 3132 (<unknown>) | fork() | Process 35158 | Child PID: 35158 |
-| 6410427816100 | FORK | Process 3132 (<unknown>) | fork() | Process 35160 | Child PID: 35160 |
-| 6410428208329 | FS_EXEC_SUCCESS | Process 35159 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410428217456 | FS_EXEC_SUCCESS | Process 35157 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410428242503 | FS_EXEC_SUCCESS | Process 35158 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
-| 6410428564259 | FS_EXEC_SUCCESS | Process 35160 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866033053283 | FORK | Process 2 (<unknown>) | fork() | Process 43797 | Child PID: 43797 |
+| 8866071034688 | FORK | Process 3132 (<unknown>) | fork() | Process 43798 | Child PID: 43798 |
+| 8866071034708 | FORK | Process 3132 (<unknown>) | fork() | Process 43802 | Child PID: 43802 |
+| 8866071035289 | FORK | Process 3132 (<unknown>) | fork() | Process 43801 | Child PID: 43801 |
+| 8866071035460 | FORK | Process 3132 (<unknown>) | fork() | Process 43799 | Child PID: 43799 |
+| 8866071036111 | FORK | Process 3132 (<unknown>) | fork() | Process 43800 | Child PID: 43800 |
+| 8866071040459 | FORK | Process 3132 (<unknown>) | fork() | Process 43803 | Child PID: 43803 |
+| 8866071045138 | FORK | Process 3132 (<unknown>) | fork() | Process 43804 | Child PID: 43804 |
+| 8866071048243 | FORK | Process 3132 (<unknown>) | fork() | Process 43806 | Child PID: 43806 |
+| 8866071048404 | FORK | Process 3132 (<unknown>) | fork() | Process 43805 | Child PID: 43805 |
+| 8866071384994 | FS_EXEC_SUCCESS | Process 43804 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866071409630 | FS_EXEC_SUCCESS | Process 43799 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866071423135 | FS_EXEC_SUCCESS | Process 43798 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866071432032 | FS_EXEC_SUCCESS | Process 43806 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866071513925 | FS_EXEC_SUCCESS | Process 43803 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866071521710 | FS_EXEC_SUCCESS | Process 43801 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866071562336 | FS_EXEC_SUCCESS | Process 43800 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866071919936 | FS_EXEC_SUCCESS | Process 43805 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866073472883 | FS_EXEC_SUCCESS | Process 43802 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866082947052 | FORK | Process 3132 (<unknown>) | fork() | Process 43807 | Child PID: 43807 |
+| 8866082947423 | FORK | Process 3132 (<unknown>) | fork() | Process 43808 | Child PID: 43808 |
+| 8866082947683 | FORK | Process 3132 (<unknown>) | fork() | Process 43809 | Child PID: 43809 |
+| 8866083331492 | FS_EXEC_SUCCESS | Process 43809 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866083333987 | FS_EXEC_SUCCESS | Process 43808 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866083334077 | FS_EXEC_SUCCESS | Process 43807 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866085374708 | FORK | Process 3132 (<unknown>) | fork() | Process 43810 | Child PID: 43810 |
+| 8866085447214 | FORK | Process 3132 (<unknown>) | fork() | Process 43811 | Child PID: 43811 |
+| 8866085459727 | FORK | Process 3132 (<unknown>) | fork() | Process 43812 | Child PID: 43812 |
+| 8866085463043 | FORK | Process 3132 (<unknown>) | fork() | Process 43813 | Child PID: 43813 |
+| 8866085464135 | FORK | Process 3132 (<unknown>) | fork() | Process 43814 | Child PID: 43814 |
+| 8866085468343 | FORK | Process 3132 (<unknown>) | fork() | Process 43815 | Child PID: 43815 |
+| 8866085475607 | FORK | Process 3132 (<unknown>) | fork() | Process 43816 | Child PID: 43816 |
+| 8866085492538 | FORK | Process 3132 (<unknown>) | fork() | Process 43817 | Child PID: 43817 |
+| 8866085509250 | FORK | Process 3132 (<unknown>) | fork() | Process 43818 | Child PID: 43818 |
+| 8866085555156 | FORK | Process 3132 (<unknown>) | fork() | Process 43819 | Child PID: 43819 |
+| 8866085629154 | FS_EXEC_SUCCESS | Process 43810 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866085688275 | FORK | Process 3132 (<unknown>) | fork() | Process 43820 | Child PID: 43820 |
+| 8866085738349 | FS_EXEC_SUCCESS | Process 43815 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866085740763 | FORK | Process 3132 (<unknown>) | fork() | Process 43821 | Child PID: 43821 |
+| 8866085797028 | FORK | Process 3132 (<unknown>) | fork() | Process 43822 | Child PID: 43822 |
+| 8866085802018 | FS_EXEC_SUCCESS | Process 43811 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866085803451 | FS_EXEC_SUCCESS | Process 43818 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866085838787 | FORK | Process 3132 (<unknown>) | fork() | Process 43823 | Child PID: 43823 |
+| 8866085866669 | FS_EXEC_SUCCESS | Process 43813 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866085871037 | FS_EXEC_SUCCESS | Process 43814 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866085905141 | FORK | Process 3132 (<unknown>) | fork() | Process 43824 | Child PID: 43824 |
+| 8866085967177 | FS_EXEC_SUCCESS | Process 43820 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866085982626 | FS_EXEC_SUCCESS | Process 43817 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866086029203 | FS_EXEC_SUCCESS | Process 43816 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866086049932 | FS_EXEC_SUCCESS | Process 43822 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866086073316 | FS_EXEC_SUCCESS | Process 43823 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866086113050 | FS_EXEC_SUCCESS | Process 43824 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866086178713 | FS_EXEC_SUCCESS | Process 43812 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866088211439 | FS_EXEC_SUCCESS | Process 43821 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866089192025 | FS_EXEC_SUCCESS | Process 43819 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866090246279 | FORK | Process 3132 (<unknown>) | fork() | Process 43825 | Child PID: 43825 |
+| 8866090438509 | FORK | Process 3132 (<unknown>) | fork() | Process 43826 | Child PID: 43826 |
+| 8866090441314 | FORK | Process 3132 (<unknown>) | fork() | Process 43827 | Child PID: 43827 |
+| 8866090442096 | FS_EXEC_SUCCESS | Process 43825 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866090626992 | FS_EXEC_SUCCESS | Process 43826 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866090637772 | FS_EXEC_SUCCESS | Process 43827 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866092035660 | FORK | Process 3132 (<unknown>) | fork() | Process 43828 | Child PID: 43828 |
+| 8866092186632 | FORK | Process 3132 (<unknown>) | fork() | Process 43829 | Child PID: 43829 |
+| 8866092188706 | FS_EXEC_SUCCESS | Process 43828 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866092337324 | FS_EXEC_SUCCESS | Process 43829 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866095036188 | FORK | Process 2 (<unknown>) | fork() | Process 43830 | Child PID: 43830 |
+| 8866107074127 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 1 | Type: CREATION, Name: xorg, FD: 95 |
+| 8866107078395 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 1 | Name: xorg, FD: 95 |
+| 8866107117228 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 1 | Name: xorg, FD: 95, Duration: 44183 ns |
+| 8866107128469 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 1 | Type: DUP, Name: xorg, FD: 6 |
+| 8866107143667 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 1 | Name: xorg, FD: 6, Duration: 16290 ns |
+| 8866109626265 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 2 | Type: CREATION, Name: xorg, FD: 95 |
+| 8866109629151 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 2 | Name: xorg, FD: 95 |
+| 8866109650300 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 2 | Name: xorg, FD: 95, Duration: 24666 ns |
+| 8866109661972 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 2 | Type: DUP, Name: xorg, FD: 6 |
+| 8866109673364 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 2 | Name: xorg, FD: 6, Duration: 13496 ns |
+| 8866259390999 | FORK | Process 3132 (<unknown>) | fork() | Process 43832 | Child PID: 43832 |
+| 8866259391630 | FORK | Process 3132 (<unknown>) | fork() | Process 43831 | Child PID: 43831 |
+| 8866259392041 | FORK | Process 3132 (<unknown>) | fork() | Process 43834 | Child PID: 43834 |
+| 8866259392231 | FORK | Process 3132 (<unknown>) | fork() | Process 43833 | Child PID: 43833 |
+| 8866260180888 | FS_EXEC_SUCCESS | Process 43832 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866260192500 | FS_EXEC_SUCCESS | Process 43831 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866260202499 | FS_EXEC_SUCCESS | Process 43834 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866260211275 | FS_EXEC_SUCCESS | Process 43833 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866362704038 | FORK | Process 3132 (<unknown>) | fork() | Process 43835 | Child PID: 43835 |
+| 8866362704549 | FORK | Process 3132 (<unknown>) | fork() | Process 43836 | Child PID: 43836 |
+| 8866362704780 | FORK | Process 3132 (<unknown>) | fork() | Process 43837 | Child PID: 43837 |
+| 8866362707144 | FORK | Process 3132 (<unknown>) | fork() | Process 43838 | Child PID: 43838 |
+| 8866363102244 | FS_EXEC_SUCCESS | Process 43836 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866363106722 | FS_EXEC_SUCCESS | Process 43838 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866363110870 | FS_EXEC_SUCCESS | Process 43835 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866363150955 | FS_EXEC_SUCCESS | Process 43837 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866465502294 | FORK | Process 3132 (<unknown>) | fork() | Process 43839 | Child PID: 43839 |
+| 8866465502545 | FORK | Process 3132 (<unknown>) | fork() | Process 43840 | Child PID: 43840 |
+| 8866465510610 | FORK | Process 3132 (<unknown>) | fork() | Process 43842 | Child PID: 43842 |
+| 8866465510790 | FORK | Process 3132 (<unknown>) | fork() | Process 43841 | Child PID: 43841 |
+| 8866465942809 | FS_EXEC_SUCCESS | Process 43841 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866465954641 | FS_EXEC_SUCCESS | Process 43840 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866467217295 | FS_EXEC_SUCCESS | Process 43842 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866467414344 | FS_EXEC_SUCCESS | Process 43839 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866569168905 | FORK | Process 3132 (<unknown>) | fork() | Process 43844 | Child PID: 43844 |
+| 8866569169346 | FORK | Process 3132 (<unknown>) | fork() | Process 43843 | Child PID: 43843 |
+| 8866569169607 | FORK | Process 3132 (<unknown>) | fork() | Process 43845 | Child PID: 43845 |
+| 8866569183683 | FORK | Process 3132 (<unknown>) | fork() | Process 43846 | Child PID: 43846 |
+| 8866569555589 | FS_EXEC_SUCCESS | Process 43843 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866569564386 | FS_EXEC_SUCCESS | Process 43846 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866569630460 | FS_EXEC_SUCCESS | Process 43845 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866570103956 | FS_EXEC_SUCCESS | Process 43844 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866671956451 | FORK | Process 3132 (<unknown>) | fork() | Process 43848 | Child PID: 43848 |
+| 8866671956872 | FORK | Process 3132 (<unknown>) | fork() | Process 43847 | Child PID: 43847 |
+| 8866671964616 | FORK | Process 3132 (<unknown>) | fork() | Process 43849 | Child PID: 43849 |
+| 8866671965848 | FORK | Process 3132 (<unknown>) | fork() | Process 43850 | Child PID: 43850 |
+| 8866672348184 | FS_EXEC_SUCCESS | Process 43847 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866672367420 | FS_EXEC_SUCCESS | Process 43850 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866672373632 | FS_EXEC_SUCCESS | Process 43848 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866672376998 | FS_EXEC_SUCCESS | Process 43849 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866775298364 | FORK | Process 3132 (<unknown>) | fork() | Process 43851 | Child PID: 43851 |
+| 8866775301841 | FORK | Process 3132 (<unknown>) | fork() | Process 43852 | Child PID: 43852 |
+| 8866775305397 | FORK | Process 3132 (<unknown>) | fork() | Process 43853 | Child PID: 43853 |
+| 8866775306169 | FORK | Process 3132 (<unknown>) | fork() | Process 43854 | Child PID: 43854 |
+| 8866775681972 | FS_EXEC_SUCCESS | Process 43851 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866775697822 | FS_EXEC_SUCCESS | Process 43854 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866775700757 | FS_EXEC_SUCCESS | Process 43852 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866775713602 | FS_EXEC_SUCCESS | Process 43853 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866890948673 | FORK | Process 3132 (<unknown>) | fork() | Process 43855 | Child PID: 43855 |
+| 8866890949084 | FORK | Process 3132 (<unknown>) | fork() | Process 43856 | Child PID: 43856 |
+| 8866890949956 | FORK | Process 3132 (<unknown>) | fork() | Process 43858 | Child PID: 43858 |
+| 8866890950447 | FORK | Process 3132 (<unknown>) | fork() | Process 43857 | Child PID: 43857 |
+| 8866891678420 | FS_EXEC_SUCCESS | Process 43857 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866891678780 | FS_EXEC_SUCCESS | Process 43856 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866891691124 | FS_EXEC_SUCCESS | Process 43858 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866891710860 | FS_EXEC_SUCCESS | Process 43855 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866994011324 | FORK | Process 3132 (<unknown>) | fork() | Process 43859 | Child PID: 43859 |
+| 8866994011905 | FORK | Process 3132 (<unknown>) | fork() | Process 43860 | Child PID: 43860 |
+| 8866994012356 | FORK | Process 3132 (<unknown>) | fork() | Process 43861 | Child PID: 43861 |
+| 8866994029849 | FORK | Process 3132 (<unknown>) | fork() | Process 43862 | Child PID: 43862 |
+| 8866994396405 | FS_EXEC_SUCCESS | Process 43859 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866994417344 | FS_EXEC_SUCCESS | Process 43862 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866994428676 | FS_EXEC_SUCCESS | Process 43861 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8866996203669 | FS_EXEC_SUCCESS | Process 43860 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867001609501 | FORK | Process 3110 (<unknown>) | fork() | Process 43863 | Child PID: 43863 |
+| 8867002951944 | FS_EXEC_SUCCESS | Process 43863 (/bin/sh) | exec_success() | FS Object 2490662 | Path: /bin/sh, Inode: 2490662 |
+| 8867003443735 | FORK | Process 43863 (/bin/sh) | fork() | Process 43864 | Child PID: 43864 |
+| 8867003654560 | FS_EXEC_SUCCESS | Process 43864 (/usr/bin/whoami) | exec_success() | FS Object 2515452 | Path: /usr/bin/whoami, Inode: 2515452 |
+| 8867004286373 | CONNECT | Process 43864 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
+| 8867004322641 | CONNECT | Process 43864 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
+| 8867097611773 | FORK | Process 3132 (<unknown>) | fork() | Process 43866 | Child PID: 43866 |
+| 8867097612003 | FORK | Process 3132 (<unknown>) | fork() | Process 43865 | Child PID: 43865 |
+| 8867097618816 | FORK | Process 3132 (<unknown>) | fork() | Process 43868 | Child PID: 43868 |
+| 8867097619417 | FORK | Process 3132 (<unknown>) | fork() | Process 43867 | Child PID: 43867 |
+| 8867097998848 | FS_EXEC_SUCCESS | Process 43865 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867098019977 | FS_EXEC_SUCCESS | Process 43866 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867098023414 | FS_EXEC_SUCCESS | Process 43867 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867098026199 | FS_EXEC_SUCCESS | Process 43868 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867105983287 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 3 | Type: CREATION, Name: xorg, FD: 95 |
+| 8867105985972 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 3 | Name: xorg, FD: 95 |
+| 8867106027119 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 3 | Name: xorg, FD: 95, Duration: 44813 ns |
+| 8867106039042 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 3 | Type: DUP, Name: xorg, FD: 6 |
+| 8867106055032 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 3 | Name: xorg, FD: 6, Duration: 17122 ns |
+| 8867109471829 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 4 | Type: CREATION, Name: xorg, FD: 95 |
+| 8867109473412 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 4 | Name: xorg, FD: 95 |
+| 8867109495383 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 4 | Name: xorg, FD: 95, Duration: 24125 ns |
+| 8867109511183 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 4 | Type: DUP, Name: xorg, FD: 6 |
+| 8867109529487 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 4 | Name: xorg, FD: 6, Duration: 19767 ns |
+| 8867201017736 | FORK | Process 3132 (<unknown>) | fork() | Process 43869 | Child PID: 43869 |
+| 8867201018197 | FORK | Process 3132 (<unknown>) | fork() | Process 43870 | Child PID: 43870 |
+| 8867201023387 | FORK | Process 3132 (<unknown>) | fork() | Process 43871 | Child PID: 43871 |
+| 8867201023668 | FORK | Process 3132 (<unknown>) | fork() | Process 43872 | Child PID: 43872 |
+| 8867201469793 | FS_EXEC_SUCCESS | Process 43869 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867201471716 | FS_EXEC_SUCCESS | Process 43870 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867201495541 | FS_EXEC_SUCCESS | Process 43871 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867201496162 | FS_EXEC_SUCCESS | Process 43872 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867304153085 | FORK | Process 3132 (<unknown>) | fork() | Process 43874 | Child PID: 43874 |
+| 8867304153215 | FORK | Process 3132 (<unknown>) | fork() | Process 43873 | Child PID: 43873 |
+| 8867304162022 | FORK | Process 3132 (<unknown>) | fork() | Process 43875 | Child PID: 43875 |
+| 8867304165178 | FORK | Process 3132 (<unknown>) | fork() | Process 43876 | Child PID: 43876 |
+| 8867304538998 | FS_EXEC_SUCCESS | Process 43874 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867304571599 | FS_EXEC_SUCCESS | Process 43876 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867304590504 | FS_EXEC_SUCCESS | Process 43875 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867304603689 | FS_EXEC_SUCCESS | Process 43873 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867407713579 | FORK | Process 3132 (<unknown>) | fork() | Process 43877 | Child PID: 43877 |
+| 8867407714019 | FORK | Process 3132 (<unknown>) | fork() | Process 43878 | Child PID: 43878 |
+| 8867407714220 | FORK | Process 3132 (<unknown>) | fork() | Process 43879 | Child PID: 43879 |
+| 8867407719971 | FORK | Process 3132 (<unknown>) | fork() | Process 43880 | Child PID: 43880 |
+| 8867408099551 | FS_EXEC_SUCCESS | Process 43877 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867408131281 | FS_EXEC_SUCCESS | Process 43880 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867408135298 | FS_EXEC_SUCCESS | Process 43878 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867408658037 | FS_EXEC_SUCCESS | Process 43879 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867510980452 | FORK | Process 3132 (<unknown>) | fork() | Process 43882 | Child PID: 43882 |
+| 8867510980853 | FORK | Process 3132 (<unknown>) | fork() | Process 43881 | Child PID: 43881 |
+| 8867510981154 | FORK | Process 3132 (<unknown>) | fork() | Process 43883 | Child PID: 43883 |
+| 8867510996973 | FORK | Process 3132 (<unknown>) | fork() | Process 43884 | Child PID: 43884 |
+| 8867511374600 | FS_EXEC_SUCCESS | Process 43882 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867511383727 | FS_EXEC_SUCCESS | Process 43881 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867511459219 | FS_EXEC_SUCCESS | Process 43883 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867512011663 | FS_EXEC_SUCCESS | Process 43884 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867626723597 | FORK | Process 3132 (<unknown>) | fork() | Process 43888 | Child PID: 43888 |
+| 8867626725020 | FORK | Process 3132 (<unknown>) | fork() | Process 43886 | Child PID: 43886 |
+| 8867626725210 | FORK | Process 3132 (<unknown>) | fork() | Process 43885 | Child PID: 43885 |
+| 8867626725621 | FORK | Process 3132 (<unknown>) | fork() | Process 43887 | Child PID: 43887 |
+| 8867627410774 | FS_EXEC_SUCCESS | Process 43887 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867627495262 | FS_EXEC_SUCCESS | Process 43888 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867627500893 | FS_EXEC_SUCCESS | Process 43886 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867627791036 | FS_EXEC_SUCCESS | Process 43885 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867729940898 | FORK | Process 3132 (<unknown>) | fork() | Process 43889 | Child PID: 43889 |
+| 8867729944535 | FORK | Process 3132 (<unknown>) | fork() | Process 43890 | Child PID: 43890 |
+| 8867729947631 | FORK | Process 3132 (<unknown>) | fork() | Process 43891 | Child PID: 43891 |
+| 8867729947821 | FORK | Process 3132 (<unknown>) | fork() | Process 43892 | Child PID: 43892 |
+| 8867730381093 | FS_EXEC_SUCCESS | Process 43892 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867730394989 | FS_EXEC_SUCCESS | Process 43891 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867730403164 | FS_EXEC_SUCCESS | Process 43890 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867730954176 | FS_EXEC_SUCCESS | Process 43889 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867832644377 | FORK | Process 3132 (<unknown>) | fork() | Process 43893 | Child PID: 43893 |
+| 8867832644808 | FORK | Process 3132 (<unknown>) | fork() | Process 43894 | Child PID: 43894 |
+| 8867832652443 | FORK | Process 3132 (<unknown>) | fork() | Process 43895 | Child PID: 43895 |
+| 8867832660337 | FORK | Process 3132 (<unknown>) | fork() | Process 43896 | Child PID: 43896 |
+| 8867833038465 | FS_EXEC_SUCCESS | Process 43894 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867833047963 | FS_EXEC_SUCCESS | Process 43893 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867833050167 | FS_EXEC_SUCCESS | Process 43896 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867833054165 | FS_EXEC_SUCCESS | Process 43895 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867860948654 | FORK | Process 43781 (<unknown>) | fork() | Process 43897 | Child PID: 43897 |
+| 8867861652261 | FS_EXEC_SUCCESS | Process 43897 (/usr/bin/date) | exec_success() | FS Object 2515363 | Path: /usr/bin/date, Inode: 2515363 |
+| 8867862631765 | FORK | Process 43781 (<unknown>) | fork() | Process 43898 | Child PID: 43898 |
+| 8867863200530 | FS_EXEC_SUCCESS | Process 43898 (/usr/bin/sudo) | exec_success() | FS Object 2491684 | Path: /usr/bin/sudo, Inode: 2491684 |
+| 8867865024946 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
+| 8867865079678 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
+| 8867866982351 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 6, Result: 0 |
+| 8867867016565 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 6, Result: 0 |
+| 8867867267084 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: 127.0.0.53:53, FD: 6, Result: 0 |
+| 8867867816713 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: 192.168.1.118:0, FD: 6, Result: 0 |
+| 8867867854003 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: fe80::291d:5450:d8da:bbf9:0, FD: 6, Result: 0 |
+| 8867867943290 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 6, Result: 0 |
+| 8867867965702 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 6, Result: 0 |
+| 8867868414272 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 7, Result: 0 |
+| 8867870771556 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 6, Result: 0 |
+| 8867871253158 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 14, Result: 0 |
+| 8867871773101 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 15, Result: 0 |
+| 8867872059427 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 15, Result: 0 |
+| 8867872313934 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 15, Result: 0 |
+| 8867872568801 | CONNECT | Process 43898 (/usr/bin/sudo) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 15, Result: 0 |
+| 8867873340967 | FORK | Process 43898 (/usr/bin/sudo) | fork() | Process 43899 | Child PID: 43899 |
+| 8867873782033 | FORK | Process 43899 (sudo) | fork() | Process 43900 | Child PID: 43900 |
+| 8867874274134 | FS_EXEC_SUCCESS | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | exec_success() | FS Object 2490472 | Path: /usr/bin/bash, Inode: 2490472 |
+| 8867875145515 | FS_EXEC_SUCCESS | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | exec_success() | FS Object 1356593 | Path: /home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor, Inode: 1356593 |
+| 8867877845240 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 5 | Type: CREATION, Name: qual_mfd_dup, FD: 3 |
+| 8867877847715 | MEMFD_CREATE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | memfd_create() | Memfd 5 | Name: qual_mfd_dup, FD: 3 |
+| 8867877853476 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 5 | Type: DUP, Name: qual_mfd_dup, FD: 4 |
+| 8867877856471 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 5 | Type: DUP, Name: qual_mfd_dup, FD: 30 |
+| 8867877860158 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 5 | Type: DUP, Name: qual_mfd_dup, FD: 35 |
+| 8867877866721 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 5 | Type: DUP, Name: qual_mfd_dup, FD: 36 |
+| 8867877876860 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 5 | Name: qual_mfd_dup, FD: 3, Duration: 32441 ns |
+| 8867877879164 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 5 | Name: qual_mfd_dup, FD: 4, Duration: 26189 ns |
+| 8867877881128 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 5 | Name: qual_mfd_dup, FD: 30, Duration: 25148 ns |
+| 8867877882941 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 5 | Name: qual_mfd_dup, FD: 35, Duration: 22783 ns |
+| 8867877884734 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 5 | Name: qual_mfd_dup, FD: 36, Duration: 18013 ns |
+| 8867877903329 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 6 | Type: CREATION, Name: qual_mfd_replace, FD: 3 |
+| 8867877904832 | MEMFD_CREATE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | memfd_create() | Memfd 6 | Name: qual_mfd_replace, FD: 3 |
+| 8867877984080 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 6 | Name: qual_mfd_replace, FD: 3, Duration: 81172 ns |
+| 8867878071294 | UNLINK | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | unlink() | FS Object 918235 | Path: /tmp/ephim_qual_ordinary_isdO18, Status: SUCCESS |
+| 8867878123061 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 7 | Type: CREATION, Name: qual_mfd_reuse, FD: 3 |
+| 8867878124654 | MEMFD_CREATE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | memfd_create() | Memfd 7 | Name: qual_mfd_reuse, FD: 3 |
+| 8867878126587 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 7 | Name: qual_mfd_reuse, FD: 3, Duration: 3917 ns |
+| 8867878194855 | UNLINK | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | unlink() | FS Object 918235 | Path: /tmp/ephim_qual_reuse_fAW9Cd, Status: SUCCESS |
+| 8867878216045 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: CREATION, Name: qual_mfd_threads, FD: 3 |
+| 8867878217367 | MEMFD_CREATE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | memfd_create() | Memfd 8 | Name: qual_mfd_threads, FD: 3 |
+| 8867878294992 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878297918 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 0, Bytes: 1 |
+| 8867878305512 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 11742 ns |
+| 8867878308959 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878310842 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 1, Bytes: 1 |
+| 8867878313337 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4819 ns |
+| 8867878316022 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878317795 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 2, Bytes: 1 |
+| 8867878320089 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4478 ns |
+| 8867878322624 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878324337 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 3, Bytes: 1 |
+| 8867878326542 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4278 ns |
+| 8867878329116 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878331020 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 4, Bytes: 1 |
+| 8867878333815 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5049 ns |
+| 8867878336931 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878339055 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 5, Bytes: 1 |
+| 8867878341820 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5330 ns |
+| 8867878345056 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878346329 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878347260 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 6, Bytes: 1 |
+| 8867878349194 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 6, Bytes: 1 |
+| 8867878349675 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 5080 ns |
+| 8867878351588 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878352069 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 7093 ns |
+| 8867878353081 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 7, Bytes: 1 |
+| 8867878354634 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878354734 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3406 ns |
+| 8867878356097 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 8, Bytes: 1 |
+| 8867878356638 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878357830 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3587 ns |
+| 8867878357960 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 9, Bytes: 1 |
+| 8867878359523 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3166 ns |
+| 8867878359804 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878361166 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 10, Bytes: 1 |
+| 8867878361968 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878362829 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3366 ns |
+| 8867878363350 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 11, Bytes: 1 |
+| 8867878364743 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878364933 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3256 ns |
+| 8867878366015 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 12, Bytes: 1 |
+| 8867878366857 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878367679 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3236 ns |
+| 8867878368149 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 13, Bytes: 1 |
+| 8867878369562 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878369752 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3216 ns |
+| 8867878370344 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878370834 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 14, Bytes: 1 |
+| 8867878371616 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878372347 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 15, Bytes: 1 |
+| 8867878372407 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3145 ns |
+| 8867878373049 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 15, Bytes: 1 |
+| 8867878374301 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878375253 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 5591 ns |
+| 8867878375483 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 4148 ns |
+| 8867878375633 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 16, Bytes: 1 |
+| 8867878377577 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3587 ns |
+| 8867878377757 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878378098 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878379090 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 17, Bytes: 1 |
+| 8867878379591 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878379861 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 17, Bytes: 1 |
+| 8867878380763 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3326 ns |
+| 8867878381024 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 18, Bytes: 1 |
+| 8867878381705 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 4008 ns |
+| 8867878382667 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3487 ns |
+| 8867878383168 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878383889 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878384530 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878384680 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 19, Bytes: 1 |
+| 8867878385292 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 19, Bytes: 1 |
+| 8867878385863 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 19, Bytes: 1 |
+| 8867878386323 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3686 ns |
+| 8867878386915 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3377 ns |
+| 8867878387486 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3246 ns |
+| 8867878388257 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878388838 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878389359 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878389640 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 20, Bytes: 1 |
+| 8867878390221 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 20, Bytes: 1 |
+| 8867878390752 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 20, Bytes: 1 |
+| 8867878391263 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3347 ns |
+| 8867878392024 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3466 ns |
+| 8867878392946 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3877 ns |
+| 8867878393236 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878393928 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878394619 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 21, Bytes: 1 |
+| 8867878394970 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878395220 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 21, Bytes: 1 |
+| 8867878396192 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3246 ns |
+| 8867878396452 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 22, Bytes: 1 |
+| 8867878396693 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878396873 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3256 ns |
+| 8867878398126 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3447 ns |
+| 8867878398286 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878398506 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 23, Bytes: 1 |
+| 8867878399298 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878399658 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 23, Bytes: 1 |
+| 8867878400700 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 23, Bytes: 1 |
+| 8867878400811 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878401352 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 5421 ns |
+| 8867878401732 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3737 ns |
+| 8867878402153 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 24, Bytes: 1 |
+| 8867878402293 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3727 ns |
+| 8867878403446 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878403676 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878403846 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3356 ns |
+| 8867878404287 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878404618 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 25, Bytes: 1 |
+| 8867878405018 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 25, Bytes: 1 |
+| 8867878405680 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 25, Bytes: 1 |
+| 8867878405820 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878406030 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2875 ns |
+| 8867878406672 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3277 ns |
+| 8867878407142 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 26, Bytes: 1 |
+| 8867878407253 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3317 ns |
+| 8867878408184 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878408655 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878408776 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3237 ns |
+| 8867878409146 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878409347 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 27, Bytes: 1 |
+| 8867878410028 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 27, Bytes: 1 |
+| 8867878410519 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 28, Bytes: 1 |
+| 8867878410669 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2725 ns |
+| 8867878410699 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878411691 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3336 ns |
+| 8867878412162 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 29, Bytes: 1 |
+| 8867878412272 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878412392 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3516 ns |
+| 8867878413414 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 30, Bytes: 1 |
+| 8867878413725 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878413865 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3456 ns |
+| 8867878414506 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878414777 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2765 ns |
+| 8867878415157 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 31, Bytes: 1 |
+| 8867878415899 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878415959 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 31, Bytes: 1 |
+| 8867878416370 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878416791 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3377 ns |
+| 8867878417332 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 32, Bytes: 1 |
+| 8867878417512 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 32, Bytes: 1 |
+| 8867878417592 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3476 ns |
+| 8867878418724 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878418945 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3407 ns |
+| 8867878419255 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3196 ns |
+| 8867878419646 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878420057 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 33, Bytes: 1 |
+| 8867878420848 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878420988 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878421229 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 33, Bytes: 1 |
+| 8867878421720 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3266 ns |
+| 8867878421980 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 34, Bytes: 1 |
+| 8867878422662 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 34, Bytes: 1 |
+| 8867878422872 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3587 ns |
+| 8867878423814 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3206 ns |
+| 8867878424204 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878424635 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 4067 ns |
+| 8867878424906 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878425437 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878425557 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 35, Bytes: 1 |
+| 8867878426358 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 35, Bytes: 1 |
+| 8867878426519 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 35, Bytes: 1 |
+| 8867878426719 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878427160 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3256 ns |
+| 8867878427971 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3426 ns |
+| 8867878428052 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 36, Bytes: 1 |
+| 8867878428252 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3086 ns |
+| 8867878429094 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878429665 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3327 ns |
+| 8867878429955 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878430296 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878430496 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 37, Bytes: 1 |
+| 8867878431358 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 37, Bytes: 1 |
+| 8867878431498 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 37, Bytes: 1 |
+| 8867878431959 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878432179 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3416 ns |
+| 8867878433021 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3386 ns |
+| 8867878433331 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3626 ns |
+| 8867878433452 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 38, Bytes: 1 |
+| 8867878434123 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878434995 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878435095 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3487 ns |
+| 8867878435105 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878435576 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 39, Bytes: 1 |
+| 8867878436127 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 39, Bytes: 1 |
+| 8867878436407 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 39, Bytes: 1 |
+| 8867878437119 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878437179 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3407 ns |
+| 8867878437439 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2735 ns |
+| 8867878438171 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3497 ns |
+| 8867878438431 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 40, Bytes: 1 |
+| 8867878439142 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878439243 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878440034 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3226 ns |
+| 8867878440355 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878440615 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 41, Bytes: 1 |
+| 8867878440805 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 41, Bytes: 1 |
+| 8867878441717 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 41, Bytes: 1 |
+| 8867878442018 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3156 ns |
+| 8867878442128 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878442719 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3927 ns |
+| 8867878443360 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3326 ns |
+| 8867878443541 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 42, Bytes: 1 |
+| 8867878443611 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878444733 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878444823 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 43, Bytes: 1 |
+| 8867878445144 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3337 ns |
+| 8867878445354 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878446115 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 44, Bytes: 1 |
+| 8867878446196 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2846 ns |
+| 8867878447017 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 44, Bytes: 1 |
+| 8867878447468 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878447728 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878447819 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3447 ns |
+| 8867878448640 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3597 ns |
+| 8867878448861 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 45, Bytes: 1 |
+| 8867878448951 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 45, Bytes: 1 |
+| 8867878449802 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878450213 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 2715 ns |
+| 8867878450944 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3787 ns |
+| 8867878450975 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878451135 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 46, Bytes: 1 |
+| 8867878451896 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878452337 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 46, Bytes: 1 |
+| 8867878452778 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3326 ns |
+| 8867878452888 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878453088 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 47, Bytes: 1 |
+| 8867878453980 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3336 ns |
+| 8867878454211 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 47, Bytes: 1 |
+| 8867878455032 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3436 ns |
+| 8867878455483 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878455894 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3306 ns |
+| 8867878456084 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878456655 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878456825 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 48, Bytes: 1 |
+| 8867878457407 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 48, Bytes: 1 |
+| 8867878457697 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 48, Bytes: 1 |
+| 8867878457857 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878458479 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3447 ns |
+| 8867878459000 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3237 ns |
+| 8867878459170 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 49, Bytes: 1 |
+| 8867878459260 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2875 ns |
+| 8867878460442 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878460763 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3246 ns |
+| 8867878460993 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878461234 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878461865 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 50, Bytes: 1 |
+| 8867878462115 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 50, Bytes: 1 |
+| 8867878462546 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 50, Bytes: 1 |
+| 8867878462737 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878463498 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3366 ns |
+| 8867878463809 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3086 ns |
+| 8867878464209 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 51, Bytes: 1 |
+| 8867878464540 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3687 ns |
+| 8867878465492 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878465562 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878465832 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3426 ns |
+| 8867878466544 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878466714 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 52, Bytes: 1 |
+| 8867878466904 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 52, Bytes: 1 |
+| 8867878467736 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878467896 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 52, Bytes: 1 |
+| 8867878468107 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2916 ns |
+| 8867878468828 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3677 ns |
+| 8867878469018 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 53, Bytes: 1 |
+| 8867878469529 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3306 ns |
+| 8867878469730 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878470621 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3206 ns |
+| 8867878470902 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878470992 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 54, Bytes: 1 |
+| 8867878471663 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878472224 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 55, Bytes: 1 |
+| 8867878472314 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2835 ns |
+| 8867878472876 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878472946 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 55, Bytes: 1 |
+| 8867878473857 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3336 ns |
+| 8867878473887 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878474228 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 56, Bytes: 1 |
+| 8867878474529 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3216 ns |
+| 8867878475020 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 56, Bytes: 1 |
+| 8867878475801 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878475911 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3336 ns |
+| 8867878476322 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 2705 ns |
+| 8867878476462 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878477174 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 57, Bytes: 1 |
+| 8867878477795 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878477965 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 57, Bytes: 1 |
+| 8867878478145 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878478767 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3267 ns |
+| 8867878479137 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 58, Bytes: 1 |
+| 8867878479268 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 58, Bytes: 1 |
+| 8867878479598 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3416 ns |
+| 8867878480650 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878480810 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3296 ns |
+| 8867878481121 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3426 ns |
+| 8867878481592 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878482013 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 59, Bytes: 1 |
+| 8867878482694 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878482994 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878483125 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 59, Bytes: 1 |
+| 8867878483596 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3267 ns |
+| 8867878483826 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 60, Bytes: 1 |
+| 8867878484377 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 60, Bytes: 1 |
+| 8867878484738 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3497 ns |
+| 8867878485159 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2706 ns |
+| 8867878485559 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878485950 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3286 ns |
+| 8867878486611 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878486691 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878486832 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 61, Bytes: 1 |
+| 8867878487914 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878487984 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 61, Bytes: 1 |
+| 8867878488174 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 61, Bytes: 1 |
+| 8867878488415 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3166 ns |
+| 8867878489216 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 62, Bytes: 1 |
+| 8867878489396 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2955 ns |
+| 8867878490148 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3807 ns |
+| 8867878490358 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878490879 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3316 ns |
+| 8867878490969 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878491791 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 63, Bytes: 1 |
+| 8867878492092 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 63, Bytes: 1 |
+| 8867878492172 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878492873 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878493404 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3356 ns |
+| 8867878493524 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 64, Bytes: 1 |
+| 8867878493674 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2975 ns |
+| 8867878494246 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 64, Bytes: 1 |
+| 8867878495127 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3306 ns |
+| 8867878495398 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878495518 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878495839 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3327 ns |
+| 8867878496500 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 65, Bytes: 1 |
+| 8867878496850 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 65, Bytes: 1 |
+| 8867878497261 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878497722 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878497942 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2835 ns |
+| 8867878498674 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3597 ns |
+| 8867878498734 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 66, Bytes: 1 |
+| 8867878499035 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 66, Bytes: 1 |
+| 8867878499535 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878500397 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3426 ns |
+| 8867878500577 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878500688 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 67, Bytes: 1 |
+| 8867878500968 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3526 ns |
+| 8867878501950 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 68, Bytes: 1 |
+| 8867878502060 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2815 ns |
+| 8867878502511 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878503222 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878503633 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3376 ns |
+| 8867878503663 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878503823 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 69, Bytes: 1 |
+| 8867878504555 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 69, Bytes: 1 |
+| 8867878504815 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 69, Bytes: 1 |
+| 8867878505457 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3257 ns |
+| 8867878505637 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878506158 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3256 ns |
+| 8867878506428 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3035 ns |
+| 8867878506969 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 70, Bytes: 1 |
+| 8867878507460 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878507931 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878508152 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878508542 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3216 ns |
+| 8867878508983 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 71, Bytes: 1 |
+| 8867878509184 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 71, Bytes: 1 |
+| 8867878509574 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 71, Bytes: 1 |
+| 8867878510566 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878510736 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3646 ns |
+| 8867878511067 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3376 ns |
+| 8867878511788 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3957 ns |
+| 8867878511879 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 72, Bytes: 1 |
+| 8867878512680 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878512800 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878513512 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3246 ns |
+| 8867878513792 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878514083 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 73, Bytes: 1 |
+| 8867878514373 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 73, Bytes: 1 |
+| 8867878515175 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 73, Bytes: 1 |
+| 8867878515586 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3116 ns |
+| 8867878515676 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878516307 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3948 ns |
+| 8867878516748 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3276 ns |
+| 8867878517148 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 74, Bytes: 1 |
+| 8867878517489 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878518261 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878518551 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 75, Bytes: 1 |
+| 8867878518761 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878518761 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3396 ns |
+| 8867878519643 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 75, Bytes: 1 |
+| 8867878519904 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2715 ns |
+| 8867878520184 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 76, Bytes: 1 |
+| 8867878520735 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878521366 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3386 ns |
+| 8867878521577 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878521957 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3506 ns |
+| 8867878522048 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 77, Bytes: 1 |
+| 8867878522699 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 77, Bytes: 1 |
+| 8867878523340 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878523691 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3266 ns |
+| 8867878523921 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878524021 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2675 ns |
+| 8867878524693 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 78, Bytes: 1 |
+| 8867878525334 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 78, Bytes: 1 |
+| 8867878525714 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878525945 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878526306 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3257 ns |
+| 8867878526867 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 79, Bytes: 1 |
+| 8867878526927 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3316 ns |
+| 8867878527287 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 79, Bytes: 1 |
+| 8867878528259 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2785 ns |
+| 8867878528319 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878528880 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878528941 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3297 ns |
+| 8867878529782 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 80, Bytes: 1 |
+| 8867878529902 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878530283 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 80, Bytes: 1 |
+| 8867878530874 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878531044 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 81, Bytes: 1 |
+| 8867878531375 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3366 ns |
+| 8867878531876 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3306 ns |
+| 8867878532237 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 82, Bytes: 1 |
+| 8867878532417 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2785 ns |
+| 8867878533409 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878533780 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878533850 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3266 ns |
+| 8867878534010 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878534771 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 83, Bytes: 1 |
+| 8867878535112 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 83, Bytes: 1 |
+| 8867878535182 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 83, Bytes: 1 |
+| 8867878535793 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878536415 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3297 ns |
+| 8867878536675 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2946 ns |
+| 8867878537166 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 84, Bytes: 1 |
+| 8867878537416 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3957 ns |
+| 8867878538378 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878538548 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878538749 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3276 ns |
+| 8867878539430 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878539891 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 85, Bytes: 1 |
+| 8867878539991 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 85, Bytes: 1 |
+| 8867878541103 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 86, Bytes: 1 |
+| 8867878541274 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3166 ns |
+| 8867878541314 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878541985 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3897 ns |
+| 8867878542666 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 87, Bytes: 1 |
+| 8867878542706 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3606 ns |
+| 8867878542887 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878543899 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878544079 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 88, Bytes: 1 |
+| 8867878544309 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3316 ns |
+| 8867878544850 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878545251 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 89, Bytes: 1 |
+| 8867878545371 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2745 ns |
+| 8867878546173 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 89, Bytes: 1 |
+| 8867878546303 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878546844 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3256 ns |
+| 8867878546914 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878547605 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 90, Bytes: 1 |
+| 8867878547836 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3296 ns |
+| 8867878548006 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 90, Bytes: 1 |
+| 8867878549259 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878549479 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3597 ns |
+| 8867878549679 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3035 ns |
+| 8867878549840 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878550681 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 91, Bytes: 1 |
+| 8867878551222 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 91, Bytes: 1 |
+| 8867878551383 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878551513 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878552254 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3346 ns |
+| 8867878552525 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 92, Bytes: 1 |
+| 8867878552875 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3356 ns |
+| 8867878552925 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 92, Bytes: 1 |
+| 8867878553907 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2925 ns |
+| 8867878554328 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878554589 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3477 ns |
+| 8867878554779 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878555500 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878555671 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 93, Bytes: 1 |
+| 8867878556392 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 93, Bytes: 1 |
+| 8867878556632 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 93, Bytes: 1 |
+| 8867878556883 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878557324 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3307 ns |
+| 8867878558065 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3587 ns |
+| 8867878558235 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 94, Bytes: 1 |
+| 8867878558366 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3136 ns |
+| 8867878559357 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878559848 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3336 ns |
+| 8867878559999 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878560179 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878560690 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 95, Bytes: 1 |
+| 8867878561311 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 95, Bytes: 1 |
+| 8867878561652 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 95, Bytes: 1 |
+| 8867878562083 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878562303 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3266 ns |
+| 8867878562664 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 2916 ns |
+| 8867878563425 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3707 ns |
+| 8867878563515 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 96, Bytes: 1 |
+| 8867878564197 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878564557 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878565108 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3386 ns |
+| 8867878565419 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878565779 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 97, Bytes: 1 |
+| 8867878565900 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 97, Bytes: 1 |
+| 8867878566751 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 97, Bytes: 1 |
+| 8867878567192 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 7 |
+| 8867878567403 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3517 ns |
+| 8867878567653 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3366 ns |
+| 8867878568394 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3306 ns |
+| 8867878568565 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 98, Bytes: 1 |
+| 8867878569316 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878569527 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878570168 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 7, Duration: 3256 ns |
+| 8867878570408 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878570709 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 99, Bytes: 1 |
+| 8867878571109 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 99, Bytes: 1 |
+| 8867878571891 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 99, Bytes: 1 |
+| 8867878572262 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3226 ns |
+| 8867878572963 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3767 ns |
+| 8867878573524 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3436 ns |
+| 8867878573965 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878574927 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878575057 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 100, Bytes: 1 |
+| 8867878575448 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878576299 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 101, Bytes: 1 |
+| 8867878576409 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2825 ns |
+| 8867878576790 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 101, Bytes: 1 |
+| 8867878577962 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878577972 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3386 ns |
+| 8867878578443 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3296 ns |
+| 8867878579104 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 102, Bytes: 1 |
+| 8867878580297 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878580387 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2665 ns |
+| 8867878580447 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878581689 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 103, Bytes: 1 |
+| 8867878581820 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 103, Bytes: 1 |
+| 8867878582010 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878583032 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 104, Bytes: 1 |
+| 8867878583292 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3306 ns |
+| 8867878583843 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3727 ns |
+| 8867878584314 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 2595 ns |
+| 8867878585236 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878585797 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878585897 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878586689 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 105, Bytes: 1 |
+| 8867878587069 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 105, Bytes: 1 |
+| 8867878587149 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 105, Bytes: 1 |
+| 8867878588342 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3417 ns |
+| 8867878588632 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3005 ns |
+| 8867878589374 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3898 ns |
+| 8867878590325 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878590406 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878591317 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878591558 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 106, Bytes: 1 |
+| 8867878591808 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 106, Bytes: 1 |
+| 8867878592640 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 107, Bytes: 1 |
+| 8867878592860 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2775 ns |
+| 8867878593582 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3577 ns |
+| 8867878594243 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3236 ns |
+| 8867878594433 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878595545 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878596307 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 108, Bytes: 1 |
+| 8867878596587 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878596868 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 108, Bytes: 1 |
+| 8867878597950 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 109, Bytes: 1 |
+| 8867878598300 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4137 ns |
+| 8867878598721 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3486 ns |
+| 8867878599653 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3376 ns |
+| 8867878600464 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878600585 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878601556 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 6 |
+| 8867878601997 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 110, Bytes: 1 |
+| 8867878602097 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 110, Bytes: 1 |
+| 8867878603390 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 110, Bytes: 1 |
+| 8867878603721 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3447 ns |
+| 8867878604632 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 4488 ns |
+| 8867878604983 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 6, Duration: 3737 ns |
+| 8867878605604 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878606937 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878607077 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 111, Bytes: 1 |
+| 8867878608710 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 112, Bytes: 1 |
+| 8867878608800 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3517 ns |
+| 8867878610353 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3797 ns |
+| 8867878610744 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878611976 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878612036 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 113, Bytes: 1 |
+| 8867878613058 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 113, Bytes: 1 |
+| 8867878613589 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3156 ns |
+| 8867878614360 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 2655 ns |
+| 8867878615473 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878615913 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 5 |
+| 8867878616855 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 114, Bytes: 1 |
+| 8867878616965 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 114, Bytes: 1 |
+| 8867878618488 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3346 ns |
+| 8867878618779 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 5, Duration: 3126 ns |
+| 8867878620392 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878621664 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 115, Bytes: 1 |
+| 8867878623237 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3136 ns |
+| 8867878625071 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 8 | Type: DUP, Name: qual_mfd_threads, FD: 4 |
+| 8867878626583 | MEMFD_WRITE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | write() | Memfd 8 | Name: qual_mfd_threads, Offset: 116, Bytes: 1 |
+| 8867878628196 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 4, Duration: 3406 ns |
+| 8867878649156 | FD_CLOSED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | close_fd() | Memfd 8 | Name: qual_mfd_threads, FD: 3, Duration: 433522 ns |
+| 8867878662781 | FD_INSTALLED | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fd_install() | Memfd 9 | Type: CREATION, Name: qual_mfd_clone, FD: 3 |
+| 8867878663763 | MEMFD_CREATE | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | memfd_create() | Memfd 9 | Name: qual_mfd_clone, FD: 3 |
+| 8867878738884 | FORK | Process 43900 (/home/magellan/Garage/prototypes/FM/FM-persist/build/test_qualification_descriptor) | fork() | Process 43905 | Child PID: 43905 |
+| 8867878805268 | MEMFD_WRITE | Process 43905 (test_qualificat) | write() | Memfd 9 | Name: qual_mfd_clone, Offset: 0, Bytes: 25 |
+| 8867878810387 | FD_CLOSED | Process 43905 (test_qualificat) | close_fd() | Memfd 9 | Name: qual_mfd_clone, FD: 3, Duration: 147826 ns |
+| 8867880366722 | FORK | Process 43781 (<unknown>) | fork() | Process 43906 | Child PID: 43906 |
+| 8867880814009 | FS_EXEC_SUCCESS | Process 43906 (/usr/bin/date) | exec_success() | FS Object 2515363 | Path: /usr/bin/date, Inode: 2515363 |
+| 8867881490305 | FORK | Process 43781 (<unknown>) | fork() | Process 43907 | Child PID: 43907 |
+| 8867881717100 | FS_EXEC_SUCCESS | Process 43907 (/usr/bin/sleep) | exec_success() | FS Object 2515421 | Path: /usr/bin/sleep, Inode: 2515421 |
+| 8867936000038 | FORK | Process 3132 (<unknown>) | fork() | Process 43908 | Child PID: 43908 |
+| 8867936008203 | FORK | Process 3132 (<unknown>) | fork() | Process 43910 | Child PID: 43910 |
+| 8867936008333 | FORK | Process 3132 (<unknown>) | fork() | Process 43909 | Child PID: 43909 |
+| 8867936012581 | FORK | Process 3132 (<unknown>) | fork() | Process 43911 | Child PID: 43911 |
+| 8867936367536 | FS_EXEC_SUCCESS | Process 43911 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867936378897 | FS_EXEC_SUCCESS | Process 43910 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867936382043 | FS_EXEC_SUCCESS | Process 43908 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8867936952321 | FS_EXEC_SUCCESS | Process 43909 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868002671963 | FORK | Process 3110 (<unknown>) | fork() | Process 43912 | Child PID: 43912 |
+| 8868003983989 | FS_EXEC_SUCCESS | Process 43912 (/bin/sh) | exec_success() | FS Object 2490662 | Path: /bin/sh, Inode: 2490662 |
+| 8868004535422 | FORK | Process 43912 (/bin/sh) | fork() | Process 43913 | Child PID: 43913 |
+| 8868004803734 | FS_EXEC_SUCCESS | Process 43913 (/usr/bin/whoami) | exec_success() | FS Object 2515452 | Path: /usr/bin/whoami, Inode: 2515452 |
+| 8868005444324 | CONNECT | Process 43913 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
+| 8868005481774 | CONNECT | Process 43913 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
+| 8868038878165 | FORK | Process 3132 (<unknown>) | fork() | Process 43914 | Child PID: 43914 |
+| 8868038879768 | FORK | Process 3132 (<unknown>) | fork() | Process 43915 | Child PID: 43915 |
+| 8868038881300 | FORK | Process 3132 (<unknown>) | fork() | Process 43916 | Child PID: 43916 |
+| 8868038892211 | FORK | Process 3132 (<unknown>) | fork() | Process 43917 | Child PID: 43917 |
+| 8868039202442 | FS_EXEC_SUCCESS | Process 43915 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868039208263 | FS_EXEC_SUCCESS | Process 43917 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868039271180 | FS_EXEC_SUCCESS | Process 43916 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868039320643 | FS_EXEC_SUCCESS | Process 43914 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868108065089 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 10 | Type: CREATION, Name: xorg, FD: 95 |
+| 8868108067674 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 10 | Name: xorg, FD: 95 |
+| 8868108245186 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 10 | Name: xorg, FD: 95, Duration: 181630 ns |
+| 8868108319225 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 10 | Type: DUP, Name: xorg, FD: 6 |
+| 8868108354882 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 10 | Name: xorg, FD: 6, Duration: 39354 ns |
+| 8868111461048 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 11 | Type: CREATION, Name: xorg, FD: 95 |
+| 8868111462631 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 11 | Name: xorg, FD: 95 |
+| 8868111487036 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 11 | Name: xorg, FD: 95, Duration: 26619 ns |
+| 8868111547810 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 11 | Type: DUP, Name: xorg, FD: 6 |
+| 8868111582665 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 11 | Name: xorg, FD: 6, Duration: 35857 ns |
+| 8868141565555 | FORK | Process 3132 (<unknown>) | fork() | Process 43918 | Child PID: 43918 |
+| 8868141565715 | FORK | Process 3132 (<unknown>) | fork() | Process 43919 | Child PID: 43919 |
+| 8868141575383 | FORK | Process 3132 (<unknown>) | fork() | Process 43920 | Child PID: 43920 |
+| 8868141578589 | FORK | Process 3132 (<unknown>) | fork() | Process 43921 | Child PID: 43921 |
+| 8868141988136 | FS_EXEC_SUCCESS | Process 43920 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868142011750 | FS_EXEC_SUCCESS | Process 43921 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868142023853 | FS_EXEC_SUCCESS | Process 43919 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868142032749 | FS_EXEC_SUCCESS | Process 43918 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868244770314 | FORK | Process 3132 (<unknown>) | fork() | Process 43922 | Child PID: 43922 |
+| 8868244770794 | FORK | Process 3132 (<unknown>) | fork() | Process 43925 | Child PID: 43925 |
+| 8868244771005 | FORK | Process 3132 (<unknown>) | fork() | Process 43923 | Child PID: 43923 |
+| 8868244771175 | FORK | Process 3132 (<unknown>) | fork() | Process 43924 | Child PID: 43924 |
+| 8868245149423 | FS_EXEC_SUCCESS | Process 43925 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868245164702 | FS_EXEC_SUCCESS | Process 43922 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868245255472 | FS_EXEC_SUCCESS | Process 43923 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868245275910 | FS_EXEC_SUCCESS | Process 43924 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868348123951 | FORK | Process 3132 (<unknown>) | fork() | Process 43926 | Child PID: 43926 |
+| 8868348133599 | FORK | Process 3132 (<unknown>) | fork() | Process 43927 | Child PID: 43927 |
+| 8868348134912 | FORK | Process 3132 (<unknown>) | fork() | Process 43928 | Child PID: 43928 |
+| 8868348135142 | FORK | Process 3132 (<unknown>) | fork() | Process 43929 | Child PID: 43929 |
+| 8868348498032 | FS_EXEC_SUCCESS | Process 43926 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868348516706 | FS_EXEC_SUCCESS | Process 43927 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868348555369 | FS_EXEC_SUCCESS | Process 43929 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868348570958 | FS_EXEC_SUCCESS | Process 43928 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868451350661 | FORK | Process 3132 (<unknown>) | fork() | Process 43930 | Child PID: 43930 |
+| 8868451351122 | FORK | Process 3132 (<unknown>) | fork() | Process 43932 | Child PID: 43932 |
+| 8868451351342 | FORK | Process 3132 (<unknown>) | fork() | Process 43931 | Child PID: 43931 |
+| 8868451351743 | FORK | Process 3132 (<unknown>) | fork() | Process 43933 | Child PID: 43933 |
+| 8868451738658 | FS_EXEC_SUCCESS | Process 43931 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868451743577 | FS_EXEC_SUCCESS | Process 43930 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868451745751 | FS_EXEC_SUCCESS | Process 43933 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868451793851 | FS_EXEC_SUCCESS | Process 43932 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868553988298 | FORK | Process 3132 (<unknown>) | fork() | Process 43934 | Child PID: 43934 |
+| 8868553988829 | FORK | Process 3132 (<unknown>) | fork() | Process 43935 | Child PID: 43935 |
+| 8868553989060 | FORK | Process 3132 (<unknown>) | fork() | Process 43936 | Child PID: 43936 |
+| 8868553995652 | FORK | Process 3132 (<unknown>) | fork() | Process 43937 | Child PID: 43937 |
+| 8868554393357 | FS_EXEC_SUCCESS | Process 43936 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868554407102 | FS_EXEC_SUCCESS | Process 43937 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868554575167 | FS_EXEC_SUCCESS | Process 43935 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868556229374 | FS_EXEC_SUCCESS | Process 43934 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868657297262 | FORK | Process 3132 (<unknown>) | fork() | Process 43938 | Child PID: 43938 |
+| 8868657297713 | FORK | Process 3132 (<unknown>) | fork() | Process 43939 | Child PID: 43939 |
+| 8868657298093 | FORK | Process 3132 (<unknown>) | fork() | Process 43940 | Child PID: 43940 |
+| 8868657314875 | FORK | Process 3132 (<unknown>) | fork() | Process 43941 | Child PID: 43941 |
+| 8868657676532 | FS_EXEC_SUCCESS | Process 43941 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868657681922 | FS_EXEC_SUCCESS | Process 43938 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868657718931 | FS_EXEC_SUCCESS | Process 43939 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868657723019 | FS_EXEC_SUCCESS | Process 43940 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868760808905 | FORK | Process 3132 (<unknown>) | fork() | Process 43942 | Child PID: 43942 |
+| 8868760809436 | FORK | Process 3132 (<unknown>) | fork() | Process 43943 | Child PID: 43943 |
+| 8868760826027 | FORK | Process 3132 (<unknown>) | fork() | Process 43944 | Child PID: 43944 |
+| 8868760827580 | FORK | Process 3132 (<unknown>) | fork() | Process 43945 | Child PID: 43945 |
+| 8868761212931 | FS_EXEC_SUCCESS | Process 43945 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868761221748 | FS_EXEC_SUCCESS | Process 43944 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868761239581 | FS_EXEC_SUCCESS | Process 43942 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868761613932 | FS_EXEC_SUCCESS | Process 43943 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868876874525 | FORK | Process 3132 (<unknown>) | fork() | Process 43946 | Child PID: 43946 |
+| 8868876875086 | FORK | Process 3132 (<unknown>) | fork() | Process 43947 | Child PID: 43947 |
+| 8868877039574 | FORK | Process 3132 (<unknown>) | fork() | Process 43948 | Child PID: 43948 |
+| 8868877054532 | FORK | Process 3132 (<unknown>) | fork() | Process 43949 | Child PID: 43949 |
+| 8868877690994 | FS_EXEC_SUCCESS | Process 43946 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868877692526 | FS_EXEC_SUCCESS | Process 43948 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868877702435 | FS_EXEC_SUCCESS | Process 43947 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868877713856 | FS_EXEC_SUCCESS | Process 43949 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868980229464 | FORK | Process 3132 (<unknown>) | fork() | Process 43950 | Child PID: 43950 |
+| 8868980229775 | FORK | Process 3132 (<unknown>) | fork() | Process 43951 | Child PID: 43951 |
+| 8868980244402 | FORK | Process 3132 (<unknown>) | fork() | Process 43952 | Child PID: 43952 |
+| 8868980244653 | FORK | Process 3132 (<unknown>) | fork() | Process 43953 | Child PID: 43953 |
+| 8868980609396 | FS_EXEC_SUCCESS | Process 43950 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868980613774 | FS_EXEC_SUCCESS | Process 43952 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868980623512 | FS_EXEC_SUCCESS | Process 43951 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8868980839997 | FS_EXEC_SUCCESS | Process 43953 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869002307754 | FORK | Process 3110 (<unknown>) | fork() | Process 43954 | Child PID: 43954 |
+| 8869003462195 | FS_EXEC_SUCCESS | Process 43954 (/bin/sh) | exec_success() | FS Object 2490662 | Path: /bin/sh, Inode: 2490662 |
+| 8869003889856 | FORK | Process 43954 (/bin/sh) | fork() | Process 43955 | Child PID: 43955 |
+| 8869004076786 | FS_EXEC_SUCCESS | Process 43955 (/usr/bin/whoami) | exec_success() | FS Object 2515452 | Path: /usr/bin/whoami, Inode: 2515452 |
+| 8869004455505 | CONNECT | Process 43955 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
+| 8869004486764 | CONNECT | Process 43955 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
+| 8869083867947 | FORK | Process 3132 (<unknown>) | fork() | Process 43956 | Child PID: 43956 |
+| 8869083868448 | FORK | Process 3132 (<unknown>) | fork() | Process 43957 | Child PID: 43957 |
+| 8869083868698 | FORK | Process 3132 (<unknown>) | fork() | Process 43958 | Child PID: 43958 |
+| 8869083873598 | FORK | Process 3132 (<unknown>) | fork() | Process 43959 | Child PID: 43959 |
+| 8869084285319 | FS_EXEC_SUCCESS | Process 43958 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869084304605 | FS_EXEC_SUCCESS | Process 43959 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869084362152 | FS_EXEC_SUCCESS | Process 43957 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869086091380 | FS_EXEC_SUCCESS | Process 43956 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869105635474 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 12 | Type: CREATION, Name: xorg, FD: 95 |
+| 8869105637588 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 12 | Name: xorg, FD: 95 |
+| 8869105663928 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 12 | Name: xorg, FD: 95, Duration: 29325 ns |
+| 8869105670019 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 12 | Type: DUP, Name: xorg, FD: 6 |
+| 8869105679106 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 12 | Name: xorg, FD: 6, Duration: 10029 ns |
+| 8869108139864 | FD_INSTALLED | Process 1351 (<unknown>) | fd_install() | Memfd 13 | Type: CREATION, Name: xorg, FD: 95 |
+| 8869108141677 | MEMFD_CREATE | Process 1351 (<unknown>) | memfd_create() | Memfd 13 | Name: xorg, FD: 95 |
+| 8869108156845 | FD_CLOSED | Process 1351 (<unknown>) | close_fd() | Memfd 13 | Name: xorg, FD: 95, Duration: 17352 ns |
+| 8869108165161 | FD_INSTALLED | Process 3110 (<unknown>) | fd_install() | Memfd 13 | Type: DUP, Name: xorg, FD: 6 |
+| 8869108173757 | FD_CLOSED | Process 3110 (<unknown>) | close_fd() | Memfd 13 | Name: xorg, FD: 6, Duration: 9107 ns |
+| 8869186529430 | FORK | Process 3132 (<unknown>) | fork() | Process 43963 | Child PID: 43963 |
+| 8869186529790 | FORK | Process 3132 (<unknown>) | fork() | Process 43961 | Child PID: 43961 |
+| 8869186530171 | FORK | Process 3132 (<unknown>) | fork() | Process 43962 | Child PID: 43962 |
+| 8869186530321 | FORK | Process 3132 (<unknown>) | fork() | Process 43960 | Child PID: 43960 |
+| 8869186909652 | FS_EXEC_SUCCESS | Process 43963 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869186911395 | FS_EXEC_SUCCESS | Process 43961 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869186951891 | FS_EXEC_SUCCESS | Process 43962 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869186966328 | FS_EXEC_SUCCESS | Process 43960 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869289640865 | FORK | Process 3132 (<unknown>) | fork() | Process 43964 | Child PID: 43964 |
+| 8869289641135 | FORK | Process 3132 (<unknown>) | fork() | Process 43965 | Child PID: 43965 |
+| 8869289654300 | FORK | Process 3132 (<unknown>) | fork() | Process 43967 | Child PID: 43967 |
+| 8869289654570 | FORK | Process 3132 (<unknown>) | fork() | Process 43966 | Child PID: 43966 |
+| 8869290034101 | FS_EXEC_SUCCESS | Process 43965 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869290043849 | FS_EXEC_SUCCESS | Process 43967 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869290046074 | FS_EXEC_SUCCESS | Process 43964 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869290050342 | FS_EXEC_SUCCESS | Process 43966 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869392844222 | FORK | Process 3132 (<unknown>) | fork() | Process 43969 | Child PID: 43969 |
+| 8869392844723 | FORK | Process 3132 (<unknown>) | fork() | Process 43968 | Child PID: 43968 |
+| 8869392844944 | FORK | Process 3132 (<unknown>) | fork() | Process 43970 | Child PID: 43970 |
+| 8869392848300 | FORK | Process 3132 (<unknown>) | fork() | Process 43971 | Child PID: 43971 |
+| 8869393242879 | FS_EXEC_SUCCESS | Process 43969 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869393259590 | FS_EXEC_SUCCESS | Process 43968 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869393268717 | FS_EXEC_SUCCESS | Process 43970 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869393323339 | FS_EXEC_SUCCESS | Process 43971 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869496647423 | FORK | Process 3132 (<unknown>) | fork() | Process 43972 | Child PID: 43972 |
+| 8869496653374 | FORK | Process 3132 (<unknown>) | fork() | Process 43973 | Child PID: 43973 |
+| 8869496659205 | FORK | Process 3132 (<unknown>) | fork() | Process 43974 | Child PID: 43974 |
+| 8869496661810 | FORK | Process 3132 (<unknown>) | fork() | Process 43975 | Child PID: 43975 |
+| 8869497040128 | FS_EXEC_SUCCESS | Process 43972 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869497047141 | FS_EXEC_SUCCESS | Process 43975 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869497051339 | FS_EXEC_SUCCESS | Process 43974 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869497087276 | FS_EXEC_SUCCESS | Process 43973 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869613040796 | FORK | Process 3132 (<unknown>) | fork() | Process 43976 | Child PID: 43976 |
+| 8869613040947 | FORK | Process 3132 (<unknown>) | fork() | Process 43979 | Child PID: 43979 |
+| 8869613041388 | FORK | Process 3132 (<unknown>) | fork() | Process 43977 | Child PID: 43977 |
+| 8869613393146 | FORK | Process 3132 (<unknown>) | fork() | Process 43978 | Child PID: 43978 |
+| 8869613885678 | FS_EXEC_SUCCESS | Process 43979 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869613885789 | FS_EXEC_SUCCESS | Process 43976 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869613887482 | FS_EXEC_SUCCESS | Process 43978 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869613906157 | FS_EXEC_SUCCESS | Process 43977 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869716847674 | FORK | Process 3132 (<unknown>) | fork() | Process 43980 | Child PID: 43980 |
+| 8869716848075 | FORK | Process 3132 (<unknown>) | fork() | Process 43981 | Child PID: 43981 |
+| 8869716848296 | FORK | Process 3132 (<unknown>) | fork() | Process 43983 | Child PID: 43983 |
+| 8869716848466 | FORK | Process 3132 (<unknown>) | fork() | Process 43982 | Child PID: 43982 |
+| 8869717267771 | FS_EXEC_SUCCESS | Process 43980 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869717315490 | FS_EXEC_SUCCESS | Process 43981 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869717322263 | FS_EXEC_SUCCESS | Process 43983 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869719163110 | FS_EXEC_SUCCESS | Process 43982 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869819875894 | FORK | Process 3132 (<unknown>) | fork() | Process 43984 | Child PID: 43984 |
+| 8869819876385 | FORK | Process 3132 (<unknown>) | fork() | Process 43986 | Child PID: 43986 |
+| 8869819876505 | FORK | Process 3132 (<unknown>) | fork() | Process 43985 | Child PID: 43985 |
+| 8869819883929 | FORK | Process 3132 (<unknown>) | fork() | Process 43987 | Child PID: 43987 |
+| 8869820268880 | FS_EXEC_SUCCESS | Process 43987 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869820296000 | FS_EXEC_SUCCESS | Process 43985 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869820311870 | FS_EXEC_SUCCESS | Process 43986 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869820349491 | FS_EXEC_SUCCESS | Process 43984 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869882873620 | FORK | Process 43781 (<unknown>) | fork() | Process 43988 | Child PID: 43988 |
+| 8869883832496 | FS_EXEC_SUCCESS | Process 43988 (/usr/bin/date) | exec_success() | FS Object 2515363 | Path: /usr/bin/date, Inode: 2515363 |
+| 8869909558926 | FORK | Process 2 (<unknown>) | fork() | Process 43989 | Child PID: 43989 |
+| 8869922658022 | FORK | Process 3132 (<unknown>) | fork() | Process 43990 | Child PID: 43990 |
+| 8869922660006 | FORK | Process 3132 (<unknown>) | fork() | Process 43991 | Child PID: 43991 |
+| 8869922669304 | FORK | Process 3132 (<unknown>) | fork() | Process 43992 | Child PID: 43992 |
+| 8869922678882 | FORK | Process 3132 (<unknown>) | fork() | Process 43993 | Child PID: 43993 |
+| 8869923039076 | FS_EXEC_SUCCESS | Process 43992 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869923040018 | FS_EXEC_SUCCESS | Process 43993 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869923049415 | FS_EXEC_SUCCESS | Process 43990 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8869923069132 | FS_EXEC_SUCCESS | Process 43991 (/usr/bin/git) | exec_success() | FS Object 2490759 | Path: /usr/bin/git, Inode: 2490759 |
+| 8870002955001 | FORK | Process 3110 (<unknown>) | fork() | Process 43994 | Child PID: 43994 |
+| 8870004399305 | FS_EXEC_SUCCESS | Process 43994 (/bin/sh) | exec_success() | FS Object 2490662 | Path: /bin/sh, Inode: 2490662 |
+| 8870004936751 | FORK | Process 43994 (/bin/sh) | fork() | Process 43995 | Child PID: 43995 |
+| 8870005193221 | FS_EXEC_SUCCESS | Process 43995 (/usr/bin/whoami) | exec_success() | FS Object 2515452 | Path: /usr/bin/whoami, Inode: 2515452 |
+| 8870005790700 | CONNECT | Process 43995 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |
+| 8870005822921 | CONNECT | Process 43995 (/usr/bin/whoami) | connect() | Net Endpoint | Destination: <unsupported>:0, FD: 3, Result: 0 |

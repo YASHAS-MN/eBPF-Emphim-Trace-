@@ -499,7 +499,10 @@ def main():
         )
 
     print("\n=================================================================")
-    print("Reconciliation Diagnosis Complete — All Deficiencies Confirmed.")
+    if not missing_s1 and (not s2_close or not t_destroy or s2_close["timestamp_ns"] <= t_destroy) and (len(s4_child_closes) > 0 and has_close_edge):
+        print("Reconciliation Qualification Complete — All Remediations Verified.")
+    else:
+        print("Reconciliation Diagnosis Complete — Deficiencies Confirmed.")
     print("=================================================================")
 
 
