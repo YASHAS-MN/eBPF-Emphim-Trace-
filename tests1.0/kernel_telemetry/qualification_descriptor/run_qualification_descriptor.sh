@@ -49,7 +49,7 @@ for b in "$LOADER_BIN" "$REPLAY_BIN" "$BPF_OBJ" "$TEST_BIN"; do
     if [ ! -f "$b" ]; then
         echo "ERROR: Required binary not found: $b"
         echo "Building test binaries..."
-        make all "$TEST_BIN"
+        make -C "$PERSIST_DIR" all "$TEST_BIN"
     fi
 done
 
