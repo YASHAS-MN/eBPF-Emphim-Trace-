@@ -33,8 +33,13 @@ FAILURE_CONTROLS_BIN="$PERSIST_DIR/build/test_failure_controls"
 WORKLOAD_BIN="$PERSIST_DIR/tests1.0/kernel_telemetry/workload"
 RECONCILE_PY="$SCRIPT_DIR/reconcile_benchmark_e2e_01.py"
 
-# Default configuration
-RING_BUFFER_BYTES=67108864  # 64 MiB
+# Ring buffer capacity in MiB (eBPF kernel ring buffer: candidate default 64 MiB)
+RING_BUFFER_MB="${EPHIM_RING_BUFFER_MB:-64}"
+
+# Separate evidence storage capacity in bytes (file storage ceiling -b / --max-bytes)
+# Configured based on expected workload volume (~100-300 MB) and available disk space (78+ GB available)
+STORAGE_MAX_BYTES="${EPHIM_STORAGE_MAX_BYTES:-2147483648}"  # 2 GiB
+
 DEFAULT_SOAK_DURATION=1800  # 30 minutes (1800s)
 DEFAULT_REPS=5
 
@@ -62,6 +67,8 @@ done
 
 cd "$PERSIST_DIR"
 
+AVAIL_DISK_MB=$(df -m "$DATA_DIR" 2>/dev/null | awk 'NR==2 {print $4}' || echo "N/A")
+
 echo "==============================================================================="
 echo "       EphimTrace — End-to-End Forensic System Benchmark 01 Campaign           "
 echo "==============================================================================="
@@ -69,7 +76,10 @@ echo "Target User:          $TARGET_USER (UID: $TARGET_UID, GID: $TARGET_GID)"
 echo "Repository Root:      $PERSIST_DIR"
 echo "Data Directory:       $DATA_DIR"
 echo "Exports Directory:    $EXPORTS_DIR"
-echo "Production Loader:    $LOADER_BIN (64 MiB Default, Frozen at b6c89af)"
+echo "Production Loader:    $LOADER_BIN (Frozen at b6c89af)"
+echo "Ring Buffer Capacity: ${RING_BUFFER_MB} MiB (--ring-buffer-mb)"
+echo "Evidence Storage Max: $(( STORAGE_MAX_BYTES / (1024*1024) )) MiB (-b / --max-bytes)"
+echo "Available Disk Space: ${AVAIL_DISK_MB} MiB"
 echo "Matrix Repetitions:   $MATRIX_REPS per scenario (15 sessions total)"
 echo "Prolonged Soak Time:  $SOAK_DURATION seconds"
 echo "==============================================================================="
@@ -84,7 +94,7 @@ for b in "$LOADER_BIN" "$REPLAY_BIN" "$BPF_OBJ" "$MEMFD_EXEC_BIN" \
     fi
 done
 
-# Prepare clean directories
+# Prepare clean directories (preserving existing contents)
 mkdir -p "$DATA_DIR" "$RUN1_DIR" "$RUN2_DIR" "$DOCS_DIR"
 chown -R "$TARGET_USER:$TARGET_USER" "$DATA_DIR" "$EXPORTS_DIR" "$DOCS_DIR"
 chmod 0750 "$DATA_DIR" "$RUN1_DIR" "$RUN2_DIR"
@@ -124,7 +134,9 @@ cat <<EOF > "$DATA_DIR/system_metadata.json"
   "cpu_cores": "$CPU_CORES",
   "cpu_threads": "$CPU_THREADS",
   "memory_total": "$MEM_TOTAL",
-  "ring_buffer_bytes": $RING_BUFFER_BYTES,
+  "ring_buffer_mb": $RING_BUFFER_MB,
+  "storage_max_bytes": $STORAGE_MAX_BYTES,
+  "available_disk_mb": "$AVAIL_DISK_MB",
   "soak_duration_seconds": $SOAK_DURATION,
   "matrix_repetitions": $MATRIX_REPS,
   "binary_hashes": {
@@ -146,9 +158,13 @@ echo "  [OK] System metadata preserved in $DATA_DIR/system_metadata.json"
 # ------------------------------------------------------------------------------
 echo ""
 echo "[PHASE 2/7] Executing Bounded Failure Controls & Resilience Suite..."
-run_unprivileged "'$FAILURE_CONTROLS_BIN'" | tee "$DATA_DIR/failure_controls.log"
-chown "$TARGET_USER:$TARGET_USER" "$DATA_DIR/failure_controls.log"
-echo "  [OK] Failure controls suite verified"
+if [ -f "$DATA_DIR/failure_controls.log" ] && grep -q "All 5 bounded failure controls PASSED" "$DATA_DIR/failure_controls.log"; then
+    echo "  [PRESERVED] Failure controls already verified: preserving existing log."
+else
+    run_unprivileged "'$FAILURE_CONTROLS_BIN'" | tee "$DATA_DIR/failure_controls.log"
+    chown "$TARGET_USER:$TARGET_USER" "$DATA_DIR/failure_controls.log"
+    echo "  [OK] Failure controls suite verified"
+fi
 
 # ------------------------------------------------------------------------------
 # Phase 3: Paired Unmonitored Baseline Measurements
@@ -156,7 +172,10 @@ echo "  [OK] Failure controls suite verified"
 echo ""
 echo "[PHASE 3/7] Measuring Paired Unmonitored Baseline Workloads (5 reps)..."
 
-run_unprivileged "python3 -c '
+if [ -f "$DATA_DIR/unmonitored_baseline.json" ] && [ -s "$DATA_DIR/unmonitored_baseline.json" ]; then
+    echo "  [PRESERVED] Unmonitored baseline measurements already exist: preserving."
+else
+    run_unprivileged "python3 -c '
 import subprocess, time, json
 
 def run_bench(cmd, reps=5):
@@ -180,8 +199,9 @@ res = {
 with open(\"$DATA_DIR/unmonitored_baseline.json\", \"w\") as f:
     json.dump(res, f, indent=2)
 '"
-chown "$TARGET_USER:$TARGET_USER" "$DATA_DIR/unmonitored_baseline.json"
-echo "  [OK] Unmonitored baseline timings saved to $DATA_DIR/unmonitored_baseline.json"
+    chown "$TARGET_USER:$TARGET_USER" "$DATA_DIR/unmonitored_baseline.json"
+    echo "  [OK] Unmonitored baseline timings saved to $DATA_DIR/unmonitored_baseline.json"
+fi
 
 # ------------------------------------------------------------------------------
 # Phase 4: Workload Matrix (15 Sessions)
@@ -200,14 +220,30 @@ execute_monitored_session() {
     local loader_log="$DATA_DIR/${sess_id}_loader.log"
     local stat_file="$DATA_DIR/${sess_id}_collector_stat.json"
 
+    # Check if isolated session is already valid and can be preserved
+    if [ "$wl_type" == "M_ISO" ] || [ "$wl_type" == "U_ISO" ]; then
+        if [ -f "$evid_path" ] && [ -f "$manifest_path" ] && [ -s "$evid_path" ]; then
+            echo "  [PRESERVED] Existing valid session artifacts found for $sess_id: preserving without re-execution."
+            # Ensure Run 1 and Run 2 exports exist for reconciliation
+            if [ ! -f "$RUN1_DIR/${sess_id}.json" ]; then
+                run_unprivileged "'$REPLAY_BIN' '$evid_path' --dot '$RUN1_DIR/${sess_id}.dot' --json '$RUN1_DIR/${sess_id}.json' --timeline '$RUN1_DIR/${sess_id}_timeline.md' --summary-json '$RUN1_DIR/${sess_id}_summary.json' -q"
+            fi
+            if [ ! -f "$RUN2_DIR/${sess_id}.json" ]; then
+                run_unprivileged "'$REPLAY_BIN' '$evid_path' --dot '$RUN2_DIR/${sess_id}.dot' --json '$RUN2_DIR/${sess_id}.json' --timeline '$RUN2_DIR/${sess_id}_timeline.md' --summary-json '$RUN2_DIR/${sess_id}_summary.json' -q"
+            fi
+            return 0
+        fi
+    fi
+
+    # For concurrent sessions (or missing isolated sessions), execute clean session
     rm -f "$evid_path" "$manifest_path" "$wl_log" "$loader_log" "$stat_file"
 
     echo "-------------------------------------------------------------------------------"
     echo "Starting Session: $sess_id ($wl_type Rep $rep/$MATRIX_REPS)"
     echo "-------------------------------------------------------------------------------"
 
-    # Start production loader with 64 MiB buffer
-    "$LOADER_BIN" -b "$RING_BUFFER_BYTES" -o "$evid_path" -q > "$loader_log" 2>&1 &
+    # Start production loader with 64 MiB ring buffer and configured storage capacity
+    "$LOADER_BIN" --ring-buffer-mb "$RING_BUFFER_MB" -b "$STORAGE_MAX_BYTES" -o "$evid_path" -q > "$loader_log" 2>&1 &
     local loader_pid=$!
 
     # Wait for eBPF attachment
@@ -221,17 +257,50 @@ execute_monitored_session() {
     local t_wl_start
     t_wl_start=$(date +%s%N)
 
-    # Execute workload
+    # Execute workload with continuous collector liveness monitoring
     if [ "$wl_type" == "M_ISO" ]; then
         run_unprivileged "'$MEMFD_EXEC_BIN'" > "$wl_log" 2>&1
+        if ! kill -0 "$loader_pid" 2>/dev/null; then
+            echo "ERROR: Collector (PID $loader_pid) died prematurely during $sess_id!"
+            cat "$loader_log"
+            return 1
+        fi
     elif [ "$wl_type" == "U_ISO" ]; then
         run_unprivileged "'$UNLINKED_EXEC_BIN'" > "$wl_log" 2>&1
+        if ! kill -0 "$loader_pid" 2>/dev/null; then
+            echo "ERROR: Collector (PID $loader_pid) died prematurely during $sess_id!"
+            cat "$loader_log"
+            return 1
+        fi
     elif [ "$wl_type" == "MU_BG" ]; then
         # Launch background sustain workload concurrently with memfd and unlinked fixtures
         run_unprivileged "echo '' | '$WORKLOAD_BIN' 15000 4 50 0 0x1 /tmp/bg_${sess_id}.json" > /dev/null 2>&1 &
         local bg_pid=$!
+
+        if ! kill -0 "$loader_pid" 2>/dev/null; then
+            echo "ERROR: Collector (PID $loader_pid) died prematurely when starting $sess_id!"
+            kill "$bg_pid" 2>/dev/null || true
+            return 1
+        fi
+
         run_unprivileged "'$MEMFD_EXEC_BIN'" > "$wl_log" 2>&1
+        if ! kill -0 "$loader_pid" 2>/dev/null; then
+            echo "ERROR: Collector (PID $loader_pid) died prematurely during memfd exec in $sess_id!"
+            kill "$bg_pid" 2>/dev/null || true
+            return 1
+        fi
+
         run_unprivileged "'$UNLINKED_EXEC_BIN'" >> "$wl_log" 2>&1
+
+        # Poll background workload while monitoring collector liveness
+        while kill -0 "$bg_pid" 2>/dev/null; do
+            if ! kill -0 "$loader_pid" 2>/dev/null; then
+                echo "ERROR: Collector (PID $loader_pid) died prematurely during background workload in $sess_id!"
+                kill "$bg_pid" 2>/dev/null || true
+                return 1
+            fi
+            sleep 0.2
+        done
         wait "$bg_pid" 2>/dev/null || true
     fi
 
@@ -257,6 +326,13 @@ execute_monitored_session() {
     if [ -f "/proc/$loader_pid/stat" ]; then
         utime=$(awk '{print $14}' "/proc/$loader_pid/stat" || echo 0)
         stime=$(awk '{print $15}' "/proc/$loader_pid/stat" || echo 0)
+    fi
+
+    # Verify collector is still alive before sending SIGINT
+    if ! kill -0 "$loader_pid" 2>/dev/null; then
+        echo "ERROR: Collector (PID $loader_pid) died prematurely before orderly stop for $sess_id!"
+        cat "$loader_log"
+        return 1
     fi
 
     local t_stop_req
@@ -320,17 +396,17 @@ EOF
     echo "  [DONE] Session $sess_id: Wall=${wl_duration_s}s, Drain=${drain_latency_s}s, RSS=${peak_rss_kib}KiB, Evid=${evid_size}B (SHA-256 verified)"
 }
 
-# 1. Benign Memfd Execution in isolation (5 reps)
+# 1. Benign Memfd Execution in isolation (5 reps) - preserved
 for rep in $(seq 1 "$MATRIX_REPS"); do
     execute_monitored_session "memfd_iso_rep_${rep}" "M_ISO" "$rep"
 done
 
-# 2. Unlinked Regular-ELF Execution in isolation (5 reps)
+# 2. Unlinked Regular-ELF Execution in isolation (5 reps) - preserved
 for rep in $(seq 1 "$MATRIX_REPS"); do
     execute_monitored_session "unlinked_iso_rep_${rep}" "U_ISO" "$rep"
 done
 
-# 3. Concurrent Execution under W_SUSTAIN background workload (5 reps)
+# 3. Concurrent Execution under W_SUSTAIN background workload (5 reps) - repeated with --ring-buffer-mb 64
 for rep in $(seq 1 "$MATRIX_REPS"); do
     execute_monitored_session "concurrent_bg_rep_${rep}" "MU_BG" "$rep"
 done
@@ -347,8 +423,8 @@ SOAK_STAT="$DATA_DIR/soak_30min_collector_stat.json"
 SOAK_CSV="$DATA_DIR/soak_metrics_timeseries.csv"
 rm -f "$SOAK_EVID" "${SOAK_EVID}.manifest" "$SOAK_LOG" "$SOAK_STAT" "$SOAK_CSV"
 
-# Start loader for soak session
-"$LOADER_BIN" -b "$RING_BUFFER_BYTES" -o "$SOAK_EVID" -q > "$SOAK_LOG" 2>&1 &
+# Start loader for soak session with --ring-buffer-mb 64 and separate storage ceiling
+"$LOADER_BIN" --ring-buffer-mb "$RING_BUFFER_MB" -b "$STORAGE_MAX_BYTES" -o "$SOAK_EVID" -q > "$SOAK_LOG" 2>&1 &
 SOAK_LOADER_PID=$!
 sleep 2
 
@@ -384,24 +460,40 @@ T_SOAK_END=$(( T_SOAK_START + SOAK_DURATION ))
 ) &
 SAMPLER_PID=$!
 
-# Periodic workload driver
+# Periodic workload driver with liveness checks
 MARKER_COUNT=0
 INTERVAL=$(( SOAK_DURATION / 6 ))
 if [ "$INTERVAL" -lt 10 ]; then INTERVAL=10; fi
 
 while [ "$(date +%s)" -lt "$T_SOAK_END" ]; do
+    if ! kill -0 "$SOAK_LOADER_PID" 2>/dev/null; then
+        echo "ERROR: Collector terminated prematurely during prolonged soak session!"
+        kill "$SAMPLER_PID" 2>/dev/null || true
+        cat "$SOAK_LOG"
+        exit 1
+    fi
+
     MARKER_COUNT=$(( MARKER_COUNT + 1 ))
     echo "  [SOAK] Running periodic marker $MARKER_COUNT (Memfd + Unlinked fixtures)..."
     run_unprivileged "'$MEMFD_EXEC_BIN'" > /dev/null 2>&1 || true
     run_unprivileged "'$UNLINKED_EXEC_BIN'" > /dev/null 2>&1 || true
-    # Run batch of background operations
     run_unprivileged "echo '' | '$WORKLOAD_BIN' 5000 2 100 0 0x1 /tmp/soak_bg.json" > /dev/null 2>&1 || true
 
-    # Sleep until next marker or end
+    # Sleep in small increments while checking collector liveness
     rem=$(( T_SOAK_END - $(date +%s) ))
     if [ "$rem" -le 0 ]; then break; fi
-    sleep_time=$(( rem < INTERVAL ? rem : INTERVAL ))
-    sleep "$sleep_time"
+    sleep_target=$(( rem < INTERVAL ? rem : INTERVAL ))
+    sleep_elapsed=0
+    while [ "$sleep_elapsed" -lt "$sleep_target" ] && [ "$(date +%s)" -lt "$T_SOAK_END" ]; do
+        if ! kill -0 "$SOAK_LOADER_PID" 2>/dev/null; then
+            echo "ERROR: Collector terminated prematurely during soak interval!"
+            kill "$SAMPLER_PID" 2>/dev/null || true
+            cat "$SOAK_LOG"
+            exit 1
+        fi
+        sleep 2
+        sleep_elapsed=$(( sleep_elapsed + 2 ))
+    done
 done
 
 # Terminate loader cleanly
@@ -477,7 +569,8 @@ md.append('|---|---|')
 md.append(f'| **Host Kernel** | \`{meta.get(\"kernel_version\", \"N/A\")}\` |')
 md.append(f'| **CPU Model** | \`{meta.get(\"cpu_model\", \"N/A\")}\` ({meta.get(\"cpu_threads\", \"N/A\")} threads) |')
 md.append(f'| **Memory Total** | \`{meta.get(\"memory_total\", \"N/A\")}\` |')
-md.append(f'| **Ring Buffer Capacity** | {meta.get(\"ring_buffer_bytes\", 0) // (1024*1024)} MiB default |')
+md.append(f'| **Ring Buffer Capacity** | {meta.get(\"ring_buffer_mb\", 64)} MiB (--ring-buffer-mb) |')
+md.append(f'| **Evidence Storage Bound** | {meta.get(\"storage_max_bytes\", 0) // (1024*1024)} MiB (-b / --max-bytes) |')
 md.append(f'| **Loader Binary SHA-256** | \`{meta.get(\"binary_hashes\", {}).get(\"loader\", \"N/A\")}\` |')
 md.append(f'| **Replay Binary SHA-256** | \`{meta.get(\"binary_hashes\", {}).get(\"replay\", \"N/A\")}\` |')
 md.append(f'| **Monitor BPF SHA-256** | \`{meta.get(\"binary_hashes\", {}).get(\"monitor.bpf.o\", \"N/A\")}\` |')

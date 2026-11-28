@@ -10,7 +10,7 @@ Supports:
 - Paired unmonitored baseline overhead evaluation
 - Bounded failure controls results
 - Double replay determinism verification (hash, normalized JSON/DOT)
-- Exact typed, directed node and edge precision and recall
+- Exact typed, directed node and edge precision and recall (using src and dst)
 """
 
 import json
@@ -128,7 +128,6 @@ def parse_evid_header_and_records(
         }
 
         # Event payload struct format: 664 bytes
-        # struct event layout in src/user/evidence_io.h
         ev_fmt = "=IIIIIiI4xQiHH16s256sIII4xQQQQIiiIQI256sIQ"
         records = []
         seq = 0
@@ -201,24 +200,21 @@ def parse_json_graph(json_path: pathlib.Path) -> Dict[str, Any]:
         return json.load(f)
 
 
-def parse_timeline(timeline_path: pathlib.Path) -> List[Dict[str, str]]:
+def parse_timeline(timeline_path: pathlib.Path) -> List[Dict[str, Any]]:
     if not timeline_path.exists():
         return []
     entries = []
     with open(timeline_path, "r", encoding="utf-8", errors="replace") as f:
         for line in f:
             line = line.strip()
-            # Timeline entry format: - `[<timestamp_ns> ns]` <source> -> <target>: `<type>(...)`
-            m = re.match(
-                r"-\s+`\[(\d+)\s+ns\]`\s+([^\s]+)\s+->\s+([^\s:]+):\s+`([^`]+)`", line
-            )
+            # Timeline entry format: - `[<timestamp_ns> ns]` `[<TYPE>]` <detail>
+            m = re.match(r"-\s+`\[(\d+)\s+ns\]`\s+`\[([^\]]+)\]`\s+(.+)", line)
             if m:
                 entries.append(
                     {
                         "timestamp_ns": int(m.group(1)),
-                        "source": m.group(2),
-                        "target": m.group(3),
-                        "detail": m.group(4),
+                        "type": m.group(2),
+                        "detail": m.group(3),
                     }
                 )
     return entries
@@ -342,7 +338,7 @@ def reconcile_session(
         res["errors"].append(f"Failed to parse evidence file: {e}")
         return res
 
-    # 3. Double Replay Determinism Verification
+    # 3. Double Replay Determinism Verification (using src and dst)
     run1_json = parse_json_graph(run1_json_path)
     run2_json = parse_json_graph(run2_json_path)
 
@@ -364,9 +360,9 @@ def reconcile_session(
             "Determinism failure: Node ID sets between Run 1 and Run 2 differ"
         )
 
-    # Compare sorted edges
+    # Compare sorted edges using 'src' and 'dst'
     def edge_key(e):
-        return (e["type"], e["source"], e["target"], e.get("timestamp_ns", 0))
+        return (e["type"], e.get("src", ""), e.get("dst", ""), e.get("timestamp_ns", 0))
 
     edges1 = sorted([edge_key(e) for e in run1_json.get("edges", [])])
     edges2 = sorted([edge_key(e) for e in run2_json.get("edges", [])])
@@ -385,10 +381,10 @@ def reconcile_session(
     nodes_by_id = {n["id"]: n for n in run1_json.get("nodes", [])}
     edges = run1_json.get("edges", [])
 
-    # Index edges by (source, target, type)
+    # Index edges by (src, dst, type)
     edge_index: Dict[Tuple[str, str, str], List[Dict[str, Any]]] = {}
     for e in edges:
-        k = (e["source"], e["target"], e["type"])
+        k = (e.get("src", ""), e.get("dst", ""), e.get("type", ""))
         edge_index.setdefault(k, []).append(e)
 
     # Pre-declared Ground Truth Reconciliation
@@ -416,7 +412,6 @@ def reconcile_session(
         if p_node:
             found_nodes.add(p_node["id"])
             expected_nodes.add(p_node["id"])
-            # Check exit code representation
             if p_node.get("exit_code") != "unknown" and not p_node.get("is_alive"):
                 res["deficiencies"].append(
                     f"Parent process {p_pid} exit code falsely asserted as {p_node.get('exit_code')} instead of unknown"
@@ -441,18 +436,21 @@ def reconcile_session(
                 found_nodes.add(f"memfd:{mfd_name}")
                 m_node = mfd_by_name[mfd_name]
                 if p_node:
-                    # Expect fd_install and write edges
                     expected_edges.append(
-                        (p_node["id"], m_node["id"], "EDGE_FD_INSTALL")
+                        (p_node["id"], m_node["id"], "EDGE_FD_INSTALLED")
                     )
-                    expected_edges.append((p_node["id"], m_node["id"], "EDGE_WRITE"))
+                    expected_edges.append(
+                        (p_node["id"], m_node["id"], "EDGE_MEMFD_WRITE")
+                    )
 
-                    if (p_node["id"], m_node["id"], "EDGE_FD_INSTALL") in edge_index:
+                    if (p_node["id"], m_node["id"], "EDGE_FD_INSTALLED") in edge_index:
                         found_edges.append(
-                            (p_node["id"], m_node["id"], "EDGE_FD_INSTALL")
+                            (p_node["id"], m_node["id"], "EDGE_FD_INSTALLED")
                         )
-                    if (p_node["id"], m_node["id"], "EDGE_WRITE") in edge_index:
-                        found_edges.append((p_node["id"], m_node["id"], "EDGE_WRITE"))
+                    if (p_node["id"], m_node["id"], "EDGE_MEMFD_WRITE") in edge_index:
+                        found_edges.append(
+                            (p_node["id"], m_node["id"], "EDGE_MEMFD_WRITE")
+                        )
 
         # Check children
         for c_idx, c_pid, mfd_name in [
@@ -472,7 +470,6 @@ def reconcile_session(
                 )
                 if c_node:
                     found_nodes.add(f"proc_child_{c_pid}")
-                    # Fork edge
                     if p_node:
                         expected_edges.append((p_node["id"], c_node["id"], "EDGE_FORK"))
                         if (p_node["id"], c_node["id"], "EDGE_FORK") in edge_index:
@@ -480,34 +477,33 @@ def reconcile_session(
                                 (p_node["id"], c_node["id"], "EDGE_FORK")
                             )
 
-                    # Exec edge to memfd
                     if mfd_name in mfd_by_name:
                         m_node = mfd_by_name[mfd_name]
-                        expected_edges.append((c_node["id"], m_node["id"], "EDGE_EXEC"))
-                        if (c_node["id"], m_node["id"], "EDGE_EXEC") in edge_index:
+                        expected_edges.append(
+                            (c_node["id"], m_node["id"], "EDGE_MEMFD_EXEC_SUCCESS")
+                        )
+                        if (
+                            c_node["id"],
+                            m_node["id"],
+                            "EDGE_MEMFD_EXEC_SUCCESS",
+                        ) in edge_index:
                             found_edges.append(
-                                (c_node["id"], m_node["id"], "EDGE_EXEC")
+                                (c_node["id"], m_node["id"], "EDGE_MEMFD_EXEC_SUCCESS")
                             )
 
-        # Verify negative control: Test 4 (corrupted binary) must NOT have exec_success edge
+        # Negative control: Test 4 (corrupted binary) must NOT have exec_success edge
         if "m2_corrupt_exec" in mfd_by_name:
             corrupt_node = mfd_by_name["m2_corrupt_exec"]
-            # Look for any incoming EDGE_EXEC with comm transformation / success
-            exec_edges = [
+            exec_success_edges = [
                 e
                 for e in edges
-                if e.get("target") == corrupt_node["id"]
-                and e.get("type") == "EDGE_EXEC"
+                if e.get("dst") == corrupt_node["id"]
+                and e.get("type") == "EDGE_MEMFD_EXEC_SUCCESS"
             ]
-            # Check if any indicates successful execution
-            for ee in exec_edges:
-                if (
-                    ee.get("attributes", {}).get("success") is True
-                    or ee.get("attributes", {}).get("ret", -1) == 0
-                ):
-                    res["deficiencies"].append(
-                        "Test 4 negative control falsely produced successful exec edge for invalid ELF"
-                    )
+            if exec_success_edges:
+                res["deficiencies"].append(
+                    "Test 4 negative control falsely produced successful exec edge for invalid ELF"
+                )
 
     if wl_type in ("U_ISO", "MU_BG") and "u_parent_pid" in gt:
         up_pid = gt["u_parent_pid"]
@@ -549,21 +545,35 @@ def reconcile_session(
                 (
                     n
                     for n in run1_json.get("nodes", [])
-                    if n.get("type") == "NODE_FS_OBJECT" and n.get("inode") == exp_ino
+                    if n.get("type") == "NODE_FS_OBJECT"
+                    and (n.get("inode_no") == exp_ino or n.get("inode") == exp_ino)
                 ),
                 None,
             )
             if fs_node:
                 found_nodes.add(f"fs_ino_{exp_ino}")
-                # Check unlinked attribute
                 if not fs_node.get("is_unlinked", False):
                     res["deficiencies"].append(
                         f"Unlinked worker binary (inode {exp_ino}) not marked is_unlinked in graph"
                     )
                 if w_pid and w_node:
-                    expected_edges.append((w_node["id"], fs_node["id"], "EDGE_EXEC"))
-                    if (w_node["id"], fs_node["id"], "EDGE_EXEC") in edge_index:
-                        found_edges.append((w_node["id"], fs_node["id"], "EDGE_EXEC"))
+                    expected_edges.append(
+                        (w_node["id"], fs_node["id"], "EDGE_FS_EXEC_SUCCESS")
+                    )
+                    if (
+                        w_node["id"],
+                        fs_node["id"],
+                        "EDGE_FS_EXEC_SUCCESS",
+                    ) in edge_index:
+                        found_edges.append(
+                            (w_node["id"], fs_node["id"], "EDGE_FS_EXEC_SUCCESS")
+                        )
+                if up_node:
+                    expected_edges.append((up_node["id"], fs_node["id"], "EDGE_UNLINK"))
+                    if (up_node["id"], fs_node["id"], "EDGE_UNLINK") in edge_index:
+                        found_edges.append(
+                            (up_node["id"], fs_node["id"], "EDGE_UNLINK")
+                        )
 
     # Compute Precision & Recall against pre-declared expected entities
     node_tp = len(found_nodes)
@@ -589,7 +599,6 @@ def reconcile_session(
     tl_entries = parse_timeline(timeline_path)
     res["timeline_entries_count"] = len(tl_entries)
     if tl_entries:
-        # Verify monotonically non-decreasing timestamps
         is_ordered = all(
             tl_entries[i]["timestamp_ns"] <= tl_entries[i + 1]["timestamp_ns"]
             for i in range(len(tl_entries) - 1)
