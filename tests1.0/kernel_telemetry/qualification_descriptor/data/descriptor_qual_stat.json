@@ -1,0 +1,6 @@
+{
+  "workload_duration_s": 0.0223099,
+  "collector_shutdown_latency_s": 0.800024,
+  "workload_and_shutdown_pipeline_s": 2.82594,
+  "evidence_storage_bytes": 995344
+}
