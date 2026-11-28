@@ -235,23 +235,19 @@ int main(void)
         all_passed = false;
     }
 
-    /* 1.8 Safe overwrite when --overwrite is explicitly requested */
-    snprintf(args, sizeof(args), "--overwrite --dot \"%s\"", exist_dot);
-    int rc1_ovw = run_replay_cmd(evid1, args, out, sizeof(out));
-    bool dot_valid = false;
-    FILE *fr = fopen(exist_dot, "r");
-    if (fr) {
-        char rbuf[128];
-        if (fgets(rbuf, sizeof(rbuf), fr) && strstr(rbuf, "digraph")) {
-            dot_valid = true;
+    /* 1.8 All overwrite spellings must reject in-place writes. */
+    const char *overwrite_flags[] = {"--overwrite", "--force", "-f"};
+    for (size_t i = 0; i < sizeof(overwrite_flags)/sizeof(overwrite_flags[0]); i++) {
+        snprintf(args, sizeof(args), "%s --dot \"%s\"", overwrite_flags[i], exist_dot);
+        int rc1_ovw = run_replay_cmd(evid1, args, out, sizeof(out));
+        compute_sha256(exist_dot, exist_hash_after);
+        if (rc1_ovw == 1 && strcmp(exist_hash_before, exist_hash_after) == 0) {
+            printf("  [PASS] 1.8: %s rejected; existing output hash preserved.\n", overwrite_flags[i]);
+        } else {
+            printf("  [FAIL] 1.8: %s rc=%d, output hash match=%d\n",
+                   overwrite_flags[i], rc1_ovw, strcmp(exist_hash_before, exist_hash_after) == 0);
+            all_passed = false;
         }
-        fclose(fr);
-    }
-    if (rc1_ovw == 0 && dot_valid) {
-        printf("  [PASS] 1.8: Safe export overwrite allowed when --overwrite requested (rc=0), valid DOT generated.\n");
-    } else {
-        printf("  [FAIL] 1.8: rc=%d, dot_valid=%d\n", rc1_ovw, dot_valid);
-        all_passed = false;
     }
 
     /* 1.9 Rejection of symlinked target even with --overwrite */
@@ -442,6 +438,40 @@ int main(void)
     } else {
         printf("  [FAIL] 4.5: rc=%d, dot4_exists=%d\n", rc4_num, dot4_exists);
         all_passed = false;
+    }
+
+    /* 4.6-4.9: Correct evidence size/count; only the specified manifest defect should fail. */
+    struct stat st4;
+    assert(stat(evid4, &st4) == 0);
+    const char *bad_loss[] = {
+        "\"write_errors\": \"invalid\", \"sample_size_mismatches\": 0, \"poll_errors\": 0, \"drain_errors\": 0",
+        "\"sample_size_mismatches\": 0, \"poll_errors\": 0, \"drain_errors\": 0",
+        "\"write_errors\": 0, \"sample_size_mismatches\": 0, \"poll_errors\": 0, \"drain_errors\": 0, \"ring_buffer_total_drops\": 0, \"ring_buffer_per_type_drops\": {\"execve\": 9223372036854775807, \"memfd_create\": 1}",
+        "\"write_errors\": 0, \"sample_size_mismatches\": 0, \"poll_errors\": 0, \"drain_errors\": 0"
+    };
+    for (size_t i = 0; i < sizeof(bad_loss)/sizeof(bad_loss[0]); i++) {
+        fm = fopen(evid4_m, "w");
+        assert(fm);
+        fprintf(fm, "{\"manifest_version\": 1, \"record_count\": 10, \"storage_bytes\": %llu, \"finalized\": true, \"synchronized\": true, \"loss_counters\": {%s}}",
+                (unsigned long long)st4.st_size, bad_loss[i]);
+        if (i == 3) {
+            /* Place garbage beyond the old one-read buffer. */
+            for (int j = 0; j < 8192; j++) fputc(' ', fm);
+            fputs("TRAILING_GARBAGE", fm);
+        }
+        assert(fclose(fm) == 0);
+        unlink(dot4);
+        char m_before[65], m_after[65];
+        compute_sha256(evid4_m, m_before);
+        int rc_bad = run_replay_cmd(evid4, "--strict --dot " TEST_DIR "/case4.dot", out, sizeof(out));
+        compute_sha256(evid4_m, m_after);
+        if (rc_bad == 7 && access(dot4, F_OK) != 0 &&
+            strcmp(m_before, m_after) == 0 && strcmp(m_before, "ERROR") != 0) {
+            printf("  [PASS] 4.%zu: Invalid manifest rejected; no graph export; manifest unchanged.\n", i + 6);
+        } else {
+            printf("  [FAIL] 4.%zu: rc=%d\n", i + 6, rc_bad);
+            all_passed = false;
+        }
     }
 
     /* --- SUITE 5: Truncated Evidence Handling & Hash Preservation --- */
